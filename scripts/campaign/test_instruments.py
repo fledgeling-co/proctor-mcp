@@ -2612,6 +2612,61 @@ def test_plane_census_places_every_passing_case() -> None:
               f"planes after rewrite: {sorted(planes)}")
 
 
+
+# ── PRO-0136 / PRO-0146 · the spec-symbol citation linter ───────────────────
+#
+# The instrument exists to catch a rename that left the specs behind, so the
+# check that matters is the negative arm: an ungrounded citation added to a real
+# spec must take the gate red, and taking it away must put it back. A linter
+# whose gate cannot go red is a linter that has measured nothing.
+def test_spec_symbol_linter_gate_and_negative_arm() -> None:
+    script = ROOT / "scripts" / "campaign" / "spec_symbol_linter.py"
+    ratchet = ROOT / "docs" / "test-campaign" / "spec-symbol-ratchet.json"
+    check(script.is_file(), "the spec-symbol linter is on disk", str(script))
+    check(ratchet.is_file(), "the linter carries a ratchet, so a first run has a bar",
+          str(ratchet))
+
+    green = subprocess.run([sys.executable, str(script), "--gate"],
+                           capture_output=True, text=True)
+    check(green.returncode == 0, "the linter's gate is green on this tree",
+          green.stdout[-300:])
+    check("in production" in green.stdout and "in tests" in green.stdout,
+          "the count is reported per root rather than as one blended figure",
+          green.stdout.splitlines()[0] if green.stdout else "")
+
+    spec = ROOT / "docs" / "specs" / "spec-PRO-0001.md"
+    before = spec.read_text()
+    try:
+        spec.write_text(before + "\n\nA citation to `ASymbolNoTreeHereDeclares`.\n")
+        red = subprocess.run([sys.executable, str(script), "--gate"],
+                             capture_output=True, text=True)
+        check(red.returncode == 1,
+              "one ungrounded citation added to a real spec takes the gate red",
+              f"exit {red.returncode}")
+        check("ASymbolNoTreeHereDeclares" in red.stdout,
+              "the refusal names the symbol and the line that wrote it",
+              red.stdout[-300:])
+    finally:
+        spec.write_text(before)
+
+    restored = subprocess.run([sys.executable, str(script), "--gate"],
+                              capture_output=True, text=True)
+    check(restored.returncode == 0, "removing the citation puts the gate back green",
+          restored.stdout[-200:])
+
+    # A fenced block is a quotation. A symbol quoted inside one is not a citation
+    # of it, and counting it is how a scanner confuses a mention with a claim.
+    fenced = subprocess.run(
+        [sys.executable, "-c",
+         "import sys; sys.path.insert(0, %r); import spec_symbol_linter as L; "
+         "print(L.blank_fences('```\\n`Quoted`\\n```\\n`Real`'))"
+         % str(ROOT / "scripts" / "campaign")],
+        capture_output=True, text=True)
+    check("Quoted" not in fenced.stdout and "Real" in fenced.stdout,
+          "a symbol inside a fenced block is blanked before citations are read",
+          fenced.stdout.strip() or fenced.stderr[:200])
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -2664,7 +2719,8 @@ def main() -> int:
                test_guest_multisession_queue_witness_characterization,
                test_reckon_brief_join_rate_and_retirement_ladder,
                test_three_censuses_are_declared,
-               test_plane_census_places_every_passing_case):
+               test_plane_census_places_every_passing_case,
+               test_spec_symbol_linter_gate_and_negative_arm):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001

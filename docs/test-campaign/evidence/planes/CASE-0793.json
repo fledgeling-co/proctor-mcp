@@ -1,0 +1,30 @@
+{
+  "case": "CASE-0793",
+  "requirement": "REQ-101",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "evidence": [
+    {
+      "path": "scripts/campaign/spec_symbol_linter.py",
+      "sha256_16": "cdf7743d1d3d192d",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0146/spec-symbol-lint.txt",
+      "sha256_16": "c2710e0c4e9f84c3",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0146/spec-symbol-report.json",
+      "sha256_16": "d7191b520fd53ee4",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0146/negative-arm.txt",
+      "sha256_16": "9099611faa4f325a",
+      "present": true
+    }
+  ]
+}

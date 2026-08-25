@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0792",
+  "requirement": "REQ-011",
+  "lane": "macos-glass",
+  "oracle": "effect-witness",
+  "plane": "live-glass",
+  "placedBecause": "the macos-glass lane commits to a display server, whatever the artefact reads as",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0148/actuate-status.txt",
+      "sha256_16": "e63d12ba0f9043fb",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0148/actuate-status.json",
+      "sha256_16": "eb40fb87c30c1ac3",
+      "present": true
+    }
+  ]
+}

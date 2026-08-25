@@ -47,6 +47,13 @@ RANK = {p: i for i, p in enumerate(PLANES)}
 
 # What a lane can reach. A headless lane never attached to a window server, so a
 # case on it cannot rest on glass however its evidence reads.
+# A `-glass` lane suffix commits the campaign to proving the artifact ran and
+# was drawn, so it is a floor as well as a ceiling: a case on that lane rests on
+# glass whatever its evidence file happens to look like on disk. Without this,
+# a glass case whose only artefact is a JSON witness reads as hermetic and the
+# lane's whole point disappears into the evidence classifier.
+LANE_FLOOR = {"macos-glass": "live-glass", "guest-glass": "live-external"}
+
 LANE_CEILING = {
     "headless": "hermetic",
     "macos": "live-glass",
@@ -122,6 +129,9 @@ def place(case: dict, root: Path) -> tuple[str, str]:
     capped = cap(best, ceiling)
     if capped != best:
         why = f"{why}, held at {capped} by the {lane} lane"
+    floor = LANE_FLOOR.get(lane)
+    if floor and RANK[floor] > RANK[capped]:
+        return floor, f"the {lane} lane commits to a display server, whatever the artefact reads as"
     return capped, why
 
 

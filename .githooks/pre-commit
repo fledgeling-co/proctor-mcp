@@ -1,0 +1,34 @@
+#!/bin/sh
+# Refuse a commit that adds a spec citation to a symbol the tree does not carry.
+#
+# The gate is a ratchet rather than a floor: a repository this old carries 827
+# citations that resolve to nothing, and failing on all of them would produce a
+# hook somebody disables on the first commit. It fails on a RISE, which is the
+# defect — a rename that left the specs behind.
+#
+# Install: git config core.hooksPath .githooks
+# Skip once, deliberately and visibly: PROCTOR_SKIP_SPEC_LINT=1 git commit …
+set -e
+
+if [ -n "$PROCTOR_SKIP_SPEC_LINT" ]; then
+    echo "pre-commit: spec-symbol lint skipped by PROCTOR_SKIP_SPEC_LINT" >&2
+    exit 0
+fi
+
+# Only when a spec or a production source file is in the change — a docs-only
+# or test-only commit cannot move the count.
+if ! git diff --cached --name-only | grep -qE '^(docs/specs/|Sources/|Package\.swift)'; then
+    exit 0
+fi
+
+root=$(git rev-parse --show-toplevel)
+if ! python3 "$root/scripts/campaign/spec_symbol_linter.py" --gate > /tmp/spec-lint.$$ 2>&1; then
+    cat /tmp/spec-lint.$$ >&2
+    rm -f /tmp/spec-lint.$$
+    echo "" >&2
+    echo "pre-commit: a spec names a symbol Sources/ does not declare." >&2
+    echo "Fix the citation, or lower the count and re-run with --set-ratchet." >&2
+    exit 1
+fi
+tail -3 /tmp/spec-lint.$$ >&2
+rm -f /tmp/spec-lint.$$

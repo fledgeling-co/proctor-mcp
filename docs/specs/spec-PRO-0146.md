@@ -1,7 +1,7 @@
 # Spec PRO-0146 — Continuous Spec-Symbol Citation Linter
 
 **Brief:** `docs/features-to-triage/138-continuous-spec-symbol-citation-linter.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-25
 **Surfaces:** SURF-025
 **Defects:** none

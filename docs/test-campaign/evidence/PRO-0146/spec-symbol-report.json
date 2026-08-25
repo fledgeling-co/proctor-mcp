@@ -1,0 +1,5174 @@
+{
+  "specs": 147,
+  "cited": 6182,
+  "resolved": 4565,
+  "inTests": 790,
+  "unresolved": [
+    {
+      "line": 66,
+      "symbol": "xhigh",
+      "spec": "docs/specs/spec-PRO-0011.md"
+    },
+    {
+      "line": 107,
+      "symbol": "executableTarget",
+      "spec": "docs/specs/spec-PRO-0011.md"
+    },
+    {
+      "line": 118,
+      "symbol": "executableTarget",
+      "spec": "docs/specs/spec-PRO-0011.md"
+    },
+    {
+      "line": 118,
+      "symbol": "ProctorAgentCore",
+      "spec": "docs/specs/spec-PRO-0011.md"
+    },
+    {
+      "line": 120,
+      "symbol": "xhigh",
+      "spec": "docs/specs/spec-PRO-0011.md"
+    },
+    {
+      "line": 68,
+      "symbol": "xhigh",
+      "spec": "docs/specs/spec-PRO-0012.md"
+    },
+    {
+      "line": 83,
+      "symbol": "SessionPolicy",
+      "spec": "docs/specs/spec-PRO-0012.md"
+    },
+    {
+      "line": 108,
+      "symbol": "xhigh",
+      "spec": "docs/specs/spec-PRO-0012.md"
+    },
+    {
+      "line": 110,
+      "symbol": "completedRuns",
+      "spec": "docs/specs/spec-PRO-0012.md"
+    },
+    {
+      "line": 107,
+      "symbol": "xhigh",
+      "spec": "docs/specs/spec-PRO-0013.md"
+    },
+    {
+      "line": 124,
+      "symbol": "WhenUnlockedThisDeviceOnly",
+      "spec": "docs/specs/spec-PRO-0013.md"
+    },
+    {
+      "line": 85,
+      "symbol": "Policy",
+      "spec": "docs/specs/spec-PRO-0014.md"
+    },
+    {
+      "line": 118,
+      "symbol": "SessionAct",
+      "spec": "docs/specs/spec-PRO-0014.md"
+    },
+    {
+      "line": 119,
+      "symbol": "setFrameOrigin",
+      "spec": "docs/specs/spec-PRO-0015.md"
+    },
+    {
+      "line": 119,
+      "symbol": "performDrag",
+      "spec": "docs/specs/spec-PRO-0015.md"
+    },
+    {
+      "line": 137,
+      "symbol": "await",
+      "spec": "docs/specs/spec-PRO-0016.md"
+    },
+    {
+      "line": 126,
+      "symbol": "CALayer",
+      "spec": "docs/specs/spec-PRO-0017.md"
+    },
+    {
+      "line": 131,
+      "symbol": "accessibilityDisplayOptionsDidChangeNotification",
+      "spec": "docs/specs/spec-PRO-0017.md"
+    },
+    {
+      "line": 85,
+      "symbol": "graceMs",
+      "spec": "docs/specs/spec-PRO-0018.md"
+    },
+    {
+      "line": 184,
+      "symbol": "backstop",
+      "spec": "docs/specs/spec-PRO-0018.md"
+    },
+    {
+      "line": 311,
+      "symbol": "deinit",
+      "spec": "docs/specs/spec-PRO-0018.md"
+    },
+    {
+      "line": 134,
+      "symbol": "menuIcon",
+      "spec": "docs/specs/spec-PRO-0019.md"
+    },
+    {
+      "line": 28,
+      "symbol": "fetch",
+      "spec": "docs/specs/spec-PRO-0020.md"
+    },
+    {
+      "line": 28,
+      "symbol": "scrape",
+      "spec": "docs/specs/spec-PRO-0020.md"
+    },
+    {
+      "line": 108,
+      "symbol": "setEmulatedMedia",
+      "spec": "docs/specs/spec-PRO-0020.md"
+    },
+    {
+      "line": 110,
+      "symbol": "boxShadow",
+      "spec": "docs/specs/spec-PRO-0020.md"
+    },
+    {
+      "line": 110,
+      "symbol": "backgroundImage",
+      "spec": "docs/specs/spec-PRO-0020.md"
+    },
+    {
+      "line": 110,
+      "symbol": "textTransform",
+      "spec": "docs/specs/spec-PRO-0020.md"
+    },
+    {
+      "line": 111,
+      "symbol": "margin",
+      "spec": "docs/specs/spec-PRO-0020.md"
+    },
+    {
+      "line": 273,
+      "symbol": "deaa351",
+      "spec": "docs/specs/spec-PRO-0020.md"
+    },
+    {
+      "line": 280,
+      "symbol": "SessionAct",
+      "spec": "docs/specs/spec-PRO-0020.md"
+    },
+    {
+      "line": 134,
+      "symbol": "checkmark.seal",
+      "spec": "docs/specs/spec-PRO-0021.md"
+    },
+    {
+      "line": 135,
+      "symbol": "exclamationmark.triangle",
+      "spec": "docs/specs/spec-PRO-0021.md"
+    },
+    {
+      "line": 135,
+      "symbol": "bolt.horizontal.circle",
+      "spec": "docs/specs/spec-PRO-0021.md"
+    },
+    {
+      "line": 248,
+      "symbol": "SessionHUD",
+      "spec": "docs/specs/spec-PRO-0021.md"
+    },
+    {
+      "line": 248,
+      "symbol": "Dispatch",
+      "spec": "docs/specs/spec-PRO-0021.md"
+    },
+    {
+      "line": 8,
+      "symbol": "b4a29e5",
+      "spec": "docs/specs/spec-PRO-0022.md"
+    },
+    {
+      "line": 27,
+      "symbol": "b4a29e5",
+      "spec": "docs/specs/spec-PRO-0022.md"
+    },
+    {
+      "line": 28,
+      "symbol": "ProctorCatchException",
+      "spec": "docs/specs/spec-PRO-0022.md"
+    },
+    {
+      "line": 67,
+      "symbol": "isExecutableFile",
+      "spec": "docs/specs/spec-PRO-0023.md"
+    },
+    {
+      "line": 130,
+      "symbol": "scrape",
+      "spec": "docs/specs/spec-PRO-0023.md"
+    },
+    {
+      "line": 131,
+      "symbol": "fetch",
+      "spec": "docs/specs/spec-PRO-0023.md"
+    },
+    {
+      "line": 227,
+      "symbol": "hw.optional.arm64",
+      "spec": "docs/specs/spec-PRO-0023.md"
+    },
+    {
+      "line": 227,
+      "symbol": "sysctlbyname",
+      "spec": "docs/specs/spec-PRO-0023.md"
+    },
+    {
+      "line": 335,
+      "symbol": "sysctlbyname(\"hw.optional.arm64\")",
+      "spec": "docs/specs/spec-PRO-0023.md"
+    },
+    {
+      "line": 355,
+      "symbol": "proctorWillNotInstall",
+      "spec": "docs/specs/spec-PRO-0023.md"
+    },
+    {
+      "line": 371,
+      "symbol": "cae5f80",
+      "spec": "docs/specs/spec-PRO-0023.md"
+    },
+    {
+      "line": 379,
+      "symbol": "SessionDoctor",
+      "spec": "docs/specs/spec-PRO-0023.md"
+    },
+    {
+      "line": 393,
+      "symbol": "sysctlbyname(\"hw.optional.arm64\")",
+      "spec": "docs/specs/spec-PRO-0023.md"
+    },
+    {
+      "line": 402,
+      "symbol": "sysctl",
+      "spec": "docs/specs/spec-PRO-0023.md"
+    },
+    {
+      "line": 37,
+      "symbol": "fetch",
+      "spec": "docs/specs/spec-PRO-0024.md"
+    },
+    {
+      "line": 37,
+      "symbol": "eval",
+      "spec": "docs/specs/spec-PRO-0024.md"
+    },
+    {
+      "line": 347,
+      "symbol": "withTool",
+      "spec": "docs/specs/spec-PRO-0024.md"
+    },
+    {
+      "line": 350,
+      "symbol": "setenv",
+      "spec": "docs/specs/spec-PRO-0024.md"
+    },
+    {
+      "line": 352,
+      "symbol": "ProcessInfo",
+      "spec": "docs/specs/spec-PRO-0024.md"
+    },
+    {
+      "line": 453,
+      "symbol": "uvx",
+      "spec": "docs/specs/spec-PRO-0024.md"
+    },
+    {
+      "line": 453,
+      "symbol": "pip",
+      "spec": "docs/specs/spec-PRO-0024.md"
+    },
+    {
+      "line": 453,
+      "symbol": "pipx",
+      "spec": "docs/specs/spec-PRO-0024.md"
+    },
+    {
+      "line": 453,
+      "symbol": "curl",
+      "spec": "docs/specs/spec-PRO-0024.md"
+    },
+    {
+      "line": 474,
+      "symbol": "curl",
+      "spec": "docs/specs/spec-PRO-0024.md"
+    },
+    {
+      "line": 474,
+      "symbol": "tar",
+      "spec": "docs/specs/spec-PRO-0024.md"
+    },
+    {
+      "line": 474,
+      "symbol": "mv",
+      "spec": "docs/specs/spec-PRO-0024.md"
+    },
+    {
+      "line": 41,
+      "symbol": "CGWindowID",
+      "spec": "docs/specs/spec-PRO-0025.md"
+    },
+    {
+      "line": 47,
+      "symbol": "CGWindowID",
+      "spec": "docs/specs/spec-PRO-0025.md"
+    },
+    {
+      "line": 92,
+      "symbol": "CGWindowID",
+      "spec": "docs/specs/spec-PRO-0025.md"
+    },
+    {
+      "line": 103,
+      "symbol": "CGWindowID",
+      "spec": "docs/specs/spec-PRO-0025.md"
+    },
+    {
+      "line": 193,
+      "symbol": "CGWindowID",
+      "spec": "docs/specs/spec-PRO-0025.md"
+    },
+    {
+      "line": 229,
+      "symbol": "ProctorCatchNSException",
+      "spec": "docs/specs/spec-PRO-0025.md"
+    },
+    {
+      "line": 270,
+      "symbol": "aa81d5f",
+      "spec": "docs/specs/spec-PRO-0025.md"
+    },
+    {
+      "line": 271,
+      "symbol": "a383048",
+      "spec": "docs/specs/spec-PRO-0025.md"
+    },
+    {
+      "line": 312,
+      "symbol": "cae5f80",
+      "spec": "docs/specs/spec-PRO-0025.md"
+    },
+    {
+      "line": 366,
+      "symbol": "xhigh",
+      "spec": "docs/specs/spec-PRO-0025.md"
+    },
+    {
+      "line": 382,
+      "symbol": "optionOnScreenOnly",
+      "spec": "docs/specs/spec-PRO-0025.md"
+    },
+    {
+      "line": 385,
+      "symbol": "collectionBehavior",
+      "spec": "docs/specs/spec-PRO-0025.md"
+    },
+    {
+      "line": 390,
+      "symbol": "xhigh",
+      "spec": "docs/specs/spec-PRO-0025.md"
+    },
+    {
+      "line": 391,
+      "symbol": "a383048",
+      "spec": "docs/specs/spec-PRO-0025.md"
+    },
+    {
+      "line": 402,
+      "symbol": "orderFrontRegardless",
+      "spec": "docs/specs/spec-PRO-0025.md"
+    },
+    {
+      "line": 213,
+      "symbol": "IOHIDCheckAccess",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 226,
+      "symbol": "systemDefined",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 234,
+      "symbol": "flagsChanged",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 282,
+      "symbol": "ProctorCatchNSException",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 324,
+      "symbol": "scrollWheel",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 326,
+      "symbol": "flagsChanged",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 333,
+      "symbol": "systemDefined",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 347,
+      "symbol": "defer",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 373,
+      "symbol": "systemDefined",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 431,
+      "symbol": "xhigh",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 438,
+      "symbol": "flagsChanged",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 438,
+      "symbol": "flagsChanged",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 440,
+      "symbol": "tapCreate",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 440,
+      "symbol": "IOHIDCheckAccess",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 443,
+      "symbol": "orderFrontRegardless",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 443,
+      "symbol": "canJoinAllSpaces",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 443,
+      "symbol": "fullScreenAuxiliary",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 443,
+      "symbol": "hidesOnDeactivate",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 447,
+      "symbol": "systemDefined",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 447,
+      "symbol": "systemDefined",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 462,
+      "symbol": "xhigh",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 471,
+      "symbol": "ebd6e39",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 478,
+      "symbol": "announcementRequested",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 480,
+      "symbol": "CGEventFlags",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 480,
+      "symbol": "maskCommand",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 480,
+      "symbol": "maskAlternate",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 480,
+      "symbol": "maskControl",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 480,
+      "symbol": "maskShift",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 481,
+      "symbol": "defer",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 481,
+      "symbol": "do",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 487,
+      "symbol": "flagsChanged",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 494,
+      "symbol": "ebd6e39",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 503,
+      "symbol": "with",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 521,
+      "symbol": "ProctorCatchNSException",
+      "spec": "docs/specs/spec-PRO-0026.md"
+    },
+    {
+      "line": 34,
+      "symbol": "SessionDoctor",
+      "spec": "docs/specs/spec-PRO-0027.md"
+    },
+    {
+      "line": 37,
+      "symbol": "screencapture",
+      "spec": "docs/specs/spec-PRO-0027.md"
+    },
+    {
+      "line": 38,
+      "symbol": "checkmark.seal",
+      "spec": "docs/specs/spec-PRO-0027.md"
+    },
+    {
+      "line": 84,
+      "symbol": "AgentBuild.version",
+      "spec": "docs/specs/spec-PRO-0027.md"
+    },
+    {
+      "line": 90,
+      "symbol": "SessionDoctor",
+      "spec": "docs/specs/spec-PRO-0027.md"
+    },
+    {
+      "line": 93,
+      "symbol": "exclamationmark.triangle",
+      "spec": "docs/specs/spec-PRO-0027.md"
+    },
+    {
+      "line": 100,
+      "symbol": "ContentionReason.secureInput",
+      "spec": "docs/specs/spec-PRO-0027.md"
+    },
+    {
+      "line": 128,
+      "symbol": "checkmark.seal",
+      "spec": "docs/specs/spec-PRO-0027.md"
+    },
+    {
+      "line": 132,
+      "symbol": "questionmark.circle",
+      "spec": "docs/specs/spec-PRO-0027.md"
+    },
+    {
+      "line": 150,
+      "symbol": "exclamationmark.triangle",
+      "spec": "docs/specs/spec-PRO-0027.md"
+    },
+    {
+      "line": 154,
+      "symbol": "exclamationmark.triangle",
+      "spec": "docs/specs/spec-PRO-0027.md"
+    },
+    {
+      "line": 174,
+      "symbol": "touch",
+      "spec": "docs/specs/spec-PRO-0027.md"
+    },
+    {
+      "line": 184,
+      "symbol": "questionmark.circle",
+      "spec": "docs/specs/spec-PRO-0027.md"
+    },
+    {
+      "line": 184,
+      "symbol": "checkmark.seal",
+      "spec": "docs/specs/spec-PRO-0027.md"
+    },
+    {
+      "line": 203,
+      "symbol": "touch",
+      "spec": "docs/specs/spec-PRO-0027.md"
+    },
+    {
+      "line": 223,
+      "symbol": "screencapture",
+      "spec": "docs/specs/spec-PRO-0027.md"
+    },
+    {
+      "line": 230,
+      "symbol": "f794e42",
+      "spec": "docs/specs/spec-PRO-0027.md"
+    },
+    {
+      "line": 245,
+      "symbol": "xhigh",
+      "spec": "docs/specs/spec-PRO-0027.md"
+    },
+    {
+      "line": 252,
+      "symbol": "checkmark.seal",
+      "spec": "docs/specs/spec-PRO-0027.md"
+    },
+    {
+      "line": 264,
+      "symbol": "allSatisfy",
+      "spec": "docs/specs/spec-PRO-0027.md"
+    },
+    {
+      "line": 272,
+      "symbol": "touch",
+      "spec": "docs/specs/spec-PRO-0027.md"
+    },
+    {
+      "line": 284,
+      "symbol": "questionmark.circle",
+      "spec": "docs/specs/spec-PRO-0027.md"
+    },
+    {
+      "line": 289,
+      "symbol": "screencapture",
+      "spec": "docs/specs/spec-PRO-0027.md"
+    },
+    {
+      "line": 291,
+      "symbol": "ps",
+      "spec": "docs/specs/spec-PRO-0027.md"
+    },
+    {
+      "line": 18,
+      "symbol": "init",
+      "spec": "docs/specs/spec-PRO-0028.md"
+    },
+    {
+      "line": 59,
+      "symbol": "SIGKILL",
+      "spec": "docs/specs/spec-PRO-0028.md"
+    },
+    {
+      "line": 63,
+      "symbol": "CGPreflightScreenCaptureAccess()",
+      "spec": "docs/specs/spec-PRO-0028.md"
+    },
+    {
+      "line": 87,
+      "symbol": "SIGKILL",
+      "spec": "docs/specs/spec-PRO-0028.md"
+    },
+    {
+      "line": 150,
+      "symbol": "CGPreflightScreenCaptureAccess()",
+      "spec": "docs/specs/spec-PRO-0028.md"
+    },
+    {
+      "line": 172,
+      "symbol": "xhigh",
+      "spec": "docs/specs/spec-PRO-0028.md"
+    },
+    {
+      "line": 189,
+      "symbol": "SIGKILL",
+      "spec": "docs/specs/spec-PRO-0028.md"
+    },
+    {
+      "line": 203,
+      "symbol": "CGPreflightScreenCaptureAccess",
+      "spec": "docs/specs/spec-PRO-0028.md"
+    },
+    {
+      "line": 233,
+      "symbol": "AgentBuild.version",
+      "spec": "docs/specs/spec-PRO-0028.md"
+    },
+    {
+      "line": 9,
+      "symbol": "c9e42c9",
+      "spec": "docs/specs/spec-PRO-0029.md"
+    },
+    {
+      "line": 9,
+      "symbol": "d65dc1e",
+      "spec": "docs/specs/spec-PRO-0029.md"
+    },
+    {
+      "line": 72,
+      "symbol": "c9e42c9",
+      "spec": "docs/specs/spec-PRO-0029.md"
+    },
+    {
+      "line": 85,
+      "symbol": "SessionHUD.hudEnabledByDefault",
+      "spec": "docs/specs/spec-PRO-0029.md"
+    },
+    {
+      "line": 192,
+      "symbol": "EnvironmentVariables",
+      "spec": "docs/specs/spec-PRO-0029.md"
+    },
+    {
+      "line": 254,
+      "symbol": "or",
+      "spec": "docs/specs/spec-PRO-0029.md"
+    },
+    {
+      "line": 270,
+      "symbol": "c9e42c9",
+      "spec": "docs/specs/spec-PRO-0029.md"
+    },
+    {
+      "line": 272,
+      "symbol": "EnvironmentVariables",
+      "spec": "docs/specs/spec-PRO-0029.md"
+    },
+    {
+      "line": 300,
+      "symbol": "procter",
+      "spec": "docs/specs/spec-PRO-0029.md"
+    },
+    {
+      "line": 311,
+      "symbol": "CURSOR",
+      "spec": "docs/specs/spec-PRO-0029.md"
+    },
+    {
+      "line": 311,
+      "symbol": "TAKEOVER",
+      "spec": "docs/specs/spec-PRO-0029.md"
+    },
+    {
+      "line": 311,
+      "symbol": "YIELD",
+      "spec": "docs/specs/spec-PRO-0029.md"
+    },
+    {
+      "line": 313,
+      "symbol": "and",
+      "spec": "docs/specs/spec-PRO-0029.md"
+    },
+    {
+      "line": 314,
+      "symbol": "ACTUATION",
+      "spec": "docs/specs/spec-PRO-0029.md"
+    },
+    {
+      "line": 352,
+      "symbol": "ProcessInfo",
+      "spec": "docs/specs/spec-PRO-0029.md"
+    },
+    {
+      "line": 370,
+      "symbol": "SessionHUD",
+      "spec": "docs/specs/spec-PRO-0029.md"
+    },
+    {
+      "line": 387,
+      "symbol": "or",
+      "spec": "docs/specs/spec-PRO-0029.md"
+    },
+    {
+      "line": 399,
+      "symbol": "TAKEOVER",
+      "spec": "docs/specs/spec-PRO-0029.md"
+    },
+    {
+      "line": 400,
+      "symbol": "YIELD",
+      "spec": "docs/specs/spec-PRO-0029.md"
+    },
+    {
+      "line": 428,
+      "symbol": "xhigh",
+      "spec": "docs/specs/spec-PRO-0029.md"
+    },
+    {
+      "line": 442,
+      "symbol": "_INPUT",
+      "spec": "docs/specs/spec-PRO-0029.md"
+    },
+    {
+      "line": 443,
+      "symbol": "procter",
+      "spec": "docs/specs/spec-PRO-0029.md"
+    },
+    {
+      "line": 476,
+      "symbol": "EnvironmentVariables",
+      "spec": "docs/specs/spec-PRO-0029.md"
+    },
+    {
+      "line": 14,
+      "symbol": "AgentBuild.version",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 64,
+      "symbol": "e1f6cbf4fd1c",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 132,
+      "symbol": "cp",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 137,
+      "symbol": "touch",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 252,
+      "symbol": "AgentBuild.version",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 253,
+      "symbol": "ShimVersion.value",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 296,
+      "symbol": "cp",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 298,
+      "symbol": "touch",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 333,
+      "symbol": "xhigh",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 342,
+      "symbol": "touch",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 342,
+      "symbol": "cp",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 352,
+      "symbol": "git",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 361,
+      "symbol": "cp",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 404,
+      "symbol": "compiledCommitMatchesGit",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 404,
+      "symbol": "compiledDirtyMatchesGit",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 404,
+      "symbol": "compiledVersionMatchesPlist",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 408,
+      "symbol": "AgentBuild",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 408,
+      "symbol": "ShimVersion",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 408,
+      "symbol": "Sources",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 423,
+      "symbol": "xhigh",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 450,
+      "symbol": "pipefail",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 452,
+      "symbol": "codesign",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 452,
+      "symbol": "grep",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 452,
+      "symbol": "case",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 460,
+      "symbol": "PlistBuddy",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 468,
+      "symbol": "touch",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 501,
+      "symbol": "cp",
+      "spec": "docs/specs/spec-PRO-0030.md"
+    },
+    {
+      "line": 368,
+      "symbol": "fsync",
+      "spec": "docs/specs/spec-PRO-0032.md"
+    },
+    {
+      "line": 265,
+      "symbol": "xhigh",
+      "spec": "docs/specs/spec-PRO-0033.md"
+    },
+    {
+      "line": 301,
+      "symbol": "xhigh",
+      "spec": "docs/specs/spec-PRO-0033.md"
+    },
+    {
+      "line": 311,
+      "symbol": "defer",
+      "spec": "docs/specs/spec-PRO-0033.md"
+    },
+    {
+      "line": 79,
+      "symbol": "com.google.Chrome.app.abc123",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 103,
+      "symbol": "com.google.Chrome",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 116,
+      "symbol": "WebApp",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 117,
+      "symbol": "com.apple.Safari.WebApp",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 125,
+      "symbol": "com.apple.Safari.SafeBrowsing.Service",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 131,
+      "symbol": "com.apple.Safari",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 132,
+      "symbol": "com.google.Chrome.canary",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 133,
+      "symbol": "com.operasoftware.OperaGX",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 139,
+      "symbol": "com.google.Chrome",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 164,
+      "symbol": "com.google.Chrome",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 175,
+      "symbol": "Frameworks",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 325,
+      "symbol": "com.apple.Safari.WebApp",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 329,
+      "symbol": "com.google.Chrome.canary",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 330,
+      "symbol": "com.brave.Browser.beta",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 330,
+      "symbol": "com.microsoft.edgemac.Dev",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 330,
+      "symbol": "org.mozilla.nightly",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 331,
+      "symbol": "com.google.ChromeRemoteDesktop",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 334,
+      "symbol": "com.operasoftware.OperaGX",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 335,
+      "symbol": "com.apple.SafariTechnologyPreview",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 336,
+      "symbol": "com.apple.Safari.SafeBrowsing.Service",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 440,
+      "symbol": "SessionDoctor",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 446,
+      "symbol": "catch",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 455,
+      "symbol": "com.apple.Safari.WebApp",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 477,
+      "symbol": "com.operasoftware.Opera",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 477,
+      "symbol": "com.operasoftware.OperaGX",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 510,
+      "symbol": "com.apple.Safari.SafeBrowsing.Service",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 514,
+      "symbol": "WebApp",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 516,
+      "symbol": "WebApp",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 543,
+      "symbol": "instrument",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 616,
+      "symbol": "com.apple.Safari.WebApp",
+      "spec": "docs/specs/spec-PRO-0035.md"
+    },
+    {
+      "line": 4,
+      "symbol": "c9e42c9",
+      "spec": "docs/specs/spec-PRO-0036.md"
+    },
+    {
+      "line": 334,
+      "symbol": "xhigh",
+      "spec": "docs/specs/spec-PRO-0036.md"
+    },
+    {
+      "line": 336,
+      "symbol": "high",
+      "spec": "docs/specs/spec-PRO-0036.md"
+    },
+    {
+      "line": 446,
+      "symbol": "DecodingError.keyNotFound",
+      "spec": "docs/specs/spec-PRO-0036.md"
+    },
+    {
+      "line": 60,
+      "symbol": "yieldReason",
+      "spec": "docs/specs/spec-PRO-0037.md"
+    },
+    {
+      "line": 60,
+      "symbol": "yieldHeldTotal",
+      "spec": "docs/specs/spec-PRO-0037.md"
+    },
+    {
+      "line": 97,
+      "symbol": "yieldReason",
+      "spec": "docs/specs/spec-PRO-0037.md"
+    },
+    {
+      "line": 101,
+      "symbol": "yieldHeldTotal",
+      "spec": "docs/specs/spec-PRO-0037.md"
+    },
+    {
+      "line": 136,
+      "symbol": "await",
+      "spec": "docs/specs/spec-PRO-0037.md"
+    },
+    {
+      "line": 184,
+      "symbol": "CGDisplayBounds",
+      "spec": "docs/specs/spec-PRO-0037.md"
+    },
+    {
+      "line": 184,
+      "symbol": "CGGetActiveDisplayList",
+      "spec": "docs/specs/spec-PRO-0037.md"
+    },
+    {
+      "line": 246,
+      "symbol": "yieldReason",
+      "spec": "docs/specs/spec-PRO-0037.md"
+    },
+    {
+      "line": 346,
+      "symbol": "CGGetActiveDisplayList",
+      "spec": "docs/specs/spec-PRO-0037.md"
+    },
+    {
+      "line": 374,
+      "symbol": "await",
+      "spec": "docs/specs/spec-PRO-0037.md"
+    },
+    {
+      "line": 11,
+      "symbol": "d65dc1e",
+      "spec": "docs/specs/spec-PRO-0038.md"
+    },
+    {
+      "line": 153,
+      "symbol": "SessionAct",
+      "spec": "docs/specs/spec-PRO-0038.md"
+    },
+    {
+      "line": 158,
+      "symbol": "SessionFlow",
+      "spec": "docs/specs/spec-PRO-0038.md"
+    },
+    {
+      "line": 334,
+      "symbol": "init",
+      "spec": "docs/specs/spec-PRO-0038.md"
+    },
+    {
+      "line": 354,
+      "symbol": "WKWebView",
+      "spec": "docs/specs/spec-PRO-0038.md"
+    },
+    {
+      "line": 484,
+      "symbol": "WKWebView",
+      "spec": "docs/specs/spec-PRO-0038.md"
+    },
+    {
+      "line": 487,
+      "symbol": "WKWebView",
+      "spec": "docs/specs/spec-PRO-0038.md"
+    },
+    {
+      "line": 572,
+      "symbol": "break",
+      "spec": "docs/specs/spec-PRO-0038.md"
+    },
+    {
+      "line": 20,
+      "symbol": "Info.plist",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 60,
+      "symbol": "makeKeyAndOrderFront",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 85,
+      "symbol": "setActivationPolicy(.accessory)",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 86,
+      "symbol": "lsappinfo",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 91,
+      "symbol": "Helpers",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 91,
+      "symbol": "Helpers",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 100,
+      "symbol": "resourceURL",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 101,
+      "symbol": "Helpers",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 142,
+      "symbol": "CGPreflightScreenCaptureAccess()",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 149,
+      "symbol": "LSUIElement",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 149,
+      "symbol": "LSBackgroundOnly",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 151,
+      "symbol": "LSBackgroundOnly",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 157,
+      "symbol": "LSUIElement",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 164,
+      "symbol": "LSUIElement",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 169,
+      "symbol": "lsappinfo",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 171,
+      "symbol": "LSUIElement",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 181,
+      "symbol": "_NSGetExecutablePath",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 247,
+      "symbol": "unsafeFlags",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 247,
+      "symbol": "unsafeFlags",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 280,
+      "symbol": "csreq",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 291,
+      "symbol": "codesign",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 296,
+      "symbol": "UserDefaults.standard",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 298,
+      "symbol": "UserDefaults",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 317,
+      "symbol": "procter",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 333,
+      "symbol": "fef730b",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 345,
+      "symbol": "codesign",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 350,
+      "symbol": "codesign",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 364,
+      "symbol": "LSUIElement",
+      "spec": "docs/specs/spec-PRO-0040.md"
+    },
+    {
+      "line": 23,
+      "symbol": "replayd",
+      "spec": "docs/specs/spec-PRO-0041.md"
+    },
+    {
+      "line": 27,
+      "symbol": "swift",
+      "spec": "docs/specs/spec-PRO-0041.md"
+    },
+    {
+      "line": 28,
+      "symbol": "replayd",
+      "spec": "docs/specs/spec-PRO-0041.md"
+    },
+    {
+      "line": 37,
+      "symbol": "withTaskGroup",
+      "spec": "docs/specs/spec-PRO-0041.md"
+    },
+    {
+      "line": 39,
+      "symbol": "withTaskGroup",
+      "spec": "docs/specs/spec-PRO-0041.md"
+    },
+    {
+      "line": 40,
+      "symbol": "cancelAll()",
+      "spec": "docs/specs/spec-PRO-0041.md"
+    },
+    {
+      "line": 45,
+      "symbol": "withCheckedContinuation",
+      "spec": "docs/specs/spec-PRO-0041.md"
+    },
+    {
+      "line": 71,
+      "symbol": "MenuBarReadiness",
+      "spec": "docs/specs/spec-PRO-0041.md"
+    },
+    {
+      "line": 142,
+      "symbol": "await",
+      "spec": "docs/specs/spec-PRO-0041.md"
+    },
+    {
+      "line": 145,
+      "symbol": "await",
+      "spec": "docs/specs/spec-PRO-0041.md"
+    },
+    {
+      "line": 181,
+      "symbol": "await",
+      "spec": "docs/specs/spec-PRO-0041.md"
+    },
+    {
+      "line": 201,
+      "symbol": "probeTimeoutMs",
+      "spec": "docs/specs/spec-PRO-0041.md"
+    },
+    {
+      "line": 204,
+      "symbol": "CGRequestScreenCaptureAccess",
+      "spec": "docs/specs/spec-PRO-0041.md"
+    },
+    {
+      "line": 221,
+      "symbol": "xhigh",
+      "spec": "docs/specs/spec-PRO-0041.md"
+    },
+    {
+      "line": 238,
+      "symbol": "await",
+      "spec": "docs/specs/spec-PRO-0041.md"
+    },
+    {
+      "line": 263,
+      "symbol": "da4f48f",
+      "spec": "docs/specs/spec-PRO-0041.md"
+    },
+    {
+      "line": 275,
+      "symbol": "aParkedCallDoesNotHang",
+      "spec": "docs/specs/spec-PRO-0041.md"
+    },
+    {
+      "line": 319,
+      "symbol": "and",
+      "spec": "docs/specs/spec-PRO-0041.md"
+    },
+    {
+      "line": 320,
+      "symbol": "da4f48f",
+      "spec": "docs/specs/spec-PRO-0041.md"
+    },
+    {
+      "line": 100,
+      "symbol": "isCentered",
+      "spec": "docs/specs/spec-PRO-0042.md"
+    },
+    {
+      "line": 224,
+      "symbol": "SessionAssert",
+      "spec": "docs/specs/spec-PRO-0042.md"
+    },
+    {
+      "line": 291,
+      "symbol": "verticalAlignment",
+      "spec": "docs/specs/spec-PRO-0042.md"
+    },
+    {
+      "line": 300,
+      "symbol": "xhigh",
+      "spec": "docs/specs/spec-PRO-0042.md"
+    },
+    {
+      "line": 4,
+      "symbol": "d4a1565",
+      "spec": "docs/specs/spec-PRO-0043.md"
+    },
+    {
+      "line": 125,
+      "symbol": "HEAD",
+      "spec": "docs/specs/spec-PRO-0043.md"
+    },
+    {
+      "line": 155,
+      "symbol": "compiledCommitMatchesGit",
+      "spec": "docs/specs/spec-PRO-0043.md"
+    },
+    {
+      "line": 156,
+      "symbol": "HEAD",
+      "spec": "docs/specs/spec-PRO-0043.md"
+    },
+    {
+      "line": 189,
+      "symbol": "compiledDirtyMatchesGit",
+      "spec": "docs/specs/spec-PRO-0043.md"
+    },
+    {
+      "line": 221,
+      "symbol": "HEAD",
+      "spec": "docs/specs/spec-PRO-0043.md"
+    },
+    {
+      "line": 224,
+      "symbol": "HEAD",
+      "spec": "docs/specs/spec-PRO-0043.md"
+    },
+    {
+      "line": 240,
+      "symbol": "HEAD",
+      "spec": "docs/specs/spec-PRO-0043.md"
+    },
+    {
+      "line": 260,
+      "symbol": "da4f48f",
+      "spec": "docs/specs/spec-PRO-0043.md"
+    },
+    {
+      "line": 295,
+      "symbol": "xhigh",
+      "spec": "docs/specs/spec-PRO-0043.md"
+    },
+    {
+      "line": 355,
+      "symbol": "compiledVersionMatchesPlist",
+      "spec": "docs/specs/spec-PRO-0043.md"
+    },
+    {
+      "line": 355,
+      "symbol": "Info.plist",
+      "spec": "docs/specs/spec-PRO-0043.md"
+    },
+    {
+      "line": 370,
+      "symbol": "d4a1565",
+      "spec": "docs/specs/spec-PRO-0043.md"
+    },
+    {
+      "line": 385,
+      "symbol": "da4f48f",
+      "spec": "docs/specs/spec-PRO-0043.md"
+    },
+    {
+      "line": 4,
+      "symbol": "d65dc1e",
+      "spec": "docs/specs/spec-PRO-0044.md"
+    },
+    {
+      "line": 76,
+      "symbol": "SessionAct.runSteps",
+      "spec": "docs/specs/spec-PRO-0044.md"
+    },
+    {
+      "line": 86,
+      "symbol": "CUA",
+      "spec": "docs/specs/spec-PRO-0044.md"
+    },
+    {
+      "line": 87,
+      "symbol": "CUAFacade",
+      "spec": "docs/specs/spec-PRO-0044.md"
+    },
+    {
+      "line": 87,
+      "symbol": "SessionCUA",
+      "spec": "docs/specs/spec-PRO-0044.md"
+    },
+    {
+      "line": 90,
+      "symbol": "Cua",
+      "spec": "docs/specs/spec-PRO-0044.md"
+    },
+    {
+      "line": 90,
+      "symbol": "CuaDriver",
+      "spec": "docs/specs/spec-PRO-0044.md"
+    },
+    {
+      "line": 91,
+      "symbol": "CUA",
+      "spec": "docs/specs/spec-PRO-0044.md"
+    },
+    {
+      "line": 154,
+      "symbol": "CuaDriver.app",
+      "spec": "docs/specs/spec-PRO-0044.md"
+    },
+    {
+      "line": 154,
+      "symbol": "com.trycua.driver",
+      "spec": "docs/specs/spec-PRO-0044.md"
+    },
+    {
+      "line": 231,
+      "symbol": "async",
+      "spec": "docs/specs/spec-PRO-0044.md"
+    },
+    {
+      "line": 231,
+      "symbol": "async",
+      "spec": "docs/specs/spec-PRO-0044.md"
+    },
+    {
+      "line": 232,
+      "symbol": "await",
+      "spec": "docs/specs/spec-PRO-0044.md"
+    },
+    {
+      "line": 257,
+      "symbol": "SecStaticCodeCreateWithPath",
+      "spec": "docs/specs/spec-PRO-0044.md"
+    },
+    {
+      "line": 258,
+      "symbol": "SecStaticCodeCheckValidity",
+      "spec": "docs/specs/spec-PRO-0044.md"
+    },
+    {
+      "line": 267,
+      "symbol": "com.trycua.driver",
+      "spec": "docs/specs/spec-PRO-0044.md"
+    },
+    {
+      "line": 280,
+      "symbol": "com.trycua.driver",
+      "spec": "docs/specs/spec-PRO-0044.md"
+    },
+    {
+      "line": 287,
+      "symbol": "TCC.db",
+      "spec": "docs/specs/spec-PRO-0044.md"
+    },
+    {
+      "line": 426,
+      "symbol": "_fg",
+      "spec": "docs/specs/spec-PRO-0044.md"
+    },
+    {
+      "line": 540,
+      "symbol": "TCC.db",
+      "spec": "docs/specs/spec-PRO-0044.md"
+    },
+    {
+      "line": 605,
+      "symbol": "CuaDriver.app",
+      "spec": "docs/specs/spec-PRO-0044.md"
+    },
+    {
+      "line": 691,
+      "symbol": "CuaDriver.app",
+      "spec": "docs/specs/spec-PRO-0044.md"
+    },
+    {
+      "line": 718,
+      "symbol": "TCC.db",
+      "spec": "docs/specs/spec-PRO-0044.md"
+    },
+    {
+      "line": 750,
+      "symbol": "SessionFlow.requireSameBackend",
+      "spec": "docs/specs/spec-PRO-0044.md"
+    },
+    {
+      "line": 89,
+      "symbol": "SessionPolicy.auditStep",
+      "spec": "docs/specs/spec-PRO-0045.md"
+    },
+    {
+      "line": 170,
+      "symbol": "SessionAct",
+      "spec": "docs/specs/spec-PRO-0045.md"
+    },
+    {
+      "line": 260,
+      "symbol": "CuaClients",
+      "spec": "docs/specs/spec-PRO-0045.md"
+    },
+    {
+      "line": 277,
+      "symbol": "SecCodeCopyGuestWithAttributes",
+      "spec": "docs/specs/spec-PRO-0045.md"
+    },
+    {
+      "line": 287,
+      "symbol": "exec",
+      "spec": "docs/specs/spec-PRO-0045.md"
+    },
+    {
+      "line": 295,
+      "symbol": "exec",
+      "spec": "docs/specs/spec-PRO-0045.md"
+    },
+    {
+      "line": 390,
+      "symbol": "osascript",
+      "spec": "docs/specs/spec-PRO-0045.md"
+    },
+    {
+      "line": 404,
+      "symbol": "with",
+      "spec": "docs/specs/spec-PRO-0045.md"
+    },
+    {
+      "line": 404,
+      "symbol": "and",
+      "spec": "docs/specs/spec-PRO-0045.md"
+    },
+    {
+      "line": 408,
+      "symbol": "and",
+      "spec": "docs/specs/spec-PRO-0045.md"
+    },
+    {
+      "line": 566,
+      "symbol": "ca54833",
+      "spec": "docs/specs/spec-PRO-0045.md"
+    },
+    {
+      "line": 591,
+      "symbol": "kSecGuestAttributePid",
+      "spec": "docs/specs/spec-PRO-0045.md"
+    },
+    {
+      "line": 594,
+      "symbol": "libproc.h",
+      "spec": "docs/specs/spec-PRO-0045.md"
+    },
+    {
+      "line": 595,
+      "symbol": "kSecGuestAttributePid",
+      "spec": "docs/specs/spec-PRO-0045.md"
+    },
+    {
+      "line": 604,
+      "symbol": "ActuationFailure",
+      "spec": "docs/specs/spec-PRO-0045.md"
+    },
+    {
+      "line": 159,
+      "symbol": "Travelling",
+      "spec": "docs/specs/spec-PRO-0046.md"
+    },
+    {
+      "line": 779,
+      "symbol": "SessionAct",
+      "spec": "docs/specs/spec-PRO-0046.md"
+    },
+    {
+      "line": 779,
+      "symbol": "SessionQueue",
+      "spec": "docs/specs/spec-PRO-0046.md"
+    },
+    {
+      "line": 801,
+      "symbol": "defer",
+      "spec": "docs/specs/spec-PRO-0046.md"
+    },
+    {
+      "line": 808,
+      "symbol": "reduceTransparency",
+      "spec": "docs/specs/spec-PRO-0046.md"
+    },
+    {
+      "line": 830,
+      "symbol": "async",
+      "spec": "docs/specs/spec-PRO-0046.md"
+    },
+    {
+      "line": 830,
+      "symbol": "await",
+      "spec": "docs/specs/spec-PRO-0046.md"
+    },
+    {
+      "line": 832,
+      "symbol": "SecCodeCopyGuestWithAttributes",
+      "spec": "docs/specs/spec-PRO-0046.md"
+    },
+    {
+      "line": 850,
+      "symbol": "xhigh",
+      "spec": "docs/specs/spec-PRO-0046.md"
+    },
+    {
+      "line": 851,
+      "symbol": "high",
+      "spec": "docs/specs/spec-PRO-0046.md"
+    },
+    {
+      "line": 116,
+      "symbol": "controlBackgroundColor",
+      "spec": "docs/specs/spec-PRO-0047.md"
+    },
+    {
+      "line": 116,
+      "symbol": "separatorColor",
+      "spec": "docs/specs/spec-PRO-0047.md"
+    },
+    {
+      "line": 217,
+      "symbol": "LocalizedStringKey",
+      "spec": "docs/specs/spec-PRO-0047.md"
+    },
+    {
+      "line": 393,
+      "symbol": "SessionAct",
+      "spec": "docs/specs/spec-PRO-0047.md"
+    },
+    {
+      "line": 399,
+      "symbol": "MenuBarExtra",
+      "spec": "docs/specs/spec-PRO-0047.md"
+    },
+    {
+      "line": 520,
+      "symbol": "SessionHistory",
+      "spec": "docs/specs/spec-PRO-0047.md"
+    },
+    {
+      "line": 553,
+      "symbol": "clearRotatesNow",
+      "spec": "docs/specs/spec-PRO-0047.md"
+    },
+    {
+      "line": 34,
+      "symbol": "Simulator.app",
+      "spec": "docs/specs/spec-PRO-0048.md"
+    },
+    {
+      "line": 80,
+      "symbol": "Simulator.app",
+      "spec": "docs/specs/spec-PRO-0048.md"
+    },
+    {
+      "line": 96,
+      "symbol": "Simulator.app",
+      "spec": "docs/specs/spec-PRO-0048.md"
+    },
+    {
+      "line": 96,
+      "symbol": "Simulator.app",
+      "spec": "docs/specs/spec-PRO-0048.md"
+    },
+    {
+      "line": 101,
+      "symbol": "Simulator.app",
+      "spec": "docs/specs/spec-PRO-0048.md"
+    },
+    {
+      "line": 111,
+      "symbol": "targetRunning",
+      "spec": "docs/specs/spec-PRO-0048.md"
+    },
+    {
+      "line": 189,
+      "symbol": "SessionPolicy",
+      "spec": "docs/specs/spec-PRO-0048.md"
+    },
+    {
+      "line": 196,
+      "symbol": "Info.plist",
+      "spec": "docs/specs/spec-PRO-0048.md"
+    },
+    {
+      "line": 197,
+      "symbol": "maps",
+      "spec": "docs/specs/spec-PRO-0048.md"
+    },
+    {
+      "line": 197,
+      "symbol": "com.apple.Maps",
+      "spec": "docs/specs/spec-PRO-0048.md"
+    },
+    {
+      "line": 211,
+      "symbol": "com.example.app",
+      "spec": "docs/specs/spec-PRO-0048.md"
+    },
+    {
+      "line": 236,
+      "symbol": "RunQueue",
+      "spec": "docs/specs/spec-PRO-0048.md"
+    },
+    {
+      "line": 237,
+      "symbol": "Simulator.app",
+      "spec": "docs/specs/spec-PRO-0048.md"
+    },
+    {
+      "line": 295,
+      "symbol": "com.example.app",
+      "spec": "docs/specs/spec-PRO-0048.md"
+    },
+    {
+      "line": 325,
+      "symbol": "navigated",
+      "spec": "docs/specs/spec-PRO-0048.md"
+    },
+    {
+      "line": 330,
+      "symbol": "SessionPolicy",
+      "spec": "docs/specs/spec-PRO-0048.md"
+    },
+    {
+      "line": 332,
+      "symbol": "maps",
+      "spec": "docs/specs/spec-PRO-0048.md"
+    },
+    {
+      "line": 333,
+      "symbol": "com.apple.Maps",
+      "spec": "docs/specs/spec-PRO-0048.md"
+    },
+    {
+      "line": 334,
+      "symbol": "bootedByProctor",
+      "spec": "docs/specs/spec-PRO-0048.md"
+    },
+    {
+      "line": 385,
+      "symbol": "Dispatch",
+      "spec": "docs/specs/spec-PRO-0048.md"
+    },
+    {
+      "line": 385,
+      "symbol": "SessionDoctor",
+      "spec": "docs/specs/spec-PRO-0048.md"
+    },
+    {
+      "line": 420,
+      "symbol": "com.apple.Maps",
+      "spec": "docs/specs/spec-PRO-0048.md"
+    },
+    {
+      "line": 423,
+      "symbol": "com.apple.Preferences",
+      "spec": "docs/specs/spec-PRO-0048.md"
+    },
+    {
+      "line": 425,
+      "symbol": "Shutdown",
+      "spec": "docs/specs/spec-PRO-0048.md"
+    },
+    {
+      "line": 52,
+      "symbol": "backPressCommand",
+      "spec": "docs/specs/spec-PRO-0049.md"
+    },
+    {
+      "line": 54,
+      "symbol": "time",
+      "spec": "docs/specs/spec-PRO-0049.md"
+    },
+    {
+      "line": 151,
+      "symbol": "and",
+      "spec": "docs/specs/spec-PRO-0049.md"
+    },
+    {
+      "line": 245,
+      "symbol": "tapOn",
+      "spec": "docs/specs/spec-PRO-0049.md"
+    },
+    {
+      "line": 246,
+      "symbol": "assertVisible",
+      "spec": "docs/specs/spec-PRO-0049.md"
+    },
+    {
+      "line": 290,
+      "symbol": "onFlowStart",
+      "spec": "docs/specs/spec-PRO-0049.md"
+    },
+    {
+      "line": 290,
+      "symbol": "stopApp",
+      "spec": "docs/specs/spec-PRO-0049.md"
+    },
+    {
+      "line": 290,
+      "symbol": "killApp",
+      "spec": "docs/specs/spec-PRO-0049.md"
+    },
+    {
+      "line": 291,
+      "symbol": "clearState",
+      "spec": "docs/specs/spec-PRO-0049.md"
+    },
+    {
+      "line": 291,
+      "symbol": "setPermission",
+      "spec": "docs/specs/spec-PRO-0049.md"
+    },
+    {
+      "line": 292,
+      "symbol": "appId",
+      "spec": "docs/specs/spec-PRO-0049.md"
+    },
+    {
+      "line": 378,
+      "symbol": "appId",
+      "spec": "docs/specs/spec-PRO-0049.md"
+    },
+    {
+      "line": 440,
+      "symbol": "clearState",
+      "spec": "docs/specs/spec-PRO-0049.md"
+    },
+    {
+      "line": 518,
+      "symbol": "onFlowStart",
+      "spec": "docs/specs/spec-PRO-0049.md"
+    },
+    {
+      "line": 518,
+      "symbol": "stopApp",
+      "spec": "docs/specs/spec-PRO-0049.md"
+    },
+    {
+      "line": 519,
+      "symbol": "killApp",
+      "spec": "docs/specs/spec-PRO-0049.md"
+    },
+    {
+      "line": 519,
+      "symbol": "clearState",
+      "spec": "docs/specs/spec-PRO-0049.md"
+    },
+    {
+      "line": 519,
+      "symbol": "setPermission",
+      "spec": "docs/specs/spec-PRO-0049.md"
+    },
+    {
+      "line": 10,
+      "symbol": "d65dc1e",
+      "spec": "docs/specs/spec-PRO-0050.md"
+    },
+    {
+      "line": 109,
+      "symbol": "d65dc1e",
+      "spec": "docs/specs/spec-PRO-0050.md"
+    },
+    {
+      "line": 139,
+      "symbol": "unusable",
+      "spec": "docs/specs/spec-PRO-0050.md"
+    },
+    {
+      "line": 140,
+      "symbol": "installPath",
+      "spec": "docs/specs/spec-PRO-0050.md"
+    },
+    {
+      "line": 140,
+      "symbol": "selfReport",
+      "spec": "docs/specs/spec-PRO-0050.md"
+    },
+    {
+      "line": 150,
+      "symbol": "versionSource",
+      "spec": "docs/specs/spec-PRO-0050.md"
+    },
+    {
+      "line": 156,
+      "symbol": "usableConfirmed",
+      "spec": "docs/specs/spec-PRO-0050.md"
+    },
+    {
+      "line": 232,
+      "symbol": "SecStaticCode",
+      "spec": "docs/specs/spec-PRO-0050.md"
+    },
+    {
+      "line": 327,
+      "symbol": "unusable",
+      "spec": "docs/specs/spec-PRO-0050.md"
+    },
+    {
+      "line": 332,
+      "symbol": "unusable",
+      "spec": "docs/specs/spec-PRO-0050.md"
+    },
+    {
+      "line": 386,
+      "symbol": "xhigh",
+      "spec": "docs/specs/spec-PRO-0050.md"
+    },
+    {
+      "line": 397,
+      "symbol": "versionSource",
+      "spec": "docs/specs/spec-PRO-0050.md"
+    },
+    {
+      "line": 397,
+      "symbol": "versionSource",
+      "spec": "docs/specs/spec-PRO-0050.md"
+    },
+    {
+      "line": 398,
+      "symbol": "SessionDoctor",
+      "spec": "docs/specs/spec-PRO-0050.md"
+    },
+    {
+      "line": 408,
+      "symbol": "CuaClients",
+      "spec": "docs/specs/spec-PRO-0050.md"
+    },
+    {
+      "line": 408,
+      "symbol": "standardInput",
+      "spec": "docs/specs/spec-PRO-0050.md"
+    },
+    {
+      "line": 408,
+      "symbol": "standardOutput",
+      "spec": "docs/specs/spec-PRO-0050.md"
+    },
+    {
+      "line": 408,
+      "symbol": "standardError",
+      "spec": "docs/specs/spec-PRO-0050.md"
+    },
+    {
+      "line": 416,
+      "symbol": "installPath",
+      "spec": "docs/specs/spec-PRO-0050.md"
+    },
+    {
+      "line": 429,
+      "symbol": "d65dc1e",
+      "spec": "docs/specs/spec-PRO-0050.md"
+    },
+    {
+      "line": 433,
+      "symbol": "com.trycua.driver",
+      "spec": "docs/specs/spec-PRO-0050.md"
+    },
+    {
+      "line": 443,
+      "symbol": "popen",
+      "spec": "docs/specs/spec-PRO-0050.md"
+    },
+    {
+      "line": 481,
+      "symbol": "marketing",
+      "spec": "docs/specs/spec-PRO-0050.md"
+    },
+    {
+      "line": 10,
+      "symbol": "d65dc1e",
+      "spec": "docs/specs/spec-PRO-0051.md"
+    },
+    {
+      "line": 145,
+      "symbol": "com.trycua.driver",
+      "spec": "docs/specs/spec-PRO-0051.md"
+    },
+    {
+      "line": 233,
+      "symbol": "SessionFlow.requireSameBackend",
+      "spec": "docs/specs/spec-PRO-0051.md"
+    },
+    {
+      "line": 251,
+      "symbol": "SessionFlow.requireSameBackend",
+      "spec": "docs/specs/spec-PRO-0051.md"
+    },
+    {
+      "line": 271,
+      "symbol": "init",
+      "spec": "docs/specs/spec-PRO-0051.md"
+    },
+    {
+      "line": 295,
+      "symbol": "SessionFlow.requireSameBackend",
+      "spec": "docs/specs/spec-PRO-0051.md"
+    },
+    {
+      "line": 429,
+      "symbol": "init",
+      "spec": "docs/specs/spec-PRO-0051.md"
+    },
+    {
+      "line": 430,
+      "symbol": "init",
+      "spec": "docs/specs/spec-PRO-0051.md"
+    },
+    {
+      "line": 431,
+      "symbol": "ForegroundDisclosureTests.absentBlockDecodes",
+      "spec": "docs/specs/spec-PRO-0051.md"
+    },
+    {
+      "line": 450,
+      "symbol": "cuadriver",
+      "spec": "docs/specs/spec-PRO-0051.md"
+    },
+    {
+      "line": 4,
+      "symbol": "d6cf947",
+      "spec": "docs/specs/spec-PRO-0052.md"
+    },
+    {
+      "line": 231,
+      "symbol": "SessionAct.refusal(for:foreground:)",
+      "spec": "docs/specs/spec-PRO-0053.md"
+    },
+    {
+      "line": 268,
+      "symbol": "defer",
+      "spec": "docs/specs/spec-PRO-0053.md"
+    },
+    {
+      "line": 4,
+      "symbol": "a4483ec",
+      "spec": "docs/specs/spec-PRO-0054.md"
+    },
+    {
+      "line": 19,
+      "symbol": "SessionAct.refusal",
+      "spec": "docs/specs/spec-PRO-0054.md"
+    },
+    {
+      "line": 70,
+      "symbol": "SessionAct.refusal",
+      "spec": "docs/specs/spec-PRO-0054.md"
+    },
+    {
+      "line": 4,
+      "symbol": "e53176b",
+      "spec": "docs/specs/spec-PRO-0055.md"
+    },
+    {
+      "line": 14,
+      "symbol": "replayd",
+      "spec": "docs/specs/spec-PRO-0055.md"
+    },
+    {
+      "line": 16,
+      "symbol": "replayd",
+      "spec": "docs/specs/spec-PRO-0055.md"
+    },
+    {
+      "line": 45,
+      "symbol": "win11",
+      "spec": "docs/specs/spec-PRO-0056.md"
+    },
+    {
+      "line": 53,
+      "symbol": "SessionAct",
+      "spec": "docs/specs/spec-PRO-0056.md"
+    },
+    {
+      "line": 32,
+      "symbol": "SessionAssert",
+      "spec": "docs/specs/spec-PRO-0057.md"
+    },
+    {
+      "line": 50,
+      "symbol": "GuestInventoryTests",
+      "spec": "docs/specs/spec-PRO-0058.md"
+    },
+    {
+      "line": 54,
+      "symbol": "GuestProviderTests",
+      "spec": "docs/specs/spec-PRO-0058.md"
+    },
+    {
+      "line": 41,
+      "symbol": "GuestToolTests",
+      "spec": "docs/specs/spec-PRO-0059.md"
+    },
+    {
+      "line": 51,
+      "symbol": "GuestToolTests",
+      "spec": "docs/specs/spec-PRO-0060.md"
+    },
+    {
+      "line": 52,
+      "symbol": "ssh",
+      "spec": "docs/specs/spec-PRO-0060.md"
+    },
+    {
+      "line": 38,
+      "symbol": "RunHUDTests",
+      "spec": "docs/specs/spec-PRO-0062.md"
+    },
+    {
+      "line": 27,
+      "symbol": "ProctorTokens",
+      "spec": "docs/specs/spec-PRO-0064.md"
+    },
+    {
+      "line": 31,
+      "symbol": "kit",
+      "spec": "docs/specs/spec-PRO-0064.md"
+    },
+    {
+      "line": 31,
+      "symbol": "hig",
+      "spec": "docs/specs/spec-PRO-0064.md"
+    },
+    {
+      "line": 32,
+      "symbol": "brand",
+      "spec": "docs/specs/spec-PRO-0064.md"
+    },
+    {
+      "line": 33,
+      "symbol": "kit",
+      "spec": "docs/specs/spec-PRO-0064.md"
+    },
+    {
+      "line": 39,
+      "symbol": "ProctorTokens.accent(.light)",
+      "spec": "docs/specs/spec-PRO-0064.md"
+    },
+    {
+      "line": 59,
+      "symbol": "var()",
+      "spec": "docs/specs/spec-PRO-0064.md"
+    },
+    {
+      "line": 60,
+      "symbol": "oklch()",
+      "spec": "docs/specs/spec-PRO-0064.md"
+    },
+    {
+      "line": 68,
+      "symbol": "kit",
+      "spec": "docs/specs/spec-PRO-0064.md"
+    },
+    {
+      "line": 66,
+      "symbol": "CALayer",
+      "spec": "docs/specs/spec-PRO-0065.md"
+    },
+    {
+      "line": 27,
+      "symbol": "ProcessInfo",
+      "spec": "docs/specs/spec-PRO-0066.md"
+    },
+    {
+      "line": 73,
+      "symbol": "grep",
+      "spec": "docs/specs/spec-PRO-0066.md"
+    },
+    {
+      "line": 76,
+      "symbol": "system",
+      "spec": "docs/specs/spec-PRO-0066.md"
+    },
+    {
+      "line": 77,
+      "symbol": "punctuation",
+      "spec": "docs/specs/spec-PRO-0066.md"
+    },
+    {
+      "line": 129,
+      "symbol": "DecodingError",
+      "spec": "docs/specs/spec-PRO-0066.md"
+    },
+    {
+      "line": 22,
+      "symbol": "introSeen",
+      "spec": "docs/specs/spec-PRO-0067.md"
+    },
+    {
+      "line": 59,
+      "symbol": "continue",
+      "spec": "docs/specs/spec-PRO-0067.md"
+    },
+    {
+      "line": 59,
+      "symbol": "go",
+      "spec": "docs/specs/spec-PRO-0067.md"
+    },
+    {
+      "line": 59,
+      "symbol": "submit",
+      "spec": "docs/specs/spec-PRO-0067.md"
+    },
+    {
+      "line": 81,
+      "symbol": "walkthrough",
+      "spec": "docs/specs/spec-PRO-0067.md"
+    },
+    {
+      "line": 16,
+      "symbol": "MenuBarExtra",
+      "spec": "docs/specs/spec-PRO-0068.md"
+    },
+    {
+      "line": 39,
+      "symbol": "RunHUDMenuBar",
+      "spec": "docs/specs/spec-PRO-0068.md"
+    },
+    {
+      "line": 58,
+      "symbol": "hasLiveRun",
+      "spec": "docs/specs/spec-PRO-0068.md"
+    },
+    {
+      "line": 79,
+      "symbol": "tests",
+      "spec": "docs/specs/spec-PRO-0068.md"
+    },
+    {
+      "line": 61,
+      "symbol": "keylogger",
+      "spec": "docs/specs/spec-PRO-0072.md"
+    },
+    {
+      "line": 54,
+      "symbol": "or",
+      "spec": "docs/specs/spec-PRO-0073.md"
+    },
+    {
+      "line": 55,
+      "symbol": "isatty",
+      "spec": "docs/specs/spec-PRO-0073.md"
+    },
+    {
+      "line": 11,
+      "symbol": "StreamLocal",
+      "spec": "docs/specs/spec-PRO-0074.md"
+    },
+    {
+      "line": 28,
+      "symbol": "StreamLocal",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 33,
+      "symbol": "RunQueue",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 62,
+      "symbol": "Disk",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 62,
+      "symbol": "Accessed",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 63,
+      "symbol": "Memory",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 63,
+      "symbol": "Display",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 63,
+      "symbol": "CPU",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 64,
+      "symbol": "Disk",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 64,
+      "symbol": "DiskFormat",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 71,
+      "symbol": "prune",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 71,
+      "symbol": "rename",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 71,
+      "symbol": "export",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 109,
+      "symbol": "RunQueueError.timedOut",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 198,
+      "symbol": "cdaeea0",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 199,
+      "symbol": "xhigh",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 260,
+      "symbol": "await",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 266,
+      "symbol": "xhigh",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 287,
+      "symbol": "stopGuestAfterFailedAttach",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 317,
+      "symbol": "sshd",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 318,
+      "symbol": "admin",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 348,
+      "symbol": "ssh",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 473,
+      "symbol": "anvil",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 473,
+      "symbol": "ShadowHashData",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 526,
+      "symbol": "StreamLocal",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 533,
+      "symbol": "ssh",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 533,
+      "symbol": "ssh",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 559,
+      "symbol": "fatalError",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 570,
+      "symbol": "SessionHUD.hudStatus()",
+      "spec": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "line": 6,
+      "symbol": "subprocess",
+      "spec": "docs/specs/spec-PRO-0077.md"
+    },
+    {
+      "line": 6,
+      "symbol": "ipc",
+      "spec": "docs/specs/spec-PRO-0077.md"
+    },
+    {
+      "line": 56,
+      "symbol": "dtrace",
+      "spec": "docs/specs/spec-PRO-0077.md"
+    },
+    {
+      "line": 56,
+      "symbol": "eslogger",
+      "spec": "docs/specs/spec-PRO-0077.md"
+    },
+    {
+      "line": 64,
+      "symbol": "subprocess",
+      "spec": "docs/specs/spec-PRO-0077.md"
+    },
+    {
+      "line": 67,
+      "symbol": "init(executable:timeoutMs:run:)",
+      "spec": "docs/specs/spec-PRO-0077.md"
+    },
+    {
+      "line": 86,
+      "symbol": "subprocess",
+      "spec": "docs/specs/spec-PRO-0077.md"
+    },
+    {
+      "line": 106,
+      "symbol": "Darwin.write",
+      "spec": "docs/specs/spec-PRO-0077.md"
+    },
+    {
+      "line": 107,
+      "symbol": "fsync",
+      "spec": "docs/specs/spec-PRO-0077.md"
+    },
+    {
+      "line": 110,
+      "symbol": "FileHandle",
+      "spec": "docs/specs/spec-PRO-0077.md"
+    },
+    {
+      "line": 119,
+      "symbol": "ipc",
+      "spec": "docs/specs/spec-PRO-0077.md"
+    },
+    {
+      "line": 121,
+      "symbol": "Darwin.bind",
+      "spec": "docs/specs/spec-PRO-0077.md"
+    },
+    {
+      "line": 124,
+      "symbol": "Darwin.connect",
+      "spec": "docs/specs/spec-PRO-0077.md"
+    },
+    {
+      "line": 136,
+      "symbol": "unlink",
+      "spec": "docs/specs/spec-PRO-0077.md"
+    },
+    {
+      "line": 137,
+      "symbol": "Darwin.connect",
+      "spec": "docs/specs/spec-PRO-0077.md"
+    },
+    {
+      "line": 143,
+      "symbol": "xhigh",
+      "spec": "docs/specs/spec-PRO-0077.md"
+    },
+    {
+      "line": 143,
+      "symbol": "onAccept",
+      "spec": "docs/specs/spec-PRO-0077.md"
+    },
+    {
+      "line": 152,
+      "symbol": "execve",
+      "spec": "docs/specs/spec-PRO-0077.md"
+    },
+    {
+      "line": 152,
+      "symbol": "bpf",
+      "spec": "docs/specs/spec-PRO-0077.md"
+    },
+    {
+      "line": 152,
+      "symbol": "eslogger",
+      "spec": "docs/specs/spec-PRO-0077.md"
+    },
+    {
+      "line": 179,
+      "symbol": "subprocess",
+      "spec": "docs/specs/spec-PRO-0077.md"
+    },
+    {
+      "line": 180,
+      "symbol": "subprocess",
+      "spec": "docs/specs/spec-PRO-0077.md"
+    },
+    {
+      "line": 181,
+      "symbol": "FileHandle",
+      "spec": "docs/specs/spec-PRO-0077.md"
+    },
+    {
+      "line": 182,
+      "symbol": "ipc",
+      "spec": "docs/specs/spec-PRO-0077.md"
+    },
+    {
+      "line": 20,
+      "symbol": "ipc",
+      "spec": "docs/specs/spec-PRO-0078.md"
+    },
+    {
+      "line": 21,
+      "symbol": "ipc",
+      "spec": "docs/specs/spec-PRO-0078.md"
+    },
+    {
+      "line": 22,
+      "symbol": "ipc",
+      "spec": "docs/specs/spec-PRO-0078.md"
+    },
+    {
+      "line": 23,
+      "symbol": "ipc",
+      "spec": "docs/specs/spec-PRO-0078.md"
+    },
+    {
+      "line": 47,
+      "symbol": "laneProof",
+      "spec": "docs/specs/spec-PRO-0078.md"
+    },
+    {
+      "line": 79,
+      "symbol": "sharingState",
+      "spec": "docs/specs/spec-PRO-0078.md"
+    },
+    {
+      "line": 166,
+      "symbol": "dtrace",
+      "spec": "docs/specs/spec-PRO-0078.md"
+    },
+    {
+      "line": 210,
+      "symbol": "witnessed",
+      "spec": "docs/specs/spec-PRO-0078.md"
+    },
+    {
+      "line": 234,
+      "symbol": "xhigh",
+      "spec": "docs/specs/spec-PRO-0078.md"
+    },
+    {
+      "line": 236,
+      "symbol": "high",
+      "spec": "docs/specs/spec-PRO-0078.md"
+    },
+    {
+      "line": 248,
+      "symbol": "CGWindowListCreateImage",
+      "spec": "docs/specs/spec-PRO-0078.md"
+    },
+    {
+      "line": 75,
+      "symbol": "blindVocabulary",
+      "spec": "docs/specs/spec-PRO-0079.md"
+    },
+    {
+      "line": 84,
+      "symbol": "campaign.json.blindVocabulary.why",
+      "spec": "docs/specs/spec-PRO-0079.md"
+    },
+    {
+      "line": 15,
+      "symbol": "blind",
+      "spec": "docs/specs/spec-PRO-0080.md"
+    },
+    {
+      "line": 58,
+      "symbol": "subprocess",
+      "spec": "docs/specs/spec-PRO-0080.md"
+    },
+    {
+      "line": 66,
+      "symbol": "uncensused",
+      "spec": "docs/specs/spec-PRO-0080.md"
+    },
+    {
+      "line": 67,
+      "symbol": "uncensused",
+      "spec": "docs/specs/spec-PRO-0080.md"
+    },
+    {
+      "line": 67,
+      "symbol": "uncensused",
+      "spec": "docs/specs/spec-PRO-0080.md"
+    },
+    {
+      "line": 70,
+      "symbol": "unclassed",
+      "spec": "docs/specs/spec-PRO-0080.md"
+    },
+    {
+      "line": 70,
+      "symbol": "uncensused",
+      "spec": "docs/specs/spec-PRO-0080.md"
+    },
+    {
+      "line": 75,
+      "symbol": "unclassed",
+      "spec": "docs/specs/spec-PRO-0080.md"
+    },
+    {
+      "line": 84,
+      "symbol": "unclassed",
+      "spec": "docs/specs/spec-PRO-0080.md"
+    },
+    {
+      "line": 85,
+      "symbol": "virtualized",
+      "spec": "docs/specs/spec-PRO-0080.md"
+    },
+    {
+      "line": 86,
+      "symbol": "unclassed",
+      "spec": "docs/specs/spec-PRO-0080.md"
+    },
+    {
+      "line": 121,
+      "symbol": "sites",
+      "spec": "docs/specs/spec-PRO-0080.md"
+    },
+    {
+      "line": 158,
+      "symbol": "unclassed",
+      "spec": "docs/specs/spec-PRO-0080.md"
+    },
+    {
+      "line": 34,
+      "symbol": "walkthrough",
+      "spec": "docs/specs/spec-PRO-0081.md"
+    },
+    {
+      "line": 49,
+      "symbol": "grep",
+      "spec": "docs/specs/spec-PRO-0081.md"
+    },
+    {
+      "line": 56,
+      "symbol": "system",
+      "spec": "docs/specs/spec-PRO-0081.md"
+    },
+    {
+      "line": 56,
+      "symbol": "sysctlbyname",
+      "spec": "docs/specs/spec-PRO-0081.md"
+    },
+    {
+      "line": 56,
+      "symbol": "appendingPathComponent",
+      "spec": "docs/specs/spec-PRO-0081.md"
+    },
+    {
+      "line": 56,
+      "symbol": "openWindow(id:)",
+      "spec": "docs/specs/spec-PRO-0081.md"
+    },
+    {
+      "line": 58,
+      "symbol": "punctuation",
+      "spec": "docs/specs/spec-PRO-0081.md"
+    },
+    {
+      "line": 51,
+      "symbol": "headless",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 56,
+      "symbol": "DEBUG",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 61,
+      "symbol": "ipc",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 75,
+      "symbol": "FileHandle",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 89,
+      "symbol": "ipc",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 97,
+      "symbol": "waitpid",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 103,
+      "symbol": "ipc",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 116,
+      "symbol": "ipc",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 130,
+      "symbol": "ipc",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 133,
+      "symbol": "isChecking",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 136,
+      "symbol": "Darwin.bind",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 136,
+      "symbol": "accept",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 144,
+      "symbol": "ipc",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 157,
+      "symbol": "subprocess",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 175,
+      "symbol": "subprocess",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 177,
+      "symbol": "subprocess",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 183,
+      "symbol": "SessionAct",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 186,
+      "symbol": "isExecutable(path)",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 191,
+      "symbol": "subprocess",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 191,
+      "symbol": "multicast",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 192,
+      "symbol": "ipc",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 210,
+      "symbol": "ipc",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 242,
+      "symbol": "sharingState",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 242,
+      "symbol": "screencapture",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 244,
+      "symbol": "sharingState",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 256,
+      "symbol": "isOpaque",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 256,
+      "symbol": "hasShadow",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 256,
+      "symbol": "isFloatingPanel",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 257,
+      "symbol": "hidesOnDeactivate",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 257,
+      "symbol": "isReleasedWhenClosed",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 258,
+      "symbol": "collectionBehavior",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 258,
+      "symbol": "sharingType",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 274,
+      "symbol": "waitpid",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 314,
+      "symbol": "ipc",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 314,
+      "symbol": "FileHandle",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 315,
+      "symbol": "ipc",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 315,
+      "symbol": "waitpid",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 316,
+      "symbol": "ipc",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 317,
+      "symbol": "ipc",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 318,
+      "symbol": "ipc",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 319,
+      "symbol": "ipc",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 320,
+      "symbol": "subprocess",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 321,
+      "symbol": "subprocess",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 322,
+      "symbol": "ipc",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 323,
+      "symbol": "CGImageSource",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 339,
+      "symbol": "System",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 349,
+      "symbol": "sharingState",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 359,
+      "symbol": "DEBUG",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 374,
+      "symbol": "SecStaticCodeCheckValidity",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 388,
+      "symbol": "W7",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 392,
+      "symbol": "SecStaticCodeCheckValidity",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 432,
+      "symbol": "syspolicyd",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 434,
+      "symbol": "SecStaticCodeCheckValidity",
+      "spec": "docs/specs/spec-PRO-0083.md"
+    },
+    {
+      "line": 26,
+      "symbol": "Overlay",
+      "spec": "docs/specs/spec-PRO-0084.md"
+    },
+    {
+      "line": 26,
+      "symbol": "OverlayView",
+      "spec": "docs/specs/spec-PRO-0084.md"
+    },
+    {
+      "line": 28,
+      "symbol": "launchd",
+      "spec": "docs/specs/spec-PRO-0084.md"
+    },
+    {
+      "line": 32,
+      "symbol": "testmanagerd",
+      "spec": "docs/specs/spec-PRO-0084.md"
+    },
+    {
+      "line": 127,
+      "symbol": "SessionAct",
+      "spec": "docs/specs/spec-PRO-0084.md"
+    },
+    {
+      "line": 78,
+      "symbol": "provision",
+      "spec": "docs/specs/spec-PRO-0085.md"
+    },
+    {
+      "line": 82,
+      "symbol": "provision",
+      "spec": "docs/specs/spec-PRO-0085.md"
+    },
+    {
+      "line": 190,
+      "symbol": "provision",
+      "spec": "docs/specs/spec-PRO-0085.md"
+    },
+    {
+      "line": 191,
+      "symbol": "ToolProfiles",
+      "spec": "docs/specs/spec-PRO-0085.md"
+    },
+    {
+      "line": 205,
+      "symbol": "provision",
+      "spec": "docs/specs/spec-PRO-0085.md"
+    },
+    {
+      "line": 239,
+      "symbol": "and",
+      "spec": "docs/specs/spec-PRO-0085.md"
+    },
+    {
+      "line": 15,
+      "symbol": "SecStaticCodeCheckValidity",
+      "spec": "docs/specs/spec-PRO-0087.md"
+    },
+    {
+      "line": 24,
+      "symbol": "SecStaticCodeCheckValidity",
+      "spec": "docs/specs/spec-PRO-0087.md"
+    },
+    {
+      "line": 39,
+      "symbol": "async",
+      "spec": "docs/specs/spec-PRO-0087.md"
+    },
+    {
+      "line": 40,
+      "symbol": "Thread",
+      "spec": "docs/specs/spec-PRO-0087.md"
+    },
+    {
+      "line": 46,
+      "symbol": "init(identify:verify:)",
+      "spec": "docs/specs/spec-PRO-0087.md"
+    },
+    {
+      "line": 93,
+      "symbol": "SessionDoctor",
+      "spec": "docs/specs/spec-PRO-0087.md"
+    },
+    {
+      "line": 13,
+      "symbol": "RGBA(0,0,0,0)",
+      "spec": "docs/specs/spec-PRO-0088.md"
+    },
+    {
+      "line": 28,
+      "symbol": "sharingType",
+      "spec": "docs/specs/spec-PRO-0088.md"
+    },
+    {
+      "line": 36,
+      "symbol": "owningApplication",
+      "spec": "docs/specs/spec-PRO-0088.md"
+    },
+    {
+      "line": 47,
+      "symbol": "SessionAssert",
+      "spec": "docs/specs/spec-PRO-0088.md"
+    },
+    {
+      "line": 58,
+      "symbol": "sharingType",
+      "spec": "docs/specs/spec-PRO-0088.md"
+    },
+    {
+      "line": 75,
+      "symbol": "agy",
+      "spec": "docs/specs/spec-PRO-0088.md"
+    },
+    {
+      "line": 112,
+      "symbol": "sharingType",
+      "spec": "docs/specs/spec-PRO-0088.md"
+    },
+    {
+      "line": 16,
+      "symbol": "homeDirectoryForCurrentUser",
+      "spec": "docs/specs/spec-PRO-0089.md"
+    },
+    {
+      "line": 34,
+      "symbol": "timeIntervalSince",
+      "spec": "docs/specs/spec-PRO-0089.md"
+    },
+    {
+      "line": 34,
+      "symbol": "DispatchTime.now",
+      "spec": "docs/specs/spec-PRO-0089.md"
+    },
+    {
+      "line": 35,
+      "symbol": "ContinuousClock",
+      "spec": "docs/specs/spec-PRO-0089.md"
+    },
+    {
+      "line": 35,
+      "symbol": "SuspendingClock",
+      "spec": "docs/specs/spec-PRO-0089.md"
+    },
+    {
+      "line": 35,
+      "symbol": "uptimeNanoseconds",
+      "spec": "docs/specs/spec-PRO-0089.md"
+    },
+    {
+      "line": 52,
+      "symbol": "struct",
+      "spec": "docs/specs/spec-PRO-0089.md"
+    },
+    {
+      "line": 103,
+      "symbol": "grep",
+      "spec": "docs/specs/spec-PRO-0089.md"
+    },
+    {
+      "line": 9,
+      "symbol": "bed92f0",
+      "spec": "docs/specs/spec-PRO-0090.md"
+    },
+    {
+      "line": 112,
+      "symbol": "bed92f0",
+      "spec": "docs/specs/spec-PRO-0090.md"
+    },
+    {
+      "line": 36,
+      "symbol": "vacuous",
+      "spec": "docs/specs/spec-PRO-0091.md"
+    },
+    {
+      "line": 59,
+      "symbol": "structural",
+      "spec": "docs/specs/spec-PRO-0091.md"
+    },
+    {
+      "line": 64,
+      "symbol": "f37255f",
+      "spec": "docs/specs/spec-PRO-0091.md"
+    },
+    {
+      "line": 75,
+      "symbol": "vacuous",
+      "spec": "docs/specs/spec-PRO-0091.md"
+    },
+    {
+      "line": 22,
+      "symbol": "SessionMaestro",
+      "spec": "docs/specs/spec-PRO-0092.md"
+    },
+    {
+      "line": 117,
+      "symbol": "equivalent",
+      "spec": "docs/specs/spec-PRO-0092.md"
+    },
+    {
+      "line": 121,
+      "symbol": "equivalent",
+      "spec": "docs/specs/spec-PRO-0092.md"
+    },
+    {
+      "line": 132,
+      "symbol": "eb28a5b",
+      "spec": "docs/specs/spec-PRO-0092.md"
+    },
+    {
+      "line": 206,
+      "symbol": "killed",
+      "spec": "docs/specs/spec-PRO-0092.md"
+    },
+    {
+      "line": 206,
+      "symbol": "TIMEOUT",
+      "spec": "docs/specs/spec-PRO-0092.md"
+    },
+    {
+      "line": 220,
+      "symbol": "eed148f",
+      "spec": "docs/specs/spec-PRO-0092.md"
+    },
+    {
+      "line": 237,
+      "symbol": "a2e675c",
+      "spec": "docs/specs/spec-PRO-0092.md"
+    },
+    {
+      "line": 245,
+      "symbol": "eed148f",
+      "spec": "docs/specs/spec-PRO-0092.md"
+    },
+    {
+      "line": 295,
+      "symbol": "equivalent",
+      "spec": "docs/specs/spec-PRO-0092.md"
+    },
+    {
+      "line": 296,
+      "symbol": "equivalent",
+      "spec": "docs/specs/spec-PRO-0092.md"
+    },
+    {
+      "line": 299,
+      "symbol": "killed",
+      "spec": "docs/specs/spec-PRO-0092.md"
+    },
+    {
+      "line": 299,
+      "symbol": "TIMEOUT",
+      "spec": "docs/specs/spec-PRO-0092.md"
+    },
+    {
+      "line": 299,
+      "symbol": "killed",
+      "spec": "docs/specs/spec-PRO-0092.md"
+    },
+    {
+      "line": 35,
+      "symbol": "a45b",
+      "spec": "docs/specs/spec-PRO-0093.md"
+    },
+    {
+      "line": 54,
+      "symbol": "SessionAct",
+      "spec": "docs/specs/spec-PRO-0093.md"
+    },
+    {
+      "line": 55,
+      "symbol": "a45b",
+      "spec": "docs/specs/spec-PRO-0093.md"
+    },
+    {
+      "line": 74,
+      "symbol": "ESRCH",
+      "spec": "docs/specs/spec-PRO-0093.md"
+    },
+    {
+      "line": 53,
+      "symbol": "agy",
+      "spec": "docs/specs/spec-PRO-0094.md"
+    },
+    {
+      "line": 102,
+      "symbol": "productVersion",
+      "spec": "docs/specs/spec-PRO-0094.md"
+    },
+    {
+      "line": 119,
+      "symbol": "SessionGuest.guestStatus",
+      "spec": "docs/specs/spec-PRO-0094.md"
+    },
+    {
+      "line": 119,
+      "symbol": "productVersion",
+      "spec": "docs/specs/spec-PRO-0094.md"
+    },
+    {
+      "line": 120,
+      "symbol": "SessionGuest.guestOSVersion",
+      "spec": "docs/specs/spec-PRO-0094.md"
+    },
+    {
+      "line": 125,
+      "symbol": "SessionGuest.resolvedGuestProviders",
+      "spec": "docs/specs/spec-PRO-0094.md"
+    },
+    {
+      "line": 146,
+      "symbol": "FB21748086",
+      "spec": "docs/specs/spec-PRO-0094.md"
+    },
+    {
+      "line": 229,
+      "symbol": "FB21748086",
+      "spec": "docs/specs/spec-PRO-0094.md"
+    },
+    {
+      "line": 272,
+      "symbol": "agy",
+      "spec": "docs/specs/spec-PRO-0094.md"
+    },
+    {
+      "line": 27,
+      "symbol": "chmod",
+      "spec": "docs/specs/spec-PRO-0095.md"
+    },
+    {
+      "line": 34,
+      "symbol": "replaceItemAt",
+      "spec": "docs/specs/spec-PRO-0095.md"
+    },
+    {
+      "line": 70,
+      "symbol": "SecStaticCodeCheckValidity",
+      "spec": "docs/specs/spec-PRO-0095.md"
+    },
+    {
+      "line": 71,
+      "symbol": "async",
+      "spec": "docs/specs/spec-PRO-0095.md"
+    },
+    {
+      "line": 73,
+      "symbol": "Thread",
+      "spec": "docs/specs/spec-PRO-0095.md"
+    },
+    {
+      "line": 93,
+      "symbol": "readlink",
+      "spec": "docs/specs/spec-PRO-0095.md"
+    },
+    {
+      "line": 94,
+      "symbol": "xcodebuild",
+      "spec": "docs/specs/spec-PRO-0095.md"
+    },
+    {
+      "line": 104,
+      "symbol": "umask(0)",
+      "spec": "docs/specs/spec-PRO-0095.md"
+    },
+    {
+      "line": 21,
+      "symbol": "analyzer",
+      "spec": "docs/specs/spec-PRO-0096.md"
+    },
+    {
+      "line": 21,
+      "symbol": "examined",
+      "spec": "docs/specs/spec-PRO-0096.md"
+    },
+    {
+      "line": 22,
+      "symbol": "examined",
+      "spec": "docs/specs/spec-PRO-0096.md"
+    },
+    {
+      "line": 48,
+      "symbol": "armedBy",
+      "spec": "docs/specs/spec-PRO-0096.md"
+    },
+    {
+      "line": 55,
+      "symbol": "metamorphic",
+      "spec": "docs/specs/spec-PRO-0096.md"
+    },
+    {
+      "line": 62,
+      "symbol": "FileHandle",
+      "spec": "docs/specs/spec-PRO-0096.md"
+    },
+    {
+      "line": 62,
+      "symbol": "ipc",
+      "spec": "docs/specs/spec-PRO-0096.md"
+    },
+    {
+      "line": 14,
+      "symbol": "vacuous",
+      "spec": "docs/specs/spec-PRO-0097.md"
+    },
+    {
+      "line": 16,
+      "symbol": "witness",
+      "spec": "docs/specs/spec-PRO-0097.md"
+    },
+    {
+      "line": 82,
+      "symbol": "vacuous",
+      "spec": "docs/specs/spec-PRO-0097.md"
+    },
+    {
+      "line": 83,
+      "symbol": "witness",
+      "spec": "docs/specs/spec-PRO-0097.md"
+    },
+    {
+      "line": 87,
+      "symbol": "armedBy",
+      "spec": "docs/specs/spec-PRO-0097.md"
+    },
+    {
+      "line": 104,
+      "symbol": "attributesOfItem",
+      "spec": "docs/specs/spec-PRO-0098.md"
+    },
+    {
+      "line": 104,
+      "symbol": "Darwin.open",
+      "spec": "docs/specs/spec-PRO-0098.md"
+    },
+    {
+      "line": 155,
+      "symbol": "atime",
+      "spec": "docs/specs/spec-PRO-0098.md"
+    },
+    {
+      "line": 61,
+      "symbol": "ProcessInfo",
+      "spec": "docs/specs/spec-PRO-0099.md"
+    },
+    {
+      "line": 100,
+      "symbol": "census",
+      "spec": "docs/specs/spec-PRO-0099.md"
+    },
+    {
+      "line": 110,
+      "symbol": "parameterised",
+      "spec": "docs/specs/spec-PRO-0099.md"
+    },
+    {
+      "line": 182,
+      "symbol": "mkdir",
+      "spec": "docs/specs/spec-PRO-0099.md"
+    },
+    {
+      "line": 118,
+      "symbol": "a15febf",
+      "spec": "docs/specs/spec-PRO-0100.md"
+    },
+    {
+      "line": 169,
+      "symbol": "ViewModifier",
+      "spec": "docs/specs/spec-PRO-0100.md"
+    },
+    {
+      "line": 194,
+      "symbol": "armedBy",
+      "spec": "docs/specs/spec-PRO-0100.md"
+    },
+    {
+      "line": 224,
+      "symbol": "census",
+      "spec": "docs/specs/spec-PRO-0100.md"
+    },
+    {
+      "line": 242,
+      "symbol": "a33ac1c",
+      "spec": "docs/specs/spec-PRO-0100.md"
+    },
+    {
+      "line": 259,
+      "symbol": "do",
+      "spec": "docs/specs/spec-PRO-0100.md"
+    },
+    {
+      "line": 260,
+      "symbol": "catch",
+      "spec": "docs/specs/spec-PRO-0100.md"
+    },
+    {
+      "line": 264,
+      "symbol": "withUnsafeBytes",
+      "spec": "docs/specs/spec-PRO-0100.md"
+    },
+    {
+      "line": 284,
+      "symbol": "UNPROVEN",
+      "spec": "docs/specs/spec-PRO-0100.md"
+    },
+    {
+      "line": 285,
+      "symbol": "do",
+      "spec": "docs/specs/spec-PRO-0100.md"
+    },
+    {
+      "line": 285,
+      "symbol": "catch",
+      "spec": "docs/specs/spec-PRO-0100.md"
+    },
+    {
+      "line": 127,
+      "symbol": "a15febf",
+      "spec": "docs/specs/spec-PRO-0101.md"
+    },
+    {
+      "line": 127,
+      "symbol": "shipyard",
+      "spec": "docs/specs/spec-PRO-0101.md"
+    },
+    {
+      "line": 223,
+      "symbol": "f600731",
+      "spec": "docs/specs/spec-PRO-0101.md"
+    },
+    {
+      "line": 232,
+      "symbol": "comm",
+      "spec": "docs/specs/spec-PRO-0101.md"
+    },
+    {
+      "line": 238,
+      "symbol": "edit",
+      "spec": "docs/specs/spec-PRO-0101.md"
+    },
+    {
+      "line": 99,
+      "symbol": "a15febf",
+      "spec": "docs/specs/spec-PRO-0102.md"
+    },
+    {
+      "line": 103,
+      "symbol": "unbuilt",
+      "spec": "docs/specs/spec-PRO-0102.md"
+    },
+    {
+      "line": 103,
+      "symbol": "CLASSES",
+      "spec": "docs/specs/spec-PRO-0102.md"
+    },
+    {
+      "line": 103,
+      "symbol": "unjoined",
+      "spec": "docs/specs/spec-PRO-0102.md"
+    },
+    {
+      "line": 116,
+      "symbol": "reckon",
+      "spec": "docs/specs/spec-PRO-0102.md"
+    },
+    {
+      "line": 118,
+      "symbol": "a15febf",
+      "spec": "docs/specs/spec-PRO-0102.md"
+    },
+    {
+      "line": 135,
+      "symbol": "reckon",
+      "spec": "docs/specs/spec-PRO-0102.md"
+    },
+    {
+      "line": 173,
+      "symbol": "reckon.CLASSES",
+      "spec": "docs/specs/spec-PRO-0102.md"
+    },
+    {
+      "line": 187,
+      "symbol": "c1132ea",
+      "spec": "docs/specs/spec-PRO-0102.md"
+    },
+    {
+      "line": 197,
+      "symbol": "fc86fe7",
+      "spec": "docs/specs/spec-PRO-0102.md"
+    },
+    {
+      "line": 220,
+      "symbol": "reckon.classify()",
+      "spec": "docs/specs/spec-PRO-0102.md"
+    },
+    {
+      "line": 246,
+      "symbol": "fc86fe7",
+      "spec": "docs/specs/spec-PRO-0102.md"
+    },
+    {
+      "line": 265,
+      "symbol": "classify()",
+      "spec": "docs/specs/spec-PRO-0102.md"
+    },
+    {
+      "line": 271,
+      "symbol": "unbuilt",
+      "spec": "docs/specs/spec-PRO-0102.md"
+    },
+    {
+      "line": 273,
+      "symbol": "unbuilt",
+      "spec": "docs/specs/spec-PRO-0102.md"
+    },
+    {
+      "line": 281,
+      "symbol": "unbuilt",
+      "spec": "docs/specs/spec-PRO-0102.md"
+    },
+    {
+      "line": 284,
+      "symbol": "obsolete",
+      "spec": "docs/specs/spec-PRO-0102.md"
+    },
+    {
+      "line": 284,
+      "symbol": "superseded",
+      "spec": "docs/specs/spec-PRO-0102.md"
+    },
+    {
+      "line": 287,
+      "symbol": "Cases",
+      "spec": "docs/specs/spec-PRO-0102.md"
+    },
+    {
+      "line": 110,
+      "symbol": "ratchet",
+      "spec": "docs/specs/spec-PRO-0103.md"
+    },
+    {
+      "line": 127,
+      "symbol": "grok",
+      "spec": "docs/specs/spec-PRO-0103.md"
+    },
+    {
+      "line": 198,
+      "symbol": "transcribed",
+      "spec": "docs/specs/spec-PRO-0103.md"
+    },
+    {
+      "line": 201,
+      "symbol": "reckon",
+      "spec": "docs/specs/spec-PRO-0103.md"
+    },
+    {
+      "line": 222,
+      "symbol": "reckon",
+      "spec": "docs/specs/spec-PRO-0103.md"
+    },
+    {
+      "line": 223,
+      "symbol": "reckon",
+      "spec": "docs/specs/spec-PRO-0103.md"
+    },
+    {
+      "line": 259,
+      "symbol": "reckon",
+      "spec": "docs/specs/spec-PRO-0103.md"
+    },
+    {
+      "line": 263,
+      "symbol": "reckon",
+      "spec": "docs/specs/spec-PRO-0103.md"
+    },
+    {
+      "line": 289,
+      "symbol": "grok",
+      "spec": "docs/specs/spec-PRO-0103.md"
+    },
+    {
+      "line": 330,
+      "symbol": "unbuilt",
+      "spec": "docs/specs/spec-PRO-0103.md"
+    },
+    {
+      "line": 330,
+      "symbol": "unjoined",
+      "spec": "docs/specs/spec-PRO-0103.md"
+    },
+    {
+      "line": 330,
+      "symbol": "unjoined",
+      "spec": "docs/specs/spec-PRO-0103.md"
+    },
+    {
+      "line": 345,
+      "symbol": "classify()",
+      "spec": "docs/specs/spec-PRO-0103.md"
+    },
+    {
+      "line": 345,
+      "symbol": "unjoined",
+      "spec": "docs/specs/spec-PRO-0103.md"
+    },
+    {
+      "line": 351,
+      "symbol": "git()",
+      "spec": "docs/specs/spec-PRO-0103.md"
+    },
+    {
+      "line": 52,
+      "symbol": "Brief",
+      "spec": "docs/specs/spec-PRO-0104.md"
+    },
+    {
+      "line": 52,
+      "symbol": "Supersedes",
+      "spec": "docs/specs/spec-PRO-0104.md"
+    },
+    {
+      "line": 52,
+      "symbol": "Direction",
+      "spec": "docs/specs/spec-PRO-0104.md"
+    },
+    {
+      "line": 62,
+      "symbol": "citable",
+      "spec": "docs/specs/spec-PRO-0104.md"
+    },
+    {
+      "line": 84,
+      "symbol": "a2d4db1",
+      "spec": "docs/specs/spec-PRO-0104.md"
+    },
+    {
+      "line": 87,
+      "symbol": "waived",
+      "spec": "docs/specs/spec-PRO-0104.md"
+    },
+    {
+      "line": 91,
+      "symbol": "citable",
+      "spec": "docs/specs/spec-PRO-0104.md"
+    },
+    {
+      "line": 91,
+      "symbol": "references",
+      "spec": "docs/specs/spec-PRO-0104.md"
+    },
+    {
+      "line": 128,
+      "symbol": "Brief",
+      "spec": "docs/specs/spec-PRO-0104.md"
+    },
+    {
+      "line": 128,
+      "symbol": "Direction",
+      "spec": "docs/specs/spec-PRO-0104.md"
+    },
+    {
+      "line": 129,
+      "symbol": "Supersedes",
+      "spec": "docs/specs/spec-PRO-0104.md"
+    },
+    {
+      "line": 152,
+      "symbol": "vacuous",
+      "spec": "docs/specs/spec-PRO-0104.md"
+    },
+    {
+      "line": 192,
+      "symbol": "citable",
+      "spec": "docs/specs/spec-PRO-0104.md"
+    },
+    {
+      "line": 192,
+      "symbol": "references",
+      "spec": "docs/specs/spec-PRO-0104.md"
+    },
+    {
+      "line": 15,
+      "symbol": "reckon",
+      "spec": "docs/specs/spec-PRO-0105.md"
+    },
+    {
+      "line": 17,
+      "symbol": "unjoined",
+      "spec": "docs/specs/spec-PRO-0105.md"
+    },
+    {
+      "line": 74,
+      "symbol": "git()",
+      "spec": "docs/specs/spec-PRO-0106.md"
+    },
+    {
+      "line": 87,
+      "symbol": "killed",
+      "spec": "docs/specs/spec-PRO-0106.md"
+    },
+    {
+      "line": 102,
+      "symbol": "mock",
+      "spec": "docs/specs/spec-PRO-0106.md"
+    },
+    {
+      "line": 108,
+      "symbol": "redundantFiles",
+      "spec": "docs/specs/spec-PRO-0106.md"
+    },
+    {
+      "line": 165,
+      "symbol": "revert()",
+      "spec": "docs/specs/spec-PRO-0106.md"
+    },
+    {
+      "line": 241,
+      "symbol": "citations",
+      "spec": "docs/specs/spec-PRO-0106.md"
+    },
+    {
+      "line": 243,
+      "symbol": "R",
+      "spec": "docs/specs/spec-PRO-0106.md"
+    },
+    {
+      "line": 243,
+      "symbol": "mv",
+      "spec": "docs/specs/spec-PRO-0106.md"
+    },
+    {
+      "line": 243,
+      "symbol": "D",
+      "spec": "docs/specs/spec-PRO-0106.md"
+    },
+    {
+      "line": 257,
+      "symbol": "UnicodeDecodeError",
+      "spec": "docs/specs/spec-PRO-0106.md"
+    },
+    {
+      "line": 259,
+      "symbol": "surrogateescape",
+      "spec": "docs/specs/spec-PRO-0106.md"
+    },
+    {
+      "line": 298,
+      "symbol": "returncode",
+      "spec": "docs/specs/spec-PRO-0106.md"
+    },
+    {
+      "line": 23,
+      "symbol": "dd1a443",
+      "spec": "docs/specs/spec-PRO-0107.md"
+    },
+    {
+      "line": 23,
+      "symbol": "eed148f",
+      "spec": "docs/specs/spec-PRO-0107.md"
+    },
+    {
+      "line": 29,
+      "symbol": "unpublishedReason",
+      "spec": "docs/specs/spec-PRO-0107.md"
+    },
+    {
+      "line": 45,
+      "symbol": "unpublishedReason",
+      "spec": "docs/specs/spec-PRO-0107.md"
+    },
+    {
+      "line": 94,
+      "symbol": "framesThatWereNotEvidence",
+      "spec": "docs/specs/spec-PRO-0107.md"
+    },
+    {
+      "line": 104,
+      "symbol": "depicts",
+      "spec": "docs/specs/spec-PRO-0107.md"
+    },
+    {
+      "line": 113,
+      "symbol": "unpublishedReason",
+      "spec": "docs/specs/spec-PRO-0107.md"
+    },
+    {
+      "line": 198,
+      "symbol": "sys.exit()",
+      "spec": "docs/specs/spec-PRO-0107.md"
+    },
+    {
+      "line": 235,
+      "symbol": "unpublishedReason",
+      "spec": "docs/specs/spec-PRO-0107.md"
+    },
+    {
+      "line": 254,
+      "symbol": "statusShot",
+      "spec": "docs/specs/spec-PRO-0107.md"
+    },
+    {
+      "line": 263,
+      "symbol": "unpublishedReason",
+      "spec": "docs/specs/spec-PRO-0107.md"
+    },
+    {
+      "line": 15,
+      "symbol": "reckon",
+      "spec": "docs/specs/spec-PRO-0108.md"
+    },
+    {
+      "line": 30,
+      "symbol": "unjoined",
+      "spec": "docs/specs/spec-PRO-0108.md"
+    },
+    {
+      "line": 12,
+      "symbol": "unpublishedReason",
+      "spec": "docs/specs/spec-PRO-0109.md"
+    },
+    {
+      "line": 51,
+      "symbol": "shots",
+      "spec": "docs/specs/spec-PRO-0109.md"
+    },
+    {
+      "line": 17,
+      "symbol": "Merged",
+      "spec": "docs/specs/spec-PRO-0110.md"
+    },
+    {
+      "line": 30,
+      "symbol": "Merged",
+      "spec": "docs/specs/spec-PRO-0110.md"
+    },
+    {
+      "line": 30,
+      "symbol": "Retired",
+      "spec": "docs/specs/spec-PRO-0110.md"
+    },
+    {
+      "line": 37,
+      "symbol": "citations()",
+      "spec": "docs/specs/spec-PRO-0110.md"
+    },
+    {
+      "line": 14,
+      "symbol": "IOHIDEvent",
+      "spec": "docs/specs/spec-PRO-0111.md"
+    },
+    {
+      "line": 19,
+      "symbol": "Maestro",
+      "spec": "docs/specs/spec-PRO-0111.md"
+    },
+    {
+      "line": 20,
+      "symbol": "IOHIDEvent",
+      "spec": "docs/specs/spec-PRO-0111.md"
+    },
+    {
+      "line": 18,
+      "symbol": "deinit",
+      "spec": "docs/specs/spec-PRO-0115.md"
+    },
+    {
+      "line": 21,
+      "symbol": "vacuous",
+      "spec": "docs/specs/spec-PRO-0115.md"
+    },
+    {
+      "line": 38,
+      "symbol": "deinit",
+      "spec": "docs/specs/spec-PRO-0115.md"
+    },
+    {
+      "line": 13,
+      "symbol": "MaestroRun",
+      "spec": "docs/specs/spec-PRO-0124.md"
+    },
+    {
+      "line": 13,
+      "symbol": "ProctorTokens",
+      "spec": "docs/specs/spec-PRO-0129.md"
+    }
+  ],
+  "rows": [
+    {
+      "spec": "spec-PRO-0001.md",
+      "cited": 10,
+      "resolved": 10,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0002.md",
+      "cited": 3,
+      "resolved": 3,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0003.md",
+      "cited": 18,
+      "resolved": 18,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0004.md",
+      "cited": 3,
+      "resolved": 3,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0005.md",
+      "cited": 2,
+      "resolved": 2,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0006.md",
+      "cited": 2,
+      "resolved": 2,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0007.md",
+      "cited": 8,
+      "resolved": 8,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0008.md",
+      "cited": 18,
+      "resolved": 18,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0009.md",
+      "cited": 4,
+      "resolved": 4,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0010.md",
+      "cited": 5,
+      "resolved": 5,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0011.md",
+      "cited": 55,
+      "resolved": 31,
+      "inTests": 19,
+      "unresolved": 5
+    },
+    {
+      "spec": "spec-PRO-0012.md",
+      "cited": 34,
+      "resolved": 25,
+      "inTests": 5,
+      "unresolved": 4
+    },
+    {
+      "spec": "spec-PRO-0013.md",
+      "cited": 21,
+      "resolved": 8,
+      "inTests": 11,
+      "unresolved": 2
+    },
+    {
+      "spec": "spec-PRO-0014.md",
+      "cited": 53,
+      "resolved": 20,
+      "inTests": 31,
+      "unresolved": 2
+    },
+    {
+      "spec": "spec-PRO-0015.md",
+      "cited": 20,
+      "resolved": 18,
+      "inTests": 0,
+      "unresolved": 2
+    },
+    {
+      "spec": "spec-PRO-0016.md",
+      "cited": 17,
+      "resolved": 16,
+      "inTests": 0,
+      "unresolved": 1
+    },
+    {
+      "spec": "spec-PRO-0017.md",
+      "cited": 9,
+      "resolved": 7,
+      "inTests": 0,
+      "unresolved": 2
+    },
+    {
+      "spec": "spec-PRO-0018.md",
+      "cited": 148,
+      "resolved": 99,
+      "inTests": 46,
+      "unresolved": 3
+    },
+    {
+      "spec": "spec-PRO-0019.md",
+      "cited": 75,
+      "resolved": 74,
+      "inTests": 0,
+      "unresolved": 1
+    },
+    {
+      "spec": "spec-PRO-0020.md",
+      "cited": 105,
+      "resolved": 95,
+      "inTests": 1,
+      "unresolved": 9
+    },
+    {
+      "spec": "spec-PRO-0021.md",
+      "cited": 44,
+      "resolved": 37,
+      "inTests": 2,
+      "unresolved": 5
+    },
+    {
+      "spec": "spec-PRO-0022.md",
+      "cited": 11,
+      "resolved": 7,
+      "inTests": 1,
+      "unresolved": 3
+    },
+    {
+      "spec": "spec-PRO-0023.md",
+      "cited": 130,
+      "resolved": 116,
+      "inTests": 3,
+      "unresolved": 11
+    },
+    {
+      "spec": "spec-PRO-0024.md",
+      "cited": 218,
+      "resolved": 200,
+      "inTests": 6,
+      "unresolved": 12
+    },
+    {
+      "spec": "spec-PRO-0025.md",
+      "cited": 163,
+      "resolved": 124,
+      "inTests": 24,
+      "unresolved": 15
+    },
+    {
+      "spec": "spec-PRO-0026.md",
+      "cited": 138,
+      "resolved": 59,
+      "inTests": 45,
+      "unresolved": 34
+    },
+    {
+      "spec": "spec-PRO-0027.md",
+      "cited": 66,
+      "resolved": 40,
+      "inTests": 2,
+      "unresolved": 24
+    },
+    {
+      "spec": "spec-PRO-0028.md",
+      "cited": 41,
+      "resolved": 32,
+      "inTests": 0,
+      "unresolved": 9
+    },
+    {
+      "spec": "spec-PRO-0029.md",
+      "cited": 96,
+      "resolved": 73,
+      "inTests": 0,
+      "unresolved": 23
+    },
+    {
+      "spec": "spec-PRO-0030.md",
+      "cited": 137,
+      "resolved": 90,
+      "inTests": 20,
+      "unresolved": 27
+    },
+    {
+      "spec": "spec-PRO-0031.md",
+      "cited": 4,
+      "resolved": 4,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0032.md",
+      "cited": 66,
+      "resolved": 23,
+      "inTests": 42,
+      "unresolved": 1
+    },
+    {
+      "spec": "spec-PRO-0033.md",
+      "cited": 105,
+      "resolved": 67,
+      "inTests": 35,
+      "unresolved": 3
+    },
+    {
+      "spec": "spec-PRO-0034.md",
+      "cited": 9,
+      "resolved": 6,
+      "inTests": 3,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0035.md",
+      "cited": 193,
+      "resolved": 158,
+      "inTests": 5,
+      "unresolved": 30
+    },
+    {
+      "spec": "spec-PRO-0036.md",
+      "cited": 52,
+      "resolved": 30,
+      "inTests": 18,
+      "unresolved": 4
+    },
+    {
+      "spec": "spec-PRO-0037.md",
+      "cited": 120,
+      "resolved": 108,
+      "inTests": 2,
+      "unresolved": 10
+    },
+    {
+      "spec": "spec-PRO-0038.md",
+      "cited": 103,
+      "resolved": 67,
+      "inTests": 28,
+      "unresolved": 8
+    },
+    {
+      "spec": "spec-PRO-0039.md",
+      "cited": 1,
+      "resolved": 1,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0040.md",
+      "cited": 87,
+      "resolved": 57,
+      "inTests": 2,
+      "unresolved": 28
+    },
+    {
+      "spec": "spec-PRO-0041.md",
+      "cited": 113,
+      "resolved": 60,
+      "inTests": 34,
+      "unresolved": 19
+    },
+    {
+      "spec": "spec-PRO-0042.md",
+      "cited": 124,
+      "resolved": 120,
+      "inTests": 0,
+      "unresolved": 4
+    },
+    {
+      "spec": "spec-PRO-0043.md",
+      "cited": 47,
+      "resolved": 20,
+      "inTests": 13,
+      "unresolved": 14
+    },
+    {
+      "spec": "spec-PRO-0044.md",
+      "cited": 165,
+      "resolved": 119,
+      "inTests": 22,
+      "unresolved": 24
+    },
+    {
+      "spec": "spec-PRO-0045.md",
+      "cited": 210,
+      "resolved": 177,
+      "inTests": 18,
+      "unresolved": 15
+    },
+    {
+      "spec": "spec-PRO-0046.md",
+      "cited": 205,
+      "resolved": 138,
+      "inTests": 57,
+      "unresolved": 10
+    },
+    {
+      "spec": "spec-PRO-0047.md",
+      "cited": 141,
+      "resolved": 75,
+      "inTests": 59,
+      "unresolved": 7
+    },
+    {
+      "spec": "spec-PRO-0048.md",
+      "cited": 152,
+      "resolved": 122,
+      "inTests": 6,
+      "unresolved": 24
+    },
+    {
+      "spec": "spec-PRO-0049.md",
+      "cited": 215,
+      "resolved": 177,
+      "inTests": 20,
+      "unresolved": 18
+    },
+    {
+      "spec": "spec-PRO-0050.md",
+      "cited": 209,
+      "resolved": 151,
+      "inTests": 35,
+      "unresolved": 23
+    },
+    {
+      "spec": "spec-PRO-0051.md",
+      "cited": 85,
+      "resolved": 60,
+      "inTests": 15,
+      "unresolved": 10
+    },
+    {
+      "spec": "spec-PRO-0052.md",
+      "cited": 30,
+      "resolved": 29,
+      "inTests": 0,
+      "unresolved": 1
+    },
+    {
+      "spec": "spec-PRO-0053.md",
+      "cited": 68,
+      "resolved": 51,
+      "inTests": 15,
+      "unresolved": 2
+    },
+    {
+      "spec": "spec-PRO-0054.md",
+      "cited": 27,
+      "resolved": 13,
+      "inTests": 11,
+      "unresolved": 3
+    },
+    {
+      "spec": "spec-PRO-0055.md",
+      "cited": 39,
+      "resolved": 21,
+      "inTests": 15,
+      "unresolved": 3
+    },
+    {
+      "spec": "spec-PRO-0056.md",
+      "cited": 26,
+      "resolved": 23,
+      "inTests": 1,
+      "unresolved": 2
+    },
+    {
+      "spec": "spec-PRO-0057.md",
+      "cited": 25,
+      "resolved": 21,
+      "inTests": 3,
+      "unresolved": 1
+    },
+    {
+      "spec": "spec-PRO-0058.md",
+      "cited": 25,
+      "resolved": 23,
+      "inTests": 0,
+      "unresolved": 2
+    },
+    {
+      "spec": "spec-PRO-0059.md",
+      "cited": 9,
+      "resolved": 8,
+      "inTests": 0,
+      "unresolved": 1
+    },
+    {
+      "spec": "spec-PRO-0060.md",
+      "cited": 20,
+      "resolved": 17,
+      "inTests": 1,
+      "unresolved": 2
+    },
+    {
+      "spec": "spec-PRO-0061.md",
+      "cited": 9,
+      "resolved": 7,
+      "inTests": 2,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0062.md",
+      "cited": 10,
+      "resolved": 5,
+      "inTests": 4,
+      "unresolved": 1
+    },
+    {
+      "spec": "spec-PRO-0063.md",
+      "cited": 22,
+      "resolved": 21,
+      "inTests": 1,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0064.md",
+      "cited": 22,
+      "resolved": 9,
+      "inTests": 4,
+      "unresolved": 9
+    },
+    {
+      "spec": "spec-PRO-0065.md",
+      "cited": 31,
+      "resolved": 29,
+      "inTests": 1,
+      "unresolved": 1
+    },
+    {
+      "spec": "spec-PRO-0066.md",
+      "cited": 38,
+      "resolved": 31,
+      "inTests": 2,
+      "unresolved": 5
+    },
+    {
+      "spec": "spec-PRO-0067.md",
+      "cited": 31,
+      "resolved": 25,
+      "inTests": 1,
+      "unresolved": 5
+    },
+    {
+      "spec": "spec-PRO-0068.md",
+      "cited": 20,
+      "resolved": 15,
+      "inTests": 1,
+      "unresolved": 4
+    },
+    {
+      "spec": "spec-PRO-0069.md",
+      "cited": 22,
+      "resolved": 18,
+      "inTests": 4,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0070.md",
+      "cited": 7,
+      "resolved": 6,
+      "inTests": 1,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0071.md",
+      "cited": 12,
+      "resolved": 11,
+      "inTests": 1,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0072.md",
+      "cited": 9,
+      "resolved": 7,
+      "inTests": 1,
+      "unresolved": 1
+    },
+    {
+      "spec": "spec-PRO-0073.md",
+      "cited": 23,
+      "resolved": 21,
+      "inTests": 0,
+      "unresolved": 2
+    },
+    {
+      "spec": "spec-PRO-0074.md",
+      "cited": 18,
+      "resolved": 17,
+      "inTests": 0,
+      "unresolved": 1
+    },
+    {
+      "spec": "spec-PRO-0075.md",
+      "cited": 4,
+      "resolved": 4,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0076.md",
+      "cited": 176,
+      "resolved": 116,
+      "inTests": 32,
+      "unresolved": 28
+    },
+    {
+      "spec": "spec-PRO-0077.md",
+      "cited": 75,
+      "resolved": 51,
+      "inTests": 0,
+      "unresolved": 24
+    },
+    {
+      "spec": "spec-PRO-0078.md",
+      "cited": 59,
+      "resolved": 45,
+      "inTests": 3,
+      "unresolved": 11
+    },
+    {
+      "spec": "spec-PRO-0079.md",
+      "cited": 9,
+      "resolved": 7,
+      "inTests": 0,
+      "unresolved": 2
+    },
+    {
+      "spec": "spec-PRO-0080.md",
+      "cited": 35,
+      "resolved": 22,
+      "inTests": 0,
+      "unresolved": 13
+    },
+    {
+      "spec": "spec-PRO-0081.md",
+      "cited": 33,
+      "resolved": 26,
+      "inTests": 0,
+      "unresolved": 7
+    },
+    {
+      "spec": "spec-PRO-0082.md",
+      "cited": 41,
+      "resolved": 41,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0083.md",
+      "cited": 193,
+      "resolved": 125,
+      "inTests": 15,
+      "unresolved": 53
+    },
+    {
+      "spec": "spec-PRO-0084.md",
+      "cited": 34,
+      "resolved": 28,
+      "inTests": 1,
+      "unresolved": 5
+    },
+    {
+      "spec": "spec-PRO-0085.md",
+      "cited": 53,
+      "resolved": 47,
+      "inTests": 0,
+      "unresolved": 6
+    },
+    {
+      "spec": "spec-PRO-0086.md",
+      "cited": 23,
+      "resolved": 23,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0087.md",
+      "cited": 28,
+      "resolved": 22,
+      "inTests": 0,
+      "unresolved": 6
+    },
+    {
+      "spec": "spec-PRO-0088.md",
+      "cited": 42,
+      "resolved": 35,
+      "inTests": 0,
+      "unresolved": 7
+    },
+    {
+      "spec": "spec-PRO-0089.md",
+      "cited": 52,
+      "resolved": 44,
+      "inTests": 0,
+      "unresolved": 8
+    },
+    {
+      "spec": "spec-PRO-0090.md",
+      "cited": 63,
+      "resolved": 61,
+      "inTests": 0,
+      "unresolved": 2
+    },
+    {
+      "spec": "spec-PRO-0091.md",
+      "cited": 8,
+      "resolved": 4,
+      "inTests": 0,
+      "unresolved": 4
+    },
+    {
+      "spec": "spec-PRO-0092.md",
+      "cited": 47,
+      "resolved": 30,
+      "inTests": 3,
+      "unresolved": 14
+    },
+    {
+      "spec": "spec-PRO-0093.md",
+      "cited": 61,
+      "resolved": 55,
+      "inTests": 2,
+      "unresolved": 4
+    },
+    {
+      "spec": "spec-PRO-0094.md",
+      "cited": 65,
+      "resolved": 56,
+      "inTests": 0,
+      "unresolved": 9
+    },
+    {
+      "spec": "spec-PRO-0095.md",
+      "cited": 41,
+      "resolved": 31,
+      "inTests": 2,
+      "unresolved": 8
+    },
+    {
+      "spec": "spec-PRO-0096.md",
+      "cited": 19,
+      "resolved": 12,
+      "inTests": 0,
+      "unresolved": 7
+    },
+    {
+      "spec": "spec-PRO-0097.md",
+      "cited": 24,
+      "resolved": 18,
+      "inTests": 1,
+      "unresolved": 5
+    },
+    {
+      "spec": "spec-PRO-0098.md",
+      "cited": 48,
+      "resolved": 37,
+      "inTests": 8,
+      "unresolved": 3
+    },
+    {
+      "spec": "spec-PRO-0099.md",
+      "cited": 45,
+      "resolved": 36,
+      "inTests": 5,
+      "unresolved": 4
+    },
+    {
+      "spec": "spec-PRO-0100.md",
+      "cited": 28,
+      "resolved": 14,
+      "inTests": 3,
+      "unresolved": 11
+    },
+    {
+      "spec": "spec-PRO-0101.md",
+      "cited": 10,
+      "resolved": 5,
+      "inTests": 0,
+      "unresolved": 5
+    },
+    {
+      "spec": "spec-PRO-0102.md",
+      "cited": 43,
+      "resolved": 21,
+      "inTests": 3,
+      "unresolved": 19
+    },
+    {
+      "spec": "spec-PRO-0103.md",
+      "cited": 37,
+      "resolved": 17,
+      "inTests": 5,
+      "unresolved": 15
+    },
+    {
+      "spec": "spec-PRO-0104.md",
+      "cited": 24,
+      "resolved": 9,
+      "inTests": 1,
+      "unresolved": 14
+    },
+    {
+      "spec": "spec-PRO-0105.md",
+      "cited": 6,
+      "resolved": 4,
+      "inTests": 0,
+      "unresolved": 2
+    },
+    {
+      "spec": "spec-PRO-0106.md",
+      "cited": 50,
+      "resolved": 32,
+      "inTests": 6,
+      "unresolved": 12
+    },
+    {
+      "spec": "spec-PRO-0107.md",
+      "cited": 22,
+      "resolved": 11,
+      "inTests": 0,
+      "unresolved": 11
+    },
+    {
+      "spec": "spec-PRO-0108.md",
+      "cited": 17,
+      "resolved": 15,
+      "inTests": 0,
+      "unresolved": 2
+    },
+    {
+      "spec": "spec-PRO-0109.md",
+      "cited": 3,
+      "resolved": 1,
+      "inTests": 0,
+      "unresolved": 2
+    },
+    {
+      "spec": "spec-PRO-0110.md",
+      "cited": 7,
+      "resolved": 3,
+      "inTests": 0,
+      "unresolved": 4
+    },
+    {
+      "spec": "spec-PRO-0111.md",
+      "cited": 12,
+      "resolved": 9,
+      "inTests": 0,
+      "unresolved": 3
+    },
+    {
+      "spec": "spec-PRO-0112.md",
+      "cited": 2,
+      "resolved": 2,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0113.md",
+      "cited": 3,
+      "resolved": 2,
+      "inTests": 1,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0114.md",
+      "cited": 10,
+      "resolved": 10,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0115.md",
+      "cited": 9,
+      "resolved": 6,
+      "inTests": 0,
+      "unresolved": 3
+    },
+    {
+      "spec": "spec-PRO-0116.md",
+      "cited": 6,
+      "resolved": 6,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0117.md",
+      "cited": 3,
+      "resolved": 3,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0118.md",
+      "cited": 0,
+      "resolved": 0,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0119.md",
+      "cited": 0,
+      "resolved": 0,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0120.md",
+      "cited": 0,
+      "resolved": 0,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0121.md",
+      "cited": 0,
+      "resolved": 0,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0122.md",
+      "cited": 2,
+      "resolved": 2,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0123.md",
+      "cited": 1,
+      "resolved": 1,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0124.md",
+      "cited": 1,
+      "resolved": 0,
+      "inTests": 0,
+      "unresolved": 1
+    },
+    {
+      "spec": "spec-PRO-0125.md",
+      "cited": 2,
+      "resolved": 2,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0126.md",
+      "cited": 0,
+      "resolved": 0,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0127.md",
+      "cited": 0,
+      "resolved": 0,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0128.md",
+      "cited": 0,
+      "resolved": 0,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0129.md",
+      "cited": 1,
+      "resolved": 0,
+      "inTests": 0,
+      "unresolved": 1
+    },
+    {
+      "spec": "spec-PRO-0130.md",
+      "cited": 0,
+      "resolved": 0,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0131.md",
+      "cited": 0,
+      "resolved": 0,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0132.md",
+      "cited": 0,
+      "resolved": 0,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0133.md",
+      "cited": 0,
+      "resolved": 0,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0134.md",
+      "cited": 0,
+      "resolved": 0,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0135.md",
+      "cited": 0,
+      "resolved": 0,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0136.md",
+      "cited": 0,
+      "resolved": 0,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0137.md",
+      "cited": 0,
+      "resolved": 0,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0138.md",
+      "cited": 2,
+      "resolved": 2,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0139.md",
+      "cited": 0,
+      "resolved": 0,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0140.md",
+      "cited": 0,
+      "resolved": 0,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0141.md",
+      "cited": 0,
+      "resolved": 0,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0142.md",
+      "cited": 0,
+      "resolved": 0,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0143.md",
+      "cited": 0,
+      "resolved": 0,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0144.md",
+      "cited": 0,
+      "resolved": 0,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0145.md",
+      "cited": 0,
+      "resolved": 0,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0146.md",
+      "cited": 0,
+      "resolved": 0,
+      "inTests": 0,
+      "unresolved": 0
+    },
+    {
+      "spec": "spec-PRO-0147.md",
+      "cited": 0,
+      "resolved": 0,
+      "inTests": 0,
+      "unresolved": 0
+    }
+  ]
+}

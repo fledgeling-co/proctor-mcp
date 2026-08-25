@@ -8,7 +8,7 @@
   "evidence": [
     {
       "path": "scripts/campaign/test_instruments.py",
-      "sha256_16": "eb7194992a602bf6",
+      "sha256_16": "d48cdb08655cacba",
       "present": true
     }
   ]

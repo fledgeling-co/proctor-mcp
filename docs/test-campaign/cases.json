@@ -1692,7 +1692,7 @@
       "effect": "ipc",
       "count": 1
     },
-    "plane": "hermetic",
+    "plane": "live-glass",
     "journey": "JRN-010"
   },
   {
@@ -8791,5 +8791,46 @@
       "effect": "device",
       "count": 1
     }
+  },
+  {
+    "id": "CASE-0793",
+    "req": "REQ-101",
+    "surface": "SURF-024",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "docs/test-campaign/evidence/PRO-0146/negative-arm.txt \u2014 one ungrounded citation added to spec-PRO-0001.md takes the gate from exit 0 to exit 1 naming the symbol and line, and removing it puts the gate back green.",
+    "defects": [],
+    "evidence": [
+      "scripts/campaign/spec_symbol_linter.py",
+      "docs/test-campaign/evidence/PRO-0146/spec-symbol-lint.txt",
+      "docs/test-campaign/evidence/PRO-0146/spec-symbol-report.json",
+      "docs/test-campaign/evidence/PRO-0146/negative-arm.txt"
+    ],
+    "note": "PRO-0136/PRO-0146. Every backticked identifier in all 147 specs resolved against three roots kept apart: 4,565 of 6,182 against declarations in Sources/ (73.8%), 790 against Tests/, and 827 unresolved. The three counts are not blended, because a production declaration and a test name are different claims about a spec. Wire names (snake_case) and platform constants (AX*/kCG*/SC*) are excluded by rule rather than by exception list, and string literals in Sources/ ground a wire key like `fsRoots` that no declaration carries. A ratchet at 827 fails on a RISE, which is the rename this exists to catch; `ProctorAgentCore` in spec-PRO-0011 is the first thing it found."
+  },
+  {
+    "id": "CASE-0794",
+    "req": "REQ-101",
+    "surface": "SURF-024",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "The hook is invoked as a real subprocess against a real staged change; a hook that is installed and never runs is the condition, not the proof.",
+    "defects": [],
+    "witness": {
+      "recorder": "git's own hook dispatch \u2014 core.hooksPath resolved by git rev-parse and the hook executed by git commit, neither read from the code under test",
+      "effect": "subprocess",
+      "count": 1
+    },
+    "evidence": [
+      ".githooks/pre-commit",
+      "docs/test-campaign/evidence/PRO-0146/negative-arm.txt"
+    ],
+    "note": "PRO-0146 acceptance 4. The pre-commit hook runs the linter only when the change touches docs/specs/, Sources/ or Package.swift \u2014 a docs-only commit cannot move the count, and a hook that runs on every commit is a hook that gets disabled. PROCTOR_SKIP_SPEC_LINT skips it loudly rather than silently, and the skip prints to stderr so it appears in the commit's own output."
   }
 ]

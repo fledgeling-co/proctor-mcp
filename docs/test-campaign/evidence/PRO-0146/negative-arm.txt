@@ -1,0 +1,13 @@
+negative arm for the spec-symbol linter — the gate is proved able to go red
+date: Tue 25 Aug 2026 12:00:08 AEST
+
+with one ungrounded citation added to spec-PRO-0001.md:
+exit=1
+    docs/specs/spec-PRO-0001.md:63  `ThisSymbolIsNotDeclaredAnywhereInTheTree`
+  FAIL  unresolved rose from 827 to 828 — a spec is naming a symbol the tree does not declare.
+        docs/specs/spec-PRO-0001.md:63  `ThisSymbolIsNotDeclaredAnywhereInTheTree`
+
+with the tree restored:
+exit=0
+  ratchet: 827 unresolved allowed
+  held.

@@ -3,8 +3,8 @@
   "requirement": "REQ-049",
   "lane": "macos-glass",
   "oracle": "effect-witness",
-  "plane": "hermetic",
-  "placedBecause": "an artifact written by a run outside the test process",
+  "plane": "live-glass",
+  "placedBecause": "the macos-glass lane commits to a display server, whatever the artefact reads as",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0081/a3-negative-arm.json",

@@ -1,0 +1,20 @@
+{
+  "case": "CASE-0794",
+  "requirement": "REQ-101",
+  "lane": "headless",
+  "oracle": "effect-witness",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "evidence": [
+    {
+      "path": ".githooks/pre-commit",
+      "sha256_16": "44a1f04ee6a0bc80",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0146/negative-arm.txt",
+      "sha256_16": "9099611faa4f325a",
+      "present": true
+    }
+  ]
+}

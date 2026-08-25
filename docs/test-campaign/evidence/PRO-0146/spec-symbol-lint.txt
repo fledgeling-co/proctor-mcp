@@ -1,0 +1,28 @@
+147 spec(s) · 6182 symbol citation(s) · 4565 in production (73.8% of 6182) · 790 in tests · 827 unresolved
+index: 4503 production name(s) across 199 file(s) under Sources/ · 4120 test name(s) under Tests/ · 1676 string literal(s) and module name(s)
+
+specs carrying the most unresolved citations:
+  spec-PRO-0083.md          53 of 193
+  spec-PRO-0026.md          34 of 138
+  spec-PRO-0035.md          30 of 193
+  spec-PRO-0040.md          28 of  87
+  spec-PRO-0076.md          28 of 176
+  spec-PRO-0030.md          27 of 137
+  spec-PRO-0027.md          24 of  66
+  spec-PRO-0044.md          24 of 165
+
+first twelve, line-anchored:
+  docs/specs/spec-PRO-0011.md:66  `xhigh`
+  docs/specs/spec-PRO-0011.md:107  `executableTarget`
+  docs/specs/spec-PRO-0011.md:118  `executableTarget`
+  docs/specs/spec-PRO-0011.md:118  `ProctorAgentCore`
+  docs/specs/spec-PRO-0011.md:120  `xhigh`
+  docs/specs/spec-PRO-0012.md:68  `xhigh`
+  docs/specs/spec-PRO-0012.md:83  `SessionPolicy`
+  docs/specs/spec-PRO-0012.md:108  `xhigh`
+  docs/specs/spec-PRO-0012.md:110  `completedRuns`
+  docs/specs/spec-PRO-0013.md:107  `xhigh`
+  docs/specs/spec-PRO-0013.md:124  `WhenUnlockedThisDeviceOnly`
+  docs/specs/spec-PRO-0014.md:85  `Policy`
+
+wrote docs/test-campaign/evidence/PRO-0146/spec-symbol-report.json

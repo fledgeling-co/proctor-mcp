@@ -1,7 +1,7 @@
 # Spec PRO-0136 — Automated Continuous Spec-Validation Runner
 
 **Brief:** `docs/features-to-triage/128-automated-spec-validation-runner.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-24
 **Surfaces:** SURF-025
 **Defects:** none
