@@ -1,7 +1,7 @@
 # Spec PRO-0130 — Operator State and Evidence Integrity Chain
 
 **Brief:** `docs/features-to-triage/122-operator-state-and-evidence-integrity-chain.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-24
 **Surfaces:** SURF-012, SURF-015
 **Defects:** none

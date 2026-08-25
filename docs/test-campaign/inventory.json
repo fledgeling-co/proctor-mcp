@@ -384,7 +384,10 @@
       "class": "capability",
       "effect": "ipc",
       "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift",
-      "evidence": "observed"
+      "evidence": "observed",
+      "surfaces": [
+        "SURF-017"
+      ]
     },
     {
       "id": "REQ-030",
@@ -419,7 +422,12 @@
       "text": "The status window lists every permission macOS holds about Proctor, including the one whose absence is silent",
       "source": "Sources/ProctorAgent/Session/SessionDoctor.swift; design/surfaces/ status pane; docs/features-to-triage/37-the-status-windows-checks-say-what-they-can-check.md",
       "class": "affordance",
-      "effect": "none"
+      "effect": "none",
+      "surfaces": [
+        "SURF-008"
+      ],
+      "evidence": "observed",
+      "note": "observed on 4 passing case(s) citing it: CASE-0039, CASE-0042, CASE-0368, CASE-0369"
     },
     {
       "id": "REQ-033",
@@ -441,7 +449,12 @@
       "text": "An operator drives and checks this Mac from a shell: 21 verbs derived from the tool catalogue, six exit codes, and shell completion generated from the same catalogue",
       "source": "Sources/ProctorCLI/CLI.swift, Sources/ProctorCore/CLISurface.swift; spec-PRO-0073.md A1, A6, A8; docs/features-to-triage/68-the-operator-cli.md",
       "effect": "ipc",
-      "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift"
+      "provider": "Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift",
+      "surfaces": [
+        "SURF-018"
+      ],
+      "evidence": "observed",
+      "note": "observed on 2 passing case(s) citing it: CASE-0044, CASE-0081"
     },
     {
       "id": "REQ-035",
@@ -449,14 +462,25 @@
       "text": "A CLI call is not a privilege bypass: same socket, same policy gate, same queue lane, same audit trail, and the trail records which front end called, read from the peer process rather than the request",
       "source": "Sources/ProctorCLI/CLI.swift; spec-PRO-0073.md A3, A4, A5; docs/features-to-triage/68-the-operator-cli.md",
       "effect": "ipc",
-      "provider": "LOCAL_PEERPID getsockopt in Sources/ProctorAgent/SessionIdentity.swift"
+      "provider": "LOCAL_PEERPID getsockopt in Sources/ProctorAgent/SessionIdentity.swift",
+      "surfaces": [
+        "SURF-012",
+        "SURF-018"
+      ],
+      "evidence": "observed",
+      "note": "observed on 3 passing case(s) citing it: CASE-0045, CASE-0080, CASE-0114"
     },
     {
       "id": "REQ-036",
       "class": "honesty guardrail",
       "text": "Exit code 1 (a check failed) and exit code 3 (the agent is not answering) are never confused, because CI reads an exit code rather than prose",
       "source": "Sources/ProctorCore/CLISurface.swift exit(for:); spec-PRO-0073.md exit-code table; docs/features-to-triage/68-the-operator-cli.md",
-      "effect": "none"
+      "effect": "none",
+      "surfaces": [
+        "SURF-018"
+      ],
+      "evidence": "observed",
+      "note": "observed on 2 passing case(s) citing it: CASE-0046, CASE-0057"
     },
     {
       "id": "REQ-037",
@@ -517,14 +541,24 @@
       "class": "honesty guardrail",
       "text": "Only the agent draws on this Mac: a switch says what an operator asked for and cannot say who is asking, so every live surface also requires the process to have claimed it is the agent",
       "source": "Sources/ProctorAgent/AgentProcess.swift, Sources/ProctorCore/OverlaySwitch.swift mayRaise; docs/features-to-triage/30-a-home-for-the-proctor-switches.md",
-      "effect": "none"
+      "effect": "none",
+      "surfaces": [
+        "SURF-021"
+      ],
+      "evidence": "observed",
+      "note": "observed on 1 passing case(s) citing it: CASE-0051"
     },
     {
       "id": "REQ-042",
       "class": "behaviour",
       "text": "The takeover statement holds for a minimum duration once raised, and a request arriving while it is up extends it rather than raising it again, so a batch-driving agent sees one statement instead of a strobe",
       "source": "Sources/ProctorCore/Takeover.swift Dwell; Sources/ProctorAgent/Overlay/TakeoverOverlay.swift; docs/features-to-triage/27-foreground-takeover-overlay.md",
-      "effect": "none"
+      "effect": "none",
+      "surfaces": [
+        "SURF-005"
+      ],
+      "evidence": "observed",
+      "note": "observed on 2 passing case(s) citing it: CASE-0052, CASE-0058"
     },
     {
       "id": "REQ-043",
@@ -533,35 +567,65 @@
       "source": "Sources/ProctorCore/PointerPlane.swift decide/fallback/isCovered; Sources/ProctorAgent/Overlay/CursorOverlay.swift; docs/features-to-triage/26-prefer-background-and-pointer-in-plane.md",
       "effect": "none",
       "evidence": "observed",
-      "note": " ELEVATED 2026-08-24: verified by window_occlusion_witness.py and CoveredTargetOcclusionWitnessTests. PRO-0118."
+      "note": " ELEVATED 2026-08-24: verified by window_occlusion_witness.py and CoveredTargetOcclusionWitnessTests. PRO-0118.",
+      "surfaces": [
+        "SURF-005",
+        "SURF-039"
+      ]
     },
     {
       "id": "REQ-044",
       "class": "honesty guardrail",
       "text": "The takeover statement names a control reachable from the screen reading it: the run panel on the panel's own display, Proctor's menu bar on every other and when no panel is standing",
       "source": "Sources/ProctorCore/Takeover.swift label(app:blocking:panelIsOnThisScreen:) and panelScreen(panel:in:); docs/features-to-triage/27-foreground-takeover-overlay.md",
-      "effect": "none"
+      "effect": "none",
+      "surfaces": [
+        "SURF-005"
+      ],
+      "evidence": "observed",
+      "note": "observed on 1 passing case(s) citing it: CASE-0054"
     },
     {
       "id": "REQ-045",
       "class": "honesty guardrail",
       "text": "A campaign instrument carries a measured false-positive rate with its denominator before anything is gated on its count: the blind-mutation pass over the Swift suite reports a number that is 96% noise, and a count read as a defect count would be the misconfiguration the tool warns about",
       "source": "test-campaign 0.9.2 scripts/vacuity-check.py pass_blind; docs/test-campaign/campaign.json blindVocabulary; spec-PRO-0079.md A1, A2, A5; docs/features-to-triage/72-tests-that-mutate-and-never-read-back.md",
-      "effect": "none"
+      "effect": "none",
+      "surfaces": [
+        "SURF-022"
+      ],
+      "evidence": "observed",
+      "note": "observed on 1 passing case(s) citing it: CASE-0063"
     },
     {
       "id": "REQ-046",
       "class": "honesty guardrail",
       "text": "Every campaign gate is proved able to go red before its passing state is read as evidence, and the proof covers each of the gate's passes separately: both requirement-level census passes have a seeded control that turns them red and restores the registry byte-for-byte, because a control that exercises one predicate leaves the other in exactly the position the control exists to end",
       "source": "test-campaign 0.9.2 scripts/vacuity-check.py seed_strengthen; scripts/campaign/seed_unclass.py; spec-PRO-0080.md A1, A2, A3; docs/features-to-triage/72-tests-that-mutate-and-never-read-back.md",
-      "effect": "none"
+      "effect": "none",
+      "surfaces": [
+        "SURF-022"
+      ],
+      "evidence": "observed",
+      "note": "observed on 3 passing case(s) citing it: CASE-0072, CASE-0073, CASE-0152"
     },
     {
       "id": "REQ-047",
       "class": "honesty guardrail",
       "text": "Mutation survival for the agent package is measured with its denominator, its seed and its unrun count rather than inferred from the core package's figure, and every survivor the lane can reach is closed by a test that was watched failing on the mutant, the rest recorded with a reason typed equivalent or uncovered-by-lane",
       "source": "scripts/campaign/mutate_swift.py; docs/test-campaign/evidence/mutation-agent.json; spec-PRO-0080.md A4, A5, A6; docs/features-to-triage/72-tests-that-mutate-and-never-read-back.md",
-      "effect": "none"
+      "effect": "none",
+      "surfaces": [
+        "SURF-002",
+        "SURF-003",
+        "SURF-004",
+        "SURF-005",
+        "SURF-006",
+        "SURF-012",
+        "SURF-022"
+      ],
+      "evidence": "observed",
+      "note": "observed on 15 passing case(s) citing it: CASE-0074, CASE-0075, CASE-0076, CASE-0077, CASE-0078, CASE-0079"
     },
     {
       "id": "REQ-048",
@@ -620,14 +684,25 @@
       "class": "behaviour",
       "text": "One process verifies a given binary's code signature once per file identity, however many sessions ask about it and however many ask at the same moment: fifteen concurrent callers on a cold entry produce one verification and fourteen waiters, and no caller and no verification holds a thread of the cooperative pool while it waits, so unrelated work runs to completion while a verification is in flight",
       "source": "Sources/ProctorAgent/Session/SignatureVerdictCache.swift; docs/specs/spec-PRO-0087.md acceptance 1-2",
-      "effect": "none"
+      "effect": "none",
+      "surfaces": [
+        "SURF-003",
+        "SURF-008"
+      ],
+      "evidence": "observed",
+      "note": "observed on 6 passing case(s) citing it: CASE-0110, CASE-0111, CASE-0113, CASE-0115, CASE-0116, CASE-0197"
     },
     {
       "id": "REQ-054",
       "class": "affordance",
       "text": "The shared signature store is a default rather than a singleton: a ToolProbes handed a cache uses that one, so a test gets an isolated store and the identify/verify seam stays injectable",
       "source": "Sources/ProctorAgent/Session/ToolProbe.swift:280; docs/specs/spec-PRO-0087.md acceptance 3",
-      "effect": "none"
+      "effect": "none",
+      "surfaces": [
+        "SURF-003"
+      ],
+      "evidence": "observed",
+      "note": "observed on 1 passing case(s) citing it: CASE-0112"
     },
     {
       "id": "REQ-057",
@@ -783,19 +858,37 @@
       "id": "REQ-073",
       "class": "surface guarantee",
       "text": "Every user-facing string a ProctorUI view draws has exactly one definition, in ProctorCore, named for what the string addresses rather than filed under one word: copy a person reads in a Copy enum, a key that addresses the machine in a Wire or verb enum, a log line in AppLog, a command id in CommandID. No file in Sources/ProctorUI holds a literal scripts/campaign/status_literals.py classifies as user-facing.",
-      "source": "DEF-039; PRO-0090 spec section A; the Package.swift fact behind it is that there is no ProctorUI test target, so a string written in a view body is a string this repo cannot assert anything about"
+      "source": "DEF-039; PRO-0090 spec section A; the Package.swift fact behind it is that there is no ProctorUI test target, so a string written in a view body is a string this repo cannot assert anything about",
+      "surfaces": [
+        "SURF-008",
+        "SURF-009",
+        "SURF-010"
+      ],
+      "evidence": "observed",
+      "note": "observed on 14 passing case(s) citing it: CASE-0250, CASE-0251, CASE-0252, CASE-0254, CASE-0255, CASE-0256"
     },
     {
       "id": "REQ-074",
       "class": "surface guarantee",
       "text": "The status window draws no branch its own state machine cannot reach, and every state it can reach is drawn by the section that is actually on screen in that state. StatusSurface.sections(for:) is the authority: a section absent from a state's list may not carry a branch for it.",
-      "source": "DEF-037; StatusSurface.sections(for: .down) returns [.agentDown] alone, which is PRO-0066's clause that a permission row is never drawn over data nothing has read"
+      "source": "DEF-037; StatusSurface.sections(for: .down) returns [.agentDown] alone, which is PRO-0066's clause that a permission row is never drawn over data nothing has read",
+      "surfaces": [
+        "SURF-008"
+      ],
+      "evidence": "observed",
+      "note": "observed on 2 passing case(s) citing it: CASE-0263, CASE-0264"
     },
     {
       "id": "REQ-075",
       "class": "contract guarantee",
       "text": "Every key in the payload Proctor's window reads and Proctor's agent writes has one definition that both ends reach. This is not a style rule: the reader takes a default for a key it cannot find, so a rename that parts the two ends does not fail \u2014 it reports a wrong answer quietly.",
-      "source": "DEF-039 one layer down; AgentModel read value[\"canShow\"] while RunHUDFeed.wire wrote \"canShow\" and nothing bound them; the same shape HistorySurface.Wire closed for the history window"
+      "source": "DEF-039 one layer down; AgentModel read value[\"canShow\"] while RunHUDFeed.wire wrote \"canShow\" and nothing bound them; the same shape HistorySurface.Wire closed for the history window",
+      "surfaces": [
+        "SURF-004",
+        "SURF-008"
+      ],
+      "evidence": "observed",
+      "note": "observed on 2 passing case(s) citing it: CASE-0253, CASE-0262"
     },
     {
       "id": "REQ-076",
@@ -1389,7 +1482,11 @@
       "status": "pass",
       "evidence": "observed",
       "effect": "none",
-      "surface": "SURF-027"
+      "surface": "SURF-027",
+      "surfaces": [
+        "SURF-027",
+        "SURF-028"
+      ]
     },
     {
       "id": "REQ-145",

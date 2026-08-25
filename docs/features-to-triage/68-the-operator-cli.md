@@ -1,5 +1,6 @@
 ---
 sources: [REQ-034, REQ-035, REQ-036]
+status: retired
 ---
 # `proctor`, the operator CLI
 
@@ -78,3 +79,13 @@ takes a lane for `proctor snapshot` would serialise a person's debugging behind 
   persists in the agent, but "which session is this" decides queue attribution and the hold
   attribution the HUD shows. Per-invocation makes every call a new session; per-terminal
   needs somewhere to keep an id.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-034, REQ-035, REQ-036
+- surface: SURF-012, SURF-018
+- cases: CASE-0017, CASE-0018, CASE-0044, CASE-0045, CASE-0046, CASE-0057
+- rungs reached: effect-witness, metamorphic, outcome
+- provider: Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift

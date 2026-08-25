@@ -1,5 +1,6 @@
 ---
 sources: [REQ-035, DEF-044]
+status: retired
 ---
 # The signature cache is per-session and the work it caches is not
 
@@ -81,3 +82,13 @@ relax the forged peer's 10 s timeout — raising a timeout to hide a starvation 
 rather than the defect closing. And it does not touch `Server.dispatchBlocking`'s use of
 `Task.detached`, which is correct; the pool is starved by the fifteen verifications, not by the
 dispatch.
+
+## Validation record
+
+Written by `scripts/campaign/brief_validation.py`, which reads the registry rather than this document. Every id below is re-checkable: the requirement is in `inventory.json`, the surface is the one that requirement itself names, and each case passed at a rung at or above reckon's retiring floor.
+
+- requirement: REQ-035
+- surface: SURF-012, SURF-018
+- cases: CASE-0017, CASE-0018, CASE-0044, CASE-0045, CASE-0046, CASE-0057
+- rungs reached: effect-witness, metamorphic, outcome
+- provider: LOCAL_PEERPID getsockopt in Sources/ProctorAgent/SessionIdentity.swift

@@ -1,7 +1,7 @@
 # Spec PRO-0129 — Surface Conformance and Capture Trust Sourcing
 
 **Brief:** `docs/features-to-triage/121-surface-conformance-and-capture-trust-sourcing.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-24
 **Surfaces:** SURF-001, SURF-002, SURF-009, SURF-010
 **Defects:** none

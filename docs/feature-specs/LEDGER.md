@@ -138,13 +138,13 @@
 | PRO-0126 | Headless Simulator Provisioning and Teardown Hook | 2026-08-24 | Ready for AI |
 | PRO-0127 | Guest VM Health Telemetry and Live Socket Probe | 2026-08-24 | Ready for AI |
 | PRO-0128 | Native OCR and High-DPI Inspection Fixture | 2026-08-24 | Ready for AI |
-| PRO-0129 | Surface Conformance and Capture Trust Sourcing | 2026-08-24 | Ready for AI |
-| PRO-0130 | Operator State and Evidence Integrity Chain | 2026-08-24 | Ready for AI |
+| PRO-0129 | Surface Conformance and Capture Trust Sourcing | 2026-08-24 | Merged |
+| PRO-0130 | Operator State and Evidence Integrity Chain | 2026-08-24 | Merged |
 | PRO-0131 | High-DPI Display Scale Factor Injection Helper | 2026-08-24 | Ready for AI |
 | PRO-0132 | Automated Warrant Tier Promotion Ledger Helper | 2026-08-24 | Ready for AI |
 | PRO-0133 | Legacy Brief Spec-Validation and Retirement | 2026-08-24 | Merged |
-| PRO-0134 | Registry Drift and Surface Conformance Figure Sourcing | 2026-08-24 | Ready for AI |
-| PRO-0135 | Operator State and Capture Trust Figure Sourcing | 2026-08-24 | Ready for AI |
+| PRO-0134 | Registry Drift and Surface Conformance Figure Sourcing | 2026-08-24 | Merged |
+| PRO-0135 | Operator State and Capture Trust Figure Sourcing | 2026-08-24 | Merged |
 | PRO-0136 | Automated Continuous Spec-Validation Runner | 2026-08-24 | Merged |
 | PRO-0137 | Warrant Assurance Tier Dashboard Exporter | 2026-08-24 | Ready for AI |
 | PRO-0138 | ProctorAgent Mutation Hardening and Boundary Sweep | 2026-08-24 | Ready for AI |

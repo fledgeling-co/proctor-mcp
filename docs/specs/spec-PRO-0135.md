@@ -1,7 +1,7 @@
 # Spec PRO-0135 — Operator State and Capture Trust Figure Sourcing
 
 **Brief:** `docs/features-to-triage/127-operator-state-and-capture-trust-figure-sourcing.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-24
 **Surfaces:** SURF-012, SURF-015
 **Defects:** none

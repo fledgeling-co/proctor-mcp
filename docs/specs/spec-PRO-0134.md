@@ -1,7 +1,7 @@
 # Spec PRO-0134 — Registry Drift and Surface Conformance Figure Sourcing
 
 **Brief:** `docs/features-to-triage/126-registry-drift-and-surface-conformance-figure-sourcing.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-24
 **Surfaces:** SURF-001, SURF-002, SURF-027
 **Defects:** none

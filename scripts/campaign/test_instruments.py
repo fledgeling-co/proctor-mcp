@@ -2667,6 +2667,93 @@ def test_spec_symbol_linter_gate_and_negative_arm() -> None:
           fenced.stdout.strip() or fenced.stderr[:200])
 
 
+
+# ── PRO-0133 · the evidence word may not outrun the cases ───────────────────
+#
+# `evidence: observed` is a word somebody types, and one campaign moved eight
+# requirements out of `unmeasured` in a single session with no case having run
+# in between. The invariant here is the one reckon 1.7.0 added `backed_by` for,
+# applied before the word is written rather than after: no requirement reads
+# `observed` while nothing passing cites it.
+def test_requirement_evidence_is_backed_by_a_passing_case() -> None:
+    script = ROOT / "scripts" / "campaign" / "requirement_evidence.py"
+    out = subprocess.run([sys.executable, str(script), str(CAMPAIGN_DIR), "--gate"],
+                         capture_output=True, text=True)
+    check(out.returncode == 0,
+          "every `observed` requirement is backed by a passing case that names it",
+          out.stdout[-400:])
+
+    # The negative arm, on a copy: mark a requirement observed while stripping
+    # every case that cites it, and the gate must refuse.
+    with tempfile.TemporaryDirectory() as td:
+        d = Path(td) / "campaign"
+        shutil.copytree(CAMPAIGN_DIR, d)
+        inv = json.loads((d / "inventory.json").read_text())
+        raw = json.loads((d / "cases.json").read_text())
+        seq = raw if isinstance(raw, list) else (raw.get("case") or raw.get("cases"))
+        victim = next(r for r in inv["requirement"] if (r.get("evidence") or "") == "observed")
+        victim_id = victim["id"]
+        keep = [c for c in seq
+                if victim_id not in ([c.get("req")] if isinstance(c.get("req"), str)
+                                     else (c.get("req") or []))]
+        if isinstance(raw, list):
+            raw = keep
+        else:
+            raw["case" if "case" in raw else "cases"] = keep
+        (d / "cases.json").write_text(json.dumps(raw, indent=2) + "\n")
+        (d / "inventory.json").write_text(json.dumps(inv, indent=2) + "\n")
+        red = subprocess.run([sys.executable, str(script), str(d), "--gate"],
+                             capture_output=True, text=True)
+        check(red.returncode == 1,
+              "a requirement left reading `observed` with its cases removed takes the gate red",
+              f"exit {red.returncode}: {red.stdout[-300:]}")
+        check(victim_id in red.stdout,
+              "the refusal names the requirement rather than a count alone", red.stdout[-300:])
+
+    # And the classes that exist to record a limit are never promoted, whatever
+    # their cases say: a ceiling is not an observation.
+    dry = subprocess.run([sys.executable, str(script), str(CAMPAIGN_DIR)],
+                         capture_output=True, text=True)
+    check("class=ceiling" in dry.stdout or "class=deferred" in dry.stdout,
+          "a `ceiling` or `deferred` requirement is held back by class, not by luck",
+          dry.stdout[-400:])
+
+
+# ── PRO-0139 / PRO-0143 / PRO-0144 · retirement follows reckon's verdict ────
+#
+# The failure this guards is a script asserting `retirable` for itself. The
+# validator supplies the citation; the class is reckon's to award, so a brief
+# carrying a Validation record must also carry the ids that record names.
+def test_brief_validation_records_are_recheckable() -> None:
+    briefs = ROOT / "docs" / "features-to-triage"
+    inv = json.loads((CAMPAIGN_DIR / "inventory.json").read_text())
+    req_ids = {r["id"] for r in inv["requirement"]}
+    surf_ids = {s["id"] for s in inv["surface"]}
+    raw = json.loads((CAMPAIGN_DIR / "cases.json").read_text())
+    seq = raw if isinstance(raw, list) else (raw.get("case") or raw.get("cases"))
+    passing = {c["id"] for c in seq if str(c.get("status", "")).startswith("pass")}
+
+    checked, bad = 0, []
+    for f in sorted(briefs.rglob("*.md")):
+        text = f.read_text()
+        if "## Validation record" not in text:
+            continue
+        block = text.split("## Validation record", 1)[1]
+        checked += 1
+        for label, universe in (("requirement:", req_ids), ("surface:", surf_ids),
+                                ("cases:", passing)):
+            line = next((l for l in block.splitlines() if l.strip().startswith("- " + label)), "")
+            ids = [x.strip() for x in line.split(":", 1)[-1].split(",") if x.strip()]
+            missing = [i for i in ids if i not in universe]
+            if not ids or missing:
+                bad.append(f"{f.name} {label} {missing or 'names nothing'}")
+    check(checked > 0, "validation records exist to check", f"{checked} found")
+    check(not bad,
+          f"every id in every validation record resolves, and every case in one passed "
+          f"({checked} record(s))",
+          "\n".join(bad[:6]))
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -2720,7 +2807,9 @@ def main() -> int:
                test_reckon_brief_join_rate_and_retirement_ladder,
                test_three_censuses_are_declared,
                test_plane_census_places_every_passing_case,
-               test_spec_symbol_linter_gate_and_negative_arm):
+               test_spec_symbol_linter_gate_and_negative_arm,
+               test_requirement_evidence_is_backed_by_a_passing_case,
+               test_brief_validation_records_are_recheckable):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001
