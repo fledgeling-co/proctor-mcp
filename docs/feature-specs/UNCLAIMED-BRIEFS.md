@@ -9,12 +9,6 @@ empty is not a row: it fails the check the same way a missing row does.
 
 | Brief | Where it went | Why no spec claims it |
 |---|---|---|
-| `157-non-zero-class-partition-breakdown-reporter.md` | Untriaged — tailings intake 2026-08-25 | Tailings T11: report all non-zero sub-class counts in downstream summaries. No spec exists until triage allocates one. |
-| `158-unsuppressed-gate-execution-and-exit-verification.md` | Untriaged — tailings intake 2026-08-25 | Tailings T5: capture and verify primary process exit codes without swallowing by pipe. No spec exists until triage allocates one. |
-| `159-repository-relative-path-citation-resolver.md` | Untriaged — tailings intake 2026-08-25 | Tailings R2: resolve path citations relative to repository root to eliminate ambiguous references. No spec exists until triage allocates one. |
-| `160-release-stub-and-no-op-verification-attestation.md` | Untriaged — tailings intake 2026-08-25 | Tailings R9: provide formal attestation and tests for intentional release/null no-ops. No spec exists until triage allocates one. |
-| `161-polling-loop-suppression-and-notification-monitor.md` | Untriaged — tailings intake 2026-08-25 | Tailings T13: replace repetitive polling loops with event-driven background notifications. No spec exists until triage allocates one. |
-| `162-autonomous-audit-worklist-continuous-verifier.md` | Untriaged — tailings intake 2026-08-25 | Tailings proposal: continuous background audit verification of newly modified artifacts. No spec exists until triage allocates one. |
 
 ## Briefs several specs share
 

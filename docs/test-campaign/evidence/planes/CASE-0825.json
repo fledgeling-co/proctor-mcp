@@ -1,0 +1,32 @@
+{
+  "case": "CASE-0825",
+  "requirement": "REQ-102",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T11:41:37Z",
+  "tree": {
+    "commit": "626539e3",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The arm is the gate's own first use: PRO-0163 was marked Merged carrying a **Moves:** line for warrant.evidence-integrity, and figure_ledger refused it \u2014 'PRO-0163 merged and warrant.evidence-integrity did not move: 91.1 -> 91.1'. The declaration was wrong and the refusal was right.",
+  "evidence": [
+    {
+      "path": "scripts/campaign/figure_ledger.py",
+      "sha256_16": "4443abcf2731d07a",
+      "present": true
+    },
+    {
+      "path": "docs/specs/spec-PRO-0163.md",
+      "sha256_16": "e6e87ea181fcadf0",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0163/figure-ledger.txt",
+      "sha256_16": "d7a7c254e11c226d",
+      "present": true
+    }
+  ]
+}

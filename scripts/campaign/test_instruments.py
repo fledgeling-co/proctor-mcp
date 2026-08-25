@@ -3083,27 +3083,44 @@ def test_claim_provenance_gate_and_its_waiver_rule() -> None:
           "the run names what it could not check rather than reporting only what it could",
           ok.stdout[-400:])
 
-    orch = ROOT / "ORCHESTRATOR.md"
-    before = orch.read_text()
-    try:
-        rows = len(re.findall(r"^\| PRO-\d{4} \|", 
-                              (ROOT / "docs/feature-specs/LEDGER.md").read_text(), re.M))
-        orch.write_text(before.replace(f"| **0** | {rows} rows", "| **0** | 999 rows", 1))
-        red = subprocess.run([sys.executable, str(script), "--gate"],
+    # The arm runs against a FIXTURE rather than against ORCHESTRATOR.md.
+    #
+    # Three earlier versions of this check edited ORCHESTRATOR.md in place and
+    # went red every time the ledger grew, because the string they searched for
+    # carried the row count. That is a test coupled to a number that moves for
+    # unrelated reasons — it failed in Waves 27, 28 and 29 without once finding
+    # the defect it exists for.
+    with tempfile.TemporaryDirectory() as td:
+        art = Path(td) / "DELIVERY.md"
+        raw = json.loads((CAMPAIGN_DIR / "cases.json").read_text())
+        seq = raw if isinstance(raw, list) else (raw.get("case") or raw.get("cases"))
+        real = len(seq)
+        art.write_text(f"# Wave close — every row merged\n\n"
+                       f"The campaign holds {real} cases.\n")
+        ok = subprocess.run([sys.executable, str(script), "--gate", "--artifact", str(art)],
+                            capture_output=True, text=True)
+        check(ok.returncode == 0, "a right figure with no verdict word beside it passes",
+              ok.stdout[-300:])
+
+        art.write_text(f"# Wave close — every row merged\n\n"
+                       f"The campaign holds {real} cases and the run failed.\n")
+        red = subprocess.run([sys.executable, str(script), "--gate", "--artifact", str(art)],
                              capture_output=True, text=True)
         check(red.returncode == 1,
-              "one wrong figure in a durable artifact takes the gate red",
-              f"exit {red.returncode}")
-        check("999" in red.stdout and str(rows) in red.stdout,
-              "and the refusal prints both the stated figure and the registry's",
-              red.stdout[-400:])
-    finally:
-        orch.write_text(before)
+              "a right figure beside a FAILURE, under a heading claiming completion, "
+              "takes the gate red", f"exit {red.returncode}: {red.stdout[-300:]}")
+        check("right number beside a wrong word" in red.stdout,
+              "and the refusal says which half was wrong", red.stdout[-300:])
 
-    restored = subprocess.run([sys.executable, str(script), "--gate"],
-                              capture_output=True, text=True)
-    check(restored.returncode == 0, "restoring the figure puts the gate back green",
-          restored.stdout[-200:])
+        art.write_text(f"# Wave close — every row merged\n\n"
+                       f"The campaign holds {real + 999} cases.\n")
+        wrong = subprocess.run([sys.executable, str(script), "--gate", "--artifact", str(art)],
+                               capture_output=True, text=True)
+        check(wrong.returncode == 1, "a wrong figure takes the gate red on its own",
+              f"exit {wrong.returncode}")
+        check(str(real) in wrong.stdout and str(real + 999) in wrong.stdout,
+              "and the refusal prints both the stated figure and the registry's",
+              wrong.stdout[-300:])
 
     # A waiver must be a sentence somebody wrote, not one the tool granted
     # itself. The rule is checkable: the only route into `waived` outside a

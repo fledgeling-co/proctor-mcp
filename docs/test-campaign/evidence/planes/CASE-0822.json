@@ -5,9 +5,9 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
-  "recordedAt": "2026-08-25T09:46:45Z",
+  "recordedAt": "2026-08-25T11:41:37Z",
   "tree": {
-    "commit": "cc0e8b0",
+    "commit": "626539e3",
     "dirty": true
   },
   "witness": null,
@@ -15,12 +15,12 @@
   "evidence": [
     {
       "path": "scripts/campaign/test_instruments.py",
-      "sha256_16": "28a5b1747ad7a615",
+      "sha256_16": "d80358b9eefb7660",
       "present": true
     },
     {
       "path": "docs/test-campaign/instrument-runs.jsonl",
-      "sha256_16": "40b36a3b86ff7aa6",
+      "sha256_16": "7c0c41aa42f7bc86",
       "present": true
     },
     {

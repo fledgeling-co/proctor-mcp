@@ -1,0 +1,27 @@
+{
+  "case": "CASE-0824",
+  "requirement": "REQ-045",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T11:41:37Z",
+  "tree": {
+    "commit": "626539e3",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Machine-readable arm (PRO-0153): removing the field that gives the blind pass its corpus takes pass_census --gate red and the refusal names testRoot by name.",
+  "evidence": [
+    {
+      "path": "scripts/campaign/pass_census.py",
+      "sha256_16": "dc31337cd4a10c14",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/PRO-0159/pass-census.txt",
+      "sha256_16": "0e2f9ee8cfc49a54",
+      "present": true
+    }
+  ]
+}

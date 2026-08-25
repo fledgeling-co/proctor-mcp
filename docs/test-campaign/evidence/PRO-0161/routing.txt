@@ -1,0 +1,52 @@
+500 case(s) · 43 below the effect rung · 18 unarmed
+  raisable       20
+  structural     16
+  undecided       7
+
+raisable (20):
+  CASE-0103  SURF-002  REQ-048
+  CASE-0105  SURF-002  REQ-048
+  CASE-0139  SURF-022  REQ-056
+  CASE-0126  SURF-006  REQ-061
+  CASE-0210  SURF-022  REQ-067
+  CASE-0221  SURF-022  REQ-056
+  CASE-0250  SURF-009  REQ-073
+  CASE-0254  SURF-008  REQ-073
+  CASE-0257  SURF-010  REQ-073
+  CASE-0261  SURF-008  REQ-073
+  CASE-0263  SURF-008  REQ-074
+  CASE-0312  SURF-009  REQ-082
+  … and 8 more
+
+undecided (7):
+  CASE-0319  SURF-009  REQ-083
+  CASE-0355  SURF-008  REQ-088
+  CASE-0390  SURF-009  REQ-083
+  CASE-0391  SURF-009  REQ-094
+  CASE-0396  SURF-022  REQ-077
+  CASE-0400  SURF-002  REQ-091
+  CASE-0458  SURF-002  REQ-108
+
+wrote a routing verdict onto 43 case(s)
+wrote docs/test-campaign/evidence/PRO-0161/routing.json
+
+== WHERE THIS STOPS, AND WHY ==
+36 of 43 cases below the effect rung are routed. 7 are not, and the gate says so
+rather than the router guessing.
+
+The rules that took undecided from 14 to 7 were each read off a row rather than
+tuned: 'no file' belongs with 'no code path'; an explicit 'is NOT raised' is an
+absence written the other way round; a census over source lines measures the
+source; and a case naming the glass lane that could find the thing has named its
+own observable.
+
+The remaining 7 are genuinely mixed — a presence guard, a drift guard, two
+design-of-record yields in opposite directions, a grep census, a correction to
+another row, and a mutation survivor. Extending the rules until they classify is
+the tuning-toward-zero this campaign refuses elsewhere, and it would put a
+verdict on rows nobody read.
+
+PRO-0161 is therefore NOT complete. Its acceptance asks that every case below
+the rung be routed, and 7 are not. It stays Ready for AI, and the figure it
+declared it would move — warrant.surface-conformance, 84.0 to 100 — has not
+moved. figure_ledger.py would report the merge if it were marked otherwise.

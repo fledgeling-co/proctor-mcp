@@ -3,7 +3,7 @@
 <!-- Managed by the /triage skill. "Project code" and "Last allocated" are load-bearing — every spec id is derived from them. Edit by hand only if you know what you're doing. -->
 
 **Project code:** PRO
-**Last allocated:** 164
+**Last allocated:** 170
 
 | ID | Title | Created | Status |
 |----|-------|---------|--------|
@@ -168,9 +168,15 @@
 | PRO-0156 | Ledger Status Distribution | 2026-08-25 | Merged |
 | PRO-0157 | Capture Store Discovery by Convention | 2026-08-25 | Merged |
 | PRO-0158 | Reclassification Record for an Audit Pass | 2026-08-25 | Merged |
-| PRO-0159 | Every Declared Pass Proves It Ran | 2026-08-25 | Ready for AI |
+| PRO-0159 | Every Declared Pass Proves It Ran | 2026-08-25 | Merged |
 | PRO-0160 | Control Census Across Every Surface | 2026-08-25 | Ready for AI |
 | PRO-0161 | Raise or Record Every Case Below the Effect Rung | 2026-08-25 | Ready for AI |
 | PRO-0162 | Cut or Record Every Durable Boundary | 2026-08-25 | Ready for AI |
-| PRO-0163 | A Specification Names the Figure It Will Move | 2026-08-25 | Ready for AI |
+| PRO-0163 | A Specification Names the Figure It Will Move | 2026-08-25 | Merged |
 | PRO-0164 | Judge Every Judgeable Capture | 2026-08-25 | Ready for AI |
+| PRO-0165 | Non-Zero Class Partition Reporting | 2026-08-25 | Ready for AI |
+| PRO-0166 | Exit Codes That Survive a Pipe | 2026-08-25 | Ready for AI |
+| PRO-0167 | Path Citations That Resolve From the Root | 2026-08-25 | Ready for AI |
+| PRO-0168 | An Intentional No-Op Says So | 2026-08-25 | Ready for AI |
+| PRO-0169 | Waiting Without Polling | 2026-08-25 | Ready for AI |
+| PRO-0170 | Continuous Claim Verification Between Waves | 2026-08-25 | Ready for AI |

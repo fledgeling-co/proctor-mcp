@@ -181,7 +181,8 @@ def main() -> int:
     a = ap.parse_args()
 
     known = truths(a.campaign, ROOT)
-    artifacts = [ROOT / p for p in (a.artifact or DEFAULT_ARTIFACTS)]
+    artifacts = [Path(p) if Path(p).is_absolute() else ROOT / p
+                 for p in (a.artifact or DEFAULT_ARTIFACTS)]
     rows = []
 
     for art in artifacts:
@@ -208,7 +209,11 @@ def main() -> int:
                 historical = (newest is not None and wave_starts
                               and i - 1 < newest
                               and any(i - 1 > s for s in wave_starts))
-                row = {"artifact": str(art.relative_to(ROOT)), "line": i,
+                try:
+                    shown = str(art.relative_to(ROOT))
+                except ValueError:
+                    shown = str(art)          # outside the repo: name it in full
+                row = {"artifact": shown, "line": i,
                        "figure": n, "subject": subject, "text": ln.strip()[:120],
                        "verdict": verdict_of(ln)}
                 if historical:

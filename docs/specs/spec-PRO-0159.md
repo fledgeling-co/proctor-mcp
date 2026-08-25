@@ -1,7 +1,7 @@
 # Spec PRO-0159 — Every Declared Pass Proves It Ran
 
 **Brief:** `docs/features-to-triage/151-a-declared-pass-that-never-ran.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-25
 **Surfaces:** SURF-029
 **Defects:** none

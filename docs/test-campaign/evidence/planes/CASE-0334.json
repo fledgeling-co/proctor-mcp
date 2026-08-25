@@ -5,9 +5,9 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
-  "recordedAt": "2026-08-25T09:46:45Z",
+  "recordedAt": "2026-08-25T11:41:37Z",
   "tree": {
-    "commit": "cc0e8b0",
+    "commit": "626539e3",
     "dirty": true
   },
   "witness": null,
@@ -25,7 +25,7 @@
     },
     {
       "path": "scripts/campaign/test_instruments.py",
-      "sha256_16": "28a5b1747ad7a615",
+      "sha256_16": "d80358b9eefb7660",
       "present": true
     },
     {

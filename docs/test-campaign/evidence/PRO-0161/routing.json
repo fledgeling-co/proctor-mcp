@@ -1,0 +1,355 @@
+{
+  "belowEffectRung": 43,
+  "unarmed": 18,
+  "counts": {
+    "structural": 16,
+    "raisable": 20,
+    "undecided": 7
+  },
+  "rows": [
+    {
+      "case": "CASE-0102",
+      "surface": "SURF-002",
+      "req": "REQ-048",
+      "oracle": "source-analysis",
+      "routed": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    },
+    {
+      "case": "CASE-0103",
+      "surface": "SURF-002",
+      "req": "REQ-048",
+      "oracle": "source-analysis",
+      "routed": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    },
+    {
+      "case": "CASE-0104",
+      "surface": "SURF-002",
+      "req": "REQ-048",
+      "oracle": "source-analysis",
+      "routed": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    },
+    {
+      "case": "CASE-0105",
+      "surface": "SURF-002",
+      "req": "REQ-048",
+      "oracle": "source-analysis",
+      "routed": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    },
+    {
+      "case": "CASE-0139",
+      "surface": "SURF-022",
+      "req": "REQ-056",
+      "oracle": "source-analysis",
+      "routed": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    },
+    {
+      "case": "CASE-0126",
+      "surface": "SURF-006",
+      "req": "REQ-061",
+      "oracle": "source-analysis",
+      "routed": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    },
+    {
+      "case": "CASE-0127",
+      "surface": "SURF-004",
+      "req": "REQ-062",
+      "oracle": "source-analysis",
+      "routed": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    },
+    {
+      "case": "CASE-0210",
+      "surface": "SURF-022",
+      "req": "REQ-067",
+      "oracle": "source-analysis",
+      "routed": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    },
+    {
+      "case": "CASE-0216",
+      "surface": "SURF-006",
+      "req": "REQ-061",
+      "oracle": "source-analysis",
+      "routed": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    },
+    {
+      "case": "CASE-0221",
+      "surface": "SURF-022",
+      "req": "REQ-056",
+      "oracle": "source-analysis",
+      "routed": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    },
+    {
+      "case": "CASE-0250",
+      "surface": "SURF-009",
+      "req": "REQ-073",
+      "oracle": "source-analysis",
+      "routed": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    },
+    {
+      "case": "CASE-0254",
+      "surface": "SURF-008",
+      "req": "REQ-073",
+      "oracle": "source-analysis",
+      "routed": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    },
+    {
+      "case": "CASE-0257",
+      "surface": "SURF-010",
+      "req": "REQ-073",
+      "oracle": "source-analysis",
+      "routed": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    },
+    {
+      "case": "CASE-0261",
+      "surface": "SURF-008",
+      "req": "REQ-073",
+      "oracle": "source-analysis",
+      "routed": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    },
+    {
+      "case": "CASE-0263",
+      "surface": "SURF-008",
+      "req": "REQ-074",
+      "oracle": "source-analysis",
+      "routed": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    },
+    {
+      "case": "CASE-0264",
+      "surface": "SURF-008",
+      "req": "REQ-074",
+      "oracle": "source-analysis",
+      "routed": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    },
+    {
+      "case": "CASE-0265",
+      "surface": "SURF-008",
+      "req": "REQ-073",
+      "oracle": "source-analysis",
+      "routed": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    },
+    {
+      "case": "CASE-0282",
+      "surface": "SURF-008",
+      "req": "REQ-076",
+      "oracle": "source-analysis",
+      "routed": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    },
+    {
+      "case": "CASE-0283",
+      "surface": "SURF-022",
+      "req": "REQ-077",
+      "oracle": "source-analysis",
+      "routed": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    },
+    {
+      "case": "CASE-0312",
+      "surface": "SURF-009",
+      "req": "REQ-082",
+      "oracle": "source-analysis",
+      "routed": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    },
+    {
+      "case": "CASE-0313",
+      "surface": "SURF-009",
+      "req": "REQ-083",
+      "oracle": "source-analysis",
+      "routed": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    },
+    {
+      "case": "CASE-0319",
+      "surface": "SURF-009",
+      "req": "REQ-083",
+      "oracle": "source-analysis",
+      "routed": "undecided",
+      "why": "neither an absence nor a named observable could be read off this row; a person has to look, and this tool will not guess which it is"
+    },
+    {
+      "case": "CASE-0315",
+      "surface": "SURF-009",
+      "req": "REQ-084",
+      "oracle": "source-analysis",
+      "routed": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    },
+    {
+      "case": "CASE-0333",
+      "surface": "SURF-012",
+      "req": "REQ-085",
+      "oracle": "source-analysis",
+      "routed": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    },
+    {
+      "case": "CASE-0334",
+      "surface": "SURF-012",
+      "req": "REQ-085",
+      "oracle": "source-analysis",
+      "routed": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    },
+    {
+      "case": "CASE-0335",
+      "surface": "SURF-012",
+      "req": "REQ-085",
+      "oracle": "source-analysis",
+      "routed": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    },
+    {
+      "case": "CASE-0355",
+      "surface": "SURF-008",
+      "req": "REQ-088",
+      "oracle": "source-analysis",
+      "routed": "undecided",
+      "why": "neither an absence nor a named observable could be read off this row; a person has to look, and this tool will not guess which it is"
+    },
+    {
+      "case": "CASE-0359",
+      "surface": "SURF-008",
+      "req": "REQ-089",
+      "oracle": "source-analysis",
+      "routed": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    },
+    {
+      "case": "CASE-0366",
+      "surface": "SURF-009",
+      "req": "REQ-090",
+      "oracle": "source-analysis",
+      "routed": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    },
+    {
+      "case": "CASE-0390",
+      "surface": "SURF-009",
+      "req": "REQ-083",
+      "oracle": "source-analysis",
+      "routed": "undecided",
+      "why": "neither an absence nor a named observable could be read off this row; a person has to look, and this tool will not guess which it is"
+    },
+    {
+      "case": "CASE-0391",
+      "surface": "SURF-009",
+      "req": "REQ-094",
+      "oracle": "source-analysis",
+      "routed": "undecided",
+      "why": "neither an absence nor a named observable could be read off this row; a person has to look, and this tool will not guess which it is"
+    },
+    {
+      "case": "CASE-0392",
+      "surface": "SURF-009",
+      "req": "REQ-094",
+      "oracle": "source-analysis",
+      "routed": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    },
+    {
+      "case": "CASE-0396",
+      "surface": "SURF-022",
+      "req": "REQ-077",
+      "oracle": "source-analysis",
+      "routed": "undecided",
+      "why": "neither an absence nor a named observable could be read off this row; a person has to look, and this tool will not guess which it is"
+    },
+    {
+      "case": "CASE-0397",
+      "surface": "SURF-002",
+      "req": "REQ-096",
+      "oracle": "source-analysis",
+      "routed": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    },
+    {
+      "case": "CASE-0398",
+      "surface": "SURF-002",
+      "req": "REQ-096",
+      "oracle": "source-analysis",
+      "routed": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    },
+    {
+      "case": "CASE-0399",
+      "surface": "SURF-002",
+      "req": "REQ-096",
+      "oracle": "source-analysis",
+      "routed": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    },
+    {
+      "case": "CASE-0400",
+      "surface": "SURF-002",
+      "req": "REQ-091",
+      "oracle": "source-analysis",
+      "routed": "undecided",
+      "why": "neither an absence nor a named observable could be read off this row; a person has to look, and this tool will not guess which it is"
+    },
+    {
+      "case": "CASE-0426",
+      "surface": "SURF-023",
+      "req": "REQ-098",
+      "oracle": "source-analysis",
+      "routed": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    },
+    {
+      "case": "CASE-0427",
+      "surface": "SURF-023",
+      "req": "REQ-099",
+      "oracle": "source-analysis",
+      "routed": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    },
+    {
+      "case": "CASE-0428",
+      "surface": "SURF-023",
+      "req": "REQ-099",
+      "oracle": "source-analysis",
+      "routed": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    },
+    {
+      "case": "CASE-0455",
+      "surface": "SURF-025",
+      "req": "REQ-107",
+      "oracle": "source-analysis",
+      "routed": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    },
+    {
+      "case": "CASE-0458",
+      "surface": "SURF-002",
+      "req": "REQ-108",
+      "oracle": "source-analysis",
+      "routed": "undecided",
+      "why": "neither an absence nor a named observable could be read off this row; a person has to look, and this tool will not guess which it is"
+    },
+    {
+      "case": "CASE-0459",
+      "surface": "SURF-002",
+      "req": "REQ-108",
+      "oracle": "source-analysis",
+      "routed": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    }
+  ]
+}

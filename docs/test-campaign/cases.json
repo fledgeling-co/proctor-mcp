@@ -1716,7 +1716,11 @@
       "analyzer": "scripts/campaign/status_literals.py over Sources/ProctorUI/MainWindow.swift",
       "examined": 45
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    }
   },
   {
     "id": "CASE-0103",
@@ -1735,7 +1739,11 @@
       "analyzer": "scripts/campaign/status_literals.py over two one-line mutations of Sources/ProctorUI/MainWindow.swift and the file as written",
       "examined": 45
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    }
   },
   {
     "id": "CASE-0104",
@@ -1758,7 +1766,11 @@
       "analyzer": "scripts/campaign/status_literals.py --json against evidence/PRO-0081/a2-identifier-baseline.json, compared as a set",
       "examined": 45
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    }
   },
   {
     "id": "CASE-0105",
@@ -1777,7 +1789,11 @@
       "analyzer": "scripts/campaign/status_literals.py over the seven siblings of MainWindow.swift in Sources/ProctorUI",
       "examined": 310
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    }
   },
   {
     "id": "CASE-0106",
@@ -1968,7 +1984,11 @@
       "DEF-106",
       "DEF-108"
     ],
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    }
   },
   {
     "id": "CASE-0110",
@@ -2385,7 +2405,11 @@
       "examined": 451
     },
     "plane": "in-tree",
-    "journey": "JRN-003"
+    "journey": "JRN-003",
+    "rungRouting": {
+      "verdict": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    }
   },
   {
     "id": "CASE-0127",
@@ -2411,7 +2435,11 @@
       "examined": 615
     },
     "plane": "in-tree",
-    "journey": "JRN-004"
+    "journey": "JRN-004",
+    "rungRouting": {
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    }
   },
   {
     "id": "CASE-0128",
@@ -2924,7 +2952,11 @@
       "DEF-112",
       "DEF-114"
     ],
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    }
   },
   {
     "id": "CASE-0211",
@@ -3029,7 +3061,11 @@
     },
     "note": "A5. 451 lines of CaptureEngineImpl.swift and 615 of CursorOverlay.swift, 1,066 examined between them, read off the tree at the commit named in the evidence file rather than copied from a previous run. CursorOverlay carries 0 direct `.level = ` assignments outside place(_:at:) and 1 inside it, which is the range control.",
     "defects": [],
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    }
   },
   {
     "id": "CASE-0217",
@@ -3127,7 +3163,11 @@
     "defects": [
       "DEF-106"
     ],
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    }
   },
   {
     "id": "CASE-0222",
@@ -3203,7 +3243,11 @@
       "analyzer": "scripts/campaign/status_literals.py, plus WalkthroughFlowTests.theWalkthroughViewHoldsNoLiterals, which counts quote characters outside comments over the whole file",
       "examined": 322
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    }
   },
   {
     "id": "CASE-0251",
@@ -3274,7 +3318,11 @@
       "analyzer": "scripts/campaign/status_literals.py, plus HistorySurfaceTests.theHistoryViewHoldsNoUserFacingLiterals, which reads every line holding a quote and requires an interpolation in it",
       "examined": 552
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    }
   },
   {
     "id": "CASE-0255",
@@ -3329,7 +3377,11 @@
       "analyzer": "scripts/campaign/status_literals.py, plus SurfaceLiteralsTests.sceneNamesAreNamed, which scans the comment-stripped file for five named spellings",
       "examined": 292
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    }
   },
   {
     "id": "CASE-0258",
@@ -3401,7 +3453,11 @@
       "analyzer": "scripts/campaign/status_literals.py, plus SurfaceLiteralsTests.agentModelNamesTheWireKeys, which scans the comment-stripped file for 29 named wire keys",
       "examined": 443
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    }
   },
   {
     "id": "CASE-0262",
@@ -3439,7 +3495,11 @@
       "analyzer": "SurfaceLiteralsTests.readinessHasNoUnreachableBranch, slicing the comment-stripped MainWindow.swift between two declaration anchors that fail the test if either has moved",
       "examined": 823
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    }
   },
   {
     "id": "CASE-0264",
@@ -3459,7 +3519,11 @@
       "analyzer": "SurfaceLiteralsTests.agentDownDrawsApplying, over the same anchored slice of MainWindow.swift",
       "examined": 823
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    }
   },
   {
     "id": "CASE-0265",
@@ -3479,7 +3543,11 @@
       "analyzer": "SurfaceLiteralsTests.toolsCardBindsToShippedNote, over the anchored ToolsSection slice plus all eight files in Sources/ProctorUI for the \u2026InDesign twins",
       "examined": 823
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    }
   },
   {
     "id": "CASE-0266",
@@ -3830,7 +3898,11 @@
     "defects": [
       "DEF-132"
     ],
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    }
   },
   {
     "id": "CASE-0283",
@@ -3853,7 +3925,11 @@
     "defects": [
       "DEF-136"
     ],
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    }
   },
   {
     "id": "CASE-0284",
@@ -4125,7 +4201,11 @@
       "examined": 354
     },
     "plane": "in-tree",
-    "journey": "JRN-010"
+    "journey": "JRN-010",
+    "rungRouting": {
+      "verdict": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    }
   },
   {
     "id": "CASE-0313",
@@ -4148,7 +4228,11 @@
       "examined": 354
     },
     "plane": "in-tree",
-    "journey": "JRN-010"
+    "journey": "JRN-010",
+    "rungRouting": {
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    }
   },
   {
     "id": "CASE-0319",
@@ -4172,7 +4256,11 @@
       "examined": 354
     },
     "plane": "in-tree",
-    "journey": "JRN-010"
+    "journey": "JRN-010",
+    "rungRouting": {
+      "verdict": "undecided",
+      "why": "neither an absence nor a named observable could be read off this row; a person has to look, and this tool will not guess which it is"
+    }
   },
   {
     "id": "CASE-0314",
@@ -4213,7 +4301,11 @@
       "examined": 354
     },
     "plane": "in-tree",
-    "journey": "JRN-010"
+    "journey": "JRN-010",
+    "rungRouting": {
+      "verdict": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    }
   },
   {
     "id": "CASE-0317",
@@ -4386,7 +4478,11 @@
       "analyzer": "scripts/campaign/test_instruments.py",
       "examined": 295
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    }
   },
   {
     "id": "CASE-0334",
@@ -4408,7 +4504,11 @@
       "analyzer": "scripts/campaign/test_instruments.py",
       "examined": 295
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    }
   },
   {
     "id": "CASE-0335",
@@ -4433,7 +4533,11 @@
       "analyzer": "scripts/campaign/test_instruments.py",
       "examined": 295
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    }
   },
   {
     "id": "CASE-0350",
@@ -4551,7 +4655,11 @@
       "analyzer": "Tests/ProctorCoreTests/StatusChecksTests.swift, grantNamesMatchTheMap, matching `.init(\\s*name: \"\u2026\"` over the whole of Sources/ProctorAgent/Session/SessionDoctor.swift and comparing the 4 names it found against StatusChecks.known in both directions",
       "examined": 264
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "undecided",
+      "why": "neither an absence nor a named observable could be read off this row; a person has to look, and this tool will not guess which it is"
+    }
   },
   {
     "id": "CASE-0356",
@@ -4631,7 +4739,11 @@
       "analyzer": "Tests/ProctorCoreTests/StatusPolicySectionTests.swift, everyRowStringIsEnumerable, checking every label the policy card draws against the constants StatusSurface.Copy.all enumerates",
       "examined": 88
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    }
   },
   {
     "id": "CASE-0360",
@@ -4768,7 +4880,11 @@
       "analyzer": "Tests/ProctorCoreTests/WalkthroughSettingsLineTests.swift, theOldWordingIsGoneFromEverySource, reading every .swift file under Sources with whole-line comments dropped and searching each for \"Already allowed\"",
       "examined": 197
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    }
   },
   {
     "id": "CASE-0367",
@@ -4958,7 +5074,11 @@
       "analyzer": "WalkthroughFlowTests.theDesignDrawsSkipOnThePermissionsPane over the permissions pane's wt-foot in design/surfaces/proctor-surfaces.html, sliced to the footer's own eight-space close (304 characters, measured)",
       "examined": 3
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "undecided",
+      "why": "neither an absence nor a named observable could be read off this row; a person has to look, and this tool will not guess which it is"
+    }
   },
   {
     "id": "CASE-0391",
@@ -4984,7 +5104,11 @@
       "analyzer": "WalkthroughFlowTests.thePrimaryIsProminentOnlyWhenEnabled over Sources/ProctorUI/Walkthrough.swift with comments stripped, counting .borderedProminent and .buttonStyle(.bordered) before and inside the PrimaryProminence span",
       "examined": 6
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "undecided",
+      "why": "neither an absence nor a named observable could be read off this row; a person has to look, and this tool will not guess which it is"
+    }
   },
   {
     "id": "CASE-0392",
@@ -5008,7 +5132,11 @@
       "analyzer": "WalkthroughFlowTests.theDesignDrawsTheRefusingPrimaryPlain over the same 304-character permissions footer slice",
       "examined": 3
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    }
   },
   {
     "id": "CASE-0393",
@@ -5093,7 +5221,11 @@
       "analyzer": "scripts/campaign greps recorded in docs/test-campaign/evidence/PRO-0100/unwrap-census-raw.txt: `grep -rn 'try!' Tests`, `grep -rnE '[A-Za-z0-9_\\]]!([^=]|$)' Tests` and `grep -rn ')!' Tests`, taken before any edit at 9f99a0f",
       "examined": 105
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "undecided",
+      "why": "neither an absence nor a named observable could be read off this row; a person has to look, and this tool will not guess which it is"
+    }
   },
   {
     "id": "CASE-0397",
@@ -5118,7 +5250,11 @@
       "analyzer": "scripts/campaign/skill_doc_measure.py, the gemini.md count check, over every count word stated before the word `tools` in the proctor skill",
       "examined": 5
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    }
   },
   {
     "id": "CASE-0398",
@@ -5142,7 +5278,11 @@
       "analyzer": "scripts/campaign/skill_doc_measure.py stated_tool_counts() over every *.md under the proctor skill",
       "examined": 5
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    }
   },
   {
     "id": "CASE-0399",
@@ -5166,7 +5306,11 @@
       "analyzer": "scripts/campaign/skill_doc_measure.py named_tools_everywhere() over every proctor_* identifier in every *.md under the proctor skill",
       "examined": 119
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    }
   },
   {
     "id": "CASE-0400",
@@ -5186,7 +5330,11 @@
       "analyzer": "scripts/campaign/skill_doc_measure.py run end to end after repointing its catalogue default, counting the checks that executed at all",
       "examined": 27
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "undecided",
+      "why": "neither an absence nor a named observable could be read off this row; a person has to look, and this tool will not guess which it is"
+    }
   },
   {
     "id": "CASE-0410",
@@ -5531,7 +5679,11 @@
     "defects": [
       "DEF-211"
     ],
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    }
   },
   {
     "id": "CASE-0427",
@@ -5556,7 +5708,11 @@
     "defects": [
       "DEF-212"
     ],
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    }
   },
   {
     "id": "CASE-0428",
@@ -5581,7 +5737,11 @@
     "defects": [
       "DEF-212"
     ],
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    }
   },
   {
     "id": "CASE-0429",
@@ -5857,7 +6017,11 @@
       "analyzer": "python3 re.findall over CADENCE.md for quoted python3 commands, compared to the subcommand set parsed from reckoning.py --help",
       "examined": 2
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
+    }
   },
   {
     "id": "CASE-0456",
@@ -6121,7 +6285,11 @@
       "analyzer": "NSRegularExpression over Sources/ProctorAgent/Dispatch.swift, sectioned by `// MARK: - proctor_<tool>`, joined per (tool, argument) against the prose default parsed from each boolean property's description in ToolCatalogue.all",
       "examined": 34
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "undecided",
+      "why": "neither an absence nor a named observable could be read off this row; a person has to look, and this tool will not guess which it is"
+    }
   },
   {
     "id": "CASE-0459",
@@ -6142,7 +6310,11 @@
       "analyzer": "as CASE-0458",
       "examined": 34
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "rungRouting": {
+      "verdict": "raisable",
+      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+    }
   },
   {
     "id": "CASE-0460",
@@ -9412,5 +9584,50 @@
       "tailings/reclass-history.jsonl"
     ],
     "note": "PRO-0158. The classification file is the gate's input and the pass is its only writer, so a pass that wants to finish clean can always finish clean. The tailings pass over Wave 27 corrected four artifacts and then re-graded the four rows, clearing its own gate; it caught that and reverted, and nothing in the tooling would have. Correcting the artifact and re-grading the claim are two acts and only the first belongs to the pass that found it."
+  },
+  {
+    "id": "CASE-0824",
+    "req": "REQ-045",
+    "surface": "SURF-029",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "arm": {
+      "file": "docs/test-campaign/campaign.json",
+      "remove": "\"testRoot\": \"Tests\"",
+      "after": "\"testRootDisabled\": \"Tests\"",
+      "expectRed": [
+        "python3",
+        "scripts/campaign/pass_census.py",
+        "--gate"
+      ]
+    },
+    "armedBy": "Machine-readable arm (PRO-0153): removing the field that gives the blind pass its corpus takes pass_census --gate red and the refusal names testRoot by name.",
+    "defects": [],
+    "evidence": [
+      "scripts/campaign/pass_census.py",
+      "docs/test-campaign/evidence/PRO-0159/pass-census.txt"
+    ],
+    "note": "PRO-0159. The blind pass reported NOT RUN for the life of this campaign because testRoot was never declared, and every 'vacuity 0 findings' line was true of two passes out of three. The census reads each pass's own output and requires two things of every one: that it ran, and that it says over how many things. Naming the missing field is the half that matters \u2014 an operator told 'blind did not run' still has to find out why, and the why is one missing key."
+  },
+  {
+    "id": "CASE-0825",
+    "req": "REQ-102",
+    "surface": "SURF-032",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "The arm is the gate's own first use: PRO-0163 was marked Merged carrying a **Moves:** line for warrant.evidence-integrity, and figure_ledger refused it \u2014 'PRO-0163 merged and warrant.evidence-integrity did not move: 91.1 -> 91.1'. The declaration was wrong and the refusal was right.",
+    "defects": [],
+    "evidence": [
+      "scripts/campaign/figure_ledger.py",
+      "docs/specs/spec-PRO-0163.md",
+      "docs/test-campaign/evidence/PRO-0163/figure-ledger.txt"
+    ],
+    "note": "PRO-0163. Four specifications were written to bring five warrant classes to full figure sourcing; all four merged and the rollup still reports all five short. Nothing tied a merge to the figure it claimed it would shift. The ledger does, and it caught its own author on the first run: a **Moves:** line attached to this spec as a demonstration was a mis-declaration, and the refusal is recorded in the spec rather than quietly deleted \u2014 a gate catching its author on first use is the most useful thing it will ever do."
   }
 ]

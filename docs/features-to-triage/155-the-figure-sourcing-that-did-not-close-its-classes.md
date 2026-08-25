@@ -2,7 +2,8 @@
 generated-by: reckon
 campaign-sources: [warrant.rollup_classes]
 reckon-sources: [REQ-102, REQ-111]
-status: to-triage
+status: triaged
+triaged-as: PRO-0163
 ---
 # The figure sourcing that did not close its classes
 
