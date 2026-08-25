@@ -1,11 +1,5 @@
-Wave 27 close — the full suite, recorded so the figure in ORCHESTRATOR.md has a run behind it.
+Wave 27 — the suite after PRO-0122/PRO-0126
 command: ./scripts/test.sh
-date: Tue 25 Aug 2026 14:24:33 AEST
-head: b4ad0d5
-
-􁁛  Test run with 2146 tests in 270 suites passed after 124.065 seconds.
-PASS: 􁁛  Test run with 2146 tests in 270 suites passed after 124.065 seconds.
-
-script exit: TESTSH_EXIT=0, read from the script rather than from a pipe.
-A pipe reports tail's status, and a bare 'swift test' exits 1 while reporting
-every test passing, which is why scripts/test.sh owns the verdict in this repo.
+date: Tue 25 Aug 2026 14:33:49 AEST
+􁁛  Test run with 2151 tests in 271 suites passed after 130.494 seconds.
+PASS: 􁁛  Test run with 2151 tests in 271 suites passed after 130.494 seconds.

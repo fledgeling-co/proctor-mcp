@@ -1,0 +1,64 @@
+PRO-0122 / PRO-0126 — an ephemeral simulator, booted headless and torn down
+date: Tue 25 Aug 2026 14:27:06 AEST
+simctl: usage: simctl [--set <path>] [--profiles <path>] <subcommand> ...  (Xcode 26.6, per proctor_doctor)
+device: proctor-pro-0126-scratch  udid=D2FCA10B-5451-4474-9517-617361AD77FF
+
+== ISOLATION ==
+The device was CREATED for this run, so its data container is its own:
+  /Users/lukerhodes/Library/Developer/CoreSimulator/Devices/D2FCA10B-5451-4474-9517-617361AD77FF/data
+Nothing here touches the three simulators already booted on this machine.
+
+== BOOT, HEADLESS ==
+simctl boot does not open Simulator.app: the device runs with no window
+server presentation, which is the headless half PRO-0126 asks for.
+state before boot: Shutdown
+	Finished
+
+state after boot:  Booted
+Simulator.app running: no
+launchd_sim children for this device: 1
+
+== WHAT IOSDeviceList.parse READS ==
+simctl produced 16866 bytes; the production decoder is exercised by the
+Swift test below against this same shape. Read here for the record:
+  udid            D2FCA10B-5451-4474-9517-617361AD77FF
+  name            proctor-pro-0126-scratch
+  runtime         com.apple.CoreSimulator.SimRuntime.iOS-18-2
+  state           Booted
+  isAvailable     True
+  deviceType      com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro
+  listing holds 27 device(s): 6 booted, 0 unavailable
+  An unavailable device is KEPT and marked rather than filtered out, because
+  'there is a device here you cannot use' and 'there is no device here' are
+  different answers.
+
+== TEARDOWN ==
+Only this UDID. The three simulators a person had booted are untouched, and
+nothing here runs 'delete unavailable' or any unscoped delete.
+container before: present
+pids for this device before: 1
+state after shutdown: Shutdown
+pids for this device after shutdown: 0
+container after delete: absent
+listings naming this udid after delete: 0
+other booted devices still up: 5
+
+The scratch directory is removed by the delete, so the cleanup handler has
+nothing left to do on the happy path. What it is FOR is the interrupted run:
+a device created and never deleted is a leaked container, and the Swift
+fixture asserts that its teardown runs on the failure path as well.
+
+== THE SWIFT FIXTURE, RUN LIVE ==
+PROCTOR_LIVE_SIM=1 swift test --filter EphemeralSimulatorTests
+  Test "a created simulator boots headless, is seen booted, and leaves nothing behind"
+  passed after 25.284 seconds.
+  Test run with 5 tests in 1 suite passed.
+
+scratch devices left behind after the run: 0
+the person's own booted devices: still up, untouched
+
+The live half is opt-in behind PROCTOR_LIVE_SIM=1. The other four cases run
+always, so the parse, the truncated-listing diagnostic and the teardown's
+scoping are never unmeasured — and a skipped live lane is reported rather
+than passed over, because an operator cannot otherwise tell 'not run here'
+from 'ran and passed'.

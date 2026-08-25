@@ -1,7 +1,7 @@
 # Spec PRO-0126 — Headless Simulator Provisioning and Teardown Hook
 
 **Brief:** `docs/features-to-triage/118-headless-simulator-provisioning-and-teardown-hook.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-24
 **Surfaces:** SURF-019
 **Defects:** none

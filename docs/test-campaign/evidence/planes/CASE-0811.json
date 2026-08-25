@@ -1,0 +1,27 @@
+{
+  "case": "CASE-0811",
+  "requirement": "REQ-020",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "in-tree",
+  "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T04:31:13Z",
+  "tree": {
+    "commit": "7eb83e8",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Feeding the parser a listing cut mid-key takes it from a decoded array to an AgentError naming the byte count; a raw DecodingError reaching the caller fails the case.",
+  "evidence": [
+    {
+      "path": "Tests/ProctorAgentTests/EphemeralSimulatorTests.swift",
+      "sha256_16": "27e8e5e16b0feed6",
+      "present": true
+    },
+    {
+      "path": "Sources/ProctorCore/IOSDevice.swift",
+      "sha256_16": "f8ef06689ba41484",
+      "present": true
+    }
+  ]
+}

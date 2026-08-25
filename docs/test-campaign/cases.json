@@ -9118,5 +9118,44 @@
       "Tests/ProctorCoreTests/SocketBoundaryChaosTests.swift"
     ],
     "note": "PRO-0140/PRO-0141. Descriptor exhaustion measured by SCALING, not by count. A first version compared a process-wide descriptor count either side of each call and failed at 13 against 5: Swift Testing runs suites in parallel, so the count moves for reasons unrelated to the test \u2014 and a second version failed with a NEGATIVE delta when another suite closed a file between the readings. Growth is what a leak produces, so growth is what is measured, over 10 calls and then 40. Separately: reading the count off getdtablesize() made a million syscalls per call here, because the soft RLIMIT_NOFILE is 1,048,576, and the suite appeared to hang rather than to fail. /dev/fd is exact and costs one readdir."
+  },
+  {
+    "id": "CASE-0810",
+    "req": "REQ-020",
+    "surface": "SURF-019",
+    "oracle": "effect-witness",
+    "lane": "ios-sim",
+    "plane": "live-external",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "The state read is the arm: the same device read Shutdown before boot and Booted after, through the production parser rather than through simctl's prose. A boot that did not happen leaves the first reading in place and the case fails.",
+    "defects": [],
+    "witness": {
+      "recorder": "CoreSimulator's own device listing, read as a subprocess and decoded by IOSDeviceList.parse \u2014 plus the filesystem, which held and then lost the device's data container. Neither is written by the code under test.",
+      "effect": "subprocess",
+      "count": 1
+    },
+    "evidence": [
+      "docs/test-campaign/evidence/PRO-0126/ephemeral-boot.txt",
+      "Tests/ProctorAgentTests/EphemeralSimulatorTests.swift"
+    ],
+    "note": "PRO-0122/PRO-0126, on the real lane. A device created for this run (proctor-pro-0126-scratch, D2FCA10B) with its own data container, booted headless \u2014 Simulator.app never launched \u2014 read as Booted through IOSDeviceList.parse over a live 16,866-byte listing holding 27 devices, then shut down and deleted with the container gone. Scoped to that one UDID: no delete by name, no `delete unavailable`, and the five simulators a person had booted were untouched before and after. The Swift fixture runs the same cycle in 25.3s under PROCTOR_LIVE_SIM=1 and leaves nothing behind."
+  },
+  {
+    "id": "CASE-0811",
+    "req": "REQ-020",
+    "surface": "SURF-019",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "in-tree",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Feeding the parser a listing cut mid-key takes it from a decoded array to an AgentError naming the byte count; a raw DecodingError reaching the caller fails the case.",
+    "defects": [],
+    "evidence": [
+      "Tests/ProctorAgentTests/EphemeralSimulatorTests.swift",
+      "Sources/ProctorCore/IOSDevice.swift"
+    ],
+    "note": "PRO-0122 acceptance 2, and the teardown's scoping. A truncated listing is an actionFailed naming how many bytes arrived and what to run by hand, not a DecodingError a caller cannot act on \u2014 measured 2026-08-20 when a loaded parallel run produced 'Unexpected end of file' and the raw error travelled all the way out. An unavailable device is kept and marked rather than filtered, because 'there is a device here you cannot use' and 'there is no device here' are different answers. And a scratch that never minted a udid tears down to a no-op rather than falling back to a delete by name, which is how a cleanup handler reaches a device somebody else was using."
   }
 ]

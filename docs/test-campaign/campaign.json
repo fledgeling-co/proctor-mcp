@@ -4,7 +4,8 @@
   "lanes": [
     "macos",
     "mcp-stdio",
-    "cli"
+    "cli",
+    "ios-sim"
   ],
   "axes": [
     "surface",

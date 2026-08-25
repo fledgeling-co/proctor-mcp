@@ -55,13 +55,19 @@ RANK = {p: i for i, p in enumerate(PLANES)}
 # glass whatever its evidence file happens to look like on disk. Without this,
 # a glass case whose only artefact is a JSON witness reads as hermetic and the
 # lane's whole point disappears into the evidence classifier.
-LANE_FLOOR = {"macos-glass": "live-glass", "guest-glass": "live-external"}
+# `ios-sim` is a floor at live-external for the same reason `guest-glass` is: a
+# CoreSimulator device is a system outside this host's process tree, with its own
+# filesystem and its own launchd, reached only through a subprocess. A case there
+# is not hermetic however its artefact reads.
+LANE_FLOOR = {"macos-glass": "live-glass", "guest-glass": "live-external",
+              "ios-sim": "live-external"}
 
 LANE_CEILING = {
     "headless": "hermetic",
     "macos": "live-glass",
     "macos-glass": "live-glass",
     "guest-glass": "live-external",
+    "ios-sim": "live-external",
     None: "live-glass",
 }
 

@@ -1,0 +1,31 @@
+{
+  "case": "CASE-0810",
+  "requirement": "REQ-020",
+  "lane": "ios-sim",
+  "oracle": "effect-witness",
+  "plane": "live-external",
+  "placedBecause": "the ios-sim lane commits to a display server, whatever the artefact reads as",
+  "recordedAt": "2026-08-25T04:31:13Z",
+  "tree": {
+    "commit": "7eb83e8",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "CoreSimulator's own device listing, read as a subprocess and decoded by IOSDeviceList.parse \u2014 plus the filesystem, which held and then lost the device's data container. Neither is written by the code under test.",
+    "effect": "subprocess",
+    "count": 1
+  },
+  "armedBy": "The state read is the arm: the same device read Shutdown before boot and Booted after, through the production parser rather than through simctl's prose. A boot that did not happen leaves the first reading in place and the case fails.",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/PRO-0126/ephemeral-boot.txt",
+      "sha256_16": "cd3c1ebb8755d053",
+      "present": true
+    },
+    {
+      "path": "Tests/ProctorAgentTests/EphemeralSimulatorTests.swift",
+      "sha256_16": "27e8e5e16b0feed6",
+      "present": true
+    }
+  ]
+}

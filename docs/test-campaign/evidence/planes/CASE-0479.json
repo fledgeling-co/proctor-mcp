@@ -5,9 +5,9 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a capture or window witness off a display server, held at hermetic by the headless lane",
-  "recordedAt": "2026-08-25T04:16:10Z",
+  "recordedAt": "2026-08-25T04:31:13Z",
   "tree": {
-    "commit": "68a31a7",
+    "commit": "7eb83e8",
     "dirty": true
   },
   "witness": null,
@@ -15,7 +15,7 @@
   "evidence": [
     {
       "path": "docs/test-campaign/cases.json",
-      "sha256_16": "cf0f01a06318e880",
+      "sha256_16": "10065389acf3d753",
       "present": true
     },
     {

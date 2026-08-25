@@ -1,7 +1,7 @@
 # Spec PRO-0122 — iOS Simulator Boot Fixture Harness
 
 **Brief:** `docs/features-to-triage/114-ios-simulator-boot-fixture-harness.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-24
 **Surfaces:** SURF-019
 **Defects:** BLOCK-0001

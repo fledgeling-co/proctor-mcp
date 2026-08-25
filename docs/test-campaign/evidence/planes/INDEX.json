@@ -1,21 +1,21 @@
 {
-  "recordedAt": "2026-08-25T04:16:10Z",
+  "recordedAt": "2026-08-25T04:31:13Z",
   "tree": {
-    "commit": "68a31a7",
+    "commit": "7eb83e8",
     "dirty": true
   },
-  "cases": 486,
+  "cases": 488,
   "planeCounts": {
-    "in-tree": 149,
+    "in-tree": 150,
     "hermetic": 305,
     "live-glass": 31,
-    "live-external": 1
+    "live-external": 2
   },
   "passingPlaneCounts": {
-    "in-tree": 149,
+    "in-tree": 150,
     "hermetic": 303,
     "live-glass": 30,
-    "live-external": 1
+    "live-external": 2
   },
   "note": "One receipt per case, naming the plane its claim rests on and the rule that placed it there. Digests are the first 16 hex of SHA-256 over each evidence file as it stood at `recordedAt`."
 }
