@@ -5075,6 +5075,19 @@
         "REQ-024"
       ],
       "note": "Measured 2026-08-25 with lsof over the process's own pid. `maestro --version` \u2014 an invocation that prints a string and runs no flow \u2014 opens TWO outbound TLS connections before returning: 34.36.150.207:443 (bc.googleusercontent.com) and 3.41.202.171:443 (compute-1.amazonaws.com). MAESTRO_CLI_NO_ANALYTICS=1 stops the AWS one; the Google Cloud one still happens. MAESTRO_DISABLE_ANALYTICS is not a variable Maestro reads. Proctor now sets the working variable on its own subprocess, which is not the same act as rewriting ~/.maestro/analytics.json, and that file is deliberately untouched. PARTIALLY fixed and recorded as such: one connection remains and cannot be stopped from here, so a lane called network-isolated is not one. The disclosure previously said telemetry runs 'when it is enabled in its configuration' \u2014 true, and it understates a connection that happens on the most trivial invocation there is. evidence/PRO-0124/network-isolation.txt"
+    },
+    {
+      "id": "DEF-340",
+      "title": "A fifth of the campaign carries no lane, and two declared lanes carry no case",
+      "status": "open",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-029"
+      ],
+      "requirements": [
+        "REQ-045"
+      ],
+      "note": "Measured 2026-08-25 on a full run. 106 of 500 cases have an empty `lane`, and campaign.py reports them as one `unassigned` row \u2014 the per-lane ledger exists so a lane cannot hide, and a fifth of the campaign sitting outside every lane row is that failure at scale. Meanwhile `cli` and `mcp-stdio` were declared and carry zero cases, while `headless` (373) and `guest-glass` (1) were in use and undeclared; the two in use are now declared, which is transcription. The 106 are not: only 9 name a lane readably in their own evidence (7 cli, 2 mcp-stdio) and the other 97 would be inference. Filling a lane ledger by inference is how a lane hides, so the gap is recorded rather than closed."
     }
   ],
   "journey": [

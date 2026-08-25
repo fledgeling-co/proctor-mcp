@@ -1,16 +1,16 @@
 warrant · owner Luke Rhodes <luke@rhodes.gg> · signed 2026-08-22 · renewal 2027-02-18
-campaign gate clear: True · 475 case(s) · 7 class(es)
+campaign gate clear: True · 500 case(s) · 7 class(es)
 
 2 class(es) qualify for promotion:
 
-  run-lifecycle  tier 0 -> 1  (44/44 figures on an effect rung, 9 surface(s))
+  run-lifecycle  tier 0 -> 1  (52/52 figures on an effect rung, 9 surface(s))
   release-integrity  tier 0 -> 1  (1/1 figures on an effect rung, 1 surface(s))
 
 Ratification block — apply to .warrant/warrant.toml and commit it under the
 owner's own name. The charter says the signature is the commit, and that an
 agent committing it is not a signature, so this tool writes it and stops.
 
-  # run-lifecycle: 44/44 figures sourced on an effect rung across
+  # run-lifecycle: 52/52 figures sourced on an effect rung across
   # 9 surface(s), campaign gate clear. Proposed by warrant_promotion.py.
   [[classes]]
   name = "run-lifecycle"
@@ -26,8 +26,8 @@ agent committing it is not a signature, so this tool writes it and stops.
 
 5 class(es) blocked:
 
-  evidence-integrity  tier 0  90.7% (185 of 204)
-      · 19 of 204 case(s) stand below the effect rung, across 4 surface(s)
+  evidence-integrity  tier 0  91.1% (195 of 214)
+      · 19 of 214 case(s) stand below the effect rung, across 4 surface(s)
       core://tools                      10 short   CASE-0102(source-analysis), CASE-0103(source-analysis), CASE-0104(source-analysis), CASE-0105(source-analysis), CASE-0397(source-analysis)
       tool://vacuity-check/blind         5 short   CASE-0139(source-analysis), CASE-0210(source-analysis), CASE-0221(source-analysis), CASE-0283(source-analysis), CASE-0396(source-analysis)
       tool://reckon/build                3 short   CASE-0426(source-analysis), CASE-0427(source-analysis), CASE-0428(source-analysis)
@@ -40,16 +40,16 @@ agent committing it is not a signature, so this tool writes it and stops.
       ui://menubar                       1 short   CASE-0257(source-analysis)
       ui://run-hud                       1 short   CASE-0127(source-analysis)
 
-  capture-trust  tier 0  95.5% (42 of 44)
-      · 2 of 44 case(s) stand below the effect rung, across 1 surface(s)
+  capture-trust  tier 0  95.7% (44 of 46)
+      · 2 of 46 case(s) stand below the effect rung, across 1 surface(s)
       engine://screen-capture            2 short   CASE-0126(source-analysis), CASE-0216(source-analysis)
 
   operator-state  tier 0  94.5% (52 of 55)
       · 3 of 55 case(s) stand below the effect rung, across 1 surface(s)
       engine://audit-policy              3 short   CASE-0333(source-analysis), CASE-0334(source-analysis), CASE-0335(source-analysis)
 
-  registry-drift  tier 0  96.3% (26 of 27)
-      · 1 of 27 case(s) stand below the effect rung, across 1 surface(s)
+  registry-drift  tier 0  97.0% (32 of 33)
+      · 1 of 33 case(s) stand below the effect rung, across 1 surface(s)
       tool://reckoning/compare           1 short   CASE-0455(source-analysis)
 
 wrote docs/test-campaign/evidence/PRO-0137/warrant-tiers.json

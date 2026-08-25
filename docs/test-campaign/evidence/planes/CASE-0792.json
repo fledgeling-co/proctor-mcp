@@ -5,9 +5,9 @@
   "oracle": "effect-witness",
   "plane": "live-glass",
   "placedBecause": "the macos-glass lane commits to a display server, whatever the artefact reads as",
-  "recordedAt": "2026-08-25T09:18:07Z",
+  "recordedAt": "2026-08-25T09:38:18Z",
   "tree": {
-    "commit": "679810a",
+    "commit": "4b95f98",
     "dirty": true
   },
   "witness": {

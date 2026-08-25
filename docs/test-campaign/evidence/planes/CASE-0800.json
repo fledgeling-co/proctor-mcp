@@ -5,9 +5,9 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
-  "recordedAt": "2026-08-25T09:18:07Z",
+  "recordedAt": "2026-08-25T09:38:18Z",
   "tree": {
-    "commit": "679810a",
+    "commit": "4b95f98",
     "dirty": true
   },
   "witness": null,
@@ -15,12 +15,12 @@
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0137/warrant-tiers.html",
-      "sha256_16": "47ba4b1eaf5bf5ce",
+      "sha256_16": "36130bbdbce3a8b7",
       "present": true
     },
     {
       "path": "docs/test-campaign/evidence/PRO-0137/warrant-tiers.json",
-      "sha256_16": "cabb7b0455ef5e43",
+      "sha256_16": "2ed7d3f9cf46ada1",
       "present": true
     }
   ]

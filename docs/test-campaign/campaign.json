@@ -5,7 +5,9 @@
     "macos",
     "mcp-stdio",
     "cli",
-    "ios-sim"
+    "ios-sim",
+    "headless",
+    "guest-glass"
   ],
   "axes": [
     "surface",
@@ -20,9 +22,9 @@
   "run": {
     "scope": "full",
     "basis": "",
-    "lastFullRun": "2026-08-24T21:08:49+00:00",
-    "decidedBy": "user asked to run test campaign to its fullest extent",
-    "declaredAt": "2026-08-24T21:08:49+00:00",
+    "lastFullRun": "2026-08-25T09:32:29+00:00",
+    "decidedBy": "the reader asked for the fullest extent \u2014 rung 1, no inference",
+    "declaredAt": "2026-08-25T09:32:29+00:00",
     "maxFullRunAgeDays": 14.0
   },
   "laneProof": {
@@ -151,5 +153,7 @@
   "captureRoots": [
     "docs/test-campaign/evidence"
   ],
-  "captureRootsConventionalPath": "docs/evidence"
+  "captureRootsConventionalPath": "docs/evidence",
+  "testRoot": "Tests",
+  "laneNote": "`cli` and `mcp-stdio` are declared and carry no case: their work is done inside cases whose lane field is empty. 106 cases carry no lane at all, and only 9 of them name one readably in their own evidence \u2014 the rest would be inference. Recorded as DEF-340 rather than guessed at, because the per-lane ledger exists so a lane cannot hide, and filling it by inference is how one does."
 }

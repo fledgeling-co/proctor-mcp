@@ -5,9 +5,9 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
-  "recordedAt": "2026-08-25T09:18:07Z",
+  "recordedAt": "2026-08-25T09:38:18Z",
   "tree": {
-    "commit": "679810a",
+    "commit": "4b95f98",
     "dirty": true
   },
   "witness": null,
@@ -25,7 +25,7 @@
     },
     {
       "path": "tailings/reclass-history.jsonl",
-      "sha256_16": "2e8b431c288cfb64",
+      "sha256_16": "8d51a5c9cae2c3f3",
       "present": true
     }
   ]

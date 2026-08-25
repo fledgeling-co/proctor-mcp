@@ -3171,6 +3171,75 @@ def test_claim_provenance_reads_the_verdict_not_only_the_number() -> None:
           qual.stdout.strip())
 
 
+
+# ── The blind pass, ratcheted rather than gated ─────────────────────────────
+#
+# `vacuity-check.py --gate` exits 1 on any finding, and this tree's blind
+# population is characterised rather than empty: PRO-0079 read 57 of 78 findings
+# at a fixed seed and found **0 genuine**, 95% upper bound 3 in 78. 42 of the 57
+# were structural shapes no reader list can reach — a mutator prefix-matching a
+# non-mutating identifier, a read on what the mutator returned, read-then-
+# teardown. Tuning the vocabulary toward zero is refused in campaign.json with
+# its numbers, and an out-of-family reviewer argued for refusing even the two
+# spellings that were added.
+#
+# So the count ratchets: it may fall and may not rise. What that catches is a
+# NEW test that mutates and never reads, which is the thing the pass is for.
+#
+# The reason this check exists at all: `testRoot` was absent from campaign.json
+# until 2026-08-25, so the blind pass reported NOT RUN while its vocabulary sat
+# fully measured beside it — and every "vacuity 0 findings" line in this
+# repository's gate tables was true of two passes out of three.
+BLIND_RATCHET = 85
+
+
+def test_blind_pass_runs_and_holds_its_ratchet() -> None:
+    campaign_cfg = json.loads((CAMPAIGN_DIR / "campaign.json").read_text())
+    check(campaign_cfg.get("testRoot") == "Tests",
+          "campaign.json declares testRoot, so the blind pass has a corpus",
+          f"testRoot is {campaign_cfg.get('testRoot')!r}")
+
+    script = _newest_vacuity_check()
+    if script is None:
+        check(False, "the installed test-campaign's vacuity-check.py is findable",
+              "an absent instrument is a lane failure, not a pass")
+        return
+    out = subprocess.run([sys.executable, str(script), str(CAMPAIGN_DIR)],
+                         capture_output=True, text=True)
+    line = next((l for l in out.stdout.splitlines() if l.startswith("blind:")), "")
+    check("NOT RUN" not in line and "NOT MEASURED" not in line,
+          "the blind pass runs rather than reporting no corpus", line or "(no blind line)")
+
+    m = re.search(r"examined=(\d+) mutating=(\d+) re-read-after=(\d+) blind=(\d+)", line)
+    check(m is not None, "the blind pass prints its denominators", line)
+    if not m:
+        return
+    examined, mutating, reread, blind = (int(g) for g in m.groups())
+    check(reread + blind == mutating,
+          f"re-read-after plus blind sums to mutating ({reread} + {blind} vs {mutating})", line)
+    check(blind <= BLIND_RATCHET,
+          f"blind findings held at or below the ratchet of {BLIND_RATCHET}",
+          f"{blind} found — a new test mutates and never reads back, which is what this catches")
+    if blind < BLIND_RATCHET:
+        print(f"      blind FELL from {BLIND_RATCHET} to {blind} — lower BLIND_RATCHET in the "
+              f"same commit, so it cannot climb back.")
+    check(examined > 2000 and mutating > 500,
+          f"the corpus is the whole test tree ({examined} examined, {mutating} mutating)", line)
+
+
+def _newest_vacuity_check() -> Path | None:
+    cache = Path.home() / ".claude/plugins/cache/fledgeling-plugins/test-campaign"
+    if not cache.is_dir():
+        return None
+    def key(d: Path) -> tuple:
+        return tuple(int(x) if x.isdigit() else -1 for x in d.name.split("."))
+    for d in sorted((x for x in cache.iterdir() if x.is_dir()), key=key, reverse=True):
+        c = d / "skills/test-campaign/scripts/vacuity-check.py"
+        if c.is_file():
+            return c
+    return None
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -3234,7 +3303,8 @@ def main() -> int:
                test_capture_index_declares_where_the_store_is,
                test_skill_overlay_reader_fires_on_the_running_family,
                test_claim_provenance_gate_and_its_waiver_rule,
-               test_claim_provenance_reads_the_verdict_not_only_the_number):
+               test_claim_provenance_reads_the_verdict_not_only_the_number,
+               test_blind_pass_runs_and_holds_its_ratchet):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001

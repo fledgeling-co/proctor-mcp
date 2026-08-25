@@ -1,676 +1,676 @@
 [
-  {
-    "path": "evidence/shots/surf-007-zoom.png",
-    "subject": "SURF-007",
-    "target": "proctor://win:7:1/zoom",
-    "channel": "proctor_zoom \u2192 ScreenCaptureKit window-scoped, then a native crop at device resolution",
-    "sha256": "f5686195906ee1ec2542e878be315c63e5a3b1f84e530102de6ef40b977788e8",
-    "bytes": 48627,
-    "frameStatus": "complete",
-    "trustworthy": true,
-    "framesWaited": 2,
-    "resolvedTarget": {
-      "window": "win:7:1",
-      "app": "app:45808:7",
-      "contentRect": {
-        "h": 592,
-        "w": 640,
-        "x": 0,
-        "y": 0
-      },
-      "sourcePath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-7-1-zoom-1787184845451.png"
-    },
-    "normalization": null,
-    "conditions": {
-      "build": "wave-9 .build/Proctor.app, Developer ID signed",
-      "crop": "[0,0,320,200] points from the window's top-left, 8pt padding",
-      "why": "the crop is taken from the same window SURF-008 photographs, so the two pictures differ by the engine's own cropping rather than by their subject",
-      "elapsedSeconds": 0.39,
-      "drawnBy": "no Proctor source \u2014 the subject is a crop the engine took, and the claim is about the region and the resolution rather than about anything drawn"
-    },
-    "capturedAt": "2026-08-20T10:14:05+1000"
+ {
+  "path": "evidence/shots/surf-007-zoom.png",
+  "subject": "SURF-007",
+  "target": "proctor://win:7:1/zoom",
+  "channel": "proctor_zoom \u2192 ScreenCaptureKit window-scoped, then a native crop at device resolution",
+  "sha256": "f5686195906ee1ec2542e878be315c63e5a3b1f84e530102de6ef40b977788e8",
+  "bytes": 48627,
+  "frameStatus": "complete",
+  "trustworthy": true,
+  "framesWaited": 2,
+  "resolvedTarget": {
+   "window": "win:7:1",
+   "app": "app:45808:7",
+   "contentRect": {
+    "h": 592,
+    "w": 640,
+    "x": 0,
+    "y": 0
+   },
+   "sourcePath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-7-1-zoom-1787184845451.png"
   },
-  {
-    "path": "evidence/shots/surf-006-screen-capture.png",
-    "subject": "SURF-006",
-    "target": "proctor://win:8:0/screen-capture",
-    "channel": "proctor_capture \u2192 ScreenCaptureKit, window-scoped, on another application's window",
-    "sha256": "ab31d8bf945d09bd5900ec037d1ba93c8eb17b13bd17e7d88ce335e92f00d311",
-    "bytes": 58873,
-    "frameStatus": "complete",
-    "trustworthy": true,
-    "framesWaited": 3,
-    "resolvedTarget": {
-      "window": "win:8:0",
-      "app": "app:922:8",
-      "contentRect": {
-        "h": 488,
-        "w": 586,
-        "x": 0,
-        "y": 0
-      },
-      "sourcePath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-8-0-1787184869047.png"
-    },
-    "normalization": {
-      "applied": true,
-      "estimatedVisionTokens": 1000,
-      "height": 790,
-      "maxLongEdge": 1024,
-      "maxPixels": 750000,
-      "originalHeight": 976,
-      "originalWidth": 1172,
-      "purpose": "verify",
-      "scale": 0.8097331455627117,
-      "width": 949
-    },
-    "conditions": {
-      "app": "TextEdit (pid 922), window 'Untitled 32', CG window 92",
-      "why": "the capture engine is the subject here, so it is pointed at an application other than Proctor. A picture of Proctor's own window would not distinguish the engine working from the app drawing.",
-      "note": "tier verify, the default, so the frame carries the engine's own normalisation block",
-      "elapsedSeconds": 0.51,
-      "build": "wave-9 .build/Proctor.app, Developer ID signed. Recorded late: this entry carried no build at all, which the audit that followed the SURF-008 stale capture went looking for. What the picture depicts is another application's window photographed by the engine, so no Proctor source draws it and the frame status is what settles it, but a manifest row with no build is a row nobody can re-derive.",
-      "drawnBy": "no Proctor source \u2014 the subject is another application's window, photographed by the capture engine"
-    },
-    "capturedAt": "2026-08-20T10:14:29+1000"
+  "normalization": null,
+  "conditions": {
+   "build": "wave-9 .build/Proctor.app, Developer ID signed",
+   "crop": "[0,0,320,200] points from the window's top-left, 8pt padding",
+   "why": "the crop is taken from the same window SURF-008 photographs, so the two pictures differ by the engine's own cropping rather than by their subject",
+   "elapsedSeconds": 0.39,
+   "drawnBy": "no Proctor source \u2014 the subject is a crop the engine took, and the claim is about the region and the resolution rather than about anything drawn"
   },
-  {
-    "path": "evidence/shots/surf-010-menubar.png",
-    "subject": "SURF-010",
-    "target": "proctor://app:45808:7/menubar",
-    "channel": "screencapture -x -R, cropped to the AXExtrasMenuBar item frame this process reported",
-    "sha256": "61bb6f68d7ded1e118cf6dc263f597cb7874877f0616b7c133ce3ffdbbb0c6f2",
-    "bytes": 10680,
-    "frameStatus": "complete",
-    "trustworthy": true,
-    "framesWaited": null,
-    "resolvedTarget": {
-      "window": null,
-      "app": "app:45808:7",
-      "axFrame": {
-        "x": 1075,
-        "y": 4.5,
-        "w": 40,
-        "h": 24
-      },
-      "region": [
-        1073,
-        3,
-        44,
-        28
-      ],
-      "resolvedFrom": "AXExtrasMenuBar child of pid 45808, read directly from the accessibility plane"
-    },
-    "normalization": null,
-    "conditions": {
-      "build": "wave-9 .build/Proctor.app, Developer ID signed",
-      "why": "a display capture of the menu bar shows every application's status items, so the strip alone cannot be bound to Proctor. The frame comes from this process's own extras menu bar, which names which cells are its.",
-      "instances": "two Proctor processes were running; the frame was resolved for pid 45808 specifically, and the other instance's item is not inside this region",
-      "bleed": "the region is 2pt wider than the item on each side, so the crop cannot clip the glyph",
-      "drawnBy": "Sources/ProctorUI/MenuBarCharacter.swift, last changed 15 Aug 08:25 (c94799b)",
-      "sourceOlderThanCapture": "MenuBarCharacter.swift last moved on 15 Aug and this was taken on 20 Aug, so the capture is of the current source."
-    },
-    "capturedAt": "2026-08-20T10:15:52+1000"
+  "capturedAt": "2026-08-20T10:14:05+1000"
+ },
+ {
+  "path": "evidence/shots/surf-006-screen-capture.png",
+  "subject": "SURF-006",
+  "target": "proctor://win:8:0/screen-capture",
+  "channel": "proctor_capture \u2192 ScreenCaptureKit, window-scoped, on another application's window",
+  "sha256": "ab31d8bf945d09bd5900ec037d1ba93c8eb17b13bd17e7d88ce335e92f00d311",
+  "bytes": 58873,
+  "frameStatus": "complete",
+  "trustworthy": true,
+  "framesWaited": 3,
+  "resolvedTarget": {
+   "window": "win:8:0",
+   "app": "app:922:8",
+   "contentRect": {
+    "h": 488,
+    "w": 586,
+    "x": 0,
+    "y": 0
+   },
+   "sourcePath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-8-0-1787184869047.png"
   },
-  {
-    "path": "evidence/shots/surf-009-walkthrough.png",
-    "subject": "SURF-009",
-    "target": "proctor://win:9:0/walkthrough",
-    "channel": "proctor_capture \u2192 ScreenCaptureKit, window-scoped",
-    "sha256": "80f045629a3ee664795b1c191906fdfef71e32a790d02797dda48209847768d5",
-    "bytes": 157312,
-    "frameStatus": "complete",
-    "trustworthy": true,
-    "framesWaited": 1,
-    "resolvedTarget": {
-      "window": "win:9:0",
-      "app": "app:88463:9",
-      "contentRect": {
-        "h": 572,
-        "w": 640,
-        "x": 0,
-        "y": 0
-      },
-      "sourcePath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-9-0-1787186318487.png"
-    },
-    "normalization": {
-      "applied": true,
-      "estimatedVisionTokens": 1000,
-      "height": 819,
-      "maxLongEdge": 1024,
-      "maxPixels": 750000,
-      "originalHeight": 1144,
-      "originalWidth": 1280,
-      "purpose": "verify",
-      "scale": 0.7156697068974133,
-      "width": 916
-    },
-    "conditions": {
-      "build": "wave-9 .build/Proctor.app at pid 88463, Developer ID signed",
-      "state": "walkthrough, first slide \u2014 a fresh launch opens here",
-      "instances": "two Proctor processes share this bundle id; the CG window the agent resolved is 43385",
-      "elapsedSeconds": 0.221,
-      "stateConfirmedBy": "proctor_snapshot read 'What Proctor does' in this window before the shutter",
-      "drawnBy": "Sources/ProctorUI/Walkthrough.swift, last changed 20 Aug 07:17 (640d186)",
-      "sourceOlderThanCapture": "Walkthrough.swift last moved at 07:17 and this was taken at 10:38, so the capture is of the current source. Checked rather than assumed, because the SURF-008 capture that was not checked turned out to show the wrong build."
-    },
-    "capturedAt": "2026-08-20T10:38:38+1000"
+  "normalization": {
+   "applied": true,
+   "estimatedVisionTokens": 1000,
+   "height": 790,
+   "maxLongEdge": 1024,
+   "maxPixels": 750000,
+   "originalHeight": 976,
+   "originalWidth": 1172,
+   "purpose": "verify",
+   "scale": 0.8097331455627117,
+   "width": 949
   },
-  {
-    "subject": "SURF-008",
-    "sha256": "10480d409313135fe5d4888b7c2b133a5dabea58c5d10bda81a5e96fb8014978",
-    "bytes": 152688,
-    "channel": "proctor_capture \u2192 ScreenCaptureKit, window-scoped",
-    "frameStatus": "complete",
-    "trustworthy": true,
-    "framesWaited": 3,
-    "normalization": {
-      "applied": true,
-      "estimatedVisionTokens": 999,
-      "height": 977,
-      "maxLongEdge": 1024,
-      "maxPixels": 750000,
-      "originalHeight": 1936,
-      "originalWidth": 1520,
-      "purpose": "verify",
-      "scale": 0.504842793544681,
-      "width": 767
-    },
-    "conditions": {
-      "build": "wave-9 .build/Proctor.app rebuilt 11:03, at pid 13867, carrying the sentence-case section headers",
-      "agent": "open -n --env PROCTOR_SOCKET=/tmp/proctor-wave9.sock, so the window reads the wave-9 agent's health report. The operator's installed agent was never replaced.",
-      "why": "the previous capture of this surface was taken at 10:55 from an instance launched before the header fix was rebuilt, so it showed letter-spaced capitals while the source drew sentence case. Re-taken from a process started after the rebuild.",
-      "state": "status sections, confirmed by proctor_find before the shutter",
-      "elapsedSeconds": 0.799,
-      "stateConfirmedBy": "proctor_find matched 'proctor.status.section.permissions' in this window before the shutter",
-      "drawnBy": "Sources/ProctorUI/MainWindow.swift, last changed 20 Aug 11:06 (822e5ff)"
-    },
-    "capturedAt": "2026-08-20T11:42:10+1000",
-    "path": "evidence/shots/surf-008-status-window.png",
-    "target": "proctor://win:1:1/status-window",
-    "resolvedTarget": {
-      "window": "win:1:1",
-      "app": "app:13867:1",
-      "contentRect": {
-        "h": 968,
-        "w": 760,
-        "x": 0,
-        "y": 0
-      },
-      "sourcePath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-1-1-1787190130224.png"
-    }
+  "conditions": {
+   "app": "TextEdit (pid 922), window 'Untitled 32', CG window 92",
+   "why": "the capture engine is the subject here, so it is pointed at an application other than Proctor. A picture of Proctor's own window would not distinguish the engine working from the app drawing.",
+   "note": "tier verify, the default, so the frame carries the engine's own normalisation block",
+   "elapsedSeconds": 0.51,
+   "build": "wave-9 .build/Proctor.app, Developer ID signed. Recorded late: this entry carried no build at all, which the audit that followed the SURF-008 stale capture went looking for. What the picture depicts is another application's window photographed by the engine, so no Proctor source draws it and the frame status is what settles it, but a manifest row with no build is a row nobody can re-derive.",
+   "drawnBy": "no Proctor source \u2014 the subject is another application's window, photographed by the capture engine"
   },
-  {
-    "path": "evidence/shots/surf-008-tools.png",
-    "unpublishedReason": "SURF-008 publishes one shot and it is surf-008-status-window.png. This is the same window in the same state 38 minutes earlier from pid 26655, framed taller so Permissions and Tools are both visible, and its provenance was written at the shutter \u2014 the entry above carries the target, channel, contentRect, normalisation block and stateConfirmedBy. Kept as the second framing of the surface rather than published, because a subject publishes one picture and a `sharesWith` declaration covers one picture under several subjects, not the reverse. PRO-0107.",
-    "depicts": "The status window at 760x1000 with Permissions and Tools both in frame: four grants (Accessibility, Screen Recording, Automation, Input Monitoring), a Ready pill, and seven tool rows from obscura to Shortcuts CLI.",
-    "namedFor": "SURF-008 Status & Diagnostics Window",
-    "capturedRecord": "its own captures.json entry, written at capture time",
-    "sha256": "e99b456e77575c378c5601dc61060b97c5ce492f2f5a564d6f4161bd2b1f248f",
-    "bytes": 150623
+  "capturedAt": "2026-08-20T10:14:29+1000"
+ },
+ {
+  "path": "evidence/shots/surf-010-menubar.png",
+  "subject": "SURF-010",
+  "target": "proctor://app:45808:7/menubar",
+  "channel": "screencapture -x -R, cropped to the AXExtrasMenuBar item frame this process reported",
+  "sha256": "61bb6f68d7ded1e118cf6dc263f597cb7874877f0616b7c133ce3ffdbbb0c6f2",
+  "bytes": 10680,
+  "frameStatus": "complete",
+  "trustworthy": true,
+  "framesWaited": null,
+  "resolvedTarget": {
+   "window": null,
+   "app": "app:45808:7",
+   "axFrame": {
+    "x": 1075,
+    "y": 4.5,
+    "w": 40,
+    "h": 24
+   },
+   "region": [
+    1073,
+    3,
+    44,
+    28
+   ],
+   "resolvedFrom": "AXExtrasMenuBar child of pid 45808, read directly from the accessibility plane"
   },
-  {
-    "path": "evidence/guest/a1-guest-calculator-4x7.png",
-    "subject": "SURF-019",
-    "target": "proctor-guest://win:1:0/calculator",
-    "channel": "lume VNC framebuffer read of the guest's virtual display (vncdotool against the endpoint `lume ls` publishes). Not ScreenCaptureKit: the host cannot window-scope inside a guest, so this is the whole guest screen as the hypervisor presents it.",
-    "sha256": "ecfe3fb1509a9741396fe77d544918ef6fe0b58ec6f661b0c8a8f76c1f07a22d",
-    "bytes": 1040655,
-    "frameStatus": "unreported",
-    "trustworthy": true,
-    "corroboration": "guest accessibility tree via proctor_find on win:1:0 returned AXStaticText values '4\u00d77' and '28', matching the pixels",
-    "resolvedTarget": {
-      "guest": "proctor-guest",
-      "provider": "lume",
-      "handle": "gst-be9a4c36a3c20494",
-      "guestWindow": "win:1:0",
-      "guestApp": "com.apple.calculator pid 1085",
-      "screen": "1920x1440 framebuffer"
-    },
-    "normalization": null,
-    "note": "The guest's whole screen after five key steps were driven through a host session attached to it. Calculator shows 4x7 and 28."
+  "normalization": null,
+  "conditions": {
+   "build": "wave-9 .build/Proctor.app, Developer ID signed",
+   "why": "a display capture of the menu bar shows every application's status items, so the strip alone cannot be bound to Proctor. The frame comes from this process's own extras menu bar, which names which cells are its.",
+   "instances": "two Proctor processes were running; the frame was resolved for pid 45808 specifically, and the other instance's item is not inside this region",
+   "bleed": "the region is 2pt wider than the item on each side, so the crop cannot clip the glyph",
+   "drawnBy": "Sources/ProctorUI/MenuBarCharacter.swift, last changed 15 Aug 08:25 (c94799b)",
+   "sourceOlderThanCapture": "MenuBarCharacter.swift last moved on 15 Aug and this was taken on 20 Aug, so the capture is of the current source."
   },
-  {
-    "path": "evidence/guest/a1-guest-calculator-4x7-crop.png",
-    "subject": "SURF-019",
-    "target": "proctor-guest://win:1:0/calculator#display",
-    "channel": "lume VNC framebuffer read of the guest's virtual display (vncdotool against the endpoint `lume ls` publishes). Not ScreenCaptureKit: the host cannot window-scope inside a guest, so this is the whole guest screen as the hypervisor presents it.",
-    "sha256": "71aae8abe056151f1e3e1df77a5cbd2070a40a0519ff65f971785611aeec50df",
-    "bytes": 18463,
-    "frameStatus": "unreported",
-    "trustworthy": true,
-    "corroboration": "guest accessibility tree via proctor_find on win:1:0 returned AXStaticText values '4\u00d77' and '28', matching the pixels",
-    "resolvedTarget": {
-      "guest": "proctor-guest",
-      "provider": "lume",
-      "handle": "gst-be9a4c36a3c20494",
-      "guestWindow": "win:1:0",
-      "guestApp": "com.apple.calculator pid 1085",
-      "screen": "1920x1440 framebuffer"
-    },
-    "normalization": null,
-    "note": "The same frame, cropped to the Calculator display. Same capture, not a second one."
+  "capturedAt": "2026-08-20T10:15:52+1000"
+ },
+ {
+  "path": "evidence/shots/surf-009-walkthrough.png",
+  "subject": "SURF-009",
+  "target": "proctor://win:9:0/walkthrough",
+  "channel": "proctor_capture \u2192 ScreenCaptureKit, window-scoped",
+  "sha256": "80f045629a3ee664795b1c191906fdfef71e32a790d02797dda48209847768d5",
+  "bytes": 157312,
+  "frameStatus": "complete",
+  "trustworthy": true,
+  "framesWaited": 1,
+  "resolvedTarget": {
+   "window": "win:9:0",
+   "app": "app:88463:9",
+   "contentRect": {
+    "h": 572,
+    "w": 640,
+    "x": 0,
+    "y": 0
+   },
+   "sourcePath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-9-0-1787186318487.png"
   },
-  {
-    "path": "evidence/shots/surf-006-xproc-calculator.png",
-    "subject": "STEP-A1B-XPROC",
-    "target": "proctor://win:1:0/screen-capture",
-    "sha256": "685fa3235e42bd548b7419d7fccdccc7b60d6cb87235d53baa85f85dd69ec0fc",
-    "bytes": 149520,
-    "channel": "proctor_capture \u2192 ScreenCaptureKit, window-scoped, on a window owned by another process (Calculator, pid 14545, CG window 123357)",
-    "resolvedTarget": {
-      "window": "win:1:0",
-      "app": "app:14545:1",
-      "contentRect": {
-        "h": 408,
-        "w": 674,
-        "x": 0,
-        "y": 0
-      },
-      "sourcePath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-1-0-1787259997525.png"
-    },
-    "frameStatus": "complete",
-    "trustworthy": true,
-    "framesWaited": 3,
-    "normalization": {
-      "applied": true,
-      "estimatedVisionTokens": 847,
-      "height": 620,
-      "maxLongEdge": 1024,
-      "maxPixels": 750000,
-      "originalHeight": 816,
-      "originalWidth": 1348,
-      "purpose": "verify",
-      "scale": 0.7596439169139466,
-      "width": 1024
-    },
-    "conditions": {
-      "build": ".build/Proctor.app, Developer ID signed, agent pid 68474 on /tmp/pro0078b-agent.sock",
-      "why": "PRO-0078 clause 8 retake. The A1b frame was taken without a manifest row, and a manifest cannot be written after the shutter, so the cross-process capture is taken again through the writer rather than back-filled.",
-      "drawnBy": "no Proctor source \u2014 the subject is another application's window, which is the point",
-      "elapsedSeconds": 2.048
-    },
-    "capturedAt": "2026-08-21T07:06:37+1000"
+  "normalization": {
+   "applied": true,
+   "estimatedVisionTokens": 1000,
+   "height": 819,
+   "maxLongEdge": 1024,
+   "maxPixels": 750000,
+   "originalHeight": 1144,
+   "originalWidth": 1280,
+   "purpose": "verify",
+   "scale": 0.7156697068974133,
+   "width": 916
   },
-  {
-    "path": "evidence/shots/surf-006-self-excluded.png",
-    "subject": "STEP-A1-SELF",
-    "target": "proctor://win:2:0/screen-capture",
-    "sha256": "e90ce4108a6891fc5a38e020a6499a764a0b8b4f33e2b2eaa959c46eb3022df5",
-    "bytes": 13236,
-    "channel": "proctor_capture \u2192 ScreenCaptureKit, window-scoped, on a Proctor-owned window (Proctor UI pid 21088, CG window 121564, title History)",
-    "resolvedTarget": {
-      "window": "win:2:0",
-      "app": "app:21088:2",
-      "contentRect": {
-        "h": 968,
-        "w": 760,
-        "x": 0,
-        "y": 0
-      },
-      "sourcePath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-2-0-1787260006482.png"
-    },
-    "frameStatus": "complete",
-    "trustworthy": true,
-    "framesWaited": 8,
-    "normalization": {
-      "applied": true,
-      "estimatedVisionTokens": 999,
-      "height": 977,
-      "maxLongEdge": 1024,
-      "maxPixels": 750000,
-      "originalHeight": 1936,
-      "originalWidth": 1520,
-      "purpose": "verify",
-      "scale": 0.504842793544681,
-      "width": 767
-    },
-    "conditions": {
-      "build": ".build/Proctor.app, Developer ID signed, agent pid 68474 on /tmp/pro0078b-agent.sock",
-      "why": "PRO-0078 clause 8 retake, and the negative control for the cross-process frame beside it. Proctor excludes its own windows from its own captures, so this frame is expected to arrive empty while still reporting complete and trustworthy.",
-      "drawnBy": "Proctor's own SwiftUI History window, which the capture engine excludes from its own stream",
-      "elapsedSeconds": 1.087
-    },
-    "capturedAt": "2026-08-21T07:06:46+1000"
+  "conditions": {
+   "build": "wave-9 .build/Proctor.app at pid 88463, Developer ID signed",
+   "state": "walkthrough, first slide \u2014 a fresh launch opens here",
+   "instances": "two Proctor processes share this bundle id; the CG window the agent resolved is 43385",
+   "elapsedSeconds": 0.221,
+   "stateConfirmedBy": "proctor_snapshot read 'What Proctor does' in this window before the shutter",
+   "drawnBy": "Sources/ProctorUI/Walkthrough.swift, last changed 20 Aug 07:17 (640d186)",
+   "sourceOlderThanCapture": "Walkthrough.swift last moved at 07:17 and this was taken at 10:38, so the capture is of the current source. Checked rather than assumed, because the SURF-008 capture that was not checked turned out to show the wrong build."
   },
-  {
-    "path": "evidence/shots/step-a3-walkthrough-primary-disabled.png",
-    "subject": "STEP-A3-PRIMARY-DISABLED",
-    "target": "proctor://win:11:0/walkthrough/permissions/primary-disabled",
-    "sha256": "d7d9f2b5dfc172dc45df52d68f08e0be344c46503e6822ca438607d9f24b168f",
-    "bytes": 147672,
-    "channel": "proctor_capture \u2192 ScreenCaptureKit, window-scoped, on the PRO-0081 test build (Proctor UI pid 96306, CG window 130808, launched with PROCTOR_SOCKET naming nothing so every grant reads false)",
-    "resolvedTarget": {
-      "window": "win:11:0",
-      "app": "app:96306:11",
-      "contentRect": {
-        "h": 572,
-        "w": 640,
-        "x": 0,
-        "y": 0
-      },
-      "sourcePath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-11-0-1787278171947.png"
-    },
-    "frameStatus": "complete",
-    "trustworthy": true,
-    "framesWaited": 4,
-    "normalization": null,
-    "conditions": {
-      "targetPid": 96306,
-      "cgWindowID": 130808,
-      "step": "permissions",
-      "grantsVisibleToTheApp": "none \u2014 the socket names nothing, so the report is nil",
-      "primaryEnabledAsReadFromTheTree": false,
-      "readerProcess": "installed proctor-agent pid 76491, a different process from the target",
-      "installedAppUntouched": true,
-      "elapsedSeconds": 0.716,
-      "stateConfirmedBy": "proctor_find matched 'proctor.walkthrough.action.primary' in this window before the shutter"
-    },
-    "capturedAt": "2026-08-21T12:09:31+1000"
+  "capturedAt": "2026-08-20T10:38:38+1000"
+ },
+ {
+  "subject": "SURF-008",
+  "sha256": "10480d409313135fe5d4888b7c2b133a5dabea58c5d10bda81a5e96fb8014978",
+  "bytes": 152688,
+  "channel": "proctor_capture \u2192 ScreenCaptureKit, window-scoped",
+  "frameStatus": "complete",
+  "trustworthy": true,
+  "framesWaited": 3,
+  "normalization": {
+   "applied": true,
+   "estimatedVisionTokens": 999,
+   "height": 977,
+   "maxLongEdge": 1024,
+   "maxPixels": 750000,
+   "originalHeight": 1936,
+   "originalWidth": 1520,
+   "purpose": "verify",
+   "scale": 0.504842793544681,
+   "width": 767
   },
-  {
-    "path": "evidence/shots/overlay-exclusion-armed.png",
-    "unpublishedReason": "The frame taken while the overlays were armed of the overlay-exclusion measurement, and the picture is a TextEdit scratch window rather than any Proctor surface. All three overlay-exclusion files are byte-identical, which is the measurement rather than a fault: evidence/overlay-exclusion.json records the two baselines and the armed frame at one md5 with a positive control (a cmd-A select-all did change the frame), three overlay windows witnessed onscreen at alpha 1 while armed, and verdict `excluded`. Unpublished because the frame is only evidence alongside that record, and no subject in this campaign is the scratch window. PRO-0107.",
-    "depicts": "A TextEdit window titled scratch.txt reading \"campaign scratch target \u2014 hover and drag only, no text mutation\". Not a Proctor surface: it is the window the exclusion measurement was made against.",
-    "namedFor": "no surface \u2014 the overlay-exclusion measurement's own frame",
-    "capturedRecord": "evidence/overlay-exclusion.json",
-    "sha256": "ee7807db110ea041dafc1e235bc376fa87c74fafa2702b17d6a12bf03d96ef78",
-    "bytes": 41268
+  "conditions": {
+   "build": "wave-9 .build/Proctor.app rebuilt 11:03, at pid 13867, carrying the sentence-case section headers",
+   "agent": "open -n --env PROCTOR_SOCKET=/tmp/proctor-wave9.sock, so the window reads the wave-9 agent's health report. The operator's installed agent was never replaced.",
+   "why": "the previous capture of this surface was taken at 10:55 from an instance launched before the header fix was rebuilt, so it showed letter-spaced capitals while the source drew sentence case. Re-taken from a process started after the rebuild.",
+   "state": "status sections, confirmed by proctor_find before the shutter",
+   "elapsedSeconds": 0.799,
+   "stateConfirmedBy": "proctor_find matched 'proctor.status.section.permissions' in this window before the shutter",
+   "drawnBy": "Sources/ProctorUI/MainWindow.swift, last changed 20 Aug 11:06 (822e5ff)"
   },
-  {
-    "path": "evidence/shots/overlay-exclusion-baseA.png",
-    "unpublishedReason": "The first baseline of the overlay-exclusion measurement, and the picture is a TextEdit scratch window rather than any Proctor surface. All three overlay-exclusion files are byte-identical, which is the measurement rather than a fault: evidence/overlay-exclusion.json records the two baselines and the armed frame at one md5 with a positive control (a cmd-A select-all did change the frame), three overlay windows witnessed onscreen at alpha 1 while armed, and verdict `excluded`. Unpublished because the frame is only evidence alongside that record, and no subject in this campaign is the scratch window. PRO-0107.",
-    "depicts": "A TextEdit window titled scratch.txt reading \"campaign scratch target \u2014 hover and drag only, no text mutation\". Not a Proctor surface: it is the window the exclusion measurement was made against.",
-    "namedFor": "no surface \u2014 the overlay-exclusion measurement's own frame",
-    "capturedRecord": "evidence/overlay-exclusion.json",
-    "sha256": "ee7807db110ea041dafc1e235bc376fa87c74fafa2702b17d6a12bf03d96ef78",
-    "bytes": 41268
-  },
-  {
-    "path": "evidence/shots/overlay-exclusion-baseB.png",
-    "unpublishedReason": "The second baseline of the overlay-exclusion measurement, and the picture is a TextEdit scratch window rather than any Proctor surface. All three overlay-exclusion files are byte-identical, which is the measurement rather than a fault: evidence/overlay-exclusion.json records the two baselines and the armed frame at one md5 with a positive control (a cmd-A select-all did change the frame), three overlay windows witnessed onscreen at alpha 1 while armed, and verdict `excluded`. Unpublished because the frame is only evidence alongside that record, and no subject in this campaign is the scratch window. PRO-0107.",
-    "depicts": "A TextEdit window titled scratch.txt reading \"campaign scratch target \u2014 hover and drag only, no text mutation\". Not a Proctor surface: it is the window the exclusion measurement was made against.",
-    "namedFor": "no surface \u2014 the overlay-exclusion measurement's own frame",
-    "capturedRecord": "evidence/overlay-exclusion.json",
-    "sha256": "ee7807db110ea041dafc1e235bc376fa87c74fafa2702b17d6a12bf03d96ef78",
-    "bytes": 41268
-  },
-  {
-    "path": "evidence/shots/surf-004-run-hud.png",
-    "unpublishedReason": "The filename is honest \u2014 the picture is the Run HUD, and SURF-004 is the Run HUD. It stays unpublished because nothing recorded a target at the shutter: evidence/overlay-capture-lifted.json carries the frame's bounds, layer 25, sharingState 1, 704x460 and 2,517 distinct colours, and no window id or target. Publishing it would mean writing that target now, and a manifest written after the fact records what somebody believed rather than what the channel did \u2014 which is the pass this gate exists to refuse. Re-capture through capture_with_manifest.py is the route to publishing it. PRO-0107.",
-    "depicts": "The Run HUD: 'Hovering over \"l1\"' with step 1/16, an amber 'Synthetic event \u2014 TextEdit must stay in front' line, a completed 'Hovered over \"l0\"' row at 820ms, a 0:01 elapsed clock, and Pause and Stop controls.",
-    "namedFor": "SURF-004 Run HUD Floating Cocoa Overlay",
-    "capturedRecord": "evidence/overlay-capture-lifted.json",
-    "sha256": "fa7f64e3b7a11c53a52f993fe9663b32ca84fb0c02b5d04075de97998c071c9e",
-    "bytes": 136289
-  },
-  {
-    "path": "evidence/shots/surf-005-takeover-sck-external.png",
-    "unpublishedReason": "A real capture of the takeover shield at 5120x2880 replacing empty frames (DEF-219). Unpublished because it was captured without a shutter-recorded target.",
-    "depicts": "The takeover shield at 5120x2880: a full-display near-black tint reading 'Proctor is driving \"TextEdit\"' over 'Your clicks and keys still reach it \u2014 Pause and Stop are in Proctor's run panel'.",
-    "namedFor": "SURF-005 Takeover Shield & Contention Blocker",
-    "capturedRecord": "evidence/overlay-capture-lifted.json",
-    "sha256": "6fd8f87196a648c2ec6f7d67bb3950d8fde28843e3738d5a39dc436ef5c86ad7",
-    "bytes": 636565
-  },
-  {
-    "path": "evidence/shots/surf-005-takeover-sck-laptop.png",
-    "unpublishedReason": "A real capture of the takeover shield at 3456x2234 replacing empty frames (DEF-219). Unpublished because it was captured without a shutter-recorded target.",
-    "depicts": "The takeover shield at 3456x2234: a full-display near-black tint reading 'Proctor is driving \"TextEdit\"' over 'Your clicks and keys still reach it \u2014 Pause and Stop are in Proctor's run panel'.",
-    "namedFor": "SURF-005 Takeover Shield & Contention Blocker",
-    "capturedRecord": "evidence/overlay-capture-lifted.json",
-    "sha256": "652d36640f0a485cc5e1016a57f95d92d2b1f4b99f18e754bdcb0f80b8f1fe4f",
-    "bytes": 513267
-  },
-  {
-    "path": "evidence/shots/surf-005-takeover-sck-window.png",
-    "unpublishedReason": "A real capture of the takeover shield at 1024x662 replacing empty frames (DEF-219). Unpublished because it was captured without a shutter-recorded target.",
-    "depicts": "The takeover shield at 1024x662: a full-display near-black tint reading 'Proctor is driving \"TextEdit\"' over 'Your clicks and keys still reach it \u2014 Pause and Stop are in Proctor's run panel'.",
-    "namedFor": "SURF-005 Takeover Shield & Contention Blocker",
-    "capturedRecord": "evidence/overlay-capture-lifted.json",
-    "sha256": "4baff8a362099bc803c963a4ff4a187dc8eb702c8829971efdfef2597f7300c6",
-    "bytes": 40263
-  },
-  {
-    "path": "evidence/shots/surf-005-takeover-shield.png",
-    "unpublishedReason": "The filename is honest \u2014 the picture is the takeover shield, and SURF-005 is the takeover shield. 5120x2880 with every one of 14,745,600 pixels opaque and 2,739 distinct RGBA, matching evidence/overlay-capture-lifted.json's takeover record (layer 24, sharingState 1, 1,037,920 bytes). Unpublished for the same reason as surf-004-run-hud.png: that record carries bounds and layers, not a target, so nothing but the filename would bind the frame to SURF-005. PRO-0107.",
-    "depicts": "The takeover shield: a full-display near-black tint reading 'Proctor is driving \"TextEdit\"' over 'Your clicks and keys still reach it \u2014 Pause and Stop are in Proctor's run panel'.",
-    "namedFor": "SURF-005 Takeover Shield & Contention Blocker",
-    "capturedRecord": "evidence/overlay-capture-lifted.json",
-    "sha256": "7946ed24967422fdf4c715c55315918458604fe3778f9e96a293d9748da2aa6f",
-    "bytes": 1037920
-  },
-  {
-    "path": "evidence/shots/sweepK-external.png",
-    "unpublishedReason": "Named for the external display, a 900x833 capture of the status window from an earlier wave. Reconciled with sweepK-scaling.json which no longer lists it as a scaling mode frame (DEF-220).",
-    "depicts": "The status window at 900x833 with LETTER-SPACED CAPITAL section headers and three grants \u2014 the pre-sentence-case build, from an earlier wave than the published SURF-008 frame.",
-    "namedFor": "no surface \u2014 status window frame from an earlier wave",
-    "capturedRecord": "evidence/sweepK-scaling.json",
-    "sha256": "cea3e1052e630da1fcac09bae9f7fd52b6c90b68a9829fe22a7121d3724c1109",
-    "bytes": 154617
-  },
-  {
-    "path": "evidence/shots/sweepK-extras-open.png",
-    "unpublishedReason": "The filename is honest and corroborated from outside itself: evidence/sweepK-popover.json recorded the same item text at click time, the status item at 1105,4,40,24, the new window at 1091,34,223,211, and the verdict that the menu anchors to its own item rather than centring on the screen. Unpublished because that record names no capture target, and because the frame also carries another application's window behind the menu, so it is a display capture rather than a window-scoped picture of a Proctor surface. PRO-0107.",
-    "depicts": "The menu-bar extra's menu open over the desktop: 'Ready \u00b7 0 app(s) attached', 'Idle \u2014 no model connected', a ticked Show Run Panel, then Proctor Status\u2026, History\u2026, Run Setup Again\u2026 and Quit Proctor.",
-    "namedFor": "SURF-010 Menu Bar Status Item Extra (the menu, not the item)",
-    "capturedRecord": "evidence/sweepK-popover.json",
-    "sha256": "1a9141438893bfd287cfa1640a1fcad15883b9945e1f0f19b696f3ea66ffd216",
-    "bytes": 222708
-  },
-  {
-    "path": "evidence/shots/sweepK-laptop.png",
-    "unpublishedReason": "Named for the laptop display, a 900x833 capture of the status window from an earlier wave. Reconciled with sweepK-scaling.json which no longer lists it as a scaling mode frame (DEF-220).",
-    "depicts": "The status window at 900x833 with LETTER-SPACED CAPITAL section headers and three grants \u2014 the pre-sentence-case build, from an earlier wave than the published SURF-008 frame.",
-    "namedFor": "no surface \u2014 status window frame from an earlier wave",
-    "capturedRecord": "evidence/sweepK-scaling.json",
-    "sha256": "342e46b0dab579d12eda9c9084c31f21319c1d17729536bed1805c55526c82cf",
-    "bytes": 154478
-  },
-  {
-    "path": "evidence/shots/sweepK-scale-1x.png",
-    "unpublishedReason": "The filename is honest: 820x654 is exactly the capture size evidence/sweepK-scaling.json records for its 1920x1200 @1x mode, which is the only 1x mode in the sweep. Unpublished because that record is a mode table and a verdict and names no capture target, so publishing would rest on the filename. PRO-0107.",
-    "depicts": "The status window at 820x654 carrying the ad-hoc-signed warning, Ready, and three grants.",
-    "namedFor": "no surface \u2014 sweep K's display-scaling frames",
-    "capturedRecord": "evidence/sweepK-scaling.json",
-    "sha256": "665d9a52daf2df0863f3b78318dee3d27a04f9688f7db15c881b2bbd12befb0f",
-    "bytes": 86006
-  },
-  {
-    "path": "evidence/shots/sweepK-scale-small.png",
-    "unpublishedReason": "The filename is honest: 970x773 is the capture size evidence/sweepK-scaling.json records for its smallest mode, 1168x755 @2x. Unpublished because that record names no capture target. PRO-0107.",
-    "depicts": "The status window at 970x773, ad-hoc-signed warning visible, Ready, three grants.",
-    "namedFor": "no surface \u2014 sweep K's display-scaling frames",
-    "capturedRecord": "evidence/sweepK-scaling.json",
-    "sha256": "515e10e3a3fe4ed2e0e15ede0c3b47778046a9407061a2d336a107a8e6b98bfd",
-    "bytes": 165788
-  },
-  {
-    "path": "evidence/shots/sweepK-theme-after.png",
-    "unpublishedReason": "The filename is honest: evidence/sweepK-theme.json records this frame's meanRGBA at 216.96/216.79/216.32 against a dark before frame at 30.48, a repaint delta of 186 with no relaunch, and the appearance restored afterwards. Unpublished because that record names no capture target. PRO-0107.",
-    "depicts": "The status window repainted light \u2014 white ground, dark text, Ready, three grants.",
-    "namedFor": "no surface \u2014 sweep K's runtime theme change",
-    "capturedRecord": "evidence/sweepK-theme.json",
-    "sha256": "953b4fdf6d85770317ab61f7b70290a817c76022c85fb8771473f52210101579",
-    "bytes": 582784
-  },
-  {
-    "path": "evidence/shots/sweepK-theme-before.png",
-    "unpublishedReason": "Honest as sweep K's dark baseline \u2014 evidence/sweepK-theme.json records the before frame at meanRGBA 30.484, which is this picture. It is also byte-identical to sweepL-wedged-t1.png and sweepL-wedged-recovered.png, which belong to a different sweep: one file under three captions across two unrelated sweeps. Unpublished, and DEF-221 records the sharing. PRO-0107.",
-    "depicts": "The status window dark and Ready, with the ad-hoc-signed warning and the full Tools list.",
-    "namedFor": "no surface \u2014 sweep K's runtime theme change",
-    "capturedRecord": "evidence/sweepK-theme.json",
-    "sha256": "670a9398831540fde79fe19f44c34cb83bd499de8579424b22feb113684a261a",
-    "bytes": 592144
-  },
-  {
-    "path": "evidence/shots/sweepK-theme-restored.png",
-    "unpublishedReason": "The filename is honest and the frame is its own capture rather than a copy of the before frame: evidence/sweepK-theme.json records a restore delta of 0.001 against the before frame, and the two files are not byte-identical. Unpublished because that record names no capture target. PRO-0107.",
-    "depicts": "The status window dark again after the appearance was toggled back, ad-hoc-signed warning visible, Ready.",
-    "namedFor": "no surface \u2014 sweep K's runtime theme change",
-    "capturedRecord": "evidence/sweepK-theme.json",
-    "sha256": "267ab59670504639c58a168f57d14babe4b51b414aa69a659905460f0592716a",
-    "bytes": 590527
-  },
-  {
-    "path": "evidence/shots/sweepL-status-agent-down.png",
-    "unpublishedReason": "The status window in the Agent-down state showing the Agent-down pill (DEF-222). Unpublished because sweepL is an honesty check sweep rather than a published surface capture.",
-    "depicts": "The status window reading 'Agent down': 'The background agent is not answering', the socket path it could not reach, 'Until it is running, permissions cannot be read and no test can run', and Start the agent / Re-check. Depicts the Agent-down pill.",
-    "namedFor": "no surface \u2014 sweep L's status-window honesty check",
-    "capturedRecord": "evidence/sweeps-kl.json",
-    "sha256": "4f8c11912bbda884a196207acb0ee8a80ed6d191b10b52d751e74362b2913b3d",
-    "bytes": 361696
-  },
-  {
-    "path": "evidence/shots/sweepL-status-t0.6.png",
-    "unpublishedReason": "Honest in content \u2014 this is the agent-down state evidence/sweeps-kl.json claims at t+0.71s. The two sampled times are one picture: sweepL-status-t0.6.png and sweepL-status-t3.5.png are byte-identical, so the second sample is not independently witnessed and the pair cannot show the state persisting rather than being read once. Unpublished, and DEF-222 records it. PRO-0107.",
-    "depicts": "The status window reading 'Agent down': 'The background agent is not answering', the agent.sock path it could not reach, 'Until it is running, permissions cannot be read and no test can run', and Start the agent / Re-check.",
-    "namedFor": "no surface \u2014 sweep L's status-window honesty check",
-    "capturedRecord": "evidence/sweeps-kl.json",
-    "sha256": "4f8c11912bbda884a196207acb0ee8a80ed6d191b10b52d751e74362b2913b3d",
-    "bytes": 361696
-  },
-  {
-    "path": "evidence/shots/sweepL-status-t3.5.png",
-    "unpublishedReason": "Honest in content \u2014 this is the agent-down state evidence/sweeps-kl.json claims at t+3.63s. The two sampled times are one picture: sweepL-status-t0.6.png and sweepL-status-t3.5.png are byte-identical, so the second sample is not independently witnessed and the pair cannot show the state persisting rather than being read once. Unpublished, and DEF-222 records it. PRO-0107.",
-    "depicts": "The status window reading 'Agent down': 'The background agent is not answering', the agent.sock path it could not reach, 'Until it is running, permissions cannot be read and no test can run', and Start the agent / Re-check.",
-    "namedFor": "no surface \u2014 sweep L's status-window honesty check",
-    "capturedRecord": "evidence/sweeps-kl.json",
-    "sha256": "4f8c11912bbda884a196207acb0ee8a80ed6d191b10b52d751e74362b2913b3d",
-    "bytes": 361696
-  },
-  {
-    "path": "evidence/shots/sweepL-wedged-recovered.png",
-    "unpublishedReason": "A genuine re-take of the Ready status window witnessing recovery after SIGCONT (DEF-221), with a 1,046-pixel delta against sweepL-wedged-t1.png. Unpublished because sweepL records half-open socket behavior rather than a published surface capture.",
-    "depicts": "A dark Ready status window, taken as a genuine re-take differing by 1,046 pixels from the pre-recovery frame (sweepL-wedged-t1.png), witnessing the transition back to Ready after SIGCONT.",
-    "namedFor": "no surface \u2014 sweep L's half-open socket check",
-    "capturedRecord": "evidence/sweepL-halfopen.json",
-    "sha256": "e687c3f78cf639cb35195401a566920526b11b1166a4d0d8c93e2573d12e364a",
-    "bytes": 373465
-  },
-  {
-    "path": "evidence/shots/sweepL-wedged-t1.png",
-    "unpublishedReason": "A Ready window one second into a wedged agent is defensible on its own terms \u2014 the window's own timeout is 5s, so at t+1 it has nothing to report yet. What it cannot do is stand as evidence: the file is byte-identical to sweepL-wedged-recovered.png and to sweepK-theme-before.png from a different sweep, so nothing distinguishes 'still Ready at t+1' from 'recovered after SIGCONT' from 'sweep K's dark baseline'. Unpublished, and DEF-221 records it. PRO-0107.",
-    "depicts": "A dark Ready status window, identical bytes to sweepK-theme-before.png and to sweepL-wedged-recovered.png.",
-    "namedFor": "no surface \u2014 sweep L's half-open socket check",
-    "capturedRecord": "evidence/sweepL-halfopen.json",
-    "sha256": "670a9398831540fde79fe19f44c34cb83bd499de8579424b22feb113684a261a",
-    "bytes": 592144
-  },
-  {
-    "path": "evidence/shots/sweepL-wedged-t14.png",
-    "unpublishedReason": "Honest in content \u2014 this is a wedged agent at t+14s, which is what evidence/sweepL-halfopen.json claims. The two later samples are one picture: sweepL-wedged-t7.png and sweepL-wedged-t14.png are byte-identical, so the wedge is witnessed once rather than twice. Unpublished, and DEF-221 records it. PRO-0107.",
-    "depicts": "The status window reading 'Agent down' with 'the Proctor agent did not answer within 5s', over the Switches section with every toggle 'Not yet known \u2014 waiting for the agent'.",
-    "namedFor": "no surface \u2014 sweep L's half-open socket check",
-    "capturedRecord": "evidence/sweepL-halfopen.json",
-    "sha256": "5c7d4535e70c1b9d4cb81d25798d4077b76cab9adf9a35196397151f78528018",
-    "bytes": 648609
-  },
-  {
-    "path": "evidence/shots/sweepL-wedged-t7.png",
-    "unpublishedReason": "Honest in content \u2014 this is a wedged agent at t+7s, which is what evidence/sweepL-halfopen.json claims. The two later samples are one picture: sweepL-wedged-t7.png and sweepL-wedged-t14.png are byte-identical, so the wedge is witnessed once rather than twice. Unpublished, and DEF-221 records it. PRO-0107.",
-    "depicts": "The status window reading 'Agent down' with 'the Proctor agent did not answer within 5s', over the Switches section with every toggle 'Not yet known \u2014 waiting for the agent'.",
-    "namedFor": "no surface \u2014 sweep L's half-open socket check",
-    "capturedRecord": "evidence/sweepL-halfopen.json",
-    "sha256": "5c7d4535e70c1b9d4cb81d25798d4077b76cab9adf9a35196397151f78528018",
-    "bytes": 648609
-  },
-  {
-    "path": "evidence/shots/icon-audit-arrow-1024.png",
-    "unpublishedReason": "Not a capture of the surface its name claims. Opened and read: A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window. scripts/build_test_campaign.py lines 282-296 copy `design/icon/audit-renders/*` and `design/icon/runs/*/candidate-1024.png` into this directory under surface-shaped names, which is the mechanism that made the filename claim an engine it never photographed (surf-016-install-notarize.png is byte-identical to design/icon/icon-proctor-1024.png, checked). Kept rather than deleted because it is the evidence for DEF-218; unpublished because no subject in this campaign depicts an icon render. PRO-0107.",
-    "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
-    "namedFor": "arrow-1024 icon render",
-    "capturedRecord": "scripts/build_test_campaign.py:282-296",
-    "sha256": "7fdb3536e6c5052af4e1fde9dd42870420fa287821d8fc604cbe78a4324cfd85",
-    "bytes": 18136
-  },
-  {
-    "path": "evidence/shots/icon-audit-rasterB-1024.png",
-    "unpublishedReason": "Not a capture of the surface its name claims. Opened and read: A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window. scripts/build_test_campaign.py lines 282-296 copy `design/icon/audit-renders/*` and `design/icon/runs/*/candidate-1024.png` into this directory under surface-shaped names, which is the mechanism that made the filename claim an engine it never photographed (surf-016-install-notarize.png is byte-identical to design/icon/icon-proctor-1024.png, checked). Kept rather than deleted because it is the evidence for DEF-218; unpublished because no subject in this campaign depicts an icon render. PRO-0107.",
-    "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
-    "namedFor": "rasterB-1024 icon render",
-    "capturedRecord": "scripts/build_test_campaign.py:282-296",
-    "sha256": "7f6166226dfdb94add708700cdd3ca5ba1d1d74cffab1ecf5456fa8d6fa95d50",
-    "bytes": 1505713
-  },
-  {
-    "path": "evidence/shots/icon-proctor-1024.png",
-    "unpublishedReason": "Not a capture of the surface its name claims. Opened and read: A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window. scripts/build_test_campaign.py lines 282-296 copy `design/icon/audit-renders/*` and `design/icon/runs/*/candidate-1024.png` into this directory under surface-shaped names, which is the mechanism that made the filename claim an engine it never photographed (surf-016-install-notarize.png is byte-identical to design/icon/icon-proctor-1024.png, checked). Kept rather than deleted because it is the evidence for DEF-218; unpublished because no subject in this campaign depicts an icon render. PRO-0107.",
-    "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
-    "namedFor": "icon-proctor-1024 app icon render",
-    "capturedRecord": "scripts/build_test_campaign.py:282-296",
-    "sha256": "a67cf67af07e4971c54f2e23a94f1602663f4955b8ba38ac7fbc508a03df7743",
-    "bytes": 1376951
-  },
-  {
-    "path": "evidence/shots/icon-run-r00-baseline-1024.png",
-    "unpublishedReason": "Not a capture of the surface its name claims. Opened and read: A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window. scripts/build_test_campaign.py lines 282-296 copy `design/icon/audit-renders/*` and `design/icon/runs/*/candidate-1024.png` into this directory under surface-shaped names, which is the mechanism that made the filename claim an engine it never photographed (surf-016-install-notarize.png is byte-identical to design/icon/icon-proctor-1024.png, checked). Kept rather than deleted because it is the evidence for DEF-218; unpublished because no subject in this campaign depicts an icon render. PRO-0107.",
-    "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
-    "namedFor": "r00-baseline-1024 icon render",
-    "capturedRecord": "scripts/build_test_campaign.py:282-296",
-    "sha256": "2184898473a0915a9fcdc48626b49d8403335bf5a5944da20a5d67cab35501ca",
-    "bytes": 244038
-  },
-  {
-    "path": "evidence/shots/icon-run-r01-coarse-structure-1024.png",
-    "unpublishedReason": "Not a capture of the surface its name claims. Opened and read: A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window. scripts/build_test_campaign.py lines 282-296 copy `design/icon/audit-renders/*` and `design/icon/runs/*/candidate-1024.png` into this directory under surface-shaped names, which is the mechanism that made the filename claim an engine it never photographed (surf-016-install-notarize.png is byte-identical to design/icon/icon-proctor-1024.png, checked). Kept rather than deleted because it is the evidence for DEF-218; unpublished because no subject in this campaign depicts an icon render. PRO-0107.",
-    "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
-    "namedFor": "r01-coarse-structure-1024 icon render",
-    "capturedRecord": "scripts/build_test_campaign.py:282-296",
-    "sha256": "6ccd84e18cae82546d16b57755ef4556f87e5f0d3cd31008f922fbc4bd12fda0",
-    "bytes": 413879
-  },
-  {
-    "path": "evidence/shots/icon-run-r01-master-after-1024.png",
-    "unpublishedReason": "Not a capture of the surface its name claims. Opened and read: A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window. scripts/build_test_campaign.py lines 282-296 copy `design/icon/audit-renders/*` and `design/icon/runs/*/candidate-1024.png` into this directory under surface-shaped names, which is the mechanism that made the filename claim an engine it never photographed (surf-016-install-notarize.png is byte-identical to design/icon/icon-proctor-1024.png, checked). Kept rather than deleted because it is the evidence for DEF-218; unpublished because no subject in this campaign depicts an icon render. PRO-0107.",
-    "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
-    "namedFor": "r01-master-after-1024 icon render",
-    "capturedRecord": "scripts/build_test_campaign.py:282-296",
-    "sha256": "5fd9f9950c9fe21803ae4bd34e2d4c58938e461827f883d0ba11af506742280c",
-    "bytes": 250677
-  },
-  {
-    "path": "evidence/shots/icon-run-r01-master-before-1024.png",
-    "unpublishedReason": "Not a capture of the surface its name claims. Opened and read: A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window. scripts/build_test_campaign.py lines 282-296 copy `design/icon/audit-renders/*` and `design/icon/runs/*/candidate-1024.png` into this directory under surface-shaped names, which is the mechanism that made the filename claim an engine it never photographed (surf-016-install-notarize.png is byte-identical to design/icon/icon-proctor-1024.png, checked). Kept rather than deleted because it is the evidence for DEF-218; unpublished because no subject in this campaign depicts an icon render. PRO-0107.",
-    "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
-    "namedFor": "r01-master-before-1024 icon render",
-    "capturedRecord": "scripts/build_test_campaign.py:282-296",
-    "sha256": "bdb8838e0f50e90b6b6c307f7aa352497245d5a65dc002e4d808c44b23bec9a5",
-    "bytes": 212324
-  },
-  {
-    "path": "evidence/shots/icon-run-r02b-glass-translucency-1024.png",
-    "unpublishedReason": "Not a capture of the surface its name claims. Opened and read: A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window. scripts/build_test_campaign.py lines 282-296 copy `design/icon/audit-renders/*` and `design/icon/runs/*/candidate-1024.png` into this directory under surface-shaped names, which is the mechanism that made the filename claim an engine it never photographed (surf-016-install-notarize.png is byte-identical to design/icon/icon-proctor-1024.png, checked). Kept rather than deleted because it is the evidence for DEF-218; unpublished because no subject in this campaign depicts an icon render. PRO-0107.",
-    "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
-    "namedFor": "r02b-glass-translucency-1024 icon render",
-    "capturedRecord": "scripts/build_test_campaign.py:282-296",
-    "sha256": "5afe9eed9f8af025dfab37f2bc5290d10f39165d7105ff304f2f4fe0e43a301c",
-    "bytes": 515436
-  },
-  {
-    "path": "evidence/shots/icon-run-r04-contact-shadow-1024.png",
-    "unpublishedReason": "Not a capture of the surface its name claims. Opened and read: A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window. scripts/build_test_campaign.py lines 282-296 copy `design/icon/audit-renders/*` and `design/icon/runs/*/candidate-1024.png` into this directory under surface-shaped names, which is the mechanism that made the filename claim an engine it never photographed (surf-016-install-notarize.png is byte-identical to design/icon/icon-proctor-1024.png, checked). Kept rather than deleted because it is the evidence for DEF-218; unpublished because no subject in this campaign depicts an icon render. PRO-0107.",
-    "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
-    "namedFor": "r04-contact-shadow-1024 icon render",
-    "capturedRecord": "scripts/build_test_campaign.py:282-296",
-    "sha256": "7d5c07bb445545f59f3f150d1323a5eb75ba5a9bd41772ac653b79bacfe13184",
-    "bytes": 541471
-  },
-  {
-    "path": "evidence/shots/surf-003-drawn-pointer.png",
-    "unpublishedReason": "The drawn pointer glyph alone on an otherwise empty frame (3,739 non-transparent pixels of 7,720,704). Prefixed surf-003- to match SURF-003 Actuation Overlay (DEF-223). Unpublished because evidence/overlay-capture-lifted.json records bounds and layer without a shutter target.",
-    "depicts": "An otherwise empty 3456x2234 frame carrying the drawn pointer glyph alone \u2014 3,739 non-transparent pixels of 7,720,704 and 173 distinct RGBA. The drawn pointer belongs to SURF-003 Process-Directed Actuation Subsystem.",
-    "namedFor": "SURF-003 Process-Directed Actuation Subsystem",
-    "capturedRecord": "evidence/overlay-capture-lifted.json",
-    "sha256": "6e7a2b0256a5dcbc3eeecdec85f5304856ee38dd086eeda5f29d5c744f589908",
-    "bytes": 143842
-  },
-  {
-    "path": "evidence/shots/surf-028-about.png",
-    "unpublishedReason": "The About Proctor panel, prefixed surf-028- to match SURF-028 About Proctor Panel (DEF-223). Unpublished because it was captured without a shutter-recorded target.",
-    "depicts": "The About Proctor panel: the app icon, 'Proctor', 'Version 0.1.0 (1)', and 'Proctor is released under the MIT licence.' A 704x518 panel, not the status window.",
-    "namedFor": "SURF-028 About Proctor Panel",
-    "capturedRecord": null,
-    "sha256": "75ee625c4d9fda67d032421e17fd6f01e01ead3c8bd911b43bd064252d4c6e43",
-    "bytes": 119455
+  "capturedAt": "2026-08-20T11:42:10+1000",
+  "path": "evidence/shots/surf-008-status-window.png",
+  "target": "proctor://win:1:1/status-window",
+  "resolvedTarget": {
+   "window": "win:1:1",
+   "app": "app:13867:1",
+   "contentRect": {
+    "h": 968,
+    "w": 760,
+    "x": 0,
+    "y": 0
+   },
+   "sourcePath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-1-1-1787190130224.png"
   }
+ },
+ {
+  "path": "evidence/shots/surf-008-tools.png",
+  "unpublishedReason": "SURF-008 publishes one shot and it is surf-008-status-window.png. This is the same window in the same state 38 minutes earlier from pid 26655, framed taller so Permissions and Tools are both visible, and its provenance was written at the shutter \u2014 the entry above carries the target, channel, contentRect, normalisation block and stateConfirmedBy. Kept as the second framing of the surface rather than published, because a subject publishes one picture and a `sharesWith` declaration covers one picture under several subjects, not the reverse. PRO-0107.",
+  "depicts": "The status window at 760x1000 with Permissions and Tools both in frame: four grants (Accessibility, Screen Recording, Automation, Input Monitoring), a Ready pill, and seven tool rows from obscura to Shortcuts CLI.",
+  "namedFor": "SURF-008 Status & Diagnostics Window",
+  "capturedRecord": "its own captures.json entry, written at capture time",
+  "sha256": "e99b456e77575c378c5601dc61060b97c5ce492f2f5a564d6f4161bd2b1f248f",
+  "bytes": 150623
+ },
+ {
+  "path": "evidence/guest/a1-guest-calculator-4x7.png",
+  "subject": "SURF-019",
+  "target": "proctor-guest://win:1:0/calculator",
+  "channel": "lume VNC framebuffer read of the guest's virtual display (vncdotool against the endpoint `lume ls` publishes). Not ScreenCaptureKit: the host cannot window-scope inside a guest, so this is the whole guest screen as the hypervisor presents it.",
+  "sha256": "ecfe3fb1509a9741396fe77d544918ef6fe0b58ec6f661b0c8a8f76c1f07a22d",
+  "bytes": 1040655,
+  "frameStatus": "unreported",
+  "trustworthy": true,
+  "corroboration": "guest accessibility tree via proctor_find on win:1:0 returned AXStaticText values '4\u00d77' and '28', matching the pixels",
+  "resolvedTarget": {
+   "guest": "proctor-guest",
+   "provider": "lume",
+   "handle": "gst-be9a4c36a3c20494",
+   "guestWindow": "win:1:0",
+   "guestApp": "com.apple.calculator pid 1085",
+   "screen": "1920x1440 framebuffer"
+  },
+  "normalization": null,
+  "note": "The guest's whole screen after five key steps were driven through a host session attached to it. Calculator shows 4x7 and 28."
+ },
+ {
+  "path": "evidence/guest/a1-guest-calculator-4x7-crop.png",
+  "subject": "SURF-019",
+  "target": "proctor-guest://win:1:0/calculator#display",
+  "channel": "lume VNC framebuffer read of the guest's virtual display (vncdotool against the endpoint `lume ls` publishes). Not ScreenCaptureKit: the host cannot window-scope inside a guest, so this is the whole guest screen as the hypervisor presents it.",
+  "sha256": "71aae8abe056151f1e3e1df77a5cbd2070a40a0519ff65f971785611aeec50df",
+  "bytes": 18463,
+  "frameStatus": "unreported",
+  "trustworthy": true,
+  "corroboration": "guest accessibility tree via proctor_find on win:1:0 returned AXStaticText values '4\u00d77' and '28', matching the pixels",
+  "resolvedTarget": {
+   "guest": "proctor-guest",
+   "provider": "lume",
+   "handle": "gst-be9a4c36a3c20494",
+   "guestWindow": "win:1:0",
+   "guestApp": "com.apple.calculator pid 1085",
+   "screen": "1920x1440 framebuffer"
+  },
+  "normalization": null,
+  "note": "The same frame, cropped to the Calculator display. Same capture, not a second one."
+ },
+ {
+  "path": "evidence/shots/surf-006-xproc-calculator.png",
+  "subject": "STEP-A1B-XPROC",
+  "target": "proctor://win:1:0/screen-capture",
+  "sha256": "685fa3235e42bd548b7419d7fccdccc7b60d6cb87235d53baa85f85dd69ec0fc",
+  "bytes": 149520,
+  "channel": "proctor_capture \u2192 ScreenCaptureKit, window-scoped, on a window owned by another process (Calculator, pid 14545, CG window 123357)",
+  "resolvedTarget": {
+   "window": "win:1:0",
+   "app": "app:14545:1",
+   "contentRect": {
+    "h": 408,
+    "w": 674,
+    "x": 0,
+    "y": 0
+   },
+   "sourcePath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-1-0-1787259997525.png"
+  },
+  "frameStatus": "complete",
+  "trustworthy": true,
+  "framesWaited": 3,
+  "normalization": {
+   "applied": true,
+   "estimatedVisionTokens": 847,
+   "height": 620,
+   "maxLongEdge": 1024,
+   "maxPixels": 750000,
+   "originalHeight": 816,
+   "originalWidth": 1348,
+   "purpose": "verify",
+   "scale": 0.7596439169139466,
+   "width": 1024
+  },
+  "conditions": {
+   "build": ".build/Proctor.app, Developer ID signed, agent pid 68474 on /tmp/pro0078b-agent.sock",
+   "why": "PRO-0078 clause 8 retake. The A1b frame was taken without a manifest row, and a manifest cannot be written after the shutter, so the cross-process capture is taken again through the writer rather than back-filled.",
+   "drawnBy": "no Proctor source \u2014 the subject is another application's window, which is the point",
+   "elapsedSeconds": 2.048
+  },
+  "capturedAt": "2026-08-21T07:06:37+1000"
+ },
+ {
+  "path": "evidence/shots/surf-006-self-excluded.png",
+  "subject": "STEP-A1-SELF",
+  "target": "proctor://win:2:0/screen-capture",
+  "sha256": "e90ce4108a6891fc5a38e020a6499a764a0b8b4f33e2b2eaa959c46eb3022df5",
+  "bytes": 13236,
+  "channel": "proctor_capture \u2192 ScreenCaptureKit, window-scoped, on a Proctor-owned window (Proctor UI pid 21088, CG window 121564, title History)",
+  "resolvedTarget": {
+   "window": "win:2:0",
+   "app": "app:21088:2",
+   "contentRect": {
+    "h": 968,
+    "w": 760,
+    "x": 0,
+    "y": 0
+   },
+   "sourcePath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-2-0-1787260006482.png"
+  },
+  "frameStatus": "complete",
+  "trustworthy": true,
+  "framesWaited": 8,
+  "normalization": {
+   "applied": true,
+   "estimatedVisionTokens": 999,
+   "height": 977,
+   "maxLongEdge": 1024,
+   "maxPixels": 750000,
+   "originalHeight": 1936,
+   "originalWidth": 1520,
+   "purpose": "verify",
+   "scale": 0.504842793544681,
+   "width": 767
+  },
+  "conditions": {
+   "build": ".build/Proctor.app, Developer ID signed, agent pid 68474 on /tmp/pro0078b-agent.sock",
+   "why": "PRO-0078 clause 8 retake, and the negative control for the cross-process frame beside it. Proctor excludes its own windows from its own captures, so this frame is expected to arrive empty while still reporting complete and trustworthy.",
+   "drawnBy": "Proctor's own SwiftUI History window, which the capture engine excludes from its own stream",
+   "elapsedSeconds": 1.087
+  },
+  "capturedAt": "2026-08-21T07:06:46+1000"
+ },
+ {
+  "path": "evidence/shots/step-a3-walkthrough-primary-disabled.png",
+  "subject": "STEP-A3-PRIMARY-DISABLED",
+  "target": "proctor://win:11:0/walkthrough/permissions/primary-disabled",
+  "sha256": "d7d9f2b5dfc172dc45df52d68f08e0be344c46503e6822ca438607d9f24b168f",
+  "bytes": 147672,
+  "channel": "proctor_capture \u2192 ScreenCaptureKit, window-scoped, on the PRO-0081 test build (Proctor UI pid 96306, CG window 130808, launched with PROCTOR_SOCKET naming nothing so every grant reads false)",
+  "resolvedTarget": {
+   "window": "win:11:0",
+   "app": "app:96306:11",
+   "contentRect": {
+    "h": 572,
+    "w": 640,
+    "x": 0,
+    "y": 0
+   },
+   "sourcePath": "/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures/win-11-0-1787278171947.png"
+  },
+  "frameStatus": "complete",
+  "trustworthy": true,
+  "framesWaited": 4,
+  "normalization": null,
+  "conditions": {
+   "targetPid": 96306,
+   "cgWindowID": 130808,
+   "step": "permissions",
+   "grantsVisibleToTheApp": "none \u2014 the socket names nothing, so the report is nil",
+   "primaryEnabledAsReadFromTheTree": false,
+   "readerProcess": "installed proctor-agent pid 76491, a different process from the target",
+   "installedAppUntouched": true,
+   "elapsedSeconds": 0.716,
+   "stateConfirmedBy": "proctor_find matched 'proctor.walkthrough.action.primary' in this window before the shutter"
+  },
+  "capturedAt": "2026-08-21T12:09:31+1000"
+ },
+ {
+  "path": "evidence/shots/overlay-exclusion-armed.png",
+  "unpublishedReason": "The frame taken while the overlays were armed of the overlay-exclusion measurement, and the picture is a TextEdit scratch window rather than any Proctor surface. All three overlay-exclusion files are byte-identical, which is the measurement rather than a fault: evidence/overlay-exclusion.json records the two baselines and the armed frame at one md5 with a positive control (a cmd-A select-all did change the frame), three overlay windows witnessed onscreen at alpha 1 while armed, and verdict `excluded`. Unpublished because the frame is only evidence alongside that record, and no subject in this campaign is the scratch window. PRO-0107.",
+  "depicts": "A TextEdit window titled scratch.txt reading \"campaign scratch target \u2014 hover and drag only, no text mutation\". Not a Proctor surface: it is the window the exclusion measurement was made against.",
+  "namedFor": "no surface \u2014 the overlay-exclusion measurement's own frame",
+  "capturedRecord": "evidence/overlay-exclusion.json",
+  "sha256": "ee7807db110ea041dafc1e235bc376fa87c74fafa2702b17d6a12bf03d96ef78",
+  "bytes": 41268
+ },
+ {
+  "path": "evidence/shots/overlay-exclusion-baseA.png",
+  "unpublishedReason": "The first baseline of the overlay-exclusion measurement, and the picture is a TextEdit scratch window rather than any Proctor surface. All three overlay-exclusion files are byte-identical, which is the measurement rather than a fault: evidence/overlay-exclusion.json records the two baselines and the armed frame at one md5 with a positive control (a cmd-A select-all did change the frame), three overlay windows witnessed onscreen at alpha 1 while armed, and verdict `excluded`. Unpublished because the frame is only evidence alongside that record, and no subject in this campaign is the scratch window. PRO-0107.",
+  "depicts": "A TextEdit window titled scratch.txt reading \"campaign scratch target \u2014 hover and drag only, no text mutation\". Not a Proctor surface: it is the window the exclusion measurement was made against.",
+  "namedFor": "no surface \u2014 the overlay-exclusion measurement's own frame",
+  "capturedRecord": "evidence/overlay-exclusion.json",
+  "sha256": "ee7807db110ea041dafc1e235bc376fa87c74fafa2702b17d6a12bf03d96ef78",
+  "bytes": 41268
+ },
+ {
+  "path": "evidence/shots/overlay-exclusion-baseB.png",
+  "unpublishedReason": "The second baseline of the overlay-exclusion measurement, and the picture is a TextEdit scratch window rather than any Proctor surface. All three overlay-exclusion files are byte-identical, which is the measurement rather than a fault: evidence/overlay-exclusion.json records the two baselines and the armed frame at one md5 with a positive control (a cmd-A select-all did change the frame), three overlay windows witnessed onscreen at alpha 1 while armed, and verdict `excluded`. Unpublished because the frame is only evidence alongside that record, and no subject in this campaign is the scratch window. PRO-0107.",
+  "depicts": "A TextEdit window titled scratch.txt reading \"campaign scratch target \u2014 hover and drag only, no text mutation\". Not a Proctor surface: it is the window the exclusion measurement was made against.",
+  "namedFor": "no surface \u2014 the overlay-exclusion measurement's own frame",
+  "capturedRecord": "evidence/overlay-exclusion.json",
+  "sha256": "ee7807db110ea041dafc1e235bc376fa87c74fafa2702b17d6a12bf03d96ef78",
+  "bytes": 41268
+ },
+ {
+  "path": "evidence/shots/surf-004-run-hud.png",
+  "unpublishedReason": "The filename is honest \u2014 the picture is the Run HUD, and SURF-004 is the Run HUD. It stays unpublished because nothing recorded a target at the shutter: evidence/overlay-capture-lifted.json carries the frame's bounds, layer 25, sharingState 1, 704x460 and 2,517 distinct colours, and no window id or target. Publishing it would mean writing that target now, and a manifest written after the fact records what somebody believed rather than what the channel did \u2014 which is the pass this gate exists to refuse. Re-capture through capture_with_manifest.py is the route to publishing it. PRO-0107.",
+  "depicts": "The Run HUD: 'Hovering over \"l1\"' with step 1/16, an amber 'Synthetic event \u2014 TextEdit must stay in front' line, a completed 'Hovered over \"l0\"' row at 820ms, a 0:01 elapsed clock, and Pause and Stop controls.",
+  "namedFor": "SURF-004 Run HUD Floating Cocoa Overlay",
+  "capturedRecord": "evidence/overlay-capture-lifted.json",
+  "sha256": "fa7f64e3b7a11c53a52f993fe9663b32ca84fb0c02b5d04075de97998c071c9e",
+  "bytes": 136289
+ },
+ {
+  "path": "evidence/shots/surf-005-takeover-sck-external.png",
+  "unpublishedReason": "A real capture of the takeover shield at 5120x2880 replacing empty frames (DEF-219). Unpublished because it was captured without a shutter-recorded target.",
+  "depicts": "The takeover shield at 5120x2880: a full-display near-black tint reading 'Proctor is driving \"TextEdit\"' over 'Your clicks and keys still reach it \u2014 Pause and Stop are in Proctor's run panel'.",
+  "namedFor": "SURF-005 Takeover Shield & Contention Blocker",
+  "capturedRecord": "evidence/overlay-capture-lifted.json",
+  "sha256": "6fd8f87196a648c2ec6f7d67bb3950d8fde28843e3738d5a39dc436ef5c86ad7",
+  "bytes": 636565
+ },
+ {
+  "path": "evidence/shots/surf-005-takeover-sck-laptop.png",
+  "unpublishedReason": "A real capture of the takeover shield at 3456x2234 replacing empty frames (DEF-219). Unpublished because it was captured without a shutter-recorded target.",
+  "depicts": "The takeover shield at 3456x2234: a full-display near-black tint reading 'Proctor is driving \"TextEdit\"' over 'Your clicks and keys still reach it \u2014 Pause and Stop are in Proctor's run panel'.",
+  "namedFor": "SURF-005 Takeover Shield & Contention Blocker",
+  "capturedRecord": "evidence/overlay-capture-lifted.json",
+  "sha256": "652d36640f0a485cc5e1016a57f95d92d2b1f4b99f18e754bdcb0f80b8f1fe4f",
+  "bytes": 513267
+ },
+ {
+  "path": "evidence/shots/surf-005-takeover-sck-window.png",
+  "unpublishedReason": "A real capture of the takeover shield at 1024x662 replacing empty frames (DEF-219). Unpublished because it was captured without a shutter-recorded target.",
+  "depicts": "The takeover shield at 1024x662: a full-display near-black tint reading 'Proctor is driving \"TextEdit\"' over 'Your clicks and keys still reach it \u2014 Pause and Stop are in Proctor's run panel'.",
+  "namedFor": "SURF-005 Takeover Shield & Contention Blocker",
+  "capturedRecord": "evidence/overlay-capture-lifted.json",
+  "sha256": "4baff8a362099bc803c963a4ff4a187dc8eb702c8829971efdfef2597f7300c6",
+  "bytes": 40263
+ },
+ {
+  "path": "evidence/shots/surf-005-takeover-shield.png",
+  "unpublishedReason": "The filename is honest \u2014 the picture is the takeover shield, and SURF-005 is the takeover shield. 5120x2880 with every one of 14,745,600 pixels opaque and 2,739 distinct RGBA, matching evidence/overlay-capture-lifted.json's takeover record (layer 24, sharingState 1, 1,037,920 bytes). Unpublished for the same reason as surf-004-run-hud.png: that record carries bounds and layers, not a target, so nothing but the filename would bind the frame to SURF-005. PRO-0107.",
+  "depicts": "The takeover shield: a full-display near-black tint reading 'Proctor is driving \"TextEdit\"' over 'Your clicks and keys still reach it \u2014 Pause and Stop are in Proctor's run panel'.",
+  "namedFor": "SURF-005 Takeover Shield & Contention Blocker",
+  "capturedRecord": "evidence/overlay-capture-lifted.json",
+  "sha256": "7946ed24967422fdf4c715c55315918458604fe3778f9e96a293d9748da2aa6f",
+  "bytes": 1037920
+ },
+ {
+  "path": "evidence/shots/sweepK-external.png",
+  "unpublishedReason": "Named for the external display, a 900x833 capture of the status window from an earlier wave. Reconciled with sweepK-scaling.json which no longer lists it as a scaling mode frame (DEF-220).",
+  "depicts": "The status window at 900x833 with LETTER-SPACED CAPITAL section headers and three grants \u2014 the pre-sentence-case build, from an earlier wave than the published SURF-008 frame.",
+  "namedFor": "no surface \u2014 status window frame from an earlier wave",
+  "capturedRecord": "evidence/sweepK-scaling.json",
+  "sha256": "cea3e1052e630da1fcac09bae9f7fd52b6c90b68a9829fe22a7121d3724c1109",
+  "bytes": 154617
+ },
+ {
+  "path": "evidence/shots/sweepK-extras-open.png",
+  "unpublishedReason": "The filename is honest and corroborated from outside itself: evidence/sweepK-popover.json recorded the same item text at click time, the status item at 1105,4,40,24, the new window at 1091,34,223,211, and the verdict that the menu anchors to its own item rather than centring on the screen. Unpublished because that record names no capture target, and because the frame also carries another application's window behind the menu, so it is a display capture rather than a window-scoped picture of a Proctor surface. PRO-0107.",
+  "depicts": "The menu-bar extra's menu open over the desktop: 'Ready \u00b7 0 app(s) attached', 'Idle \u2014 no model connected', a ticked Show Run Panel, then Proctor Status\u2026, History\u2026, Run Setup Again\u2026 and Quit Proctor.",
+  "namedFor": "SURF-010 Menu Bar Status Item Extra (the menu, not the item)",
+  "capturedRecord": "evidence/sweepK-popover.json",
+  "sha256": "1a9141438893bfd287cfa1640a1fcad15883b9945e1f0f19b696f3ea66ffd216",
+  "bytes": 222708
+ },
+ {
+  "path": "evidence/shots/sweepK-laptop.png",
+  "unpublishedReason": "Named for the laptop display, a 900x833 capture of the status window from an earlier wave. Reconciled with sweepK-scaling.json which no longer lists it as a scaling mode frame (DEF-220).",
+  "depicts": "The status window at 900x833 with LETTER-SPACED CAPITAL section headers and three grants \u2014 the pre-sentence-case build, from an earlier wave than the published SURF-008 frame.",
+  "namedFor": "no surface \u2014 status window frame from an earlier wave",
+  "capturedRecord": "evidence/sweepK-scaling.json",
+  "sha256": "342e46b0dab579d12eda9c9084c31f21319c1d17729536bed1805c55526c82cf",
+  "bytes": 154478
+ },
+ {
+  "path": "evidence/shots/sweepK-scale-1x.png",
+  "unpublishedReason": "The filename is honest: 820x654 is exactly the capture size evidence/sweepK-scaling.json records for its 1920x1200 @1x mode, which is the only 1x mode in the sweep. Unpublished because that record is a mode table and a verdict and names no capture target, so publishing would rest on the filename. PRO-0107.",
+  "depicts": "The status window at 820x654 carrying the ad-hoc-signed warning, Ready, and three grants.",
+  "namedFor": "no surface \u2014 sweep K's display-scaling frames",
+  "capturedRecord": "evidence/sweepK-scaling.json",
+  "sha256": "665d9a52daf2df0863f3b78318dee3d27a04f9688f7db15c881b2bbd12befb0f",
+  "bytes": 86006
+ },
+ {
+  "path": "evidence/shots/sweepK-scale-small.png",
+  "unpublishedReason": "The filename is honest: 970x773 is the capture size evidence/sweepK-scaling.json records for its smallest mode, 1168x755 @2x. Unpublished because that record names no capture target. PRO-0107.",
+  "depicts": "The status window at 970x773, ad-hoc-signed warning visible, Ready, three grants.",
+  "namedFor": "no surface \u2014 sweep K's display-scaling frames",
+  "capturedRecord": "evidence/sweepK-scaling.json",
+  "sha256": "515e10e3a3fe4ed2e0e15ede0c3b47778046a9407061a2d336a107a8e6b98bfd",
+  "bytes": 165788
+ },
+ {
+  "path": "evidence/shots/sweepK-theme-after.png",
+  "unpublishedReason": "The filename is honest: evidence/sweepK-theme.json records this frame's meanRGBA at 216.96/216.79/216.32 against a dark before frame at 30.48, a repaint delta of 186 with no relaunch, and the appearance restored afterwards. Unpublished because that record names no capture target. PRO-0107.",
+  "depicts": "The status window repainted light \u2014 white ground, dark text, Ready, three grants.",
+  "namedFor": "no surface \u2014 sweep K's runtime theme change",
+  "capturedRecord": "evidence/sweepK-theme.json",
+  "sha256": "953b4fdf6d85770317ab61f7b70290a817c76022c85fb8771473f52210101579",
+  "bytes": 582784
+ },
+ {
+  "path": "evidence/shots/sweepK-theme-before.png",
+  "unpublishedReason": "Honest as sweep K's dark baseline \u2014 evidence/sweepK-theme.json records the before frame at meanRGBA 30.484, which is this picture. It is also byte-identical to sweepL-wedged-t1.png and sweepL-wedged-recovered.png, which belong to a different sweep: one file under three captions across two unrelated sweeps. Unpublished, and DEF-221 records the sharing. PRO-0107.",
+  "depicts": "The status window dark and Ready, with the ad-hoc-signed warning and the full Tools list.",
+  "namedFor": "no surface \u2014 sweep K's runtime theme change",
+  "capturedRecord": "evidence/sweepK-theme.json",
+  "sha256": "670a9398831540fde79fe19f44c34cb83bd499de8579424b22feb113684a261a",
+  "bytes": 592144
+ },
+ {
+  "path": "evidence/shots/sweepK-theme-restored.png",
+  "unpublishedReason": "The filename is honest and the frame is its own capture rather than a copy of the before frame: evidence/sweepK-theme.json records a restore delta of 0.001 against the before frame, and the two files are not byte-identical. Unpublished because that record names no capture target. PRO-0107.",
+  "depicts": "The status window dark again after the appearance was toggled back, ad-hoc-signed warning visible, Ready.",
+  "namedFor": "no surface \u2014 sweep K's runtime theme change",
+  "capturedRecord": "evidence/sweepK-theme.json",
+  "sha256": "267ab59670504639c58a168f57d14babe4b51b414aa69a659905460f0592716a",
+  "bytes": 590527
+ },
+ {
+  "path": "evidence/shots/sweepL-status-agent-down.png",
+  "unpublishedReason": "The status window in the Agent-down state showing the Agent-down pill (DEF-222). Unpublished because sweepL is an honesty check sweep rather than a published surface capture.",
+  "depicts": "The status window reading 'Agent down': 'The background agent is not answering', the socket path it could not reach, 'Until it is running, permissions cannot be read and no test can run', and Start the agent / Re-check. Depicts the Agent-down pill.",
+  "namedFor": "no surface \u2014 sweep L's status-window honesty check",
+  "capturedRecord": "evidence/sweeps-kl.json",
+  "sha256": "4f8c11912bbda884a196207acb0ee8a80ed6d191b10b52d751e74362b2913b3d",
+  "bytes": 361696
+ },
+ {
+  "path": "evidence/shots/sweepL-status-t0.6.png",
+  "unpublishedReason": "Honest in content \u2014 this is the agent-down state evidence/sweeps-kl.json claims at t+0.71s. The two sampled times are one picture: sweepL-status-t0.6.png and sweepL-status-t3.5.png are byte-identical, so the second sample is not independently witnessed and the pair cannot show the state persisting rather than being read once. Unpublished, and DEF-222 records it. PRO-0107.",
+  "depicts": "The status window reading 'Agent down': 'The background agent is not answering', the agent.sock path it could not reach, 'Until it is running, permissions cannot be read and no test can run', and Start the agent / Re-check.",
+  "namedFor": "no surface \u2014 sweep L's status-window honesty check",
+  "capturedRecord": "evidence/sweeps-kl.json",
+  "sha256": "4f8c11912bbda884a196207acb0ee8a80ed6d191b10b52d751e74362b2913b3d",
+  "bytes": 361696
+ },
+ {
+  "path": "evidence/shots/sweepL-status-t3.5.png",
+  "unpublishedReason": "Honest in content \u2014 this is the agent-down state evidence/sweeps-kl.json claims at t+3.63s. The two sampled times are one picture: sweepL-status-t0.6.png and sweepL-status-t3.5.png are byte-identical, so the second sample is not independently witnessed and the pair cannot show the state persisting rather than being read once. Unpublished, and DEF-222 records it. PRO-0107.",
+  "depicts": "The status window reading 'Agent down': 'The background agent is not answering', the agent.sock path it could not reach, 'Until it is running, permissions cannot be read and no test can run', and Start the agent / Re-check.",
+  "namedFor": "no surface \u2014 sweep L's status-window honesty check",
+  "capturedRecord": "evidence/sweeps-kl.json",
+  "sha256": "4f8c11912bbda884a196207acb0ee8a80ed6d191b10b52d751e74362b2913b3d",
+  "bytes": 361696
+ },
+ {
+  "path": "evidence/shots/sweepL-wedged-recovered.png",
+  "unpublishedReason": "A genuine re-take of the Ready status window witnessing recovery after SIGCONT (DEF-221), with a 1,046-pixel delta against sweepL-wedged-t1.png. Unpublished because sweepL records half-open socket behavior rather than a published surface capture.",
+  "depicts": "A dark Ready status window, taken as a genuine re-take differing by 1,046 pixels from the pre-recovery frame (sweepL-wedged-t1.png), witnessing the transition back to Ready after SIGCONT.",
+  "namedFor": "no surface \u2014 sweep L's half-open socket check",
+  "capturedRecord": "evidence/sweepL-halfopen.json",
+  "sha256": "e687c3f78cf639cb35195401a566920526b11b1166a4d0d8c93e2573d12e364a",
+  "bytes": 373465
+ },
+ {
+  "path": "evidence/shots/sweepL-wedged-t1.png",
+  "unpublishedReason": "A Ready window one second into a wedged agent is defensible on its own terms \u2014 the window's own timeout is 5s, so at t+1 it has nothing to report yet. What it cannot do is stand as evidence: the file is byte-identical to sweepL-wedged-recovered.png and to sweepK-theme-before.png from a different sweep, so nothing distinguishes 'still Ready at t+1' from 'recovered after SIGCONT' from 'sweep K's dark baseline'. Unpublished, and DEF-221 records it. PRO-0107.",
+  "depicts": "A dark Ready status window, identical bytes to sweepK-theme-before.png and to sweepL-wedged-recovered.png.",
+  "namedFor": "no surface \u2014 sweep L's half-open socket check",
+  "capturedRecord": "evidence/sweepL-halfopen.json",
+  "sha256": "670a9398831540fde79fe19f44c34cb83bd499de8579424b22feb113684a261a",
+  "bytes": 592144
+ },
+ {
+  "path": "evidence/shots/sweepL-wedged-t14.png",
+  "unpublishedReason": "Honest in content \u2014 this is a wedged agent at t+14s, which is what evidence/sweepL-halfopen.json claims. The two later samples are one picture: sweepL-wedged-t7.png and sweepL-wedged-t14.png are byte-identical, so the wedge is witnessed once rather than twice. Unpublished, and DEF-221 records it. PRO-0107.",
+  "depicts": "The status window reading 'Agent down' with 'the Proctor agent did not answer within 5s', over the Switches section with every toggle 'Not yet known \u2014 waiting for the agent'.",
+  "namedFor": "no surface \u2014 sweep L's half-open socket check",
+  "capturedRecord": "evidence/sweepL-halfopen.json",
+  "sha256": "5c7d4535e70c1b9d4cb81d25798d4077b76cab9adf9a35196397151f78528018",
+  "bytes": 648609
+ },
+ {
+  "path": "evidence/shots/sweepL-wedged-t7.png",
+  "unpublishedReason": "Honest in content \u2014 this is a wedged agent at t+7s, which is what evidence/sweepL-halfopen.json claims. The two later samples are one picture: sweepL-wedged-t7.png and sweepL-wedged-t14.png are byte-identical, so the wedge is witnessed once rather than twice. Unpublished, and DEF-221 records it. PRO-0107.",
+  "depicts": "The status window reading 'Agent down' with 'the Proctor agent did not answer within 5s', over the Switches section with every toggle 'Not yet known \u2014 waiting for the agent'.",
+  "namedFor": "no surface \u2014 sweep L's half-open socket check",
+  "capturedRecord": "evidence/sweepL-halfopen.json",
+  "sha256": "5c7d4535e70c1b9d4cb81d25798d4077b76cab9adf9a35196397151f78528018",
+  "bytes": 648609
+ },
+ {
+  "path": "evidence/shots/icon-audit-arrow-1024.png",
+  "unpublishedReason": "Not a capture of the surface its name claims. Opened and read: A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window. scripts/build_test_campaign.py lines 282-296 copy `design/icon/audit-renders/*` and `design/icon/runs/*/candidate-1024.png` into this directory under surface-shaped names, which is the mechanism that made the filename claim an engine it never photographed (surf-016-install-notarize.png is byte-identical to design/icon/icon-proctor-1024.png, checked). Kept rather than deleted because it is the evidence for DEF-218; unpublished because no subject in this campaign depicts an icon render. PRO-0107.",
+  "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
+  "namedFor": "arrow-1024 icon render",
+  "capturedRecord": "scripts/build_test_campaign.py:282-296",
+  "sha256": "7fdb3536e6c5052af4e1fde9dd42870420fa287821d8fc604cbe78a4324cfd85",
+  "bytes": 18136
+ },
+ {
+  "path": "evidence/shots/icon-audit-rasterB-1024.png",
+  "unpublishedReason": "Not a capture of the surface its name claims. Opened and read: A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window. scripts/build_test_campaign.py lines 282-296 copy `design/icon/audit-renders/*` and `design/icon/runs/*/candidate-1024.png` into this directory under surface-shaped names, which is the mechanism that made the filename claim an engine it never photographed (surf-016-install-notarize.png is byte-identical to design/icon/icon-proctor-1024.png, checked). Kept rather than deleted because it is the evidence for DEF-218; unpublished because no subject in this campaign depicts an icon render. PRO-0107.",
+  "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
+  "namedFor": "rasterB-1024 icon render",
+  "capturedRecord": "scripts/build_test_campaign.py:282-296",
+  "sha256": "7f6166226dfdb94add708700cdd3ca5ba1d1d74cffab1ecf5456fa8d6fa95d50",
+  "bytes": 1505713
+ },
+ {
+  "path": "evidence/shots/icon-proctor-1024.png",
+  "unpublishedReason": "Not a capture of the surface its name claims. Opened and read: A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window. scripts/build_test_campaign.py lines 282-296 copy `design/icon/audit-renders/*` and `design/icon/runs/*/candidate-1024.png` into this directory under surface-shaped names, which is the mechanism that made the filename claim an engine it never photographed (surf-016-install-notarize.png is byte-identical to design/icon/icon-proctor-1024.png, checked). Kept rather than deleted because it is the evidence for DEF-218; unpublished because no subject in this campaign depicts an icon render. PRO-0107.",
+  "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
+  "namedFor": "icon-proctor-1024 app icon render",
+  "capturedRecord": "scripts/build_test_campaign.py:282-296",
+  "sha256": "a67cf67af07e4971c54f2e23a94f1602663f4955b8ba38ac7fbc508a03df7743",
+  "bytes": 1376951
+ },
+ {
+  "path": "evidence/shots/icon-run-r00-baseline-1024.png",
+  "unpublishedReason": "Not a capture of the surface its name claims. Opened and read: A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window. scripts/build_test_campaign.py lines 282-296 copy `design/icon/audit-renders/*` and `design/icon/runs/*/candidate-1024.png` into this directory under surface-shaped names, which is the mechanism that made the filename claim an engine it never photographed (surf-016-install-notarize.png is byte-identical to design/icon/icon-proctor-1024.png, checked). Kept rather than deleted because it is the evidence for DEF-218; unpublished because no subject in this campaign depicts an icon render. PRO-0107.",
+  "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
+  "namedFor": "r00-baseline-1024 icon render",
+  "capturedRecord": "scripts/build_test_campaign.py:282-296",
+  "sha256": "2184898473a0915a9fcdc48626b49d8403335bf5a5944da20a5d67cab35501ca",
+  "bytes": 244038
+ },
+ {
+  "path": "evidence/shots/icon-run-r01-coarse-structure-1024.png",
+  "unpublishedReason": "Not a capture of the surface its name claims. Opened and read: A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window. scripts/build_test_campaign.py lines 282-296 copy `design/icon/audit-renders/*` and `design/icon/runs/*/candidate-1024.png` into this directory under surface-shaped names, which is the mechanism that made the filename claim an engine it never photographed (surf-016-install-notarize.png is byte-identical to design/icon/icon-proctor-1024.png, checked). Kept rather than deleted because it is the evidence for DEF-218; unpublished because no subject in this campaign depicts an icon render. PRO-0107.",
+  "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
+  "namedFor": "r01-coarse-structure-1024 icon render",
+  "capturedRecord": "scripts/build_test_campaign.py:282-296",
+  "sha256": "6ccd84e18cae82546d16b57755ef4556f87e5f0d3cd31008f922fbc4bd12fda0",
+  "bytes": 413879
+ },
+ {
+  "path": "evidence/shots/icon-run-r01-master-after-1024.png",
+  "unpublishedReason": "Not a capture of the surface its name claims. Opened and read: A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window. scripts/build_test_campaign.py lines 282-296 copy `design/icon/audit-renders/*` and `design/icon/runs/*/candidate-1024.png` into this directory under surface-shaped names, which is the mechanism that made the filename claim an engine it never photographed (surf-016-install-notarize.png is byte-identical to design/icon/icon-proctor-1024.png, checked). Kept rather than deleted because it is the evidence for DEF-218; unpublished because no subject in this campaign depicts an icon render. PRO-0107.",
+  "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
+  "namedFor": "r01-master-after-1024 icon render",
+  "capturedRecord": "scripts/build_test_campaign.py:282-296",
+  "sha256": "5fd9f9950c9fe21803ae4bd34e2d4c58938e461827f883d0ba11af506742280c",
+  "bytes": 250677
+ },
+ {
+  "path": "evidence/shots/icon-run-r01-master-before-1024.png",
+  "unpublishedReason": "Not a capture of the surface its name claims. Opened and read: A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window. scripts/build_test_campaign.py lines 282-296 copy `design/icon/audit-renders/*` and `design/icon/runs/*/candidate-1024.png` into this directory under surface-shaped names, which is the mechanism that made the filename claim an engine it never photographed (surf-016-install-notarize.png is byte-identical to design/icon/icon-proctor-1024.png, checked). Kept rather than deleted because it is the evidence for DEF-218; unpublished because no subject in this campaign depicts an icon render. PRO-0107.",
+  "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
+  "namedFor": "r01-master-before-1024 icon render",
+  "capturedRecord": "scripts/build_test_campaign.py:282-296",
+  "sha256": "bdb8838e0f50e90b6b6c307f7aa352497245d5a65dc002e4d808c44b23bec9a5",
+  "bytes": 212324
+ },
+ {
+  "path": "evidence/shots/icon-run-r02b-glass-translucency-1024.png",
+  "unpublishedReason": "Not a capture of the surface its name claims. Opened and read: A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window. scripts/build_test_campaign.py lines 282-296 copy `design/icon/audit-renders/*` and `design/icon/runs/*/candidate-1024.png` into this directory under surface-shaped names, which is the mechanism that made the filename claim an engine it never photographed (surf-016-install-notarize.png is byte-identical to design/icon/icon-proctor-1024.png, checked). Kept rather than deleted because it is the evidence for DEF-218; unpublished because no subject in this campaign depicts an icon render. PRO-0107.",
+  "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
+  "namedFor": "r02b-glass-translucency-1024 icon render",
+  "capturedRecord": "scripts/build_test_campaign.py:282-296",
+  "sha256": "5afe9eed9f8af025dfab37f2bc5290d10f39165d7105ff304f2f4fe0e43a301c",
+  "bytes": 515436
+ },
+ {
+  "path": "evidence/shots/icon-run-r04-contact-shadow-1024.png",
+  "unpublishedReason": "Not a capture of the surface its name claims. Opened and read: A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window. scripts/build_test_campaign.py lines 282-296 copy `design/icon/audit-renders/*` and `design/icon/runs/*/candidate-1024.png` into this directory under surface-shaped names, which is the mechanism that made the filename claim an engine it never photographed (surf-016-install-notarize.png is byte-identical to design/icon/icon-proctor-1024.png, checked). Kept rather than deleted because it is the evidence for DEF-218; unpublished because no subject in this campaign depicts an icon render. PRO-0107.",
+  "depicts": "A Proctor app-icon render: the dark window dissolving into orange squares, 1024x1024, on the icon corpus's warm ground. Not a picture of this surface, and not a picture of any running Proctor window.",
+  "namedFor": "r04-contact-shadow-1024 icon render",
+  "capturedRecord": "scripts/build_test_campaign.py:282-296",
+  "sha256": "7d5c07bb445545f59f3f150d1323a5eb75ba5a9bd41772ac653b79bacfe13184",
+  "bytes": 541471
+ },
+ {
+  "path": "evidence/shots/surf-003-drawn-pointer.png",
+  "unpublishedReason": "The drawn pointer glyph alone on an otherwise empty frame (3,739 non-transparent pixels of 7,720,704). Prefixed surf-003- to match SURF-003 Actuation Overlay (DEF-223). Unpublished because evidence/overlay-capture-lifted.json records bounds and layer without a shutter target.",
+  "depicts": "An otherwise empty 3456x2234 frame carrying the drawn pointer glyph alone \u2014 3,739 non-transparent pixels of 7,720,704 and 173 distinct RGBA. The drawn pointer belongs to SURF-003 Process-Directed Actuation Subsystem.",
+  "namedFor": "SURF-003 Process-Directed Actuation Subsystem",
+  "capturedRecord": "evidence/overlay-capture-lifted.json",
+  "sha256": "6e7a2b0256a5dcbc3eeecdec85f5304856ee38dd086eeda5f29d5c744f589908",
+  "bytes": 143842
+ },
+ {
+  "path": "evidence/shots/surf-028-about.png",
+  "unpublishedReason": "The About Proctor panel, prefixed surf-028- to match SURF-028 About Proctor Panel (DEF-223). Unpublished because it was captured without a shutter-recorded target.",
+  "depicts": "The About Proctor panel: the app icon, 'Proctor', 'Version 0.1.0 (1)', and 'Proctor is released under the MIT licence.' A 704x518 panel, not the status window.",
+  "namedFor": "SURF-028 About Proctor Panel",
+  "capturedRecord": null,
+  "sha256": "75ee625c4d9fda67d032421e17fd6f01e01ead3c8bd911b43bd064252d4c6e43",
+  "bytes": 119455
+ }
 ]

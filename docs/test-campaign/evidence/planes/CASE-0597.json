@@ -5,9 +5,9 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
-  "recordedAt": "2026-08-25T09:18:07Z",
+  "recordedAt": "2026-08-25T09:38:18Z",
   "tree": {
-    "commit": "679810a",
+    "commit": "4b95f98",
     "dirty": true
   },
   "witness": null,
@@ -20,7 +20,7 @@
     },
     {
       "path": "scripts/campaign/test_instruments.py",
-      "sha256_16": "5bab5614deb19126",
+      "sha256_16": "cf64a8fa9a5c7c1f",
       "present": true
     }
   ]
