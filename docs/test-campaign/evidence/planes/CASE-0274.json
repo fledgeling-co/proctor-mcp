@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "DirectoryWitness over the store's directory, before and after the call, with each created path's mode taken off disk afterwards through a fresh FileManager.attributesOfItem \u2014 a reader that is not PolicyStore and was not told what the write intended",
+    "effect": "filesystem-write",
+    "count": 1
+  },
+  "armedBy": "Sabotage 6: the pre-fix write put back \u2014 try data.write(to: url, options: .atomic), DEF-068's original defect. 'Expectation failed: (mode(url) -> 420) == (0o600 -> 384)'; 420 is 0o644. Restored, green.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/PolicyStoreSeamTests.swift",

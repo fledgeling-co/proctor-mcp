@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "skill_doc_arm.py mutates a scratch copy of the skill and of ToolCatalogue.swift, one mutation per check, and asserts the named check flips to FAIL. The thirteen checks this case stands on were each watched red: dropping proctor_policy from tools.md reds 'names every shipped tool'; adding proctor_bogus reds 'names no tool the server lacks'; renaming name: \"proctor_zoom\" in the catalogue reds 'catalogue ships 21'; demoting one '## `proctor_wait`' to '###' reds 'specifies 15 sections'; retitling the guest heading reds 'proctor_guest has a specified section'; and deleting `guest` from the full row's adds column reds 'guest listed in full profile adds'. EVERY COUNT EITHER FILE STATES IS NOW READ, because the first instrument read two of six and a corrected site went unwatched: '21 tools' -> '20 tools' reds 'states the count the catalogue ships'; the full row's total 21 -> 20 reds 'full profile row totals the catalogue'; deleting `openai_computer` from that row's adds column reds 'every profile row totals the tools it names', which reads all four row totals against the names they nest over; 'Six more are named' -> 'Five more' reds the specified-plus-named split; 'Fifteen plus six is the 21 above' -> '20 above' reds its restatement; 'rather than all twenty-one' -> 'all twenty' reds SKILL.md's word-form count; 'the 21 tools the server ships' -> '20 tools' reds SKILL.md's depth line; and '`core` is the ten that' -> 'the eleven that' reds the core-profile size both files state. Full output in doc-measurement-arming.txt, 24/24 armed.",
   "evidence": [
     {
       "path": "scripts/campaign/skill_doc_measure.py",

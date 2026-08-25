@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Found by capturing the running program against the installed agent, which predates this feature: the surface said 'The background agent is not answering' about an agent that had just answered, and offered to start a process that was already running.",
   "evidence": [
     {
       "path": "evidence/tui-agent-too-old.json",

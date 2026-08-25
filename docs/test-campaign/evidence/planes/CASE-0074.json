@@ -5,6 +5,13 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "mutate_swift.py refuses to start unless the suite is green before any mutation, because without that a suite already failing reports every mutant as killed and returns a 0% survival rate that means nothing. Baseline green was printed before the first mutant.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/mutation-agent.json",

@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Removed the AgentProcess term and re-ran the suite while polling the window server: 2 windows appeared from swiftpm-testing-helper, one at the tint's level mid-fade and one at the drawn pointer's, and 3 tests went red. With the term in place the same run paints nothing.",
   "evidence": [
     {
       "path": "evidence/overlay/entitlement-on-glass.txt",

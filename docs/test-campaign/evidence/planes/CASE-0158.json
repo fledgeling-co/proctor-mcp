@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "the same verifier that reports 5 of 5 keys here exits 1 and names the dropped row on the hand-merge fixture in CASE-0157, in the same run.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0091/instrument-suite.txt",

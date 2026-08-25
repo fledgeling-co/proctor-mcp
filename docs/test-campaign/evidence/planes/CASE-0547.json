@@ -5,6 +5,13 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The two-way control is the arming: the same rewrite is invisible to the name diff and named by the digest diff, in one run, so a check that cannot fire is distinguishable from a check that found nothing.",
   "evidence": [
     {
       "path": "scripts/reckoning/reckoning_selftest.py",

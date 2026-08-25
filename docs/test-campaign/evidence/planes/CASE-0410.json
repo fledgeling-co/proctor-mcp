@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Current selftest.py against reckon.py as it stood at 31697a9: 'a fixed defect is not remaining work FAILED \u2014 pre-fix='broken' now='broken' work=True'. arming-D line 1.",
   "evidence": [
     {
       "path": "~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",

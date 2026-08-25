@@ -5,10 +5,17 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The same file is cited both ways in the same run against the same audit: campaign-relative and repo-relative reach the same branch and produce the same notice. Before the repair the repo-relative form produced neither a row nor a prefix match, so it resolved on disk and returned no reasons at all.",
   "evidence": [
     {
       "path": "scripts/campaign/test_instruments.py",
-      "sha256_16": "d9b63aa577e0de7e",
+      "sha256_16": "200f27dd47233bb8",
       "present": true
     },
     {

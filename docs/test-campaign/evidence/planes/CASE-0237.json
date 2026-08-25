@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Structural two-way with CASE-0236: one asserts the foreground set maps to .syntheticEvent, the other asserts the complement does not, so a vocabulary collapsing the distinction in either direction reddens one. Probe E reddens CASE-0236 with this one still passing, so they are independent.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0084/arming.txt",

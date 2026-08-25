@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Two ways. The classifier: two sentences planted, FAIL: 2 of 9 examined, exit 1. The Swift guard: AgentModel reading value[\"canShow\"] as a literal again, which failed at SurfaceLiteralsTests.swift:138. Both restored, green.",
   "evidence": [
     {
       "path": "scripts/campaign/status_literals.py",

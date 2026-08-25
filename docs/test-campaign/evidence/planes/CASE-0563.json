@@ -5,6 +5,13 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The pre-repair `unicode_escape` round trip is reintroduced against both forms in one run: it decodes the octal one and returns the literal one with its quotes still attached, which is the unopenable name. End to end, the fixture repo is set to core.quotePath=false and porcelain_paths resolves a file whose name carries both a non-ASCII byte and a space to a path that opens.",
   "evidence": [
     {
       "path": "scripts/reckoning/reckoning_selftest.py",

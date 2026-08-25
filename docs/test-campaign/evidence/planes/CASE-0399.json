@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "proctor_zoom renamed to proctor_zoomer in gemini.md on a scratch copy. skill_doc_arm.py reports ARMED and the mutation reds only this check.",
   "evidence": [
     {
       "path": "scripts/campaign/skill_doc_measure.py",

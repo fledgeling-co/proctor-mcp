@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The same all-zero sample over a window Proctor does not own returns a different verdict and a different sentence, so the branch is reading ownership rather than agreeing with itself.",
   "evidence": [
     {
       "path": "evidence/PRO-0088/gate-after.txt",

@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "HardwareInputBoundaryTests and hardware_yield_probe.py assert InputBlock classification of ourPid, delegatedPid, and untagged hardware events",
   "evidence": [
     {
       "path": "scripts/campaign/hardware_yield_probe.py",

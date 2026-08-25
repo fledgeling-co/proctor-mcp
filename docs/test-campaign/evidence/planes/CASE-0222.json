@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "THE GATE CAUGHT THIS ITEM, which is the arming that matters \u2014 a gate proved only on a fixture is a gate nobody has watched refuse a real merge. DEF-106 was written into this spec's `## Defects` table while the registry still read `open`, and `defect_gate.py claims docs/specs/spec-PRO-0097.md docs/test-campaign` exited 1: 'OPEN     DEF-106 still reads `open`', 'FAIL: 1 claimed defect(s) the registry does not agree are closed'. Real spec, real registry of 75 records, no fixture. Once DEF-106 was flipped with the evidence that closed it, the same command over the same spec exits 0.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0097/def-106-arming.txt",

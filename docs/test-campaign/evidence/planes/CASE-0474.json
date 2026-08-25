@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "surf-016-install-notarize.png's sha256 in shot-audit.json was replaced with 64 zeroes, the replacement confirmed landed by re-reading the file, and the check watched going red: exit 1, `surf-016-install-notarize.png: bytes changed under a disposition written for the old ones (000000000000 \u2192 a67cf67af07e)`. Restored from the pre-mutation copy and exit 0 reproduced. docs/test-campaign/evidence/PRO-0107/shot-disposition-armed.txt.",
   "evidence": [
     {
       "path": "scripts/campaign/shot_disposition.py",

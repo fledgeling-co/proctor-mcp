@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "the replies read back off the Reflector's own socket by a raw Darwin.socket/connect client and decoded with JSONSerialization \u2014 never the target's Frame reader or its JSONValue decoder \u2014 carrying values AppKit computed rather than values the test wrote: a constraint-solved frame, a labelColor resolved against the window's effective appearance, and a CoreAnimation layer model. Plus the socket file's own mode, read off the inode.",
+    "effect": "ipc",
+    "count": 3
+  },
+  "armedBy": "Sabotage run in the same test body: ProctorReflector.stop() closes the listening descriptor and unlinks the path, and the same client over the same window then fails connect with errno 2 on all three ops. The armed variant removed the stop() call and the sabotage half went red with four issues \u2014 the socket still existed, stillAnswered read 3, no refusal was a connect failure, and isRunning was still true. Every count was inverted in the same run and printed the number the recorder actually saw: answered 3, nodes 3 (NSView, NSTextField, NSTextFieldSimpleLabel), frame (22.0, 272.0, 110.5, 16.0), colour #FFFFFF catalog System name labelColor, constraints 2 (leading, top). docs/test-campaign/evidence/PRO-0083/arming-w9-req023.txt",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/ReflectorWitnessTests.swift",

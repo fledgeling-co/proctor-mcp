@@ -5,10 +5,17 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The same fixture history carries a legitimate later correction beside the dropped value, and the check does not report it \u2014 a check that reported every change would be as useless as one that reported none, and the two are indistinguishable from a single red. Then both dropped values are restored in a further commit and the same check exits 0, so the green is a measurement rather than an absence.",
   "evidence": [
     {
       "path": "scripts/campaign/test_instruments.py",
-      "sha256_16": "d9b63aa577e0de7e",
+      "sha256_16": "200f27dd47233bb8",
       "present": true
     }
   ]

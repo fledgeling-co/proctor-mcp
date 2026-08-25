@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "the server's own side of the socket: three distinct SocketClient connections it answered, plus the RunSessionIdentity it read off each accepted descriptor via getsockopt(SOL_LOCAL, LOCAL_PEERPID) and proc_pidinfo, recorded inside the server process from the task-local the accept path binds",
+    "effect": "ipc",
+    "count": 3
+  },
+  "armedBy": "Sabotage run in the same test body: the socket path is unlinked between bind and connect, so Darwin.connect has nothing to reach. The armed variant removed the unlink and the sabotage half went red at 'an error was expected but none was thrown'. Both count assertions were inverted in the same run and printed (answered -> 3) == -1 and (identities.count -> 3) == -1. docs/test-campaign/evidence/PRO-0077/arming-run.txt",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/EffectWitnessTests.swift",

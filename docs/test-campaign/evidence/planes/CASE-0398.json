@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "A count sentence added to references/methodology.md on a scratch copy ('this page describes nineteen tools') \u2014 a file the measurement could not previously open at all. skill_doc_arm.py reports ARMED, and the mutation reds ONLY this check, which is why it is armed in a different file from CASE-0397 rather than sharing that mutation and inheriting its red.",
   "evidence": [
     {
       "path": "scripts/campaign/skill_doc_measure.py",

@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Added a `\"Bluetooth\": .permissionReadLive` entry to StatusChecks.known \u2014 a name the agent never emits \u2014 and watched grantNamesMatchTheMap fail on the direction PRO-0082 added: (Set(StatusChecks.known.keys).subtracting(emitted) \u2192 [\"Shortcuts CLI\", \"Bluetooth\"]) == (retired \u2192 [\"Shortcuts CLI\"]), 1 issue, exit 1. docs/test-campaign/evidence/pro-0082/arming-gapfix.json",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",

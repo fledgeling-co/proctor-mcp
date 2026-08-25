@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "FrontEndAttributionTests pins the name->front-end map, and a peer whose executable is neither proctor-cli nor proctor-shim records nil rather than defaulting to one of them.",
   "evidence": [
     {
       "path": "evidence/cli/audit-via.txt",

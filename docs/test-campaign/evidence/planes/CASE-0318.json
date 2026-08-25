@@ -5,6 +5,13 @@
   "oracle": "raster-visual",
   "plane": "live-glass",
   "placedBecause": "the raster-visual rung owes a display server",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The two frames differ in the one property being asked about and agree on everything else: inactive, both Allow buttons draw the same grey; key, Accessibility's draws filled accent and Screen Recording's stays plain. A capture that could not tell the two treatments apart would have shown the same pair twice.",
   "evidence": [
     {
       "path": "evidence/PRO-0086/walkthrough-permissions-reason.png",

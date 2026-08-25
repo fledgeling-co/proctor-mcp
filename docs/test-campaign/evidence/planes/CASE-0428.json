@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Armed by setting both files back to 1.0.0 \u2014 the exact state that stranded 81ad488: 'the published version carries these repairs FAILED \u2014 published version 1.0.0 predates the behaviour this file asserts'. arming-B-delivery.txt, second mutation.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0102/source-denominators.txt",

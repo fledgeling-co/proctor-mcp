@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "live-glass",
   "placedBecause": "a capture or window witness off a display server",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "CGWindowListCopyWindowInfo and an independent AX client, both in the witness_probe process, reading the target window's owner, geometry and displayed text; ScreenCaptureKit's SCFrameStatus names the frame",
+    "effect": "device",
+    "count": 1
+  },
+  "armedBy": null,
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/witness/a1b-capture.json",

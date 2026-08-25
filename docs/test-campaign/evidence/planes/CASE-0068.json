@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "live-glass",
   "placedBecause": "a capture or window witness off a display server",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "listen-only tail-append CGEventTap in the witness_probe process, counting probe-marked posts that survived Proctor's head-inserted block",
+    "effect": "device",
+    "count": 24
+  },
+  "armedBy": null,
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/witness/a4-act.json",

@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a capture or window witness off a display server, held at hermetic by the headless lane",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Two-way on the real gate: before, six findings under 'Effect witnesses that witnessed nothing' named CASE-0128 and CASE-0129 three times each; after, that blocker is gone. The numbers written into the witness blocks are read out of the evidence files those cases already cited, so nothing was measured twice and nothing was invented.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0097/campaign-check-before.txt",

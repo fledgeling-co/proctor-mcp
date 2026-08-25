@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "mutation 4 of instrument-arming.txt puts 11.20 back into the note and the check goes red naming 22.92, which is read out of the evidence file rather than typed into the test.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0091/instrument-suite.txt",

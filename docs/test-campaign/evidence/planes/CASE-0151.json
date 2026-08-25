@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "this case IS the arming run for CASE-0150, and the plugin's tests/run.sh carries it as a permanent guard: a truncated list that prints no denominator fails, and a complete list that claims a truncation fails.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0091/def041-denominator.txt",

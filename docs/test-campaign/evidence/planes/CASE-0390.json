@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The Skip setup BUTTON removed from the design's permissions footer while the pane's caption still names Skip setup in prose. 'Expectation failed: drawsSkipButton' at WalkthroughFlowTests.swift:308 plus the require at 311; 1 test failed with 2 issues, exit 1; reverted and green. Full output in arming-def162.txt.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",

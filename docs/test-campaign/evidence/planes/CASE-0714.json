@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "test_instruments.py test_supervision_tui_pty_probe_characterization verifies 5-scenario truth table passes",
   "evidence": [
     {
       "path": "scripts/campaign/supervision_tui_pty_probe.py",

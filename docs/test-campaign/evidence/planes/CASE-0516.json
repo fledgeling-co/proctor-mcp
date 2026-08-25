@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "reckon 1.1.0 and 1.2.0 built over the identical tree (100 briefs, 335 cases, 129 defect rows, 105 requirements): class counts identical, work_items 147 both, rows reclassified 0, one cited edge removed (BRIEF-97 -> CASE-9999), join 21.0% both, build exit 0 -> 4 on two findings.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0104/vocabulary-delta.json",

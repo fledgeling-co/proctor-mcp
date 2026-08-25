@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The fresh seed armed it rather than this item. `Dispatch.swift:244`, `args.bool(\"normalize\", true)` mutated to `false`, was chosen by seed 20260823 out of 3,158 sites and scored `killed` in the sample. Re-applied afterwards to attribute the kill: `dispatchDefaultsAgreeWithTheCatalogue` exits 1 with `[\"proctor_capture.normalize decodes false, the schema says true\"]`, and the mutation was confirmed landed before the verdict was read.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0092/fresh-sample-attribution.txt",

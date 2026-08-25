@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "AppKit NSMenu extra item traversal and CommandSurface / ToolCatalogue bidirectional validation",
+    "effect": "ipc",
+    "count": 21
+  },
+  "armedBy": "MenuBarHierarchyWitnessTests menuBarHierarchyCompletenessAndToolCatalogueWitness asserts all 20 menu commands and 21 tools in NSMenu hierarchy",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/MenuBarHierarchyWitnessTests.swift",

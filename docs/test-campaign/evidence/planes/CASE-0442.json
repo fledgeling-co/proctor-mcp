@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "mutation m6: `if not (rec.get('tree') or {}).get('tree_named'):` becomes `if False:`, one substitution asserted; compare then differences the unnamed reading at exit 0. Line 'arming . removing the unnamed check differences it anyway'.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0103/selftest-green.txt",

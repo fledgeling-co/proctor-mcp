@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "scripts/campaign/cross_automation_yield_witness.py: cross automation stack yield witness",
+    "effect": "none",
+    "count": 1
+  },
+  "armedBy": "scripts/campaign/cross_automation_yield_witness.py: evaluates yield and hold attribution across external automation mode and CUA contention.",
   "evidence": [
     {
       "path": "scripts/campaign/cross_automation_yield_witness.py",

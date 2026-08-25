@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "live-glass",
   "placedBecause": "the macos-glass lane commits to a display server, whatever the artefact reads as",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "CGWindowListCopyWindowInfo over pid 2614, read by a standalone Swift binary outside the app \u2014 the window server's own census, which the menu command does not participate in",
+    "effect": "device",
+    "count": 1
+  },
+  "armedBy": "docs/test-campaign/evidence/PRO-0148/actuate-status.txt \u2014 CGWindowListCopyWindowInfo read 0 windows for pid 2614 before the command and 1 after.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0148/actuate-status.txt",

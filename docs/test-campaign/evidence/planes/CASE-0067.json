@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "live-glass",
   "placedBecause": "a capture or window witness off a display server",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "listen-only CGEventTap in the witness_probe process, plus six proctor_doctor reads of the live run queue",
+    "effect": "device",
+    "count": 0
+  },
+  "armedBy": null,
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/witness/a4-act.json",

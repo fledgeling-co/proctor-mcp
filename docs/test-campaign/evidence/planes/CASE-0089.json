@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "live-glass",
   "placedBecause": "a capture or window witness off a display server",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "four channels, none of which is Proctor's capture path: CGWindowListCopyWindowInfo for what the window server says is on screen and at what sharingState; screencapture -l for the frames; the target's own accessibility server for what the frame depicts; and CGImageSource in a fourth process for the pixels",
+    "effect": "device",
+    "count": 2
+  },
+  "armedBy": "A control frame proves the content detector can report blankness: a hand-built 200x200 fully transparent PNG reads distinctColours 1, fullyTransparentFraction 1.0, luminanceStdDev 0.0, against the subject frame's 3159 / 0.00054 / 14.25. docs/test-campaign/evidence/PRO-0083/glass/control-blank-content.json",
   "evidence": [
     {
       "path": "scripts/campaign/overlay_witness.sh",

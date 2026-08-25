@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Watched to fail on the build before the fix: an action string the surface does not have returned ok and did nothing, so a misspelled Stop was indistinguishable from a Stop that worked.",
   "evidence": [
     {
       "path": "evidence/tui-one-latch.json",

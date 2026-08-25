@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The control for CASE-0294, in the same suite: same batch, same probe, nothing swallowed, and the assertion is that yields is ABSENT. A fix that recorded a yield for every run would pass CASE-0294 and fail this.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/TakeoverWiringTests.swift",

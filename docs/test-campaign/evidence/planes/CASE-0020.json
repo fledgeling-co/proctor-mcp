@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "executed tree assertion on delegated Cua tier; verified skipped verdict with reason; restored",
   "evidence": [
     {
       "path": "evidence/test-suite-pass.log",

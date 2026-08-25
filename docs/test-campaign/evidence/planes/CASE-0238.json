@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Reads a default branch the two cases above cannot reach: they enumerate known keys, this one passes a key absent from the table and nil.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0084/arming.txt",

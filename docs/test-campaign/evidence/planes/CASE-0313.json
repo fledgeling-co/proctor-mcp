@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "ARM-6 put the primary's own rule onto Skip setup \u2014 the lockout in its exact shape. `./scripts/test.sh --filter skipIsNeverClosed` exited 1 with two issues: (disables -> 2) == 1, and the ordering clause (primary.lowerBound -> 3014[utf8]) < (disabled.lowerBound -> 2713[utf8]). Restored, green.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",

@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "live-glass",
   "placedBecause": "the macos-glass lane commits to a display server, whatever the artefact reads as",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "the installed proctor-agent (pid 76491) reading pid 45231's accessibility tree by AXIdentifier",
+    "effect": "ipc",
+    "count": 1
+  },
+  "armedBy": "this case IS the arming of CASE-0100; the two arms differ in exactly one line of source",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0081/a3-negative-arm.json",

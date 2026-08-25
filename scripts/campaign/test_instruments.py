@@ -2791,6 +2791,55 @@ def test_a_generated_untriaged_brief_is_never_validated() -> None:
           out.stdout[-400:])
 
 
+
+# ── PRO-0142 · the mutation report may not print a rate without a denominator ─
+def test_mutation_report_carries_its_denominators() -> None:
+    script = ROOT / "scripts" / "campaign" / "mutation_report.py"
+    out = subprocess.run([sys.executable, str(script), "--gate"],
+                         capture_output=True, text=True)
+    check(out.returncode == 0, "the mutation survivor ratchet holds", out.stdout[-300:])
+    check("of 3241 site(s) were run" in out.stdout or "site(s) were run" in out.stdout,
+          "the aggregate names how much of the space was sampled, not just a kill rate",
+          out.stdout[-500:])
+    check("NO SITE COUNT" in out.stdout,
+          "a run that counted no sites is named rather than folded into the average",
+          out.stdout[-500:])
+
+    # The negative arm, on a copy: a run whose sites key is removed must move out
+    # of the percentage and into the named list, rather than silently shrinking
+    # the denominator of everything else.
+    with tempfile.TemporaryDirectory() as td:
+        d = Path(td) / "evidence"
+        shutil.copytree(CAMPAIGN_DIR / "evidence", d)
+        f = d / "mutation-agent.json"
+        blob = json.loads(f.read_text())
+        before_sites = blob["summary"].pop("sites")
+        f.write_text(json.dumps(blob, indent=2) + "\n")
+        red = subprocess.run([sys.executable, str(script), "--evidence", str(d)],
+                             capture_output=True, text=True)
+        check(f"of {before_sites}" not in red.stdout,
+              "removing a run's site count removes its contribution to the sampled figure",
+              red.stdout[-400:])
+        check("mutation-agent.json" in red.stdout and "NO SITE COUNT" in red.stdout,
+              "and names the run whose rate now has nothing behind it",
+              red.stdout[-400:])
+
+    # Every survivor resolves to a real file and a line inside it, because a
+    # survivor whose location cannot be opened is a work item nobody can start.
+    agg = json.loads((CAMPAIGN_DIR / "evidence" / "mutation-aggregate.json").read_text())
+    bad = []
+    for s in agg["survivors"]:
+        f = ROOT / s["file"]
+        if not f.is_file():
+            bad.append(f"{s['file']} does not exist")
+            continue
+        n = len(f.read_text(errors="replace").splitlines())
+        if not (1 <= int(s["line"] or 0) <= n):
+            bad.append(f"{s['file']}:{s['line']} is outside the file's {n} lines")
+    check(not bad, f"every one of {len(agg['survivors'])} survivor(s) names a line "
+                   f"somebody can open", "\n".join(bad[:5]))
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -2847,7 +2896,8 @@ def main() -> int:
                test_spec_symbol_linter_gate_and_negative_arm,
                test_requirement_evidence_is_backed_by_a_passing_case,
                test_brief_validation_records_are_recheckable,
-               test_a_generated_untriaged_brief_is_never_validated):
+               test_a_generated_untriaged_brief_is_never_validated,
+               test_mutation_report_carries_its_denominators):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001

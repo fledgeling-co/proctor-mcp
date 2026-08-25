@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Watched to fail on the build before the fix: both panes drew their empty state against a live agent, which reads as a quiet machine rather than as a pane nobody wired.",
   "evidence": [
     {
       "path": "evidence/tui-live-readiness.json",

@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "live-glass",
   "placedBecause": "the macos-glass lane commits to a display server, whatever the artefact reads as",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "CGWindowListCopyWindowInfo over pid 2614, read by a standalone Swift binary outside the app, plus proctor_act's own canonical state hash over the normalised accessibility tree \u2014 neither is written by the control under test",
+    "effect": "device",
+    "count": 2
+  },
+  "armedBy": "docs/test-campaign/evidence/PRO-0148/actuate-status.json \u2014 the negative arm is the window count, which was 0 before the menu command and 1 after; an empty closure leaves it at 0 and the case fails.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0148/actuate-status.json",

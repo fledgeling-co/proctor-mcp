@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Probe E: with cgevent_fg remapped from .syntheticEvent to .routedEvent, this case reads failed and no other case moves.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0084/arming.txt",

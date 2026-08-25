@@ -1,0 +1,27 @@
+{
+  "case": "CASE-0798",
+  "requirement": "REQ-047",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "A survivor with a byte offset and no name sends its reader to open the file. The enclosing declaration is read back out of the source at the survivor's line, so a survivor whose declaration cannot be found reports `(top level)` rather than a plausible wrong name.",
+  "evidence": [
+    {
+      "path": "docs/test-campaign/evidence/mutation-aggregate.json",
+      "sha256_16": "7f8d8ca13c9d7659",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/mutation-aggregate.txt",
+      "sha256_16": "43be7ffaf787b52e",
+      "present": true
+    }
+  ]
+}

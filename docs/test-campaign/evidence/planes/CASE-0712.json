@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "pty keystroke injection and RunControl / SupervisionControl latch state observation",
+    "effect": "ipc",
+    "count": 2
+  },
+  "armedBy": "SupervisionTUIPtyWitnessTests tuiKeypressUpdatesSharedLatchState asserts pause and stop keypresses mutate shared latch",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/SupervisionTUIPtyWitnessTests.swift",

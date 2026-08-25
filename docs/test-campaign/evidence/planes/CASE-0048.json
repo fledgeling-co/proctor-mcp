@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The PRO-0076 verifier set the lane's isCounted to false; the suite hung and produced no verdict, which scripts/test.sh treats as a failure through its absent-verdict rule. Caught, but as a hang rather than a red assertion, and recorded as the weaker oracle it is.",
   "evidence": [
     {
       "path": "evidence/test-suite-pass.log",

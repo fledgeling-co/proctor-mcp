@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "spec_citation_arm.py appends `**Cut from:** `docs/features-to-triage/01-cua-schema-facade.md`` to a spec. `no brief is accounted for by an unrecognised relation` moves PASS -> FAIL naming the spec, the relation and the brief.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0104/spec-citation-arm.txt",

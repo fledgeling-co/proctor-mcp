@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "AgentVerbs.doctor renamed so it no longer matches a catalogue entry. 'Expectation failed: (ToolCatalogue.spec(named: AgentVerbs.doctor) -> nil) != nil' at AgentVerbBoundaryTests.swift:50:9. Run failed with 1 issue, exit 1; reverted and green. Full output in arming-B-doctor-renamed.txt.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/AgentVerbBoundaryTests.swift",

@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "live-glass",
   "placedBecause": "a capture or window witness off a display server",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "corrupted doctor health payload; verified status window rendered error row; restored",
   "evidence": [
     {
       "path": "evidence/shots/surf-008-status-window.png",

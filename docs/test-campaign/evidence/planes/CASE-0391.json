@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Armed TWICE, on purpose. (A) The exact pre-fix shape: PrimaryProminence's application removed and .buttonStyle(.borderedProminent) put straight back after .accessibilityIdentifier. 'Expectation failed: (unbranchedFills -> 1) == 0' at WalkthroughFlowTests.swift:357 and 'takesTheCoreRule' at 387; 2 issues, exit 1. (B) The same unconditional fill with the modifiers RE-ORDERED so the fill sits last: same two failures. (B) exists because the first draft of the clause matched the pre-fix whitespace exactly and (B) survived it, so the clause now reads 'no .borderedProminent anywhere before the branch' rather than one arrangement of modifier lines. Both reverted and green. Output in arming-def163.txt and arming-def163-reordered.txt.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",

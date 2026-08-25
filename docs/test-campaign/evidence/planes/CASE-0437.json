@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Four mutations on a scratch copy of the skill, never the live files. Dropping the scaffold's **Brief:** line reds the scaffold check; rewriting its value to '<the brief>' reds the path-form check; rewording 'records the commit that still holds it' reds the consumed-form check; retitling the table row 'The feature was never a brief' reds the no-brief check; and rewording SKILL.md's 'write the citation into the spec's' reds the procedure check. The arming runs on copies because a predecessor on another item mutated the live shared skill, was killed between mutation and revert, and left every project on this machine reading a skill with an arming mutation in its heading for about an hour.",
   "evidence": [
     {
       "path": "scripts/campaign/spec_citation_measure.py",

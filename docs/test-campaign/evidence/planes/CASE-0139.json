@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "wall_clock_census.py --arm at PRE_FIX_COMMIT baa98bbe33ce42685fe515b9c803d3d5a430d177, the parent of 6dbaa9b, which is the last tree holding BOTH historical offenders. It reports 'ScreenRecordingProbeWiringTests.swift @ baa98bbe33ce: offenders at [42] (expected 42)', 'CuaLineReaderTests.swift @ baa98bbe33ce: offenders at [107] (expected 107)', 'detector caught 2 of the 2 known offenders / ARMED', exit 0. docs/test-campaign/evidence/PRO-0096/census-arm-pinned.txt",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0089/wall-clock-census.txt",

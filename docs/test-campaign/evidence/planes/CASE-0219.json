@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Two mutants on the product, each run through ./scripts/test.sh --filter boundedWhenAsked and each watched to turn the test red. (1) Delete the SO_SNDTIMEO call: 'Expectation failed: (asked.options \u2192 [4102]) == ([SO_RCVTIMEO, SO_SNDTIMEO] \u2192 [4102, 4101])', exit 1, 2 issues. (2) Ask the kernel for `ioTimeoutSeconds + 5` on the receive direction: 'Expectation failed: (asked.seconds \u2192 [6, 1]) == ([client.ioTimeoutSeconds, client.ioTimeoutSeconds] \u2192 [1, 1])', exit 1. The second mutant also ran for 6.004 seconds against the first's 1.007, which is the bound being real rather than recorded. Both reverted; the tree carries neither.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/ProctorCoreTests.swift",

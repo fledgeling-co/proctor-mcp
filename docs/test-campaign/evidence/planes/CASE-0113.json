@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Not armed by re-introducing a shipped defect: the single-slot cache it guards against was correct while the cache was per-Session, so there is no prior state of this repo in which this test is red. It guards a regression the shared store newly makes possible.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/ToolchainDoctorTests.swift",

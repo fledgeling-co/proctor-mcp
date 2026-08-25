@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Both arms over one call, plus a WRITE arm armed by the gap-fix. Path arm: watched failing with `guard false` forcing the production branch. Write arm (`touched.isEmpty` over the operator's root): armed by sabotaging the DIVERT TARGET rather than the predicate \u2014 the interlock left fully intact, `SwitchStore.save(saved, to: SwitchStore.url(home: decoyHome))` driven against a decoy $TMPDIR home laid out by the product's own builder, and the same reader reporting ['settings/settings.json'] over it, denominator 1. Watched failing with DirectoryWitness.read blinded: OperatorFilesWitnessTests.swift:372, `(decoyChanged -> []) == [\"settings/settings.json\"]`, run exit 1. The arm also asserts TestProcess.isActive, so an arming that ran with the interlock off fails rather than claiming a diversion it did not witness.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",

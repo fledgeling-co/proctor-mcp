@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "sentinel files written by each spawned /bin/sh child carrying its own $$ AND the verb it was handed, read back off the filesystem with FileManager - no code under test participates in the reading",
+    "effect": "subprocess",
+    "count": 7
+  },
+  "armedBy": "Arming run printed \"arm A left 1 stop children [get, get, ls, ls, ls, run, stop]; arm B left 0 [ls]\" with the non-zero assertion inverted, and the sabotage printed the spawned set with a missing binary. docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt RE-ARMED AFTER A REWRITE: this suite was restructured so no test of it blocks a cooperative thread (DEF-043), which changed every body. Every count above was re-established on the code as it now stands \u2014 docs/test-campaign/evidence/PRO-0083/arming-counts-after-refactor.txt \u2014 and the sabotages were removed again and watched to fail \u2014 docs/test-campaign/evidence/PRO-0083/arming-sabotage-after-refactor.txt. That second pass caught an arming that could not fire: W3's dead watch was first pointed at a socket whose server had already been stopped, so it would have read zero whatever happened, and it was re-armed against the live socket.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/ExternalWitnessTests.swift",

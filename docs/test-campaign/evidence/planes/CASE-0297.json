@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Sabotage S6 removes runControl.release from disarmContention. Three issues: isYielded true, isPaused true, and heldBy still naming the finished run with its full HoldAttribution.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/TakeoverWiringTests.swift",

@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "sweep() in scripts/reckoning/reckoning.py: a recursive walk of the run directory taken before and after the reckon build and stored in run.json under effect. It computes a byte count and sha256 per file. When this case was written cmd_take stored only the names and the count, so the recorder was stronger than the record it left \u2014 DEF-205, closed by PRO-0106. The record now carries the digest of every file written, the before-and-after pair for any file rewritten between the sweeps, and any file the build stopped writing. The count of two is unchanged and so is this case's two-way control.",
+    "effect": "filesystem-write",
+    "count": 4
+  },
+  "armedBy": "Two-way control: the sweep runs on a directory that did not exist before the build, so an empty before-set and a two-file after-set are different readings of the same instrument. A take that wrote nothing would record count 0, and the refusal path (CASE-0441) writes no directory at all. Count corrected from four to two at verification; the two-way control is unaffected, because what it turns on is empty against non-empty.",
   "evidence": [
     {
       "path": "docs/reckoning/2026-08-22-2bdc808/run.json",

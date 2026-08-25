@@ -5,6 +5,13 @@
   "oracle": "metamorphic",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "TakeoverDwellTests pins the relation rather than a duration: showing again while up returns raising=false and moves the deadline forward, and a stop cancels rather than defers.",
   "evidence": [
     {
       "path": "evidence/test-suite-pass.log",

@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The cache's dedicated Thread run through Task.detached, which is the substitution a reviewer used to arm CASE-0116 and which puts the verification back on the width-capped pool. Red with 2 issues: Expectation failed: !((verificationRanOn.current -> \"com.apple.root.default-qos.cooperative\").contains(\"cooperative\") -> true), and .contains(\"overcommit\") against the same value. Restored, green.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/ToolchainDoctorTests.swift",

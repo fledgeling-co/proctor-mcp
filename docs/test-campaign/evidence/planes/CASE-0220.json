@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "A third mutant, on the default itself: `liveBound` replaced by `{ _, _, _ in 0 }`, an applier that reports success and sets nothing. THE TEST DOES NOT FAIL BY A MARGIN \u2014 IT HANGS, because a client with no bound applied waits forever on a listener nobody accepts on. Measured: the build finished in 15.19s and the run then sat with no verdict; a 420-second alarm killed the wrapper and the swift-test process itself was still alive at 11:09 elapsed, holding the .build lock, and had to be killed by pid. Unmutated, the same two tests run through the same script return 'Test run with 2 tests in 1 suite passed after 1.007 seconds', exit 0. One second against eleven minutes and counting is the contrast this seam is worth having, and it is the failure mode this case wants: a hang is unambiguous where a slow pass is not. Reverted; the tree carries the real applier and `grep -c MUTANT Sources/ProctorCore/Transport.swift` reads 0.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/ProctorCoreTests.swift",

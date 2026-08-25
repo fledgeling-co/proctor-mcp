@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "As CASE-0330. Write arm armed over the SAME call: `Session.maestroDebugDirectory(run: 1)` swept over `Session.testFallbackMaestroRoot`, the root the interlock itself diverts to, reporting the `run-<stamp>-1-<salt>/` directory appearing \u2014 denominator 1. Watched failing with DirectoryWitness.read blinded: OperatorFilesWitnessTests.swift:426, `(divertedChanged -> []).contains(\"run-1787376776385-1-ca19/\")`. Arming this found a DEAD ASSERTION: the whole effect of this call is a mkdir and DirectoryWitness recorded regular files only, so the operator-root claim could not have come out any other way. The witness now records directories and the claim is read through changedEntries.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",

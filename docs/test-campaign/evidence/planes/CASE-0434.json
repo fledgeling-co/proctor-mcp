@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Pointing spec-PRO-0002.md's citation at 01-cua-schema-facade.md, which PRO-0001 already claims, reds it. The same mutation also reds the reverse-direction check, because brief 02 becomes unclaimed \u2014 collateral reported alongside each mutation rather than judged.",
   "evidence": [
     {
       "path": "scripts/campaign/spec_citation_measure.py",

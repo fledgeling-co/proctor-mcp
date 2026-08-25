@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The runner's own three safety rules are the arming for the measurement's integrity rather than for its value: it refused to start until `git status` was clean, ran a green baseline before mutating anything, and reported `tree clean after: True` at the end. The instrument's new verdict is armed separately at CASE-0467. What makes THIS reading trustworthy in the direction that matters is that no mutant reached the bound and none came near it \u2014 the longest was 36.0s of a 600s bound (SessionAssert.swift:63; corrected at verification from 31.9s, the third-longest), `nearBound` is empty, and `timedOut` is 0 \u2014 so no verdict here is a starved run wearing a kill.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0092/mutation-agent-pro0092.json",

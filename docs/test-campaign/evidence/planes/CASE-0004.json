@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "live-glass",
   "placedBecause": "a capture or window witness off a display server",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "suppressed foreground activation; verified synthetic batch refused; restored",
   "evidence": [
     {
       "path": "evidence/overlay-exclusion.json",

@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "CASE-0151 is the arming run: the same gate over the same fixture, from the 0.9.3 bytes read out of git, prints the twelve rows with nothing saying it cut the list.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0091/def041-denominator.txt",

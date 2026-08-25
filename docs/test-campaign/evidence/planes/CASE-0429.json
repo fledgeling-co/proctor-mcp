@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "arming-D, two lines: 'the headline counts what is actually left FAILED' and 'a repaired defect is absent from what remains FAILED'. Also armed against the current source by disabling the headline's unjoined clause, which reds the first line \u2014 a first attempt at that mutation only trimmed the sentence's tail, no check rested on it, and it was re-run rather than reported as armed. arming-C-post-critic.txt.",
   "evidence": [
     {
       "path": "~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",

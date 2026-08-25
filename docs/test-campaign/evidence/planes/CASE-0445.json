@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "mutation m2: `missing = REQUIRED_CLASSES - classes` becomes `missing = set()`, one substitution asserted; the mislabelled tool then takes a reading at exit 0. Line 'arming . removing the vocabulary check lets the liar through'.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0103/selftest-green.txt",

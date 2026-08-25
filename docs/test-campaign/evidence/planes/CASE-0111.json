@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Each of the eight sessions given its own SignatureVerdictCache, which is what ToolProbes did before PRO-0087. The named test went red twice: (cache.verificationCount -> 0) == 1 and (arrivals.count -> 8) == 1. Restored, green.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/ToolchainDoctorTests.swift",

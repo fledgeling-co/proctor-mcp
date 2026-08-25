@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "live-glass",
   "placedBecause": "a capture or window witness off a display server",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The batch is the control: zero shield windows before it and zero four seconds after, against one per display while it runs.",
   "evidence": [
     {
       "path": "evidence/overlay-lifecycle.json",

@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "the frames that arrived on a held SocketClient.watch connection, counted client-side on its own Thread, and RunControl.shared read afterwards - which is neither the client nor the transport",
+    "effect": "ipc",
+    "count": 3
+  },
+  "armedBy": "Arming run printed \"3 frames published, 3 crossed the socket\" and \"the latch reads stopped=true after a stop over the socket\". The sabotage was pointed at the LIVE socket and went red at 2 frames crossed, so the zero in the passing run is a measurement rather than a structural silence. docs/test-campaign/evidence/PRO-0083/arming-w2-w5.txt RE-ARMED AFTER A REWRITE: this suite was restructured so no test of it blocks a cooperative thread (DEF-043), which changed every body. Every count above was re-established on the code as it now stands \u2014 docs/test-campaign/evidence/PRO-0083/arming-counts-after-refactor.txt \u2014 and the sabotages were removed again and watched to fail \u2014 docs/test-campaign/evidence/PRO-0083/arming-sabotage-after-refactor.txt. That second pass caught an arming that could not fire: W3's dead watch was first pointed at a socket whose server had already been stopped, so it would have read zero whatever happened, and it was re-armed against the live socket.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/ExternalWitnessTests.swift",

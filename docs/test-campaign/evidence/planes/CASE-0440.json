@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Three shapes against a purpose-built git fixture the arming builds and throws away, because the real history holds no commit where a cited brief path is a tree or an empty file, and a branch no mutation can reach is a branch nobody has watched. A citation naming a blob with bytes PASSes; one naming a zero-byte blob FAILs; one naming a path that is a directory FAILs. All three verdicts were pinned in the table before the run and all three were observed.",
   "evidence": [
     {
       "path": "scripts/campaign/spec_citation_measure.py",

@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Three mutations on PRO-0075's `none.` citation, each moving `every `none` citation resolves to something here` PASS -> FAIL: a path that does not resolve (`docs/nowhere/imaginary-source.md`), a PRD section that does not exist (\u00a799), and a backtick pair padded past the twenty-character floor (`whatever.md`).",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0104/spec-citation-arm.txt",

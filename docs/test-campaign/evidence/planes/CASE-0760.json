@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "scripts/campaign/window_occlusion_witness.py: window occlusion truth table evaluation",
+    "effect": "none",
+    "count": 1
+  },
+  "armedBy": "scripts/campaign/window_occlusion_witness.py Scenario 2: target point occluded by overlapping front window suppresses drawn pointer and records hold reason.",
   "evidence": [
     {
       "path": "scripts/campaign/window_occlusion_witness.py",

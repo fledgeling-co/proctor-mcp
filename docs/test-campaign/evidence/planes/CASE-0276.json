@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Sabotage 1: RestartWatch.observed settles on the first probe whether or not the agent answered \u2014 the defect itself. 'Expectation failed: (watch -> RestartWatch(state: .settled, probes: 1, giveUpAfterProbes: 30)).isApplying -> false' at probe 1, and '(drawn(watch, reachable: false) -> .startAgent) == nil'. Restored, green.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/RestartWatchTests.swift",

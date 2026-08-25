@@ -1,7 +1,7 @@
 # Spec PRO-0142 — Automated Mutation Survival Benchmark Reporter
 
 **Brief:** `docs/features-to-triage/134-automated-mutation-survival-benchmark-reporter.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-24
 **Surfaces:** SURF-026
 **Defects:** DEF-033

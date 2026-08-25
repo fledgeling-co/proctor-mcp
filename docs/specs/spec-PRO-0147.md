@@ -1,7 +1,7 @@
 # Spec PRO-0147 — Multi-Plane Verification Receipt Generator
 
 **Brief:** `docs/features-to-triage/139-multi-plane-verification-receipt-generator.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-25
 **Surfaces:** SURF-025
 **Defects:** none

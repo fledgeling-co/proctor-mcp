@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "selftest.py section 17e: seven tokens asserted against PLACEHOLDER_ID_RE one at a time \u2014 REQ-9, DEF-0 and CASE-99 are not placeholder shapes, CASE-999, CASE-9999, REQ-000 and SURF-0000 are \u2014 and a scan over 'about REQ-9 and DEF-0, and CASE-9999 is the example' returns cited ['DEF-0', 'REQ-9'] with unclassifiable ['CASE-9999']. The pre-fix pattern `(?:9+|0+)` matched REQ-9, which the assertions catch.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt",

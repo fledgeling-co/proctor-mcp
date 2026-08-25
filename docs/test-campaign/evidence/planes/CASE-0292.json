@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Sabotage S2 maps an unreadable probe to `.gone`. PeerLivenessTests \u201ca process that cannot be described is unknown, so its lane is left alone\u201d goes red: (verdict \u2192 .gone) == .unknown.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/PeerLivenessTests.swift",

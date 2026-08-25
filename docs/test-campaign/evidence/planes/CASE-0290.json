@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "RunQueueSnapshot read back from the RunScheduler actor after the reclaim, plus SessionIdentity.liveness reading the real kernel process table through kill(2) and proc_pidinfo",
+    "effect": "subprocess",
+    "count": 1
+  },
+  "armedBy": "Sabotage S1 removes the reclaim call from RunScheduler.acquire. The test then fails by throwing the original defect's own refusal: AgentError code queueBusy, \u201canother session was driving this Mac, and this run was still waiting first of 1 after 0 seconds, so it gave up without running any step\u201d. That is DEF-026 reproduced from the failing side. docs/test-campaign/evidence/PRO-0093/sabotages.txt",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/PeerReclaimWiringTests.swift",

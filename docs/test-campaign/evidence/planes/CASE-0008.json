@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "live-glass",
   "placedBecause": "a capture or window witness off a display server",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Armed by the default, which refuses: with PROCTOR_OVERLAY_CAPTURE unset every overlay reports sharingState 0 and screencapture -l exits 1 with \"could not create image from window\". The same commands with the switch set produce these pixels.",
   "evidence": [
     {
       "path": "evidence/overlay-capture-lifted.json",

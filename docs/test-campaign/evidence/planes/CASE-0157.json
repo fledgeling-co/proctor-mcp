@@ -5,6 +5,13 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "mutations 2 and 3 of instrument-arming.txt reproduce the original loss \u2014 the merge restricted to the two keys the conflict was about, and then the verifier stopped reporting what it found \u2014 and each goes red naming flow/FLOW-010.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0091/instrument-suite.txt",

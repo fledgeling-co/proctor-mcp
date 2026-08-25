@@ -5,6 +5,13 @@
   "oracle": "interactive-glass",
   "plane": "live-external",
   "placedBecause": "the guest lane runs outside this host's process tree",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": null,
   "evidence": [
     {
       "path": "evidence/guest/a1-guest-calculator-4x7.png",

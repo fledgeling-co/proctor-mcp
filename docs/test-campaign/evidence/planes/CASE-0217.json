@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Two-way on the real gate: before, four findings named CASE-0124 and CASE-0125 \u2014 'not a raster image \u2014 starts ==> swift test' and 'names no capture method'. After, the raster blockers are gone and the oracle mix reads raster-visual 9 where it read 11. The count went DOWN, which is the direction that distinguishes correcting a mislabel from reclassifying to clear a gate.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0097/campaign-check-before.txt",

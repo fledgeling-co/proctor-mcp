@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Two-way control measured in the same minute: the cached 1.0.0 copy exits 1 on this registry and the shared 1.1.0 source exits 0 on the same inputs. Both invocations are in cache-1.0.0-crash.txt with the two plugin.json versions and the cached copy's zero occurrences of 'unjoined'.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0103/cache-1.0.0-crash.txt",

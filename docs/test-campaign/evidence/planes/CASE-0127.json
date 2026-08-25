@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Armed twice, and the second is the one that counts. First arming restored 'surface.panel.level = Self.inPlaneLevel' and the test went red (gate-sabotage.txt) \u2014 but that receiver is 'surface.panel', so it never met the prefix the filter excluded. The filter skipped every line beginning 'panel.level = ', which is the shape a direct assignment takes wherever the local is called 'panel', so the check could not go red against the regression it names. Re-armed against that shape: 'Self.place(panel, at: Self.floatingLevel)' at CursorOverlay.swift:548 replaced by 'panel.level = Self.floatingLevel', which is a panel built and never given a sharing type. Transcript in case-0127-arming.txt.",
   "evidence": [
     {
       "path": "evidence/PRO-0088/gate-sabotage.txt",

@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "sentinel files written by each spawned /bin/sh child with its own $$, read back off the filesystem with FileManager and Data(contentsOf:) \u2014 no code under test participates in the reading",
+    "effect": "subprocess",
+    "count": 2
+  },
+  "armedBy": "Sabotage run in the same test body: executable pointed at a path that does not exist. The armed variant instead pointed it at the WORKING script, and the sabotage half went red with 3 issues \u2014 providerErrors nil, count 1.0 not 0, and a sentinel [8676] present. The live-count assertion was inverted in the same run and printed (livePIDs.count -> 2) < 0. docs/test-campaign/evidence/PRO-0077/arming-run.txt",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/EffectWitnessTests.swift",

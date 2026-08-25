@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Watched to fail twice on the way: a batch of hover steps was refused for want of foreground and ran in 0.239s, so there was no run to stop, and the first capture of a running TUI showed the empty state because nothing was in flight. Both are the vacuous pass this case exists to avoid.",
   "evidence": [
     {
       "path": "evidence/tui-stop-halts-mcp-run.json",

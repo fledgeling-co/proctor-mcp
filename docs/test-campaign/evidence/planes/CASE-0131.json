@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "the arming run in evidence/PRO-0089/arming.txt: with the interlock disabled and operatorDirectory redirected to a decoy under /tmp, this assertion fails \u2014 'Expectation failed: (operatorBefore \u2192 38 bytes, modified 2026-08-21 07:59:30) == (operatorAfter \u2192 94 bytes, modified 2026-08-21 08:00:00)'. The real file was never in the path while the seam was off.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0089/operator-policy-before.txt",

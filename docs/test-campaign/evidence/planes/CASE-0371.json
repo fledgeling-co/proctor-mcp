@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Each of the ten checks this case stands on was watched red under its own mutation on a scratch copy: retitling '## The guest lane' reds the section check; 'Nothing here provisions a guest' -> 'Nothing provisions a guest' reds the both-files check; inserting a `provision` token into tools.md reds 'no provision action documented', which is a negative check and would otherwise never have been seen to fire; 'caps concurrent macOS guests at two' -> 'limits macOS guests to two' reds the cap check; 'How many guests at once? Two.' -> 'How many at once? Two.' reds the scale-question check; 'prlctl' -> 'parallels-cli' reds the provider check; 'both still open' -> 'both open' reds the Tahoe check; and shortening the osVersion sentence reds the honesty check. THE TWO DESCRIPTION CHECKS WERE DEAD and are re-armed: both tested membership against the whole of SKILL.md, so a phrase 800 lines into the body satisfied a claim about the frontmatter description a host reads to route. They now read the `description:` value alone, and each is armed against a mutation that rewrites the phrase in the description while planting it in the body, a file the old predicate still passes on. Watched red in doc-description-anchor-arming.txt, which records the whole-file membership as True beside each FAIL. Full arming output in doc-measurement-arming.txt, 24/24 armed.",
   "evidence": [
     {
       "path": "scripts/campaign/skill_doc_measure.py",

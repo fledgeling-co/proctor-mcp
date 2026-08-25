@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "As CASE-0330, and watched failing twice \u2014 once by its own first draft (an assertion written against the wrong filename spelling) and once by sabotage. Write arm armed over a decoy $TMPDIR home carrying the captures directory and this call's own returned frame name, composed as production composes them \u2014 denominator 2 changed entries. Watched failing with DirectoryWitness.read blinded: OperatorFilesWitnessTests.swift:513 `(decoyChanged -> []).contains(\"captures/\")` and :515 `decoyChanged.contains { $0.hasPrefix(\"captures/ios-pro-0099-before-\") }`. The operator-root claim is now read through changedEntries for the same reason as CASE-0331.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",

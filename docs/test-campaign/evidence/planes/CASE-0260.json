@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Quit's shortcut written as the two-key \"\u2318QQ\": Expectation failed: (keys.count -> 2) == 1. Restored, green. The instrument could also report zero by finding no shortcuts at all, so the same test asserts at least five commands carry one.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/SurfaceLiteralsTests.swift",

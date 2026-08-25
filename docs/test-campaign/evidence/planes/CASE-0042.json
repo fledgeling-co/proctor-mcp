@@ -5,6 +5,13 @@
   "oracle": "raster-visual",
   "plane": "live-glass",
   "placedBecause": "the raster-visual rung owes a display server",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Watched to fail on the build before the fix, three times over: the window drew three rows against a health report carrying four, and two earlier captures of it were of a UI bound to the operator's installed agent, which predates the fix and reports three.",
   "evidence": [
     {
       "path": "evidence/shots/surf-008-status-window.png",

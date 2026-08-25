@@ -5,6 +5,13 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "the case is itself the arming: each of the census's two requirement-level passes is watched going from clear to red under a mutation aimed at it, in one session against one fixture.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0091/def030-both-passes-armed.txt",

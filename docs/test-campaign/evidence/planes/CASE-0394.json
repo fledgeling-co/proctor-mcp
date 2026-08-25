@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "RunScheduler.hold(run:_:) made a no-op, so the latch still holds the run and the ticket never learns of it. 'Expectation failed: duringHold.active.contains { $0.held != nil }' at HoldAttributionWiringTests.swift:409, once for each of the four endings; 1 test failed with 4 issues after 269.819 seconds, exit 1; reverted and green. Full output in arming-def175.txt.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/HoldAttributionWiringTests.swift",

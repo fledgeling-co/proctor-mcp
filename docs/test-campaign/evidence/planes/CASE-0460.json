@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The mutant re-applied at the site the extraction moved it to, the mutation confirmed to have landed by re-reading the file, and `snapshotOptionDefaultsMatchTheSchema` watched going red: `var includeInvisible: Bool = false  ->  var includeInvisible: Bool = true`, exit 1, Test run with 1 test in 1 suite failed after 0.001 seconds with 1 issue.. Reverted, and the tree measured clean after.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/MutationSeamTests.swift",

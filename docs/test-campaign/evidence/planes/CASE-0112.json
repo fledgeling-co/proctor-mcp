@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "ToolProbes.init's cuaSignature default put back to SignatureVerdictCache(). The named test went red twice, on both identity assertions: two independently built ToolProbes no longer held the same cache, and neither held SignatureVerdictCache.shared. Restored, green.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/ToolchainDoctorTests.swift",

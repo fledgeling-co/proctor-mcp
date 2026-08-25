@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "git's own hook dispatch \u2014 core.hooksPath resolved by git rev-parse and the hook executed by git commit, neither read from the code under test",
+    "effect": "subprocess",
+    "count": 1
+  },
+  "armedBy": "The hook is invoked as a real subprocess against a real staged change; a hook that is installed and never runs is the condition, not the proof.",
   "evidence": [
     {
       "path": ".githooks/pre-commit",

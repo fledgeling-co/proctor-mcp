@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "proctor_doctor and proctor_history IPC query and TUISurface projection state validation",
+    "effect": "ipc",
+    "count": 2
+  },
+  "armedBy": "SupervisionTUIPtyWitnessTests tuiReadinessSwitchesAndHistoryProjectionWitness asserts proctor_doctor and proctor_history projection into TUISurface model",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/SupervisionTUIPtyWitnessTests.swift",

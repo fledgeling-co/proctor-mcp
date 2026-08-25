@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "live-glass",
   "placedBecause": "a capture or window witness off a display server",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "scripts/campaign/witness_probe.swift in mode `windows`, a separate process reading CGWindowListCopyWindowInfo and filtering by the agent pid, sampled every ~330ms \u2014 54 samples on the delivered build and 60 on the pre-fix control",
+    "effect": "ipc",
+    "count": 3
+  },
+  "armedBy": "A live control build, not a citation. Two signed Developer ID builds differing only in CursorOverlay.swift: the pre-fix agent (pid 53748) reports 3 windows owned with 1 not excluded \u2014 the layer-0 one \u2014 over 60 samples. The instrument could and did report sharingState 1.",
   "evidence": [
     {
       "path": "evidence/PRO-0088/glass/overlay-population.json",

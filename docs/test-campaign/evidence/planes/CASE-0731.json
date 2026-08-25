@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "NativeOCRZoomTests highDPIRetinaScalePreservation verifies scale factor 2.0 and pointBox/boundingBox coordinate transformation",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/NativeOCRZoomTests.swift",

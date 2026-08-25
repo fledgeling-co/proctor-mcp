@@ -151,9 +151,9 @@
 | PRO-0139 | Legacy Direction Briefs Specification Validation | 2026-08-24 | Merged |
 | PRO-0140 | Hermetic Multi-Process Chaos and Recovery Fixture | 2026-08-24 | Ready for AI |
 | PRO-0141 | Process Lifecycle Chaos and Recovery Harness | 2026-08-24 | Ready for AI |
-| PRO-0142 | Automated Mutation Survival Benchmark Reporter | 2026-08-24 | Ready for AI |
+| PRO-0142 | Automated Mutation Survival Benchmark Reporter | 2026-08-24 | Merged |
 | PRO-0143 | Legacy Briefs 04 to 07 Specification Validation | 2026-08-25 | Merged |
 | PRO-0144 | Legacy Briefs 08 to 10 Specification Validation | 2026-08-25 | Merged |
 | PRO-0145 | Hermetic Tool Process Boundary Fixtures | 2026-08-25 | Ready for AI |
 | PRO-0146 | Continuous Spec-Symbol Citation Linter | 2026-08-25 | Merged |
-| PRO-0147 | Multi-Plane Verification Receipt Generator | 2026-08-25 | Ready for AI |
+| PRO-0147 | Multi-Plane Verification Receipt Generator | 2026-08-25 | Merged |

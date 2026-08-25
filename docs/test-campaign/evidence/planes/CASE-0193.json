@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The pre-fix Data.write put back: 3 issues, one per save, Expectation failed: (mode(store.url) -> 420) == (0o600 -> 384). Restored, green.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/PolicyStoreSeamTests.swift",

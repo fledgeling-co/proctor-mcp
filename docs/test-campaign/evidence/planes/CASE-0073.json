@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Both arms of the control were watched. It bites on REQ-017 (unclassed 0 findings to 1, exit 0) and REFUSES on REQ-011 (exit 2), whose text names no effect the vocabulary matches, because scoring that absent finding as a red would pass the control on a tautology. A control that cannot refuse is the thing being guarded against.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/census-control.txt",

@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The probe is instrumented in the test itself: the unparseable-key row asserts the probe closure was called zero times, so a change that made `unattributed` parse would redden it rather than quietly cost a syscall per active run on every acquire.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/PeerLivenessTests.swift",

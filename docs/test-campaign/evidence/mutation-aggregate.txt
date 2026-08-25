@@ -1,0 +1,71 @@
+4 mutation run(s) aggregated, 113 distinct mutant(s)
+
+module              killed  survived  scored     kill rate   files touched
+ProctorAgent             5        19      24    5/24 (21%)   19
+ProctorCore             60        28      88   60/88 (68%)   33
+
+TOTAL                   65        47     112        65/112
+
+sampling, per run — the site count belongs to a run's own target list, and summing it across runs that overlap gives a denominator smaller than its numerator:
+  mutation-agent.json              24 of  3189 site(s) (0.75%) over 84 target(s)
+  mutation-survival-core.json      53 scored, NO SITE COUNT — this run's rate has no denominator behind it
+  mutation-survival.json           24 of    52 site(s) (46.15%) over 4 target(s)
+  mutation-wave10.json             11 scored, NO SITE COUNT — this run's rate has no denominator behind it
+
+Across the 2 run(s) that counted their sites, 48 of 3241 site(s) were run — 1.5%. Every kill rate above is a rate among the scored and says nothing about the rest.
+
+47 surviving mutant(s), each an assertion nobody wrote:
+  Sources/ProctorAgent/AX/AXEngineImpl.swift:33  in let liveRunningApps   '||' -> '&&'   [mutation-agent.json]
+  Sources/ProctorAgent/RunIdentity.swift:30  in func mint   '12' -> '13'   [mutation-agent.json]
+  Sources/ProctorAgent/Dispatch.swift:381  in let action   'false' -> 'true'   [mutation-agent.json]
+  Sources/ProctorAgent/Overlay/TakeoverOverlay.swift:771  in let graphite   '44' -> '45'   [mutation-agent.json]
+  Sources/ProctorAgent/Session/Session.swift:92  in var includeInvisible   'false' -> 'true'   [mutation-agent.json]
+  Sources/ProctorAgent/Session/SessionFlow.swift:493  in let frame   '3000' -> '3001'   [mutation-agent.json]
+  Sources/ProctorAgent/Capture/MarkRenderer.swift:141  in let padX   '2' -> '3'   [mutation-agent.json]
+  Sources/ProctorAgent/Session/SessionKill.swift:26  in func includingBarePid   '==' -> '!='   [mutation-agent.json]
+  Sources/ProctorAgent/Dispatch.swift:394  in var pointerMarks   'true' -> 'false'   [mutation-agent.json]
+  Sources/ProctorAgent/Overlay/RunHUDPanel.swift:653  in func hitTest   'false' -> 'true'   [mutation-agent.json]
+  Sources/ProctorAgent/Session/SessionMaestro.swift:242  in let score   '<' -> '<='   [mutation-agent.json]
+  Sources/ProctorAgent/Overlay/RunHUDContentView.swift:830  in func duration   '<' -> '<='   [mutation-agent.json]
+  Sources/ProctorAgent/AX/CGWindowCorrelation.swift:59  in let matches   '0' -> '1'   [mutation-agent.json]
+  Sources/ProctorAgent/Unlock/UnlockBroker.swift:51  in func recordContact   '1' -> '2'   [mutation-agent.json]
+  Sources/ProctorAgent/Session/PixelCompare.swift:38  in var total   '4' -> '5'   [mutation-agent.json]
+  Sources/ProctorAgent/Overlay/RunHUDContentView.swift:97  in let light   '17' -> '18'   [mutation-agent.json]
+  Sources/ProctorAgent/Overlay/TakeoverOverlay.swift:363  in func isTapDisabledNotice   '==' -> '!='   [mutation-agent.json]
+  Sources/ProctorAgent/AX/KeyCodes.swift:18  in var t   '45' -> '46'   [mutation-agent.json]
+  Sources/ProctorAgent/Session/AuditKeyStore.swift:47  in let account   'false' -> 'true'   [mutation-agent.json]
+  Sources/ProctorCore/VisionCapture.swift:100  in func estimatedVisionTokens   '>' -> '>='   [mutation-survival-core.json]
+  Sources/ProctorCore/RunHUD.swift:318  in struct RunHUDState   '0' -> '1'   [mutation-survival-core.json]
+  Sources/ProctorCore/RunQueue.swift:300  in var waitingCount   '0' -> '1'   [mutation-survival-core.json]
+  Sources/ProctorCore/Wire.swift:227  in var x   '0' -> '1'   [mutation-survival-core.json]
+  Sources/ProctorCore/PointerMarker.swift:60  in func targetPoint   '0' -> '1'   [mutation-survival-core.json]
+  Sources/ProctorCore/SimctlLocator.swift:83  in var isDirectory   'false' -> 'true'   [mutation-survival-core.json]
+  Sources/ProctorCore/PointerMarker.swift:60  in func targetPoint   '0' -> '1'   [mutation-survival-core.json]
+  Sources/ProctorCore/RunHistory.swift:200  in let ordered   '<' -> '<='   [mutation-survival-core.json]
+  Sources/ProctorCore/ToolchainLanes.swift:72  in var blockers   '==' -> '!='   [mutation-survival-core.json]
+  Sources/ProctorCore/MaestroRun.swift:48  in var hasHierarchy   '0' -> '1'   [mutation-survival-core.json]
+  Sources/ProctorCore/RunHUDSurface.swift:80  in let fields   '==' -> '!='   [mutation-survival-core.json]
+  Sources/ProctorCore/BrowserTarget.swift:1020  in func isPrivateNetwork   'false' -> 'true'   [mutation-survival-core.json]
+  Sources/ProctorCore/ToolCatalogue.swift:648  in let doctor   '26' -> '27'   [mutation-survival-core.json]
+  Sources/ProctorCore/ToolCatalogue.swift:451  in let assert_   'false' -> 'true'   [mutation-survival-core.json]
+  Sources/ProctorCore/MaestroRun.swift:528  in func resolve   '5' -> '6'   [mutation-survival-core.json]
+  Sources/ProctorCore/ScriptingDictionary.swift:228  in var suite   '==' -> '!='   [mutation-survival-core.json]
+  Sources/ProctorCore/HorizontalPlacement.swift:150  in let centre   '0' -> '1'   [mutation-survival-core.json]
+  Sources/ProctorCore/MenuKeyEquivalent.swift:120  in let virtualKeyNames   '109' -> '110'   [mutation-survival-core.json]
+  Sources/ProctorCore/VisionCapture.swift:146  in let outW   '1' -> '2'   [mutation-survival-core.json]
+  Sources/ProctorCore/ToolCatalogue.swift:294  in let capture   '70' -> '71'   [mutation-survival-core.json]
+  Sources/ProctorCore/SetOfMarks.swift:135  in func gridOverlay   '>' -> '>='   [mutation-survival-core.json]
+  Sources/ProctorCore/RunHUDGate.swift:100  in func onSegment   '<=' -> '<'   [mutation-survival-core.json]
+  Sources/ProctorCore/ScriptingDictionary.swift:73  in var direct   'false' -> 'true'   [mutation-survival-core.json]
+  Sources/ProctorCore/Transport.swift:146  in func applyIOTimeout   '0' -> '1'   [mutation-survival-core.json]
+  Sources/ProctorCore/TUILayout.swift:351  in func paintText   '>=' -> '>'   [mutation-survival-core.json]
+  Sources/ProctorCore/Takeover.swift:629  in var out   '>' -> '>='   [mutation-wave10.json]
+  Sources/ProctorCore/Takeover.swift:626  in var note   '1000' -> '1001'   [mutation-wave10.json]
+  Sources/ProctorCore/Takeover.swift:356  in let rawValue   '1' -> '2'   [mutation-wave10.json]
+
+where they cluster — a declaration with several survivors is one untested branch, not several:
+    2  func targetPoint  in Sources/ProctorCore/PointerMarker.swift
+
+wrote docs/test-campaign/evidence/mutation-aggregate.json
+
+ratchet set to 47

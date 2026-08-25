@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "the audit trail's bytes on disk, read with a fresh FileHandle and opened with AuditSeal and the injected private half - never AuditLog.readTrail, which is the reader under test confirming itself",
+    "effect": "ipc",
+    "count": 3
+  },
+  "armedBy": "Same test body, inverted in the arming run: the non-zero assertion printed \"the recorder saw 3 records, attributions [Optional(\\\"cli\\\"), Optional(\\\"mcp\\\"), nil]\", the forgery assertion was flipped to demand [\"cli\"] and reported the row actually reads [nil], and the sabotage was pointed at the LIVE socket, where it went red with 1 record carrying via=cli and the CLI exiting 0 instead of 3. docs/test-campaign/evidence/PRO-0083/arming-w1-req035.txt RE-ARMED AFTER A REWRITE: this suite was restructured so no test of it blocks a cooperative thread (DEF-043), which changed every body. Every count above was re-established on the code as it now stands \u2014 docs/test-campaign/evidence/PRO-0083/arming-counts-after-refactor.txt \u2014 and the sabotages were removed again and watched to fail \u2014 docs/test-campaign/evidence/PRO-0083/arming-sabotage-after-refactor.txt. That second pass caught an arming that could not fire: W3's dead watch was first pointed at a socket whose server had already been stopped, so it would have read zero whatever happened, and it was re-armed against the live socket.\n\nTHE FORGING ARM WAS REBUILT ON THE RESUME AND RE-ARMED. It was a hard-linked copy of proctor-cli launched at a fresh path; a fresh path is a first launch for syspolicyd, and beside the wiring suites' fifteen concurrent SecStaticCodeCheckValidity calls it overran a 120-second bound in the full run, deterministically, twice, while taking 0.1s with this test alone (DEF-044). It is now a raw AF_UNIX peer that is THIS TEST PROCESS - proc_pidpath reports proctor-mcpPackageTests, which frontEnd(named:) maps to nil - so no binary is launched. The ask also became real: --via is not a flag proctor-cli parses, so the old arm never put the claim on the wire, where the frame now carries \"via\":\"cli\" at the top level of the very object the server decodes. Re-armed by inverting three assertions in the same body: the peer WAS answered (ForgedCall(answered: true, ok: true)) and its row reads [nil] from those wire bytes, 1 row. docs/test-campaign/evidence/PRO-0083/arming-forger-rawpeer.txt\n\nRE-MEASURED FOR REPRODUCIBILITY, not re-armed. A verifier saw the forging peer report ForgedCall(answered: false, ok: false) on 3 of 5 verdict-returning runs, so the clause went unexercised there; the cause was DEF-043's pool starvation seen from the client side, closed by PRO-0087 and merged here. On that build the arm answered on 30 of 30 consecutive full-suite runs, 0 stalls, at load average min 245 / median 396 / max 567. The 10s SO_RCVTIMEO was NOT raised: the margin was measured instead, by asserting readSeconds > 3600 inside three more full-suite runs, and the read returned in 0.030s / 0.038s / 0.181s, the worst 1.8% of the bound at load 561. docs/test-campaign/evidence/PRO-0083/remeasure-forged-peer.txt",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/ExternalWitnessTests.swift",

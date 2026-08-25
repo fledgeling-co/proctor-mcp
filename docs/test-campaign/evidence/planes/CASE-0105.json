@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "the same classifier that reports 0 for MainWindow.swift reports non-zero for five of its siblings in the same run, so the zero is a property of the file rather than of the instrument",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0081/a2-sibling-scope.txt",

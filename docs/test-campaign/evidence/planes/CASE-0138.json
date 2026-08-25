@@ -5,6 +5,13 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "with both now() call sites reverted to DispatchTime.now().uptimeNanoseconds: the stepping arm reports 'clock.count \u2192 0 >= 3' and 'clock.elapsed \u2192 0 >= 200000000', and the frozen arm reports 'Caught error: .timedOut'",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0089/arming.txt",

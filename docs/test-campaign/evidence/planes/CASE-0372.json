@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "A ToolSpec named proctor_hud added to ToolCatalogue.all. 'Expectation failed: (ToolCatalogue.spec(named: verb) -> ToolSpec(name: \"proctor_hud\", title: \"arming\", ...)) == nil' at AgentVerbBoundaryTests.swift:40:13, the message naming the spec the shim's gate would have forwarded. Run failed with 2 issues, exit 1; reverted and green. Full output in arming-A-hud-in-catalogue.txt.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/AgentVerbBoundaryTests.swift",

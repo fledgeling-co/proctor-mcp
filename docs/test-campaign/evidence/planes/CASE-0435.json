@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Three mutations, each watched red. Adding 97-arming.md to the scratch queue reds the claimed-or-registered check. Adding a register row for 98-not-a-brief.md, which the queue does not hold, reds the stale-register check. Blanking the reason column of brief 96's row reds the reason check \u2014 without that one the register would have decayed into a list of exemptions nobody justified, which is the absence it exists to replace.",
   "evidence": [
     {
       "path": "scripts/campaign/spec_citation_measure.py",

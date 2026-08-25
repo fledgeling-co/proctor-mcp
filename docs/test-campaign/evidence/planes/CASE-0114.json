@@ -5,6 +5,13 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The control is the unmodified tree at the same load on the same afternoon: four runs, one green, one carrying ForgedCall(answered: false, ok: false) with four REQ-035 issues, and an earlier attempt that hung outright and had to be killed after six minutes. The forging arm has therefore been watched failing on this machine, not only reported failing by PRO-0083. Independently re-measured by the verifying reviewer, who ran the forging arm 6 of 6 green on the fixed tree.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0087/run-ledger.md",

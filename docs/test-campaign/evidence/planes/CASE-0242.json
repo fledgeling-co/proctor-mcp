@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Two-way against its own pair: CASE-0242 and CASE-0243 drive the same run with cursorSuppressible false and true and read opposite values of pointerDrawnBy, so neither asserts a constant.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0084/arming.txt",

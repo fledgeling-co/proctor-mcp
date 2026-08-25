@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "arming-D: 'an unrecognised defect status stays broken FAILED \u2014 'broken' / 'a defect is a measured negative result...'' \u2014 the pre-fix class was right by accident and the reason was wrong, which is what the assertion reads.",
   "evidence": [
     {
       "path": "~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",

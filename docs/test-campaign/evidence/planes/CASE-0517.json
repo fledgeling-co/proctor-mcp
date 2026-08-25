@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "spec_citation_arm.py mutation: PRO-0001's `**Brief:**` line wrapped in a ```text fence. `every spec carries a parseable citation` moves PASS -> FAIL, and the run records the reds it moved. Baseline on the unmutated scratch copy is 19/19 PASS.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0104/spec-citation-arm.txt",

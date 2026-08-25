@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The blocking single-flight put back (waiters on an NSCondition, verification on the first caller's own thread). The named test went red: Expectation failed: (finishedBeforeTheVerificationLanded.current -> 0) == (unrelated -> 32). Zero of thirty-two unrelated tasks ran in twenty seconds while seventeen callers waited on one verification. Restored, green.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/ToolchainDoctorTests.swift",

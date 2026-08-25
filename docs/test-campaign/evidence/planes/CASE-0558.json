@@ -5,10 +5,17 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The pre-repair rule `armed = code != 0` is reintroduced against this exact fixture and returns ARMED, which is the verdict the verifier drove end to end on CASE-0461. The same fixture at exit 0 is scored NOT ARMED by that rule, so the two-way control shows one non-measurement filed as a pass in one direction and a fail in the other, and inconclusive both ways after the repair. A verdict line over one test that failed still arms, so the guard is watched clearing as well as firing.",
   "evidence": [
     {
       "path": "scripts/campaign/test_instruments.py",
-      "sha256_16": "d9b63aa577e0de7e",
+      "sha256_16": "200f27dd47233bb8",
       "present": true
     },
     {

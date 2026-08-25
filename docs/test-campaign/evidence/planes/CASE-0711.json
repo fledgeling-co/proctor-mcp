@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "test_instruments.py test_supervision_tui_pty_probe_characterization asserts 100x30 target rendering across all 5 panes with full layout fidelity",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/SupervisionTUIPtyWitnessTests.swift",

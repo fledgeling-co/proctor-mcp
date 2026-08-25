@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Both directions on fixture trees in test_instruments.py: a Sources/ file declaring NewStore.defaultURL under the operator root with NO manifest entry produces exactly one finding naming 'NewStore.defaultURL', and the same tree with an entry produces none. THE GAP-FIX ADDED THREE MORE SHAPES the verifier proved cleared both modes: a `Legacy.operatorURL` declared beside a bare-classed `SwitchStore.operatorURL` (both sites now refused until the manifest disambiguates); and a path COMPOSED as `SwitchStore.url(home: FileManager.default.homeDirectoryForCurrentUser)`, which names no root literal at all and is exactly how the real accessor is written \u2014 now caught by a second census sweep over `home_expressions`, with the literal sweep asserted blind to it in the same fixture so the second sweep is shown doing the work rather than duplicating it. Each clears once classed.",
   "evidence": [
     {
       "path": "scripts/campaign/operator_path_gate.py",
@@ -18,7 +25,7 @@
     },
     {
       "path": "scripts/campaign/test_instruments.py",
-      "sha256_16": "d9b63aa577e0de7e",
+      "sha256_16": "200f27dd47233bb8",
       "present": true
     },
     {

@@ -5,10 +5,17 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "`armed = code != 0` is reintroduced against every one of the eleven routes and the check asserts WHICH three it agrees on rather than that it disagrees somewhere \u2014 a control that moves on every input is measuring the harness rather than the repair. The three it agrees on are a reported failure, a reported pass, and the trap; it differs on the other eight, both zero-test routes among them.",
   "evidence": [
     {
       "path": "scripts/campaign/test_instruments.py",
-      "sha256_16": "d9b63aa577e0de7e",
+      "sha256_16": "200f27dd47233bb8",
       "present": true
     },
     {

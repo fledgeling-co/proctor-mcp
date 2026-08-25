@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "gemini.md's count reverted to 'twenty tools' on a scratch copy of the whole skill tree. 'FAIL gemini.md states the catalogue count [[20]]' via skill_doc_arm.py, which reports ARMED for it. Independently, the measurement was run against the UNFIXED live file before the one-word fix and exited 1 with that check and one other red; that run is the arming that came first. Output in skill-doc-arm.txt and skill-doc-measure.txt.",
   "evidence": [
     {
       "path": "scripts/campaign/skill_doc_measure.py",

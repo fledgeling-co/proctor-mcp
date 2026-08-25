@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "selftest.py section 17c: three defect rows carrying the same unknown word return one finding with count 3 and ids ['DEF-X1', 'DEF-X2', 'DEF-X3'], not three findings and not one naming one row.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt",

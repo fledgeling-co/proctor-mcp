@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "ledger_gate.audit_ledger() run against this repository's LEDGER.md and docs/specs/ passes with zero failures across all 110 rows and 107 specs.",
   "evidence": [
     {
       "path": "scripts/campaign/ledger_gate.py",

@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Two-way control: restoring the real commit on the same run.json makes the identical command produce a decomposed delta at exit 0. Lines 'gate . an unresolvable earlier commit refuses the delta' and 'two-way . a resolvable earlier commit is decomposed instead'.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0103/selftest-green.txt",

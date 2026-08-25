@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "live-glass",
   "placedBecause": "a capture or window witness off a display server",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "the installed proctor-agent (pid 52976) reading pid 491's accessibility tree by AXIdentifier with its own AX client",
+    "effect": "ipc",
+    "count": 4
+  },
+  "armedBy": "TWO-WAY ON ONE BUILD, one AXPress apart. On the intro step the same reader read the same identifier as enabled TRUE, label 'Set up permissions', frame 140x24, with NO node carrying proctor.walkthrough.action.primary.reason anywhere in the tree. On the permissions step: enabled FALSE, label 'Connect a model', frame 127x24, reason node present at 441x14. A pinned field or an unconditional caption could not have produced that pair.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0086/glass-tree-read.json",

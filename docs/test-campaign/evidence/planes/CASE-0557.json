@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "The audit file's bytes are held in memory before the run and compared against the file on disk after it, so a refused --write is witnessed writing nothing rather than reported as having written nothing. The adopted write is witnessed by reading the row back and finding the new sha256 and distinctRGBA in it.",
+    "effect": "filesystem-write",
+    "count": 1
+  },
+  "armedBy": "Three writes driven in one run and the middle one is the arming: --write over an unchanged directory writes, --write over a replaced frame is refused and the audit on disk is byte-identical to before, and --write --adopt writes. Before the repair the middle step wrote and returned 0.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0106/def226-adoption-arming.txt",

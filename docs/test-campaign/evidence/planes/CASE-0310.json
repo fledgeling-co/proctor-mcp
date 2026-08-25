@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "ARM-1: the biconditional's own guard removed from primaryDisabledReason, so a reason came back in every state. `./scripts/test.sh --filter aReasonExistsExactlyWhereThePrimaryRefuses --filter theReasonNamesTheMissingGrantAndTheNextAction` exited 1 with 'Test run with 2 tests in 1 suite failed ... with 10 issues', the first six reading ((reason == nil) -> false) == (enabled -> true). Restored, green.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",

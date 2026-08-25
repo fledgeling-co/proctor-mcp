@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Two sentences planted at the top of the file \u2014 one in an array, one returned from a function: FAIL: 2 user-facing literal(s) of 2 examined, exit 1. Removed, exit 0. The denominator matters here: Walkthrough.swift went from 56 examined to 0, so a PASS could have meant the instrument had nothing left to read, and this shows it still bites at the new denominator.",
   "evidence": [
     {
       "path": "scripts/campaign/status_literals.py",

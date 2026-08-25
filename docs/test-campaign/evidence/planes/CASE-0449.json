@@ -5,6 +5,13 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The self-comparison is the arming: an implementation that attributed movement to the wrong column, or that double-counted the control, cannot produce all-zero on identical inputs while producing a decomposition that sums on different ones. Both runs are in metamorphic-decomposition.txt with the assertions that raise on failure.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0103/metamorphic-decomposition.txt",

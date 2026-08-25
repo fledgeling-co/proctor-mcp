@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "arming-D: 'a defect with no status stays broken FAILED'. This line passed against pre-fix code until the assertion was tightened to require 'no status' in the row's why; it was re-armed against 31697a9 after tightening rather than left on the earlier capture.",
   "evidence": [
     {
       "path": "~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",

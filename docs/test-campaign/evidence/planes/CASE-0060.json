@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "sentinel files written by each spawned /bin/sh child with its own $$, read back off the filesystem with FileManager and Data(contentsOf:)",
+    "effect": "subprocess",
+    "count": 2
+  },
+  "armedBy": "Sabotage run in the same test body: simctl pointed at a path that does not exist, and readDevices raises the tool's own refusal. The armed variant pointed it at the WORKING script and the sabotage half went red with 2 issues \u2014 no error thrown, and a sentinel [8941] present. The live-count assertion was inverted in the same run and printed (pids.count -> 2) < 0. docs/test-campaign/evidence/PRO-0077/arming-run.txt",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/EffectWitnessTests.swift",

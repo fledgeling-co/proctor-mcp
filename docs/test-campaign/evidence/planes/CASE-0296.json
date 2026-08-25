@@ -5,6 +5,13 @@
   "oracle": "metamorphic",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Sabotage S4 removes `if s.userInputSince { out.insert(.userInput) }`. Six issues across the two suites, including the paired control which asserts the SAME timestamp without the flag holds nothing \u2014 so the assertion is measuring the flag rather than the window.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/ContentionTests.swift",

@@ -5,6 +5,17 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "listen-only tail-append CGEventTap in the witness_probe process, counting probe-marked posts that survived Proctor's head-inserted block",
+    "effect": "device",
+    "count": 24
+  },
+  "armedBy": "The pass was armed rather than trusted: on a /tmp copy of Tests/, one read-back line was deleted from AuditRotationTests.clearingEmptyIsANoOp, a test then in the re-read set. The count went 78 to 79 and the finding named that test. A zero-genuine result from a pass that could not report a genuine finding would have measured nothing.",
   "evidence": [
     {
       "path": "evidence/PRO-0079/blind-findings-before.txt",

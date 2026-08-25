@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Three independent sabotages redden the same test. S5 removes the reading after the last step and yields is nil. S7 binds the block to nothing: userInputs 0 and yields nil. S4 cuts the arrival clause from ContentionWatch.conditions. Each cut is a different link in the chain and each is proved load-bearing.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/TakeoverWiringTests.swift",

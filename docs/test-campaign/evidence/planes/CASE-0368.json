@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The control is the arming and it is inside the suite: `anUnconfirmedAnswerIsReProbed` shows the same instrument reporting the OTHER outcome on the same code path. Without it the freeze test would prove only that a stub returned a stub.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",

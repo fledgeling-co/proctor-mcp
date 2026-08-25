@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "CuaSubprocessWitnessTests oneShotTransportLifecycleAndStderrCapture asserts exit code 2 and stderr capture in AgentError",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/CuaSubprocessWitnessTests.swift",

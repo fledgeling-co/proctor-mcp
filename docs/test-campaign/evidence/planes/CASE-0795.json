@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "live-glass",
   "placedBecause": "the macos-glass lane commits to a display server, whatever the artefact reads as",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "CGWindowListCopyWindowInfo over pid 21914, read by a standalone Swift binary outside the app \u2014 the window server's own census, which the menu command does not participate in",
+    "effect": "device",
+    "count": 1
+  },
+  "armedBy": "docs/test-campaign/evidence/PRO-0148/def-336-closed.txt records the same call against the same product before the fix, refused with windowNotFound and zero windows opened. The negative arm is the previous build.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0148/def-336-closed.txt",

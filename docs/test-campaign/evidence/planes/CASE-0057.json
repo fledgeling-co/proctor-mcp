@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Re-ran the sweep with the refusal condition removed, so every call reached the live agent: all three predicates failed on all 21 rows. The first version of this sweep is kept in the evidence with the reason it was worthless, because its predicate examined 21 rows and could not have failed on any of them.",
   "evidence": [
     {
       "path": "evidence/cli/sweep-refusal-honesty.txt",

@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "RunQueueSnapshot after a live child has held the lane through a full acquire cycle, plus the refusal the second caller actually received",
+    "effect": "subprocess",
+    "count": 1
+  },
+  "armedBy": "Sabotage S3 widens the sweep from `== .gone` to `!= .unknown`, so a live peer is reclaimed too. The test then reports four failures, the first being that the second caller was granted the lane instead of being refused; eleven issues across the suite in total.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/PeerReclaimWiringTests.swift",

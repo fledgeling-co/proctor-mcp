@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "ARM-8: `showsSkip` made to read the grants it takes \u2014 `step != .connect && primaryEnabled(\u2026)`, the lockout written into the rule rather than into the view. `./scripts/test.sh --filter aRevocationIsNotALockout|skipIsOfferedInEveryRefusingState` exited 1; this test recorded 2 issues, one per revoked direction: `WalkthroughFlow.showsSkip(on: .permissions, accessibility: (ax \u2192 false), screenRecording: (sr \u2192 true))` and the same with the grants swapped. Restored, green. ARM-1 IS NOT THIS CASE'S ARMING AND THE PREVIOUS RECORD SAYING SO WAS WRONG: with the biconditional's guard removed, `primaryDisabledReason(.permissions, true, true)` still returns nil through the empty-missing path, so this test's `== nil` expectation holds either way \u2014 and this test was not in ARM-1's own filters, so it never ran in that session. A verifier applied ARM-1 with this test in the filter and watched it pass.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",

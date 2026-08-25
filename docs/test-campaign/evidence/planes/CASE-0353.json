@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Deleted `guard StatusChecks.kindIsPermission(name) else { continue }` from TUISurface.readiness and watched this test fail with 3 issues, exit 1. docs/test-campaign/evidence/pro-0082/arming.json",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",

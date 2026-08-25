@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Watched to fail on the build before the fix: the first render of the queue pane put '2 lanes' on the shelf where the design compiled '3 lanes', and the error pane placed its remedy keybar one row above the design's. Both were caught by the row-and-column comparison rather than by looking.",
   "evidence": [
     {
       "path": "evidence/tui-capture-100x30.json",

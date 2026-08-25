@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "GuestMultiSessionQueueWitnessTests darwinProviderAssignsNativeWitnessTier asserts darwin yields native tier and evaluates tree assertions",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/GuestMultiSessionQueueWitnessTests.swift",

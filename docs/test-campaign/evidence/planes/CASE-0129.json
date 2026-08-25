@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "a JSON-RPC client driving proctor_capture over the agent's private unix socket against a signed Developer ID build, with both replies kept whole",
+    "effect": "device",
+    "count": 2
+  },
+  "armedBy": "The Calculator leg is the sabotage and it is a real frame, not a stub: the same code path one call later returns trustworthy true, contentVerdict content, maxAlpha 255 over 1,099,968 pixels. A gate that had simply started refusing everything would fail here.",
   "evidence": [
     {
       "path": "evidence/PRO-0088/glass/capture-proctor-owned.json",

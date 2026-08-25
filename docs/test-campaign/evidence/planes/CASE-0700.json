@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "independent process table inspection and sentinel files on disk written by child process with $$",
+    "effect": "subprocess",
+    "count": 3
+  },
+  "armedBy": "test_instruments.py test_subprocess_witness_characterization asserts process spawn, argument passing, and clean exit",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/CuaSubprocessWitnessTests.swift",

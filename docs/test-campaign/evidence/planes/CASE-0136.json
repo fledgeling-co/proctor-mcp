@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "CASE-0135's arming exercises the same `bounded` race from the other side",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0089/under-load.txt",

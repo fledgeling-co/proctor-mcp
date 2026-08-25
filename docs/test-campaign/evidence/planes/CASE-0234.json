@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Probe A of docs/test-campaign/evidence/PRO-0084/arming.txt: with the escalation rung deleted from RunHUDState.planeException the suite exits 1 and this case reads failed; restored, it reads passed and the suite exits 0.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0084/arming.txt",

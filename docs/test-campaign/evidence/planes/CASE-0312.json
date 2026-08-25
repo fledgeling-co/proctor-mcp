@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "ARM-3 removed the caption's accessibilityIdentifier and ARM-4 removed the hint on the disabled button; each ran `./scripts/test.sh --filter theFooterDrawsTheReason` and each exited 1 with one issue. Two separate mutations because one assertion passing does not arm the other.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",

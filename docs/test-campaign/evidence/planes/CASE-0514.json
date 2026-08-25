@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "selftest.py section 17d, the reproduction DEF-201 was filed on: a brief whose only id-shaped token is `CASE-9999` inside a fenced example command builds no cited edge and classes `unjoined`, with the token and its count named in the row's `why`. Before the repair the same brief produced a confidence-1.0 citation and classed `unbuilt` \u2014 product work, on a token nobody cited.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt",

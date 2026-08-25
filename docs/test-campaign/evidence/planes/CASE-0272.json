@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "DirectoryWitness over a decoy laid out like the operator's root, driven by two real filesystem writes",
+    "effect": "filesystem-write",
+    "count": 2
+  },
+  "armedBy": "Sabotage 3: the sweep stops descending, options [.skipsSubdirectoryDescendants]. 'Expectation failed: (changed -> []) == [\"policy/policy.json\"]'. That is exactly how a recursive reader fails silently \u2014 it keeps reporting zero for the operator's root for ever because it never looks inside policy/ or audit/ \u2014 and it is why this case exists. Sabotage 4 (changed() dead) reds it too. Restored, green.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",

@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "selftest.py section 17d, `fenced`: PRE_FIX_SCAN over the same document returns ['DEF-0404'] while scan_ids returns cited [] and shown {'fenced': ['DEF-0404']}. Two-way control in the same fixture: the identical id written into prose instead returns cited ['DEF-0404'] and no shown region, so the exclusion is distinguishable from a scanner that stopped finding ids.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt",

@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The same S3 cut: with the sweep widened, the waiter's acquire is granted for the wrong reason and the assertions on waitingCount and on the granted ticket both fail.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/PeerReclaimWiringTests.swift",

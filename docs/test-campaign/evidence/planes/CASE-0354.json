@@ -5,6 +5,13 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Replaced StatusChecks.permissions(in:)'s `resolvedKind(ofCheckNamed:) != .tool` filter with one that keeps every grant, so the value spelling of the partition parts company with the name spelling, and watched thePaneAndTheWindowAgreeNameByName fail \u2014 (byName \u2192 false) == (byValue \u2192 true) \u2014 1 issue, exit 1. docs/test-campaign/evidence/pro-0082/arming-gapfix.json",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",

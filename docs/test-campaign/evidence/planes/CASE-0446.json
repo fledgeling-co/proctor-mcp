@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Two-way control: the same fixture with the ratchet intact takes a reading at exit 0 in the same run ('control . a clean tree and a current tool take a reading'). No removal mutation, because deleting this check leaves the failure to a later AttributeError rather than to a refusal.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0103/selftest-green.txt",

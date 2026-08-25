@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The same pair with one row edited exits 3 (CASE-0452), so a clean verdict here is a measurement rather than the only answer this code can give.",
   "evidence": [
     {
       "path": "docs/reckoning/2026-08-22-2bdc808/delta.md",

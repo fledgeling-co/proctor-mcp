@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The same proctor_hud addition. 'Expectation failed: (names.count -> 22) == 21' at AgentVerbBoundaryTests.swift:58:9. Run failed, exit 1; reverted and green. Full output in arming-A-hud-in-catalogue.txt.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/AgentVerbBoundaryTests.swift",

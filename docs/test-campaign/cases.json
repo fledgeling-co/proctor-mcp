@@ -8880,5 +8880,40 @@
       "Tests/ProctorAgentTests/BackgroundRouteTests.swift"
     ],
     "note": "DEF-337. The relation is across runs rather than within one: the same suite, the same tree, two verdicts. A fixture id chosen as a constant collides with the window server's own allocation, so the fix reads the live list and the test asserts the absence it rests on. TestWindowIDs.isAbsentOnScreen is checked inside the test, so a helper that ever stops working reports itself rather than letting the assertion pass for the wrong reason."
+  },
+  {
+    "id": "CASE-0797",
+    "req": "REQ-047",
+    "surface": "SURF-026",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "The report refuses to print a rate without its denominator: a run carrying no `sites` key is named as NO SITE COUNT rather than folded into an average, and the aggregate line counts only the runs that counted. Removing the sites key from a run's JSON moves it into that list and out of the percentage.",
+    "defects": [],
+    "evidence": [
+      "scripts/campaign/mutation_report.py",
+      "docs/test-campaign/evidence/mutation-aggregate.txt",
+      "docs/test-campaign/evidence/mutation-aggregate.json"
+    ],
+    "note": "PRO-0142. Four mutation runs aggregated: 113 distinct mutants, 112 scored, 65 killed, 47 survived. The figure that matters is the one no single run could print \u2014 across the two runs that counted their sites, 48 of 3,241 sites were ever run, which is 1.5% of the space. A first draft summed site counts per module and produced 88 scored against 52 sites for ProctorCore, a denominator smaller than its numerator, because three runs covered different files and one counted. Sampling is reported per run for that reason."
+  },
+  {
+    "id": "CASE-0798",
+    "req": "REQ-047",
+    "surface": "SURF-026",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "A survivor with a byte offset and no name sends its reader to open the file. The enclosing declaration is read back out of the source at the survivor's line, so a survivor whose declaration cannot be found reports `(top level)` rather than a plausible wrong name.",
+    "defects": [],
+    "evidence": [
+      "docs/test-campaign/evidence/mutation-aggregate.json",
+      "docs/test-campaign/evidence/mutation-aggregate.txt"
+    ],
+    "note": "PRO-0142 acceptance 3 and 4. Each of the 47 survivors carries its file, line, enclosing declaration and the edit that survived \u2014 `'||' -> '&&'` in AXEngineImpl's liveRunningApps, `'==' -> '!='` in SessionKill.includingBarePid. The clustering pass names a declaration carrying several survivors as ONE untested branch rather than several, which is the difference between a work list and a wall."
   }
 ]

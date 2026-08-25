@@ -5,10 +5,17 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The pre-repair walk is reimplemented verbatim beside the repaired one and run over the same two fixtures: it finds nothing under a dict key and nothing in a spaced path, while the repaired walk finds both. The spaced path is then deleted and the same string stops being a citation, which is the residual stated rather than hidden.",
   "evidence": [
     {
       "path": "scripts/campaign/test_instruments.py",
-      "sha256_16": "d9b63aa577e0de7e",
+      "sha256_16": "200f27dd47233bb8",
       "present": true
     },
     {

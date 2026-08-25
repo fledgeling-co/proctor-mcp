@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Not armable by reverting to 31697a9 \u2014 pre-fix said broken about everything, so it passed on both sides. Armed by mutation instead: forcing is_work_item False on every defect reds this line. arming-E-controls.txt, first mutation.",
   "evidence": [
     {
       "path": "~/Dev/fledgeling-plugins/plugins/reckon/skills/reckon/scripts/selftest.py",

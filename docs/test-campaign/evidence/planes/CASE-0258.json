@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Both directions. A name in CommandID with no command behind it: Expectation failed: (command -> nil) != nil, and title(id) fell back to the id. A command in the catalogue CommandID does not name: Expectation failed on the contains check. Both recorded in g-surfaces-arming.txt and h-def135-runner-abort.txt. Restored, green.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/SurfaceLiteralsTests.swift",

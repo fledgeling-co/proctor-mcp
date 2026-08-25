@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Same reversion; the retired question reappears in WalkthroughFlow.swift and the scan reddens, exit 1. docs/test-campaign/evidence/pro-0082/arming.json",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",

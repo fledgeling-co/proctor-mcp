@@ -5,10 +5,17 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "verify() is called twice in one session: once over an audit dict whose byteIdenticalGroups have been emptied, where it exits 1 and prints `the byte-identical grouping moved`, and once over the grouping this run computes, where it exits 0 and does not. That is the branch watched firing and clearing, which reading the source for the sentence could not do.",
   "evidence": [
     {
       "path": "scripts/campaign/test_instruments.py",
-      "sha256_16": "d9b63aa577e0de7e",
+      "sha256_16": "200f27dd47233bb8",
       "present": true
     },
     {

@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Zeroing the same geometry inverts both readings, so the measurement is of the bytes rather than of the frame's size.",
   "evidence": [
     {
       "path": "evidence/PRO-0088/gate-after.txt",

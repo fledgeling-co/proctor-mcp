@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Mutant re-applied: RunHUDContentView.swift:830 ms < 1000 to ms <= 1000. The named test went red: (RunHUDContentView.duration(1000) -> \"1000ms\") == \"1.0s\". Reverted, green.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/MutationSurvivorTests.swift",

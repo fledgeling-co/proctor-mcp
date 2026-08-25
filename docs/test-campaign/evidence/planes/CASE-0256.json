@@ -5,6 +5,13 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The halted outcome given the failure mark: the test failed on the clause that halted is not a failure. The counted-sentence check armed separately by making one sentence disagree with its number. Both restored, green.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/HistorySurfaceTests.swift",

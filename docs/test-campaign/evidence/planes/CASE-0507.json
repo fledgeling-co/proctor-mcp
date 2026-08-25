@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "selftest.py section 17c: a defect row at `characterised` produces a `vocabulary` violation reading \"defect status 'characterised' is not a word this tool classifies\" and R.verdict returns 4.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt",

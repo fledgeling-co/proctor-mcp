@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "ReadIsolationPolicyTests asserts PolicyStore and FlowStore load strictly from designated sandbox directories",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/ReadIsolationPolicyTests.swift",

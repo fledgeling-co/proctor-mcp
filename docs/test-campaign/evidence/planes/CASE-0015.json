@@ -5,6 +5,13 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "injected state hash flip on step 3; verified firstDivergence reported step 3; restored",
   "evidence": [
     {
       "path": "evidence/stability-sweep-5run.json",

@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Both runners driven from one fixture, which is the arming rather than a description of it. `main`'s runner and this one were each given a suite runner returning green for the baseline and a timeout for the mutant, over the same real tracked file. Before: `verdict=killed scored=1 survivalRate=0.0`. After: `verdict=TIMEOUT scored=0 timedOut=1 survivalRate=None`. A genuine failure is unchanged in both, so the change is not simply relabelling every red run. The pre-change source is matched by a marker string before it is trusted, and both runs left the tree clean.",
   "evidence": [
     {
       "path": "scripts/campaign/mutate_swift.py",

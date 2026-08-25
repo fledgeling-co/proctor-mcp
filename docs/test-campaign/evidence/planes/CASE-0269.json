@@ -5,6 +5,13 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Five files, two sentences planted in each, every one moving from exit 0 to exit 1 with display 2. Removed, all five back to exit 0.",
   "evidence": [
     {
       "path": "scripts/campaign/status_literals.py",

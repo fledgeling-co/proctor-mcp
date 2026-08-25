@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The interlock disabled at source: 'guard AuditLog.isTestProcess else {' replaced with 'guard false else {', which is exactly the state the tree was in when the sweep caught the write. Four issues, each naming the operator path it resolved to: 'Expectation failed: !((directory \u2192 \"/Users/lukerhodes/Library/Application Support/app.fledgeling.procter/captures\").hasPrefix(operatorRoot.path \u2192 \"/Users/lukerhodes/Library/Application Support/app.fledgeling.procter\") \u2192 true)' and the same for the zoom crop path '.../captures/win-1-zoom-1787361866561.png'. Restored, green. Full output in capture-interlock-arming.txt.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",

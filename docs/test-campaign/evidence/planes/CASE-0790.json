@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "test_instruments.py test_brief_108_retirement_verification: verifies Brief 108 is marked retired citing spec-PRO-0116.md.",
   "evidence": [
     {
       "path": "docs/features-to-triage/108-native-ocr-and-high-dpi-zoom-inspector.md",

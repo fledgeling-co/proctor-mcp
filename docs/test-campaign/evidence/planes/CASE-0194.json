@@ -5,10 +5,17 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The precondition removed, which is the shipped control's behaviour: 3 of the 8 checks red \u2014 the refusal exit code, the refusal naming the state, and the refusal naming which pass was red and over what population. The sabotaged run printed uncensused findings=3 and still claimed it had turned a clear census red. Restored, green.",
   "evidence": [
     {
       "path": "scripts/campaign/test_instruments.py",
-      "sha256_16": "d9b63aa577e0de7e",
+      "sha256_16": "200f27dd47233bb8",
       "present": true
     },
     {

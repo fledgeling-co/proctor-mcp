@@ -5,10 +5,17 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The fixture is a real git repository built in the test \u2014 base commit, an item that fixes two records and adds a third, then a commit that reverts one and drops the new row. The check exits 1 and names both. It is a repository rather than a stub of one because the check reads history, and a history check tested against a stub of its own input has been watched fail nothing.",
   "evidence": [
     {
       "path": "scripts/campaign/test_instruments.py",
-      "sha256_16": "d9b63aa577e0de7e",
+      "sha256_16": "200f27dd47233bb8",
       "present": true
     }
   ]

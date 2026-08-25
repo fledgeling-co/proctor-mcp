@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "selftest.py section 17a asserts each of `by design`, `invalid`, `obsolete`, `superseded`, `cannot reproduce`, `not-a-defect` and `vacuous` on its own: class `waived`, is_work_item False, and the word named in the row's `why`. PRE_FIX_WORD is restated and returns `broken` for every one of them. A loop that stopped at the first word would leave six unmeasured, so each prints its own line.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt",

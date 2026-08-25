@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "selftest.py section 17e: `CASE-9999` in plain prose builds no cited edge, the brief row comes out `unjoined` rather than `unbuilt`, the row carries unclassifiable_ids ['CASE-9999'], and unclassified_inputs returns exactly [('id-shaped token', 'CASE-9999', 1)].",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0104/reckon-selftest.txt",

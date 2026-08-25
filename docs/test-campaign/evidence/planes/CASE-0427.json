@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Armed by forcing plugin.json to 1.0.9 against a marketplace entry at 1.1.0: 'the manifest and the marketplace agree FAILED \u2014 version drift: plugin.json 1.0.9, marketplace 1.1.0'. arming-B-delivery.txt, first mutation.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0102/source-denominators.txt",

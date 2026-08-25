@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "with `await timer(bound)` changed to `await timer(bound + 1)`: 'Expectation failed: (asked.seconds \u2192 2.5) == (GrantProbe.bound \u2192 1.5)'",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0089/arming.txt",

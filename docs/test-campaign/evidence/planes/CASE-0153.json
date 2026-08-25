@@ -5,6 +5,13 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "mutations 1, 7 and 8 of instrument-arming.txt take this check's family red one at a time \u2014 the $ out of the lookbehind, \\s into it so no literal fires at all, and \\w out of it so a digit inside an identifier does \u2014 and the same run is green once each is restored.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0091/instrument-suite.txt",

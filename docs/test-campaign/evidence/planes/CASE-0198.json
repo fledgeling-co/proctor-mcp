@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "One fixed temporary name put back, which is what O_EXCL turns into a refusal: Expectation failed: (failures.count -> 11) == 0. Eleven of twelve concurrent saves threw, and the other four cases stayed green. Restored, green.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/PolicyStoreSeamTests.swift",

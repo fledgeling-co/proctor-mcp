@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Armed by the gate itself, in both directions and on the real registry: before, `campaign.py check` printed four findings naming CASE-0126 and CASE-0127 as claiming source-analysis with no analyzer and no denominator; after, that blocker is gone and the source-analysis count reads 7. The fields were written INSIDE `source` because that is where campaign.py:772-781 reads them \u2014 written at the top level with `examined` as prose they satisfy neither condition, which is the mistake this registry made once already and the reason this case exists twice.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0097/source-denominators.txt",

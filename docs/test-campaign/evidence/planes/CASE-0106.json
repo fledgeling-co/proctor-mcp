@@ -5,6 +5,13 @@
   "oracle": "raster-visual",
   "plane": "live-glass",
   "placedBecause": "the raster-visual rung owes a display server",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "capture-lineage.py --seed-swap STEP-A3-PRIMARY-DISABLED against SURF-009 and against SURF-008: both CAUGHT with 2 hard failures each, so the tie pass reads the manifest rather than the filename",
   "evidence": [
     {
       "path": "evidence/shots/step-a3-walkthrough-primary-disabled.png",

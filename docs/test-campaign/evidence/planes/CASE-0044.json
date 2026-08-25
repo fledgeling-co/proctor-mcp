@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "CLISurfaceTests derives verbs from ToolCatalogue.all rather than a list; adding a tool without a verb reddens the derivation test. Measured live: 21 catalogue tools, 26 verbs, zero tools with no verb.",
   "evidence": [
     {
       "path": "evidence/cli/verb-derivation.txt",

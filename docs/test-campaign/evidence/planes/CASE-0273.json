@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Sabotage 5: the sha256 dropped from FileWitness, leaving existence, size and mtime \u2014 PRO-0089's original three. 'Expectation failed: (before.digest -> nil) != (after.digest -> nil)'. Restored, green.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",

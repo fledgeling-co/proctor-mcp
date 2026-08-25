@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The ratio is its own arming, two-way on the real registry an hour apart. Before: `campaign.py check docs/test-campaign` printed 'Armed: 155/156 passing cases have been watched to fail' \u2014 the instrument reporting short, one passing case nobody had watched bite. After CASE-0113 was armed by mutation, the same command over the same registry prints 157/157: 156 once the flip landed, 157 with this case, which is armed by the 155/156 it was written to record. A ratio that had only ever read N/N would prove nothing about whether it can count short; this one was seen short.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0097/case-0113-arming.txt",

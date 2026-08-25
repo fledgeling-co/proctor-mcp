@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The writers mutated rather than the readers, which is the half that fails silently: RunHUDFeed writing \"canShowX\" and Session writing \"yieldX\". Five tests across three suites failed naming the missing keys \u2014 Set(wire.keys) -> [\"phase\", \"canShowX\", \"running\", \"drawing\"] against the expected set, and yield?[\"active\"] -> nil == true in the hold-attribution wiring. Restored, green.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/AgentVerbsWiringTests.swift",

@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Mutant re-applied by hand after the test was written: KeyCodes.swift:18 'n': 45 to 'n': 46. The named test went red with 2 issues, (actual -> 46) == (CGKeyCode(expected) -> 45) and (Set(codes).count -> 25) == 26. Mutant reverted, test green.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/MutationSurvivorTests.swift",

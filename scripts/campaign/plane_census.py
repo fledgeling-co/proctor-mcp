@@ -39,8 +39,11 @@ import hashlib
 import json
 import os
 import re
+import subprocess
 import sys
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
 
 PLANES = ("in-tree", "hermetic", "live-glass", "live-external")
 RANK = {p: i for i, p in enumerate(PLANES)}
@@ -188,6 +191,16 @@ def main() -> int:
 
     if a.receipts:
         a.receipts.mkdir(parents=True, exist_ok=True)
+        # One timestamp for the whole run rather than one per file: the receipts
+        # are written by a single pass over a single tree, and stamping each with
+        # its own clock reading would suggest they were taken at different
+        # moments and invite a reader to compare them.
+        stamp = subprocess.run(["date", "-u", "+%Y-%m-%dT%H:%M:%SZ"],
+                               capture_output=True, text=True).stdout.strip()
+        head = subprocess.run(["git", "-C", str(ROOT), "rev-parse", "--short", "HEAD"],
+                              capture_output=True, text=True).stdout.strip() or None
+        dirty = bool(subprocess.run(["git", "-C", str(ROOT), "status", "--porcelain"],
+                                    capture_output=True, text=True).stdout.strip())
         for c in cases:
             ev = []
             for e in c.get("evidence") or []:
@@ -196,12 +209,35 @@ def main() -> int:
                     p = root.parent.parent / e
                 ev.append({"path": e, "sha256_16": digest(p) if p.is_file() else None,
                            "present": p.is_file()})
+            w = c.get("witness") or {}
             (a.receipts / f"{c['id']}.json").write_text(json.dumps({
                 "case": c["id"], "requirement": c.get("req"), "lane": c.get("lane"),
                 "oracle": c.get("oracle"), "plane": placed[c["id"]],
-                "placedBecause": reasons[c["id"]], "evidence": ev,
+                "placedBecause": reasons[c["id"]],
+                "recordedAt": stamp,
+                # The tree the placement was read from. A receipt that cannot say
+                # which commit it describes is a receipt for whatever is on disk
+                # now, and `dirty` is what stops a working-tree read being taken
+                # for a committed one.
+                "tree": {"commit": head, "dirty": dirty},
+                # The attestation, where the case has one. `recorder` is the thing
+                # that saw the effect and `count` is what it saw; a witness with a
+                # count of zero is the condition being tested rather than proof of
+                # it, which is why the field is carried rather than summarised.
+                "witness": ({"recorder": w.get("recorder"), "effect": w.get("effect"),
+                             "count": w.get("count")} if w else None),
+                "armedBy": c.get("armedBy"),
+                "evidence": ev,
             }, indent=2) + "\n")
-        print(f"wrote {len(cases)} receipt(s) to {a.receipts}")
+        (a.receipts / "INDEX.json").write_text(json.dumps({
+            "recordedAt": stamp, "tree": {"commit": head, "dirty": dirty},
+            "cases": len(cases), "planeCounts": counts,
+            "passingPlaneCounts": pass_counts,
+            "note": ("One receipt per case, naming the plane its claim rests on and the rule "
+                     "that placed it there. Digests are the first 16 hex of SHA-256 over each "
+                     "evidence file as it stood at `recordedAt`."),
+        }, indent=2) + "\n")
+        print(f"wrote {len(cases)} receipt(s) and an index to {a.receipts}")
 
     print()
     print(f"plane census over {len(cases)} case(s), {len(passing)} passing")

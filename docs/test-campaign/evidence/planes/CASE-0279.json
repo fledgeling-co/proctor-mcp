@@ -5,6 +5,13 @@
   "oracle": "metamorphic",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Sabotage 1: '(busy.state -> .settled) == .abandoned' and '(quiet.state -> .settled) == .applying'. Restored, green.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/RestartWatchTests.swift",

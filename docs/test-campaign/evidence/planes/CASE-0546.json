@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "sweep() in scripts/reckoning/reckoning.py, taken by cmd_take before and after the reckon build and stored in run.json under effect. It walks the run directory and computes a byte count and sha256 per file, and since PRO-0106 the record keeps all of it: `written` per new file, `rewritten` for a file whose digest moved between the sweeps, and `removed` for one the build stopped writing.",
+    "effect": "filesystem-write",
+    "count": 2
+  },
+  "armedBy": "Mutating the effect block to write an empty `written` map leaves the witness naming files only, and the check reds.",
   "evidence": [
     {
       "path": "scripts/reckoning/reckoning_selftest.py",

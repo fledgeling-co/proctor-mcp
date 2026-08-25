@@ -5,6 +5,13 @@
   "oracle": "metamorphic",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "This case IS the arming. Two runs of the whole suite over the same sabotage, differing only in the one converted site.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0098/def136-arming.txt",

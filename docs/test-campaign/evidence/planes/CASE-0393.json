@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "accessibilityProbe replaced with a counter returning false on its fifth call, so one of the eight doctor() calls in the matrix sees a different machine. 'Expectation failed: (readies.count -> 2) == 1' at BrowserLaneWiringTests.swift:249 and '(blockerCounts.count -> 2) == 1' at 250; 1 test failed with 2 issues, exit 1; reverted and green. This is the same failure text PRO-0098 measured coming off the real machine, which is what shows the injection reached `ready` rather than being accepted and ignored. Full output in arming-def165.txt.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/BrowserLaneWiringTests.swift",

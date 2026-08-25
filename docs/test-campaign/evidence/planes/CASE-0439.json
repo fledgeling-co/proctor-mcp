@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Changing 57-vm-targets.md's count in the register from 7 specs to 6 reds it. The mutation is the count rather than the row, because a check that only asked whether the brief was listed would pass while the number it publishes was wrong.",
   "evidence": [
     {
       "path": "scripts/campaign/spec_citation_measure.py",

@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Watched to fail: deleting '&& contentVerdict == .content' from CaptureEngineImpl.swift turned this test red and the run exited 1. Transcript in gate-sabotage.txt.",
   "evidence": [
     {
       "path": "evidence/PRO-0088/gate-sabotage.txt",

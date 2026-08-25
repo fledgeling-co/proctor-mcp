@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Two mutations to the regex on a scratch copy of reckon.py, one per direction. Loosening it to the pre-fix shape \\A([^-]+-[^-]+)\\b makes '03-menu' score as an id and reds the refusal check alone. Tightening it to \\A([A-Za-z]{4,}-\\d{2,})\\b makes SCR-0075 unreadable and reds the reads-a-real-id check alone. Neither mutation reds the other check, so the two directions are separately watched rather than one predicate reported twice.",
   "evidence": [
     {
       "path": "scripts/campaign/spec_citation_measure.py",

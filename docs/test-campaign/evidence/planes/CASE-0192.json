@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The pre-fix Data.write put back: Expectation failed: (mode(store.url) -> 438) == (0o600 -> 384). 438 is 0o666, which is what the umask gives when the umask is 0 and the write sets no mode. Restored, green.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/PolicyStoreSeamTests.swift",

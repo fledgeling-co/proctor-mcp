@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "PRO-0106, DEF-200. Watched to fail on a scratch basis: the permissions footer's refusing primary redrawn from class=\"btn\" disabled to class=\"btn prominent\" disabled \u2014 the accent-fill treatment DEF-163 was about \u2014 and WalkthroughFlowTests.theDesignDrawsTheRefusingPrimaryPlain reds at WalkthroughFlowTests.swift:397 with `the design's refusing primary is no longer drawn plain-and-disabled`. The mutation was confirmed landed by re-reading the file before the verdict was read, restored immediately, and the tree checked clean afterwards. docs/test-campaign/evidence/PRO-0106/def200-case-0392-arming.txt.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",

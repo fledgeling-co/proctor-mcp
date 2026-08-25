@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The mutation restores the pre-repair `git()`-then-`[3:]` pair verbatim on a scratch copy, and the phantom `ocs/test-campaign/cases.json` comes back in the refusal. This is a comparison across the repair rather than a check that merely passes now.",
   "evidence": [
     {
       "path": "scripts/reckoning/reckoning_selftest.py",

@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "spec_citation_measure.py on this tree after the strict rule: 19/19 checks, specs 104 (legacy 24, none 4, path 76), briefs 100, claimed 96, registered 4, unclaimed 0, and the new disclosure line 'none-citations 4: 0 resolving nothing \u00b7 1 naming something this check cannot resolve (spec-PRO-0096.md `campaign.py`)'.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0104/spec-citation-measure.txt",

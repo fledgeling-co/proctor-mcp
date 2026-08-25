@@ -5,6 +5,13 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The gate is its own two-way control and it was found failing, not passing: on a clean detached worktree of main it exits 1 with before=TIMEOUT after=TIMEOUT, and with the baseline pinned it exits 0 with before=killed after=TIMEOUT. Both readings taken in the same session.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0106/timeout-arming.json",

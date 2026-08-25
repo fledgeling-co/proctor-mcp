@@ -5,6 +5,13 @@
   "oracle": "raster-visual",
   "plane": "live-glass",
   "placedBecause": "the raster-visual rung owes a display server",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "mocked TCC denial in walkthrough; verified advance button remained disabled; restored",
   "evidence": [
     {
       "path": "evidence/shots/surf-009-walkthrough.png",

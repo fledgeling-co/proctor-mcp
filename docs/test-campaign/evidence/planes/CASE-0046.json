@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Restored DEF-019's original predicate and re-ran the suite: 5 issues across the failed assertion, the skipped assertion, the timed-out wait and the failed kill. The passing-check control did NOT redden, which is what stops an over-broad fix passing the same test.",
   "evidence": [
     {
       "path": "evidence/cli/exit-codes.txt",

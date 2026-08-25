@@ -5,6 +5,13 @@
   "oracle": "metamorphic",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "docs/test-campaign/evidence/PRO-0148/def-337-flaky-fixture.txt records the failing run and the passing re-run of the identical suite minutes apart, with no code change between them.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0148/def-337-flaky-fixture.txt",

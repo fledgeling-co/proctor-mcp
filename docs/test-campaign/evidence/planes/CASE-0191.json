@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Two substitutions, each watched red. (1) The pre-fix Data.write: Expectation failed: (mode(store.url) -> 420) == (0o600 -> 384). (2) .usingNewMetadataOnly dropped and nothing else \u2014 exactly this case red, 1 issue, 420 again, with the other three still green. Restored, green.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/PolicyStoreSeamTests.swift",

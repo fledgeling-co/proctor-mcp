@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Sabotage 1: '(watch -> RestartWatch(state: .settled, probes: 1, giveUpAfterProbes: 2)).isApplying -> false'. Restored, green.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/RestartWatchTests.swift",

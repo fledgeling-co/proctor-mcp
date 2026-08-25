@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "ARM-7 wrapped Skip in the primary's own rule \u2014 `if showsSkip(\u2026), primaryEnabled(\u2026)`, the door out removed in exactly the three refusing states with no `.disabled` added anywhere, which is the verifier's own mutation. `./scripts/test.sh --filter skipIsOfferedInEveryRefusingState|skipIsNeverClosed|aRevocationIsNotALockout` exited 1 with 1 issue, on the condition literal; `skipIsNeverClosed` passed in that same run. ARM-8 then put the lockout into the Core rule instead and this test recorded 6 issues \u2014 three on `(shows \u2192 false) == ((step != .connect) \u2192 true)` and three naming the missing refusing states in the offered set. Both restored, green.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",

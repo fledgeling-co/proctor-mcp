@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Closed Status via AXPress close; proctor_apps activate returned windows []; open -a left axWindowCount=0; Window \u25b8 Proctor restored the window. The activate/open path is the one that fails.",
   "evidence": [
     {
       "path": "evidence/sweeps-kl.json",

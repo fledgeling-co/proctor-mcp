@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "NativeOCRZoomTests zoomToolDispatchAndGracefulDegradation verifies tool argument parsing and nil OCR when recognize_text is false",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/NativeOCRZoomTests.swift",

@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The probe IS two-way and that is the whole of it. Arm: a scratch copy of the registry with CASE-0067's status flipped from `inconclusive` to `pass` and its witness count left at 0 untouched \u2014 the gate then reports '4 effect-witness claim(s)' and names CASE-0067 first in 'Effect witnesses that witnessed nothing'. Disarm: the same registry unflipped \u2014 CASE-0067 is absent from the list and the count falls to 3. One field moved, and the guard turns on and off with it, so the exemption is a real branch rather than a case the gate never reached. docs/test-campaign/evidence/PRO-0096/gate-inconclusive-exemption.txt",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0096/gate-inconclusive-exemption.txt",

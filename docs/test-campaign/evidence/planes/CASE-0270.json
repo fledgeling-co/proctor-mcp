@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "DirectoryWitness in Tests/ProctorAgentTests/Support/FileWitness.swift \u2014 a recursive sweep of a root recording existence, byte count, mtime and sha256 per file, run either side of one call. It is not PolicyStore and it is not the session under test.",
+    "effect": "filesystem-write",
+    "count": 1
+  },
+  "armedBy": "Armed twice over, and the second is the one that matters for a negative claim. Sabotage 4 in new-case-arming.txt: DirectoryWitness.changed() forced to return []. The CLAIM arm stays green \u2014 which is the point \u2014 and the CONTROL arm goes red: 'Expectation failed: (wrote.count \u2192 0) >= 1' and '(wrote \u2192 []).contains(\"policy.json\")'. Sabotage 6 in structural-zero-arming.txt, added by the gap-fix: operatorRoot pointed one component off the real path, at <bundle>-absent-sabotage, which does not exist. RUN A, the witness as it was: this case PASSED \u2014 'a policy configure changes nothing under the operator's root, and the sweep can tell' passed after 0.084 seconds over a root that is not there, which is the structural zero in the flesh. RUN B, with the denominator guard: 'Expectation failed: (operatorBefore \u2192 DirectoryWitness(rootExists: false, files: [:])).rootExists \u2192 false' and 'Expectation failed: (operatorBefore.files.count \u2192 0) >= 1'. Restored, green. A SECOND ARMING, and the only kind that cannot be argued with: on 2026-08-22 this case went red on a real write, with no sabotage applied at all. './scripts/test.sh' on the clean tree: 'Expectation failed: (touched \u2192 [\"captures/win-1-zoom-1787361639249.full.png\"]).isEmpty \u2192 false'. AcceptanceE2ETests' Journey 5 calls session.zoom(path: nil) twice and Session.defaultZoomPath hard-coded the operator's captures directory, so four PNGs landed there 0.5s into every run \u2014 caught only when a write fell between the sweep's two readings, which is why this case read green for as long as it did. DEF-142, fixed by the interlock. Evidence: capture-write-caught.txt.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",

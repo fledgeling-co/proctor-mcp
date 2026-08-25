@@ -5,6 +5,13 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Pinned the approval row's value to `Copy.policyApproval(live: false)` so the two token states differ in tone and not in words, and watched toneIsNeverTheOnlyCarrier fail \u2014 the two values compared equal at \u201cNo token is live, so a sensitive step would be refused\u201d \u2014 1 issue, exit 1. docs/test-campaign/evidence/pro-0082/arming-gapfix.json",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",

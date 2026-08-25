@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "One pixel given alpha 1 moves the verdict to content and drops the caveat, so the check measures alpha rather than restating allTransparent.",
   "evidence": [
     {
       "path": "evidence/PRO-0088/gate-after.txt",

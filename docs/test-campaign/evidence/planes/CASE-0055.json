@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Deleted the guestPool line from the doctor reply assembly and re-ran: 2 assertions red in DoctorReplyWiringTests, on the reply's own object rather than on session.poolStatus().",
   "evidence": [
     {
       "path": "evidence/test-suite-pass.log",

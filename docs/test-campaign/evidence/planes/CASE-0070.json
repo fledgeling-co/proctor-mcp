@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "live-glass",
   "placedBecause": "a capture or window witness off a display server",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "an independent AXObserver created by the witness_probe process on the target pid, 9 notification names registered",
+    "effect": "ipc",
+    "count": 2
+  },
+  "armedBy": null,
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/witness/a7-axnotify-helper.json",

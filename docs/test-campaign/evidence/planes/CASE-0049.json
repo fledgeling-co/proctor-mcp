@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Two mutations after the gap-fix refactor rather than before it, because the refactor routed three stop call sites through one audited path and a green suite says least about code that has just moved. Dropping startedByThisAgent from the release guard: 2 red. Removing the audited boot-timeout stop: 4 red, including the audit row's outcome and bundle id.",
   "evidence": [
     {
       "path": "evidence/test-suite-pass.log",

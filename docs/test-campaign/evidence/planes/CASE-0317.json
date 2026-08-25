@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "ARM-1, which is the same run: with the guard removed the printed population read all sixteen states rather than three, so the set assertion this case rests on failed naming them.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/WalkthroughFlowTests.swift",
@@ -13,7 +20,7 @@
     },
     {
       "path": "docs/test-campaign/cases.json",
-      "sha256_16": "34cfd50e0dfdef6d",
+      "sha256_16": "1b9139d2c1c95b99",
       "present": true
     },
     {

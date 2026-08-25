@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The procedure could and did return `still open`. Reading each of the 24 records against the tree returned `fixed` sixteen times and `open` seven times, and one of the sevens was re-measured live rather than reasoned about: `python3 scripts/campaign/status_literals.py Sources/ProctorUI/HistoryWindow.swift` exits 1 with 'FAIL: 71 user-facing literal(s) of 91 examined', which is DEF-039 still open. A reconciliation that flipped everything whose item merged would have flipped all 23.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0097/defect-reconciliation.md",

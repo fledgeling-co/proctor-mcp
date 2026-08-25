@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "TWO RUNS, and the contrast between them IS the case. (A) The converted site put back as a bare force-unwrap and fed a nil (a switch id that is not in the catalogue): 'Fatal error: Unexpectedly found nil while unwrapping an Optional value', 'exited with unexpected signal code 5', 'Executed 0 tests, with 0 failures (0 unexpected)' from the XCTest half, and ZERO 'Test run with' verdict lines. exit 1. (B) The SAME nil through the converted try #require: 'Expectation failed: SwitchCatalogue.named(\"PROCTOR_YIELD_INPUT_ARMING\") -> nil' at ConsentSurfaceTests.swift:30, one verdict line reading 'Test run with 1 test in 1 suite failed', exit 1. Output in arming-def140.txt and arming-def140-control.txt.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/ConsentSurfaceTests.swift",

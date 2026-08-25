@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "run 2 of gate-run.txt puts mutation 1 back into mutate_swift.py and runs ./scripts/test.sh itself: the gate exits 1 and names the check, so run 1's exit 0 is a measurement rather than the absence of one.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0091/gate-run.txt",

@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The widening is itself the arming, and it was measured rather than argued: the same check over the same commit sees 21 merges and 11,149 id/field pairs path-limited and reading only `theirs`, and 88 merges and 19,070 pairs unlimited and reading every parent. Ten findings become thirteen. The three recovered are REQ-029, DEF-006 and DEF-007's `evidence`, and they are in the tree now.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0097/dropped-values.txt",

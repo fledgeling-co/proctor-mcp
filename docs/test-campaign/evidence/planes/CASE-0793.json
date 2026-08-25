@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "docs/test-campaign/evidence/PRO-0146/negative-arm.txt \u2014 one ungrounded citation added to spec-PRO-0001.md takes the gate from exit 0 to exit 1 naming the symbol and line, and removing it puts the gate back green.",
   "evidence": [
     {
       "path": "scripts/campaign/spec_symbol_linter.py",

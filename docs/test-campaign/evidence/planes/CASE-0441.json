@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "reckoning_selftest.py mutation m1 on a scratch copy: `if dirty_paths:` becomes `if False:`, asserted to substitute exactly once and the copy re-run through --help before use. The same dirty tree then publishes at exit 0 where the unmutated script exits 2. Line 'arming . removing the dirty check publishes the unnamed reading' in selftest-green.txt.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0103/selftest-green.txt",

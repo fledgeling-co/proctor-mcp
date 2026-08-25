@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "DEF-065 is the arming: one shared fallback directory turned the gate red with 67 issues across 11 suites, all policyDenied on apps the failing tests never named",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0089/gate-after.txt",

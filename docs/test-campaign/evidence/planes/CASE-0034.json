@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Watched to fail on the build before the fix: tui_gates.py --strict reported 'no bold and no dim anywhere in the frame - every glyph carries the same weight, so the screen has no hierarchy that survives a monochrome terminal', because weight was applied only on the NO_COLOR path.",
   "evidence": [
     {
       "path": "evidence/tui-gates-100x30.txt",

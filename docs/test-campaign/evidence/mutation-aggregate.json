@@ -1,0 +1,517 @@
+{
+  "runs": [
+    "mutation-agent.json",
+    "mutation-survival-core.json",
+    "mutation-survival.json",
+    "mutation-wave10.json"
+  ],
+  "modules": {
+    "ProctorAgent": {
+      "scored": 24,
+      "killed": 5,
+      "survived": 19,
+      "unbuildable": 0,
+      "sites": 0,
+      "files": [
+        "Sources/ProctorAgent/AX/AXEngineImpl.swift",
+        "Sources/ProctorAgent/AX/CGWindowCorrelation.swift",
+        "Sources/ProctorAgent/AX/KeyCodes.swift",
+        "Sources/ProctorAgent/Capture/CaptureEngineImpl.swift",
+        "Sources/ProctorAgent/Capture/MarkRenderer.swift",
+        "Sources/ProctorAgent/Dispatch.swift",
+        "Sources/ProctorAgent/Overlay/CursorOverlay.swift",
+        "Sources/ProctorAgent/Overlay/RunHUDContentView.swift",
+        "Sources/ProctorAgent/Overlay/RunHUDPanel.swift",
+        "Sources/ProctorAgent/Overlay/TakeoverOverlay.swift",
+        "Sources/ProctorAgent/RunIdentity.swift",
+        "Sources/ProctorAgent/Session/AuditKeyStore.swift",
+        "Sources/ProctorAgent/Session/PixelCompare.swift",
+        "Sources/ProctorAgent/Session/Session.swift",
+        "Sources/ProctorAgent/Session/SessionActivate.swift",
+        "Sources/ProctorAgent/Session/SessionFlow.swift",
+        "Sources/ProctorAgent/Session/SessionKill.swift",
+        "Sources/ProctorAgent/Session/SessionMaestro.swift",
+        "Sources/ProctorAgent/Unlock/UnlockBroker.swift"
+      ],
+      "runs": [
+        "mutation-agent.json"
+      ]
+    },
+    "ProctorCore": {
+      "scored": 88,
+      "killed": 60,
+      "survived": 28,
+      "unbuildable": 1,
+      "sites": 0,
+      "files": [
+        "Sources/ProctorCore/BrowserTarget.swift",
+        "Sources/ProctorCore/CLISurface.swift",
+        "Sources/ProctorCore/ElementMatch.swift",
+        "Sources/ProctorCore/Geometry.swift",
+        "Sources/ProctorCore/GuestInventory.swift",
+        "Sources/ProctorCore/HistoryRetention.swift",
+        "Sources/ProctorCore/HorizontalPlacement.swift",
+        "Sources/ProctorCore/MaestroRun.swift",
+        "Sources/ProctorCore/MenuKeyEquivalent.swift",
+        "Sources/ProctorCore/PointerMarker.swift",
+        "Sources/ProctorCore/PointerPlane.swift",
+        "Sources/ProctorCore/RunHUD.swift",
+        "Sources/ProctorCore/RunHUDGate.swift",
+        "Sources/ProctorCore/RunHUDMenuBar.swift",
+        "Sources/ProctorCore/RunHUDSurface.swift",
+        "Sources/ProctorCore/RunHistory.swift",
+        "Sources/ProctorCore/RunQueue.swift",
+        "Sources/ProctorCore/ScriptingDictionary.swift",
+        "Sources/ProctorCore/SetOfMarks.swift",
+        "Sources/ProctorCore/SimctlLocator.swift",
+        "Sources/ProctorCore/StatusChecks.swift",
+        "Sources/ProctorCore/StepDescription.swift",
+        "Sources/ProctorCore/SurfaceFidelity.swift",
+        "Sources/ProctorCore/SwitchCatalogue.swift",
+        "Sources/ProctorCore/TUILayout.swift",
+        "Sources/ProctorCore/TUISurface.swift",
+        "Sources/ProctorCore/Takeover.swift",
+        "Sources/ProctorCore/ToolCatalogue.swift",
+        "Sources/ProctorCore/ToolchainLanes.swift",
+        "Sources/ProctorCore/Transport.swift",
+        "Sources/ProctorCore/VisionCapture.swift",
+        "Sources/ProctorCore/WalkthroughFlow.swift",
+        "Sources/ProctorCore/Wire.swift"
+      ],
+      "runs": [
+        "mutation-survival.json"
+      ]
+    }
+  },
+  "totals": {
+    "killed": 65,
+    "survived": 47,
+    "scored": 112,
+    "sites": 3241
+  },
+  "survivors": [
+    {
+      "module": "ProctorAgent",
+      "file": "Sources/ProctorAgent/AX/AXEngineImpl.swift",
+      "line": 33,
+      "in": "let liveRunningApps",
+      "was": "||",
+      "became": "&&",
+      "run": "mutation-agent.json"
+    },
+    {
+      "module": "ProctorAgent",
+      "file": "Sources/ProctorAgent/RunIdentity.swift",
+      "line": 30,
+      "in": "func mint",
+      "was": "12",
+      "became": "13",
+      "run": "mutation-agent.json"
+    },
+    {
+      "module": "ProctorAgent",
+      "file": "Sources/ProctorAgent/Dispatch.swift",
+      "line": 381,
+      "in": "let action",
+      "was": "false",
+      "became": "true",
+      "run": "mutation-agent.json"
+    },
+    {
+      "module": "ProctorAgent",
+      "file": "Sources/ProctorAgent/Overlay/TakeoverOverlay.swift",
+      "line": 771,
+      "in": "let graphite",
+      "was": "44",
+      "became": "45",
+      "run": "mutation-agent.json"
+    },
+    {
+      "module": "ProctorAgent",
+      "file": "Sources/ProctorAgent/Session/Session.swift",
+      "line": 92,
+      "in": "var includeInvisible",
+      "was": "false",
+      "became": "true",
+      "run": "mutation-agent.json"
+    },
+    {
+      "module": "ProctorAgent",
+      "file": "Sources/ProctorAgent/Session/SessionFlow.swift",
+      "line": 493,
+      "in": "let frame",
+      "was": "3000",
+      "became": "3001",
+      "run": "mutation-agent.json"
+    },
+    {
+      "module": "ProctorAgent",
+      "file": "Sources/ProctorAgent/Capture/MarkRenderer.swift",
+      "line": 141,
+      "in": "let padX",
+      "was": "2",
+      "became": "3",
+      "run": "mutation-agent.json"
+    },
+    {
+      "module": "ProctorAgent",
+      "file": "Sources/ProctorAgent/Session/SessionKill.swift",
+      "line": 26,
+      "in": "func includingBarePid",
+      "was": "==",
+      "became": "!=",
+      "run": "mutation-agent.json"
+    },
+    {
+      "module": "ProctorAgent",
+      "file": "Sources/ProctorAgent/Dispatch.swift",
+      "line": 394,
+      "in": "var pointerMarks",
+      "was": "true",
+      "became": "false",
+      "run": "mutation-agent.json"
+    },
+    {
+      "module": "ProctorAgent",
+      "file": "Sources/ProctorAgent/Overlay/RunHUDPanel.swift",
+      "line": 653,
+      "in": "func hitTest",
+      "was": "false",
+      "became": "true",
+      "run": "mutation-agent.json"
+    },
+    {
+      "module": "ProctorAgent",
+      "file": "Sources/ProctorAgent/Session/SessionMaestro.swift",
+      "line": 242,
+      "in": "let score",
+      "was": "<",
+      "became": "<=",
+      "run": "mutation-agent.json"
+    },
+    {
+      "module": "ProctorAgent",
+      "file": "Sources/ProctorAgent/Overlay/RunHUDContentView.swift",
+      "line": 830,
+      "in": "func duration",
+      "was": "<",
+      "became": "<=",
+      "run": "mutation-agent.json"
+    },
+    {
+      "module": "ProctorAgent",
+      "file": "Sources/ProctorAgent/AX/CGWindowCorrelation.swift",
+      "line": 59,
+      "in": "let matches",
+      "was": "0",
+      "became": "1",
+      "run": "mutation-agent.json"
+    },
+    {
+      "module": "ProctorAgent",
+      "file": "Sources/ProctorAgent/Unlock/UnlockBroker.swift",
+      "line": 51,
+      "in": "func recordContact",
+      "was": "1",
+      "became": "2",
+      "run": "mutation-agent.json"
+    },
+    {
+      "module": "ProctorAgent",
+      "file": "Sources/ProctorAgent/Session/PixelCompare.swift",
+      "line": 38,
+      "in": "var total",
+      "was": "4",
+      "became": "5",
+      "run": "mutation-agent.json"
+    },
+    {
+      "module": "ProctorAgent",
+      "file": "Sources/ProctorAgent/Overlay/RunHUDContentView.swift",
+      "line": 97,
+      "in": "let light",
+      "was": "17",
+      "became": "18",
+      "run": "mutation-agent.json"
+    },
+    {
+      "module": "ProctorAgent",
+      "file": "Sources/ProctorAgent/Overlay/TakeoverOverlay.swift",
+      "line": 363,
+      "in": "func isTapDisabledNotice",
+      "was": "==",
+      "became": "!=",
+      "run": "mutation-agent.json"
+    },
+    {
+      "module": "ProctorAgent",
+      "file": "Sources/ProctorAgent/AX/KeyCodes.swift",
+      "line": 18,
+      "in": "var t",
+      "was": "45",
+      "became": "46",
+      "run": "mutation-agent.json"
+    },
+    {
+      "module": "ProctorAgent",
+      "file": "Sources/ProctorAgent/Session/AuditKeyStore.swift",
+      "line": 47,
+      "in": "let account",
+      "was": "false",
+      "became": "true",
+      "run": "mutation-agent.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/VisionCapture.swift",
+      "line": 100,
+      "in": "func estimatedVisionTokens",
+      "was": ">",
+      "became": ">=",
+      "run": "mutation-survival-core.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/RunHUD.swift",
+      "line": 318,
+      "in": "struct RunHUDState",
+      "was": "0",
+      "became": "1",
+      "run": "mutation-survival-core.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/RunQueue.swift",
+      "line": 300,
+      "in": "var waitingCount",
+      "was": "0",
+      "became": "1",
+      "run": "mutation-survival-core.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/Wire.swift",
+      "line": 227,
+      "in": "var x",
+      "was": "0",
+      "became": "1",
+      "run": "mutation-survival-core.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/PointerMarker.swift",
+      "line": 60,
+      "in": "func targetPoint",
+      "was": "0",
+      "became": "1",
+      "run": "mutation-survival-core.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/SimctlLocator.swift",
+      "line": 83,
+      "in": "var isDirectory",
+      "was": "false",
+      "became": "true",
+      "run": "mutation-survival-core.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/PointerMarker.swift",
+      "line": 60,
+      "in": "func targetPoint",
+      "was": "0",
+      "became": "1",
+      "run": "mutation-survival-core.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/RunHistory.swift",
+      "line": 200,
+      "in": "let ordered",
+      "was": "<",
+      "became": "<=",
+      "run": "mutation-survival-core.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/ToolchainLanes.swift",
+      "line": 72,
+      "in": "var blockers",
+      "was": "==",
+      "became": "!=",
+      "run": "mutation-survival-core.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/MaestroRun.swift",
+      "line": 48,
+      "in": "var hasHierarchy",
+      "was": "0",
+      "became": "1",
+      "run": "mutation-survival-core.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/RunHUDSurface.swift",
+      "line": 80,
+      "in": "let fields",
+      "was": "==",
+      "became": "!=",
+      "run": "mutation-survival-core.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/BrowserTarget.swift",
+      "line": 1020,
+      "in": "func isPrivateNetwork",
+      "was": "false",
+      "became": "true",
+      "run": "mutation-survival-core.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/ToolCatalogue.swift",
+      "line": 648,
+      "in": "let doctor",
+      "was": "26",
+      "became": "27",
+      "run": "mutation-survival-core.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/ToolCatalogue.swift",
+      "line": 451,
+      "in": "let assert_",
+      "was": "false",
+      "became": "true",
+      "run": "mutation-survival-core.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/MaestroRun.swift",
+      "line": 528,
+      "in": "func resolve",
+      "was": "5",
+      "became": "6",
+      "run": "mutation-survival-core.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/ScriptingDictionary.swift",
+      "line": 228,
+      "in": "var suite",
+      "was": "==",
+      "became": "!=",
+      "run": "mutation-survival-core.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/HorizontalPlacement.swift",
+      "line": 150,
+      "in": "let centre",
+      "was": "0",
+      "became": "1",
+      "run": "mutation-survival-core.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/MenuKeyEquivalent.swift",
+      "line": 120,
+      "in": "let virtualKeyNames",
+      "was": "109",
+      "became": "110",
+      "run": "mutation-survival-core.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/VisionCapture.swift",
+      "line": 146,
+      "in": "let outW",
+      "was": "1",
+      "became": "2",
+      "run": "mutation-survival-core.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/ToolCatalogue.swift",
+      "line": 294,
+      "in": "let capture",
+      "was": "70",
+      "became": "71",
+      "run": "mutation-survival-core.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/SetOfMarks.swift",
+      "line": 135,
+      "in": "func gridOverlay",
+      "was": ">",
+      "became": ">=",
+      "run": "mutation-survival-core.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/RunHUDGate.swift",
+      "line": 100,
+      "in": "func onSegment",
+      "was": "<=",
+      "became": "<",
+      "run": "mutation-survival-core.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/ScriptingDictionary.swift",
+      "line": 73,
+      "in": "var direct",
+      "was": "false",
+      "became": "true",
+      "run": "mutation-survival-core.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/Transport.swift",
+      "line": 146,
+      "in": "func applyIOTimeout",
+      "was": "0",
+      "became": "1",
+      "run": "mutation-survival-core.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/TUILayout.swift",
+      "line": 351,
+      "in": "func paintText",
+      "was": ">=",
+      "became": ">",
+      "run": "mutation-survival-core.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/Takeover.swift",
+      "line": 629,
+      "in": "var out",
+      "was": ">",
+      "became": ">=",
+      "run": "mutation-wave10.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/Takeover.swift",
+      "line": 626,
+      "in": "var note",
+      "was": "1000",
+      "became": "1001",
+      "run": "mutation-wave10.json"
+    },
+    {
+      "module": "ProctorCore",
+      "file": "Sources/ProctorCore/Takeover.swift",
+      "line": 356,
+      "in": "let rawValue",
+      "was": "1",
+      "became": "2",
+      "run": "mutation-wave10.json"
+    }
+  ]
+}

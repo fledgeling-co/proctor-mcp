@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Two substitutions, each watched red. (1) The verifier's own: the cache's dedicated Thread replaced by Task.detached routed through a synchronous helper. Expectation failed: !((verificationRanOn.current -> \"com.apple.root.default-qos.cooperative\").contains(\"cooperative\") -> true), and .contains(\"overcommit\") against the same value; 2 issues. In that same run CASE-0110 and CASE-0115 both passed, which is the gap this case exists to close. (2) DispatchQueue.global().async, the shape that reads as the fix and is bounded by the same cap: Expectation failed: (verificationRanOn.current -> \"com.apple.root.default-qos\").contains(\"overcommit\"); 1 issue. Restored, green.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/ToolchainDoctorTests.swift",

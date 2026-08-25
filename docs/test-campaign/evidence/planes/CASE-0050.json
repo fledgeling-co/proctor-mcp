@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "GuestAttachmentTests exercises the derivation both directions and for a nil platform; the PRO-0076 verifier additionally checked the regression direction of the infer fix.",
   "evidence": [
     {
       "path": "evidence/test-suite-pass.log",

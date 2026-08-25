@@ -5,6 +5,13 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Three parses are computed against all thirteen kinds in one run: the pre-repair slice, the rsplit repair, and the code as it stands. The slice is wrong on nine and the rsplit on exactly the two whose last ` -> ` sits inside a quoted destination, and both sets are asserted by membership. End to end, a scratch copy carrying the rsplit writes `stage-2.md\"` into run.json.dirty_inputs under --allow-dirty and the real subject writes the path that opens.",
   "evidence": [
     {
       "path": "scripts/reckoning/reckoning_selftest.py",

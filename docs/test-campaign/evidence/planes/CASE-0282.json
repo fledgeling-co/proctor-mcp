@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Three sabotages, each watched red, in delay-arming.txt. 2a \u2014 1.2 raised to 5.0: the first assertion fires. 2b \u2014 the restartWatch.observed call removed from apply(): the third fires. 2c \u2014 the whole defect back, a stored isApplying cleared inside the 1.2 s block: the middle one fires. Recorded rather than dropped: a FOURTH attempt, putting only `self?.isApplying = false` back in the block, does not compile, because isApplying is now computed over RestartWatch. That is not a failed arming, it is the structural half of the fix \u2014 the regression cannot come back one line at a time \u2014 and 2c is what it looks like when it comes back properly.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/RestartWatchTests.swift",

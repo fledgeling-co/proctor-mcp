@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Mutant re-applied: UnlockBroker.swift:51 contactCount += 1 to += 2. The named test went red with 3 issues, counting 2, 4 and 6 where 1, 2 and 3 were expected. Reverted, green.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/MutationSurvivorTests.swift",

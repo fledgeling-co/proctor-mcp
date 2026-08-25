@@ -5,6 +5,13 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Watched to fail by comparing without stripping wall-clock fields: the obscura and tools blocks differ on checkedAt between two calls seconds apart, so the relation is only true of the stable payload and the comparison says which fields it removed.",
   "evidence": [
     {
       "path": "evidence/cli-json-identical.json",

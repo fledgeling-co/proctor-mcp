@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Watched to fail on the build before the fix: with the agent held by SIGSTOP the window went on showing Ready and green grants past 25 seconds, and a driven proctor_doctor never returned. The same SIGSTOP against the fixed build flips it.",
   "evidence": [
     {
       "path": "evidence/sweepL-halfopen.json",

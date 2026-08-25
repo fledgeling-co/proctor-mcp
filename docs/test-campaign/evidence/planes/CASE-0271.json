@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "DirectoryWitness over the operator's application-support root, plus a sweep of PolicyStore.testFallbackRoot for where the write actually landed",
+    "effect": "filesystem-write",
+    "count": 1
+  },
+  "armedBy": "Sabotage 4, the same run: with changed() dead the fallback-root assertion is the arm that fires. Sabotage 6 in structural-zero-arming.txt is the second and covers the denominator: with operatorRoot pointed at <bundle>-absent-sabotage, RUN A shows this case PASSING \u2014 'an un-injected session writes somewhere, and that somewhere is not the operator's' passed after 0.089 seconds over an absent root \u2014 and RUN B shows it red on '(operatorBefore \u2192 DirectoryWitness(rootExists: false, files: [:])).rootExists \u2192 false' and '(operatorBefore.files.count \u2192 0) >= 1'. PRO-0089's own arming (evidence/PRO-0089/arming.txt) is the third: with the interlock disabled and operatorDirectory redirected to a decoy, the equivalent assertion reports the operator path being reached. A SECOND ARMING, and the only kind that cannot be argued with: on 2026-08-22 this case went red on a real write, with no sabotage applied at all. './scripts/test.sh' on the clean tree: 'Expectation failed: (touched \u2192 [\"captures/win-1-zoom-1787361639249.full.png\"]).isEmpty \u2192 false'. AcceptanceE2ETests' Journey 5 calls session.zoom(path: nil) twice and Session.defaultZoomPath hard-coded the operator's captures directory, so four PNGs landed there 0.5s into every run \u2014 caught only when a write fell between the sweep's two readings, which is why this case read green for as long as it did. DEF-142, fixed by the interlock. Evidence: capture-write-caught.txt.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/OperatorFilesWitnessTests.swift",

@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Replacing the whole of PRO-0075's citation line with '**Brief:** none. See above' reds it. The mutation had to replace the line rather than its opening: a first version replaced only the prefix, the rest of the sentence stayed attached, and the reason it was shortening remained long enough to pass \u2014 a NOT ARMED report against a check that worked.",
   "evidence": [
     {
       "path": "scripts/campaign/spec_citation_measure.py",

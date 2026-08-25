@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "the trail file's presence, byte size and mtime before and after, plus its bytes read with a FRESH FileHandle(forReadingFrom:) and each line opened with AuditSeal.open in ProctorCore using the injected private half \u2014 never AuditLog.readTrail or openedTail, which are the code under test confirming itself",
+    "effect": "filesystem-write",
+    "count": 3
+  },
+  "armedBy": "Sabotage run in the same test body: chmod 0500 on the trail directory, so withAuditFileLock cannot create audit.lock and appendRawLocked cannot O_CREAT the trail. The armed variant used 0700 instead and the zero-check went red at (landed -> 2753) == 0. The line-count assertion was inverted in the same run and printed (lines.count -> 3) == -1 against 3 records emitted. docs/test-campaign/evidence/PRO-0077/arming-run.txt",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/EffectWitnessTests.swift",

@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "the same DirectoryWitness, across the second save \u2014 the replace path rather than the create path",
+    "effect": "filesystem-write",
+    "count": 1
+  },
+  "armedBy": "Sabotage 6, the same run: 'Expectation failed: (mode(store.url) -> 420) == (0o600 -> 384)' at the replace. Restored, green.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/PolicyStoreSeamTests.swift",

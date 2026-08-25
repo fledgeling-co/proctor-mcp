@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The same single colour with no alpha is emptyFrame, so the test would not pass a gate that had stopped reading alpha altogether.",
   "evidence": [
     {
       "path": "evidence/PRO-0088/gate-after.txt",

@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "This case IS the arming. --seed-strengthen is the skill's own arming rule turned on its own gate: it strengthens a requirement's declared constraint to one the registry cannot satisfy and requires the census to go red. Both directions read before=clear after=red, exit 0.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/census-control.txt",

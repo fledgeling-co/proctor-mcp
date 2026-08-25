@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Watched to fail on the real tree, not a fixture: run from a worktree at 5e572d0, this item's first commit and before the restoration, the SHIPPED defect_gate.py dropped exits 1 and names thirteen values over 19,070 id/field pairs across 88 merges. On the restored tree it exits 0 over the same 19,070 pairs. The instrument could and did report non-zero on this repository's own history, three commits apart, with no fixture involved.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0097/dropped-values.txt",

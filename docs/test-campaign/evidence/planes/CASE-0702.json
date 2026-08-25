@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "process table inspection via kill(pid, 0) and Darwin process table audit verifying process absence after stop",
+    "effect": "subprocess",
+    "count": 1
+  },
+  "armedBy": "CuaSubprocessWitnessTests endpointTransportLifecycleAndShutdownInterlock verifies child process terminated and dead in process table",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/CuaSubprocessWitnessTests.swift",

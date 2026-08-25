@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The defect's own fixture, watched in both directions in one run: a flat magenta frame written over surf-007-zoom.png takes the check to exit 1, `--write` now stays at 1 with the audit byte-identical on disk, and `--write --adopt surf-007-zoom.png` writes it. Before the repair that middle step returned 0 with the row still recording publishedAs SURF-007 and distinctRGBA 1.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0106/def226-adoption-arming.txt",

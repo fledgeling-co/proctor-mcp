@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a capture or window witness off a display server, held at hermetic by the headless lane",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The unpublishedReason was removed from evidence/shots/sweepL-status-agent-down.png's entry, the removal confirmed landed by re-reading the file before any verdict was read, and the gate watched going red: exit 2, `evidence/shots/sweepL-status-agent-down.png: the manifest names it and no subject publishes it, and it records no unpublishedReason`, 1 hard failure. Restored, and the restored reading diffs identically against the pre-arming one. docs/test-campaign/evidence/PRO-0107/capture-lineage-armed.txt.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0107/capture-lineage-before.txt",

@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "live-glass",
   "placedBecause": "a capture or window witness off a display server",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "an independent AX client in the witness_probe process walking the target pid's tree with AXUIElementCopyAttributeValue",
+    "effect": "ipc",
+    "count": 825
+  },
+  "armedBy": null,
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/witness/a8-axtree-helper.json",

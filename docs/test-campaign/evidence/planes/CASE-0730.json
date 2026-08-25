@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "NativeOCRZoomTests nativeVisionOCRTextRecognition verifies VNRecognizeTextRequest extracts text strings and bounding boxes from rendered text",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/NativeOCRZoomTests.swift",

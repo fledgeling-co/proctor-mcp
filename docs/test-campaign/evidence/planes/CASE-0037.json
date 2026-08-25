@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Watched to fail on the build before the fix: proctor_menu against the running app returned 17 of 20 declared commands, and the three absent ones were exactly those SwiftUI never declared.",
   "evidence": [
     {
       "path": "evidence/menu-bar-rendered.json",

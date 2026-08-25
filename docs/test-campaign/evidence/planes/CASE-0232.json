@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Probe B: with the deferred-pointer rung deleted from the resolver, this case reads failed and no other case moves. Probe C: with setPlaneStatement reverted to a direct assignment instead of the resolver, this case reads failed - the exact defect the resolver exists to prevent, a latched fact overwritten by the next step.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0084/arming.txt",

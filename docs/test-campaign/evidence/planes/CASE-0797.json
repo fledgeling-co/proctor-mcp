@@ -1,0 +1,32 @@
+{
+  "case": "CASE-0797",
+  "requirement": "REQ-047",
+  "lane": "headless",
+  "oracle": "outcome",
+  "plane": "hermetic",
+  "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The report refuses to print a rate without its denominator: a run carrying no `sites` key is named as NO SITE COUNT rather than folded into an average, and the aggregate line counts only the runs that counted. Removing the sites key from a run's JSON moves it into that list and out of the percentage.",
+  "evidence": [
+    {
+      "path": "scripts/campaign/mutation_report.py",
+      "sha256_16": "d0a94ec3295221c2",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/mutation-aggregate.txt",
+      "sha256_16": "43be7ffaf787b52e",
+      "present": true
+    },
+    {
+      "path": "docs/test-campaign/evidence/mutation-aggregate.json",
+      "sha256_16": "7f8d8ca13c9d7659",
+      "present": true
+    }
+  ]
+}

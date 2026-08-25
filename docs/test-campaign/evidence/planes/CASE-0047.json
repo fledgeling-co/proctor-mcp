@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Deleted the guest-forwarding funnel in Dispatch.swift and re-ran: 3 assertions red in GuestDispatchWiringTests, including the host answering the call itself and the guest link never being reached.",
   "evidence": [
     {
       "path": "evidence/test-suite-pass.log",

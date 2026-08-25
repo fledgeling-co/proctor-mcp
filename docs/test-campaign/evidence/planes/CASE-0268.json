@@ -5,6 +5,13 @@
   "oracle": "metamorphic",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The probe is two-way and that is the whole of it. One mutation \u2014 the catalogue's pause and show-panel entries given different ids \u2014 run against both forms of the assertion. Pre-fix `command(id)!`: signal 5, 0 tests reported, 0 suites reported, 0 verdict lines, scripts/test.sh exit 1 on 'no swift-testing verdict line'. Post-fix `try #require`: Test run with 1963 tests in 239 suites failed with 12 issues, exit 1, four guards naming what they found. Same mutation, opposite reporting.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/CommandSurfaceTests.swift",

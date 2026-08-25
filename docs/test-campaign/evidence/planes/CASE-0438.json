@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "spec_citation_arm.py itself. It refuses to report anything unless an unmutated scratch copy is green first, it asserts that each mutation matched something before measuring, it pins the expected verdict per mutation rather than assuming FAIL, and it exits 1 on any check no mutation covers. Three of its own mutations reported NOT ARMED against checks that worked and each was the mutation's fault \u2014 a partial line replacement, two regexes emitting a doubled backslash into the mutated source, and a scaffold quoted with newlines that broke the verdict parser and read as MISSING.",
   "evidence": [
     {
       "path": "scripts/campaign/spec_citation_measure.py",

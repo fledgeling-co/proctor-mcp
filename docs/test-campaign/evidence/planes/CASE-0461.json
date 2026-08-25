@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The mutant re-applied at the site the extraction moved it to, the mutation confirmed to have landed by re-reading the file, and `correlateReturnsTheMatchingWindowsNumber` watched going red: `return matches.count == 1 ? matches[0].number : nil  ->  return matches.count == 1 ? matches[1].number : nil`, exit 1. Reverted, and the tree measured clean after. THE KILL ARRIVES AS AN ABORT RATHER THAN A FAILING ASSERTION, and that is a property of the site rather than of the test: `matches[1]` on a one-element array traps, so the run printed `Fatal error: Index out of range`, `Executed 0 tests, with 0 failures`, ZERO verdict lines and `FAIL: no swift-testing verdict line`, at signal 5. That is DEF-140's class arriving from production rather than from a test. The subscript is total under its own `count == 1` guard, so it is recorded rather than converted. Full output in correlate-crash-arming.txt.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/MutationSeamTests.swift",

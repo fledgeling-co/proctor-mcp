@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The Tools card pointed at Copy.toolsNoteInDesign: Expectation failed at SurfaceLiteralsTests.swift:65, the file drawing the twin. Restored, green.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/SurfaceLiteralsTests.swift",

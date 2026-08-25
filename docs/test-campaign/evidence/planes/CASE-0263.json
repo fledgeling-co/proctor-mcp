@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The branch put back as `if case .unreachable = model.reachability { EmptyView() }`: Expectation failed at SurfaceLiteralsTests.swift:27 naming ReadinessSection. Restored, green. The state-machine half is asserted in the same test and is a value read rather than a source scan.",
   "evidence": [
     {
       "path": "Tests/ProctorCoreTests/SurfaceLiteralsTests.swift",

@@ -5,10 +5,21 @@
   "oracle": "effect-witness",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "The test re-reads the mutated file off disk with Path.read_text and compares it against the text the splice should have produced, byte for byte \u2014 the same read-back apply() itself performs, done independently by the caller so the instrument's own claim is not the evidence for it. The refusal paths are witnessed the same way: the file is read back and compared against the bytes it held before the call.",
+    "effect": "filesystem-write",
+    "count": 1
+  },
+  "armedBy": "Two-way in one run: the landing splice is witnessed changing the file, and each refusal is witnessed leaving it byte-identical. Removing the offset check reds 9 checks and removing the read-back reds 1, both watched.",
   "evidence": [
     {
       "path": "scripts/campaign/test_instruments.py",
-      "sha256_16": "d9b63aa577e0de7e",
+      "sha256_16": "200f27dd47233bb8",
       "present": true
     },
     {

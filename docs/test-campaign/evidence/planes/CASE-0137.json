@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "a bound other than GrantProbe.bound on the live probe fails this directly; the same constant is cross-checked by the doctor remedy and schema cases in the same suite",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0089/gate-after.txt",

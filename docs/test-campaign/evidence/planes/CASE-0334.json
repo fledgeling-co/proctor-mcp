@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Five trip/clear fixture pairs in test_instruments.py, all in one run: a writer-seam whose body carries no test-process predicate is refused and the same body carrying one clears; an operator-accessor whose seam does not branch is refused; a seam that branches but never returns the truthful accessor is refused; another file reaching the truthful accessor around its seam is refused; and a bare ProctorReflector.start() under Tests/ is refused while the same call with an explicit path clears. A predicate named only in a doc comment cannot satisfy a seam. THE GAP-FIX ADDED A SIXTH: a QUALIFIED reach (`SwitchStore.operatorURL`) from a file that also declares a member of that name, which the first version waved through because it skipped any such file whole. Refused now, while a file reaching only its own bare member still clears.",
   "evidence": [
     {
       "path": "scripts/campaign/operator_path_gate.py",
@@ -18,7 +25,7 @@
     },
     {
       "path": "scripts/campaign/test_instruments.py",
-      "sha256_16": "d9b63aa577e0de7e",
+      "sha256_16": "200f27dd47233bb8",
       "present": true
     },
     {

@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Its own fixture, separate from DEF-226's \u2014 a fixture covering two repairs together proves neither individually. One spliced case citing a file that is not on disk and one citing a picture no subject publishes each take the gate to exit 1 naming the case; the merge-base instrument is run against the same two fixtures and exits 0 without mentioning either, which is the class it could not see. A third fixture citing a published capture clears.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0106/def227-citation-arming.txt",

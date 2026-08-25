@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Before believing the zero: one pixel, one channel, set to alpha 7 over the same buffer, and the instrument reports 7. It could have said non-zero.",
   "evidence": [
     {
       "path": "evidence/PRO-0088/gate-after.txt",

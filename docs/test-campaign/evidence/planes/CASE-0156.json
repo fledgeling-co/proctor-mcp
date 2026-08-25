@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "three gate tests in the plugin's tests/run.sh, each watched red on a fixture and green once the fixture is repaired: a requirement claiming a subprocess effect covered by source-analysis alone blocks, a source-analysis pass with examined=0 blocks, and the same campaign clears when the denominator returns.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0091/plugin-gate-tests.txt",

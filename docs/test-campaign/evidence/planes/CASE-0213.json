@@ -5,10 +5,17 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The two ways this check can be confident and hollow, each watched: a claimed defect with no row at all exits 1 as UNKNOWN rather than passing on `status.get() != 'open'`, and a spec whose claims did not parse exits 1 saying it measured nothing rather than passing empty. Both were run and both returned 1.",
   "evidence": [
     {
       "path": "scripts/campaign/test_instruments.py",
-      "sha256_16": "d9b63aa577e0de7e",
+      "sha256_16": "200f27dd47233bb8",
       "present": true
     }
   ]

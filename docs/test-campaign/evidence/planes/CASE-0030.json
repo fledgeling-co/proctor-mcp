@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "live-glass",
   "placedBecause": "a capture or window witness off a display server",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The run is the control. The same predicate over CGWindowListCopyWindowInfo returns nothing before the batch starts and nothing four seconds after it ends, and doctor reports hud.onScreen false at both ends.",
   "evidence": [
     {
       "path": "evidence/overlay-lifecycle.json",

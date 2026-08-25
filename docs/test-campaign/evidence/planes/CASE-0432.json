@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Pinned to immutable shas, both read with `git cat-file -e` before being written into the instrument, because this campaign has already had an arming resolve its reference with `git merge-base` and report 'caught 0 of the 2 known offenders' once the fix merged. PRO-0001's citation rewritten to `docs/features-to-triage/92-a-spec-says-which-brief-it-came-from.md @ 400808d` reds the check: 400808d is the triage commit that deleted that brief. The same citation `@ 3fb7681` stays PASS: 3fb7681 holds it. Both verdicts were pinned in the arming table and both were observed. Recorded in pinned-shas.txt with 8de8804 (the restore, HOLDS) and 9f99a0f (the tree the spec measured, ABSENT).",
   "evidence": [
     {
       "path": "scripts/campaign/spec_citation_measure.py",

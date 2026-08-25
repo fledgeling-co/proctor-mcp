@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "shot_disposition.audit() audits all 4 mock PNG files under evidence/shots/mock/ with explicit dispositions in DISPOSITIONS.",
   "evidence": [
     {
       "path": "scripts/campaign/shot_disposition.py",

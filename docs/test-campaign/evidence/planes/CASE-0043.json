@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Watched to fail with the behaviour removed, three ways. Forcing the pane's sealed branch to false collapsed a sealed trail and a quiet machine onto one identical frame and both assertions bit; dropping the shelf note lost '2 entries could not be opened'; and making history(from:) return no rows failed the mapping assertion. Restored and green.",
   "evidence": [
     {
       "path": "evidence/tui-history-pane.txt",

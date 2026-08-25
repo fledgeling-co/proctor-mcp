@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Two mutations on a scratch copy of docs/specs, both watched red. Dropping the **Brief:** line from spec-PRO-0001.md reds it. Rewriting the value to the unbacktick-ed prose '**Brief:** the cua brief' also reds it, which is the arming that matters: a header that looks present and parses to nothing is the failure a presence check written as a substring search would pass.",
   "evidence": [
     {
       "path": "scripts/campaign/spec_citation_measure.py",

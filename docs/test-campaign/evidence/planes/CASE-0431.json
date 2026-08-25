@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Two mutations, both watched red on scratch copies. Rewriting PRO-0001's citation to docs/features-to-triage/99-no-such-brief.md reds it. Deleting 01-cua-schema-facade.md from the scratch queue while its citation stands also reds it \u2014 the citation-names-a-deleted-path case the spec's added clause asks for, arrived at from the queue's side rather than the spec's.",
   "evidence": [
     {
       "path": "scripts/campaign/spec_citation_measure.py",

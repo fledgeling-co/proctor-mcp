@@ -5,6 +5,13 @@
   "oracle": "raster-visual",
   "plane": "live-glass",
   "placedBecause": "the raster-visual rung owes a display server",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "cleared status item image; verified menu bar glyph existence check failed; restored",
   "evidence": [
     {
       "path": "evidence/shots/surf-010-menubar.png",

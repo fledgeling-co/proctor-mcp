@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Replaced the entries row's `label: Copy.policyEntriesLabel` with the literal \"Entries recorded\" and watched everyRowStringIsEnumerable fail: the label is absent from the 88 constants Copy.all enumerates, 1 issue, exit 1. docs/test-campaign/evidence/pro-0082/arming-gapfix.json",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/pro-0082/suite-verdict.txt",

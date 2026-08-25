@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "in-tree",
   "placedBecause": "no evidence placed it higher",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Mutant re-applied: PixelCompare.swift:38 stride by: 4 to by: 5. The named test went red: (abs(mean - delta / 255.0) -> 0.029411764705882353) < 0.0005. Reverted, green.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/MutationSurvivorTests.swift",

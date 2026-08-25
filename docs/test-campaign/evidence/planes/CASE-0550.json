@@ -5,6 +5,13 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The pre-repair slice is reintroduced against each of the six kinds in the same run, and the check asserts which four it gets wrong rather than that it gets any wrong. A control that changes on every input measures the harness.",
   "evidence": [
     {
       "path": "scripts/reckoning/reckoning_selftest.py",

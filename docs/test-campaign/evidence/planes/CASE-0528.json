@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Two mutations on PRO-0075's `none.` citation, each moving `every `none` citation resolves to something here` PASS -> FAIL: a reason naming `/bin/sh` as its origin, and one naming `../../../etc/passwd`. Before `inside_repo`, `REPO / '/bin/sh'` is `/bin/sh` in pathlib, so the first resolved against the machine and passed as a repository path.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0104/spec-citation-arm.txt",

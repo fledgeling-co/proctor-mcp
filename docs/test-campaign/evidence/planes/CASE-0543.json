@@ -5,10 +5,17 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "a campaign instrument that runs as its own process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Removing the ambiguity refusal reds 2 checks \u2014 but only after the check was given a fixture. On the first arming pass that mutation changed nothing at all, because no function under this repository's Tests/ resolves two ways, so the branch could not be made to fire against the real tree. display_name now takes a tests_root and the fixture is two files declaring one function under different @Test names. A check nobody has watched fire is the shape this whole item is about, and it turned up in this item's own work.",
   "evidence": [
     {
       "path": "scripts/campaign/test_instruments.py",
-      "sha256_16": "d9b63aa577e0de7e",
+      "sha256_16": "200f27dd47233bb8",
       "present": true
     },
     {

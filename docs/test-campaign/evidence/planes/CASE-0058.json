@@ -5,6 +5,13 @@
   "oracle": "metamorphic",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The three surviving mutants were re-applied together after the tests were written and the suite went red with 6 issues across the three new tests, then restored to green at 1,802.",
   "evidence": [
     {
       "path": "evidence/mutation-wave10.txt",

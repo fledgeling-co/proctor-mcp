@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "A HistorySurface.Wire key respelled on the writer side alone: the test failed naming the key the reader could not find. Restored, green.",
   "evidence": [
     {
       "path": "Tests/ProctorAgentTests/RunHistoryWiringTests.swift",

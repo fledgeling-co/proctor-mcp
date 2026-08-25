@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The denominator is armed by having moved: the same grep returns 29 lines before the change and 6 after. The 6 are the 4 sites recorded unfailable plus TWO comment lines \u2014 PRO-0090's, and one this item added, which quotes `)!` while explaining why the site beside it is unfailable. Recorded exactly rather than rounded to the 5 a first count gave, because a census whose own arithmetic drifts is the thing this case exists to rule out. A census that could not tell a site from a comment would have reported the same number twice.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0098/unwrap-census.md",

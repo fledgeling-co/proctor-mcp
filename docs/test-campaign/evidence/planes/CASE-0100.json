@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "live-glass",
   "placedBecause": "a capture or window witness off a display server",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "the installed proctor-agent (pid 76491) reading pid 61666's accessibility tree by AXIdentifier with its own AX client",
+    "effect": "ipc",
+    "count": 1
+  },
+  "armedBy": "CASE-0101: the same measurement against a build with the .disabled modifier removed reads enabled TRUE in the identical state",
   "evidence": [
     {
       "path": "evidence/shots/step-a3-walkthrough-primary-disabled.png",

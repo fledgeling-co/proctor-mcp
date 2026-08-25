@@ -5,6 +5,13 @@
   "oracle": "source-analysis",
   "plane": "in-tree",
   "placedBecause": "the subject is source text; nothing ran outside this process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "Two arms, because the pinned one no longer touches this change. (1) `wall_clock_census.py --arm` runs the detector over both historical offenders at the pinned pre-fix commit baa98bbe33ce and reports 'offenders at [42] (expected 42)', 'offenders at [107] (expected 107)', 'detector caught 2 of the 2 known offenders / ARMED', exit 0. (2) The same `scan()` run over THIS item's file in both versions: at HEAD it reports 'Tests/ProctorCoreTests/ProctorCoreTests.swift:232: #expect(waited < 10, ...)' \u2014 1 offender over 2 clock sites; over the working tree, 0 offenders over 0 clock sites. The zero is the detector declining, not the detector gone quiet, which is DEF-067 and DEF-105 both.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0097/census-after.txt",

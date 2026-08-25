@@ -5,6 +5,13 @@
   "oracle": "outcome",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": null,
+  "armedBy": "The pre-fix 'case .content, .notMeasured: return nil' put back: Expectation failed: (caveat -> nil) != nil, plus the two legs asserting the sentence names the window and says 'not measured'. Restored, green. The opposite over-correction is armed in the same test: .content must still return nil, so a function that had started returning a sentence for every verdict fails here.",
   "evidence": [
     {
       "path": "evidence/PRO-0088/gate-final.txt",

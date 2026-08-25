@@ -5,6 +5,17 @@
   "oracle": "effect-witness",
   "plane": "hermetic",
   "placedBecause": "an artifact written by a run outside the test process",
+  "recordedAt": "2026-08-25T03:00:24Z",
+  "tree": {
+    "commit": "ec9592c",
+    "dirty": true
+  },
+  "witness": {
+    "recorder": "subprocess.run(['./scripts/test.sh', '--filter', <function>]) with stdout and stderr captured, one process per case, and the captured output parsed for swift-testing's own verdict, started and finished lines. seam-arming.json records the exit code, the verdict line, the tests started and finished, and the elapsed seconds for every one.",
+    "effect": "subprocess",
+    "count": 12
+  },
+  "armedBy": "The population is its own control and it is not uniform: 11 of the 12 processes printed a verdict line and one did not. CASE-0461's trapping mutant produced zero verdict lines and is armed on its started line instead, which is the distinction the repair exists to make \u2014 under the pre-repair rule all 12 were one undifferentiated `exit != 0`.",
   "evidence": [
     {
       "path": "docs/test-campaign/evidence/PRO-0106/seam-arming.json",
