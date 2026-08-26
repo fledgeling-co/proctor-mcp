@@ -57,6 +57,7 @@ gate registry-drift    $P scripts/campaign/defect_gate.py dropped docs/test-camp
 gate plane-census      $P scripts/campaign/plane_census.py docs/test-campaign --gate
 gate control-census    $P scripts/campaign/control_census.py --gate
 gate lane-census       $P scripts/campaign/lane_census.py --gate
+gate journey-census    $P scripts/campaign/journey_census.py --gate
 
 TOTAL=$((PASSED + ${#FAILED[@]}))
 if [ ${#FAILED[@]} -gt 0 ]; then

@@ -1,0 +1,370 @@
+{
+  "journeys": [
+    {
+      "journey": "JRN-001",
+      "critical": true,
+      "claimed": [
+        "request-issued",
+        "server-committed",
+        "provider-effect",
+        "client-persisted",
+        "user-acknowledged"
+      ],
+      "evidenced": [],
+      "assertedOnly": [
+        "request-issued",
+        "server-committed",
+        "provider-effect",
+        "client-persisted",
+        "user-acknowledged"
+      ],
+      "evidencedNotClaimed": []
+    },
+    {
+      "journey": "JRN-002",
+      "critical": false,
+      "claimed": [
+        "request-issued",
+        "server-committed",
+        "provider-effect",
+        "client-persisted"
+      ],
+      "evidenced": [],
+      "assertedOnly": [
+        "request-issued",
+        "server-committed",
+        "provider-effect",
+        "client-persisted"
+      ],
+      "evidencedNotClaimed": []
+    },
+    {
+      "journey": "JRN-003",
+      "critical": true,
+      "claimed": [
+        "request-issued",
+        "server-committed",
+        "provider-effect",
+        "client-persisted",
+        "user-acknowledged"
+      ],
+      "evidenced": [],
+      "assertedOnly": [
+        "request-issued",
+        "server-committed",
+        "provider-effect",
+        "client-persisted",
+        "user-acknowledged"
+      ],
+      "evidencedNotClaimed": []
+    },
+    {
+      "journey": "JRN-004",
+      "critical": true,
+      "claimed": [
+        "request-issued",
+        "server-committed",
+        "provider-effect",
+        "client-persisted",
+        "user-acknowledged"
+      ],
+      "evidenced": [],
+      "assertedOnly": [
+        "request-issued",
+        "server-committed",
+        "provider-effect",
+        "client-persisted",
+        "user-acknowledged"
+      ],
+      "evidencedNotClaimed": []
+    },
+    {
+      "journey": "JRN-005",
+      "critical": true,
+      "claimed": [
+        "request-issued",
+        "server-committed",
+        "provider-effect",
+        "client-persisted",
+        "user-acknowledged"
+      ],
+      "evidenced": [],
+      "assertedOnly": [
+        "request-issued",
+        "server-committed",
+        "provider-effect",
+        "client-persisted",
+        "user-acknowledged"
+      ],
+      "evidencedNotClaimed": []
+    },
+    {
+      "journey": "JRN-006",
+      "critical": false,
+      "claimed": [
+        "request-issued",
+        "server-committed",
+        "provider-effect",
+        "client-persisted"
+      ],
+      "evidenced": [
+        "provider-effect"
+      ],
+      "assertedOnly": [
+        "request-issued",
+        "server-committed",
+        "client-persisted"
+      ],
+      "evidencedNotClaimed": []
+    },
+    {
+      "journey": "JRN-007",
+      "critical": false,
+      "claimed": [
+        "request-issued",
+        "server-committed",
+        "provider-effect",
+        "client-persisted"
+      ],
+      "evidenced": [],
+      "assertedOnly": [
+        "request-issued",
+        "server-committed",
+        "provider-effect",
+        "client-persisted"
+      ],
+      "evidencedNotClaimed": []
+    },
+    {
+      "journey": "JRN-008",
+      "critical": false,
+      "claimed": [
+        "request-issued",
+        "server-committed"
+      ],
+      "evidenced": [],
+      "assertedOnly": [
+        "request-issued",
+        "server-committed"
+      ],
+      "evidencedNotClaimed": []
+    },
+    {
+      "journey": "JRN-009",
+      "critical": true,
+      "claimed": [
+        "request-issued",
+        "server-committed",
+        "provider-effect",
+        "client-persisted",
+        "user-acknowledged"
+      ],
+      "evidenced": [],
+      "assertedOnly": [
+        "request-issued",
+        "server-committed",
+        "provider-effect",
+        "client-persisted",
+        "user-acknowledged"
+      ],
+      "evidencedNotClaimed": []
+    },
+    {
+      "journey": "JRN-010",
+      "critical": true,
+      "claimed": [
+        "request-issued",
+        "server-committed",
+        "provider-effect",
+        "client-persisted",
+        "user-acknowledged"
+      ],
+      "evidenced": [],
+      "assertedOnly": [
+        "request-issued",
+        "server-committed",
+        "provider-effect",
+        "client-persisted",
+        "user-acknowledged"
+      ],
+      "evidencedNotClaimed": []
+    }
+  ],
+  "assertedOnly": [
+    {
+      "journey": "JRN-001",
+      "boundary": "request-issued"
+    },
+    {
+      "journey": "JRN-001",
+      "boundary": "server-committed"
+    },
+    {
+      "journey": "JRN-001",
+      "boundary": "provider-effect"
+    },
+    {
+      "journey": "JRN-001",
+      "boundary": "client-persisted"
+    },
+    {
+      "journey": "JRN-001",
+      "boundary": "user-acknowledged"
+    },
+    {
+      "journey": "JRN-002",
+      "boundary": "request-issued"
+    },
+    {
+      "journey": "JRN-002",
+      "boundary": "server-committed"
+    },
+    {
+      "journey": "JRN-002",
+      "boundary": "provider-effect"
+    },
+    {
+      "journey": "JRN-002",
+      "boundary": "client-persisted"
+    },
+    {
+      "journey": "JRN-003",
+      "boundary": "request-issued"
+    },
+    {
+      "journey": "JRN-003",
+      "boundary": "server-committed"
+    },
+    {
+      "journey": "JRN-003",
+      "boundary": "provider-effect"
+    },
+    {
+      "journey": "JRN-003",
+      "boundary": "client-persisted"
+    },
+    {
+      "journey": "JRN-003",
+      "boundary": "user-acknowledged"
+    },
+    {
+      "journey": "JRN-004",
+      "boundary": "request-issued"
+    },
+    {
+      "journey": "JRN-004",
+      "boundary": "server-committed"
+    },
+    {
+      "journey": "JRN-004",
+      "boundary": "provider-effect"
+    },
+    {
+      "journey": "JRN-004",
+      "boundary": "client-persisted"
+    },
+    {
+      "journey": "JRN-004",
+      "boundary": "user-acknowledged"
+    },
+    {
+      "journey": "JRN-005",
+      "boundary": "request-issued"
+    },
+    {
+      "journey": "JRN-005",
+      "boundary": "server-committed"
+    },
+    {
+      "journey": "JRN-005",
+      "boundary": "provider-effect"
+    },
+    {
+      "journey": "JRN-005",
+      "boundary": "client-persisted"
+    },
+    {
+      "journey": "JRN-005",
+      "boundary": "user-acknowledged"
+    },
+    {
+      "journey": "JRN-006",
+      "boundary": "request-issued"
+    },
+    {
+      "journey": "JRN-006",
+      "boundary": "server-committed"
+    },
+    {
+      "journey": "JRN-006",
+      "boundary": "client-persisted"
+    },
+    {
+      "journey": "JRN-007",
+      "boundary": "request-issued"
+    },
+    {
+      "journey": "JRN-007",
+      "boundary": "server-committed"
+    },
+    {
+      "journey": "JRN-007",
+      "boundary": "provider-effect"
+    },
+    {
+      "journey": "JRN-007",
+      "boundary": "client-persisted"
+    },
+    {
+      "journey": "JRN-008",
+      "boundary": "request-issued"
+    },
+    {
+      "journey": "JRN-008",
+      "boundary": "server-committed"
+    },
+    {
+      "journey": "JRN-009",
+      "boundary": "request-issued"
+    },
+    {
+      "journey": "JRN-009",
+      "boundary": "server-committed"
+    },
+    {
+      "journey": "JRN-009",
+      "boundary": "provider-effect"
+    },
+    {
+      "journey": "JRN-009",
+      "boundary": "client-persisted"
+    },
+    {
+      "journey": "JRN-009",
+      "boundary": "user-acknowledged"
+    },
+    {
+      "journey": "JRN-010",
+      "boundary": "request-issued"
+    },
+    {
+      "journey": "JRN-010",
+      "boundary": "server-committed"
+    },
+    {
+      "journey": "JRN-010",
+      "boundary": "provider-effect"
+    },
+    {
+      "journey": "JRN-010",
+      "boundary": "client-persisted"
+    },
+    {
+      "journey": "JRN-010",
+      "boundary": "user-acknowledged"
+    }
+  ],
+  "badNames": [],
+  "evidenced": 1,
+  "claimed": 44
+}

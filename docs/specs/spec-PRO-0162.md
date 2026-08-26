@@ -42,3 +42,26 @@ So the work this row still owes, in order:
    JRN-008's live lane needs a simulator runtime that this machine has.
 3. Criterion 2's promotion to critical follows from 1, not from the count.
 
+## The count, measured rather than asserted — 2026-08-27
+
+`scripts/campaign/journey_census.py` derives a cut from the cases that declare
+one and compares it against what each journey claims. First run:
+
+    10 journey(s) · 44 of 50 boundaries claimed cut
+      with a passing effect-rung case naming them   1
+      asserted, with no case behind them            43
+
+So `boundaries 44/50 cut` was a count of assertions, and the one cut with a case
+behind it is the one attached earlier this wave. Six of the ten journeys are
+marked critical on that count.
+
+The census REPORTS rather than rewrites. Deriving the list and writing it would
+drop the campaign's boundary count to 1 and take the critical-journey rule down
+with it in the same commit — two changes, one of them unmeasured. The number
+moves when cases are written, which is the work this row is for, and the ratchet
+at 43 means a journey cannot claim a new cut without one.
+
+Criterion 1 is now checkable: a cut is a passing case at or above the `outcome`
+rung, attached to the journey, naming the boundary. Criterion 2's promotion to
+critical follows from that rather than from the claim.
+

@@ -1,0 +1,16 @@
+10 journey(s) · 44 of 50 boundaries claimed cut
+  with a passing effect-rung case naming them   1
+  asserted, with no case behind them            43
+  JRN-001 critical claimed 5/5 · evidenced 0
+  JRN-002          claimed 4/5 · evidenced 0
+  JRN-003 critical claimed 5/5 · evidenced 0
+  JRN-004 critical claimed 5/5 · evidenced 0
+  JRN-005 critical claimed 5/5 · evidenced 0
+  JRN-006          claimed 4/5 · evidenced 1 · provider-effect
+  JRN-007          claimed 4/5 · evidenced 0
+  JRN-008          claimed 2/5 · evidenced 0
+  JRN-009 critical claimed 5/5 · evidenced 0
+  JRN-010 critical claimed 5/5 · evidenced 0
+
+ratchet: 43 asserted-only cut(s) allowed, 43 measured
+held.

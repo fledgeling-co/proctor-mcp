@@ -3885,6 +3885,54 @@ def test_a_shared_frame_is_declared_or_a_finding() -> None:
               red.stdout[-500:])
 
 
+def test_a_journey_cut_has_a_case_behind_it() -> None:
+    """PRO-0162. `boundaries 44/50 cut` was a count of assertions.
+
+    A journey declares boundariesCut and a case declares a journey, and nothing
+    joined a cut to the thing that cuts it. Measured on the first run: 44
+    claimed, 1 with a passing effect-rung case naming the boundary.
+    """
+    script = ROOT / "scripts" / "campaign" / "journey_census.py"
+    out = subprocess.run([sys.executable, str(script), "--gate"], capture_output=True, text=True)
+    check(out.returncode == 0, "the asserted-only cut ratchet holds", out.stdout[-700:])
+    check("with a passing effect-rung case naming them" in out.stdout,
+          "and the run prints the evidenced count beside the claimed one", out.stdout[:400])
+
+    with tempfile.TemporaryDirectory() as td:
+        d = Path(td) / "campaign"
+        shutil.copytree(CAMPAIGN_DIR, d)
+
+        # A journey claiming one more cut than it did must take the ratchet red.
+        inv = json.loads((d / "inventory.json").read_text())
+        for j in inv["journey"]:
+            if len(j.get("boundariesCut") or []) < 5:
+                for b in ["request-issued", "server-committed", "provider-effect",
+                          "client-persisted", "user-acknowledged"]:
+                    if b not in j["boundariesCut"]:
+                        j["boundariesCut"].append(b)
+                        break
+                break
+        (d / "inventory.json").write_text(json.dumps(inv, indent=2) + "\n")
+        red = subprocess.run([sys.executable, str(script), "--campaign", str(d), "--gate"],
+                             capture_output=True, text=True)
+        check(red.returncode == 1, "one more asserted cut takes the ratchet red",
+              f"exit {red.returncode}\n{red.stdout[-400:]}")
+        check("ROSE from" in red.stdout, "and the refusal says it rose", red.stdout[-400:])
+
+        # A case naming a boundary outside the five is refused outright.
+        shutil.rmtree(d)
+        shutil.copytree(CAMPAIGN_DIR, d)
+        raw = json.loads((d / "cases.json").read_text())
+        rows = raw if isinstance(raw, list) else raw["cases"]
+        rows[0]["cuts"] = "somewhere-else"
+        (d / "cases.json").write_text(json.dumps(raw, indent=2) + "\n")
+        red = subprocess.run([sys.executable, str(script), "--campaign", str(d), "--gate"],
+                             capture_output=True, text=True)
+        check(red.returncode == 1, "a case naming a boundary outside the five is refused",
+              f"exit {red.returncode}\n{red.stdout[-400:]}")
+        check("somewhere-else" in red.stdout, "and the refusal names it", red.stdout[-400:])
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -3967,7 +4015,8 @@ def main() -> int:
                test_the_cache_walk_survives_a_tree_being_mutated,
                test_the_pty_probe_says_when_it_could_not_measure,
                test_every_case_carries_a_lane,
-               test_a_shared_frame_is_declared_or_a_finding):
+               test_a_shared_frame_is_declared_or_a_finding,
+               test_a_journey_cut_has_a_case_behind_it):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001
