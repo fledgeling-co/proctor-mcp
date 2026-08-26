@@ -439,6 +439,17 @@ def verify_tui_pty_truth_table() -> list[PTYVerificationResult]:
 
             # A scenario that timed out reaching its precondition says so, so a
             # slow machine is distinguishable from a broken latch.
+            # The diagnostic that made this legible. A pty in canonical mode
+            # echoes what is typed at it; a TUI that has taken raw mode does not.
+            # So getting the keystrokes back is direct evidence that nothing was
+            # reading them, which distinguishes "the stop key does nothing" from
+            # "the stop key was never delivered" — DEF-344.
+            echoed = proc_latch.read_available(timeout=0.3)
+            echo_note = ""
+            if b"p" in echoed or b"s" in echoed:
+                echo_note = (f"; the pty ECHOED {echoed[:16]!r}, so the terminal was still in "
+                             f"canonical mode and nothing was reading the keys")
+
             reached = ("connected" if connected else
                        "TIMED OUT after 5.0s waiting for the TUI's first request — "
                        "the keystrokes below were typed at a client that had not arrived")
@@ -448,7 +459,7 @@ def verify_tui_pty_truth_table() -> list[PTYVerificationResult]:
                     passed=latch_ok,
                     details=(f"Keystrokes 'p' and 's' decoded across pty boundary, dispatching "
                              f"control actions (actions: {actions}; precondition: {reached}; "
-                             f"first action seen: {got_pause})"),
+                             f"first action seen: {got_pause}{echo_note})"),
                     metadata={"received_actions": actions, "connected": connected},
                 )
             )

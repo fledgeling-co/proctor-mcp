@@ -5266,7 +5266,7 @@
     },
     {
       "id": "DEF-344",
-      "title": "The TUI's stop keystroke dispatches no action in the PTY fixture, and sending it first fails the connection outright",
+      "title": "The PTY probe types before the TUI has taken raw mode, so the keys are echoed rather than read",
       "status": "open",
       "severity": "medium",
       "surfaces": [
@@ -5275,7 +5275,7 @@
       "requirements": [
         "REQ-046"
       ],
-      "note": "Exposed 2026-08-26 by fixing DEF-341. Once the latch check stopped reading other scenarios' actions, what it actually witnesses is `['pause']` and nothing else. Sources/ProctorCLI/TUI/TUIApp.swift:84 maps `case \"s\": control(\"stop\", state:, client:)` unconditionally, so a stop action is expected; none arrives within 6 seconds on any run.\n\nAND IT IS ORDER-DEPENDENT. Reversing the two keystrokes \u2014 sending `s` before `p` \u2014 makes the scenario's own precondition time out: the TUI never sends its first request to the agent within 5 seconds at all. So this is not simply 'the second control is dropped'.\n\nNOT MEASURED: whether the keystroke is lost at the pty, whether `control` opens a second connection the mock's accept loop does not take, or whether the TUI's state after a pause changes what `s` does. The check currently passes on the pause action alone, which is its own scenario's work and honest as far as it goes; this row is the half it does not cover."
+      "note": "MEASURED 2026-08-27, and the subject moves from the product to the fixture.\n\nThe reading that changed it: on a failing run the probe reads b'ps' back off the pty. A terminal in canonical mode echoes what is typed at it and one a TUI has put into raw mode does not, so getting the keystrokes back is direct evidence that nothing was reading them. In the same run `requests_served` never rises, so the TUI had not reached the mock agent either. Both observables say the same thing: the child had not come up, and the keys went into a terminal with no reader.\n\nThat rules OUT the reading this row was opened with. Sources/ProctorCLI/TUI/TUIApp.swift:84 maps `s` to control(\"stop\") unconditionally, TUIApp.control opens its own connection per call, and the mock's proctor.control branch records the action and replies \u2014 none of which is reached when nothing is reading the keys. It also explains the order-dependence: sending `s` first loses more often because it is the earliest keystroke, closest to spawn.\n\nSAME CLASS AS DEF-341, one layer earlier. That was a check reading another scenario's actions; this is a check typing before its subject exists. Both were read as product faults and both are the probe racing a process it did not wait for.\n\nNOT MEASURED: why the child takes longer than 5.8 seconds to take raw mode, or whether it exits. The binary resolves \u2014 .build/arm64-apple-macosx/debug/proctor-cli exists and is executable \u2014 so this is startup latency or an early exit rather than a missing target. What the fix needs is a readiness signal the probe can wait on: the pty leaving canonical mode, or the first request reaching the agent, with a bound that says which way it ended. The scenario already reports the precondition and now reports the echo, so a failing run says which of the two happened."
     },
     {
       "id": "DEF-345",
