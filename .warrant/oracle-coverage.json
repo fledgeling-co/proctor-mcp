@@ -2,13 +2,13 @@
  "campaign_dir": "/Users/lukerhodes/Dev/proctor-mcp/docs/test-campaign",
  "classes": {
   "capture-trust": {
-   "coverage": 0.9565,
-   "covered": 44,
+   "coverage": 0.9574,
+   "covered": 45,
    "green": false,
    "lineage_gaps": 2,
    "surfaces_matched": 3,
    "threshold": 1.0,
-   "total": 46
+   "total": 47
   },
   "evidence-integrity": {
    "coverage": 0.9128,
@@ -65,7 +65,7 @@
    "total": 119
   }
  },
- "generated_at": "2026-08-26T11:09:28.465568+00:00",
+ "generated_at": "2026-08-26T11:18:08.537691+00:00",
  "note": "`figures` is cases on that surface and `sourced` is those on an effect rung \u2014 a check that could catch a wrong answer. Run warrant's rollup_classes.py to key this by defect class using the warrant's own globs.",
  "source": "test-campaign",
  "surfaces": [
@@ -196,9 +196,9 @@
    "unsourced": 0
   },
   {
-   "figures": 27,
+   "figures": 28,
    "file": "tool://capture-lineage/unaccounted",
-   "sourced": 27,
+   "sourced": 28,
    "unsourced": 0
   },
   {

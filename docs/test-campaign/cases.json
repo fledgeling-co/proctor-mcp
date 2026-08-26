@@ -9838,5 +9838,22 @@
       "docs/test-campaign/evidence/PRO-0168/inert-build-probe.txt"
     ],
     "note": "PRO-0168, criterion 2. ProctorReflector is live under `#if DEBUG || PROCTOR_REFLECTOR` and empty under `#else`. Every run of this suite is a debug build, so the whole inert branch is dead code in all of them and its safe defaults had never been asserted by anything \u2014 compiling it in release proves it builds and not what it does. The probe drives six calls through both builds: inert reads isRunning=false isIdle=true serial=0 socketCreated=false, DEBUG reads isRunning=true serial=1."
+  },
+  {
+    "id": "CASE-0837",
+    "req": "REQ-113",
+    "surface": "SURF-027",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "capture-lineage's own ratchet is the arm and it fired in both directions in one session: it read `ratchet: 6 \u2014 rose to 8` when the two verdicts landed and refused to let the count sit above the bar, and it had held at 6 for the two waves before that with the same two captures unjudged.",
+    "defects": [],
+    "evidence": [
+      "docs/test-campaign/witness-verdicts.json",
+      "docs/test-campaign/evidence/PRO-0164/capture-lineage.txt"
+    ],
+    "note": "PRO-0164. Six of eight judgeable captures carried a verdict and the two that did not were SURF-006 and SURF-007 \u2014 the capture engine and the crop inspector, both recorded as having no design of record. That is a real limit and it is not the same as unjudgeable: a capture engine's frame can still be read against what the surface CLAIMS. SURF-006 is a TextEdit window cropped to its own bounds with no desktop and no Proctor chrome in it, which is what window-scoped asserts and what a display-scoped grab would not look like, and `Untitled 32` is a sequence number a real TextEdit assigns. SURF-007 cuts every body line mid-word at one constant x \u2014 a crop of a rendered surface, where a re-render at a smaller size would have re-wrapped and no line would end mid-word. Each verdict names what it does not cover: pixel fidelity and the scale factor as a number, neither checkable without a reference. Moving the denominator by declaring them unjudgeable was the other way to make this 100% and it measures nothing."
   }
 ]

@@ -1,7 +1,7 @@
 # Spec PRO-0164 — Judge Every Judgeable Capture
 
 **Brief:** `docs/features-to-triage/156-two-captures-nobody-judged.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-25
 **Surfaces:** SURF-027
 **Defects:** none

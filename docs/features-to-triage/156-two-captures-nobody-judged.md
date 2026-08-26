@@ -2,7 +2,7 @@
 generated-by: test-campaign
 campaign-sources: [capture-lineage.unjudged]
 reckon-sources: [REQ-111, REQ-146]
-status: to-triage
+status: triaged
 ---
 # Two captures nobody judged
 
