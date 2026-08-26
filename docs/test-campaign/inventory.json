@@ -5368,10 +5368,11 @@
       "boundariesCut": [
         "request-issued",
         "server-committed",
+        "provider-effect",
         "client-persisted"
       ],
       "fromFlow": "FLOW-006",
-      "note": "No cut at provider-effect or user-acknowledged. The chain is appended, sealed and read back, but no case witnesses the encrypted bytes on disk independently of the code that wrote them, and nothing reads the trail's verdict off a surface a person looks at. Both are owed work."
+      "note": "provider-effect is cut by CASE-0061, which drives a real audited run and reads the sealed bytes back with a fresh FileHandle rather than through AuditLog's own reader. The journey's earlier note said no case witnessed those bytes; the case existed and carried no journey, so nothing joined the two. Recorded rather than quietly corrected, because an asserted cut and a cut with a case behind it read identically in this registry \u2014 which is what PRO-0162 is actually about.\n\nStill uncut: user-acknowledged. Nothing reads the trail's verdict off a surface a person looks at. proctor_policy returns auditVerdict.clean to a caller (CASE-0017), which is the caller's channel, not a person's.\n\nAnd provider-effect is cut PARTIALLY: CASE-0061 opens the seals with AuditSeal.open, ProctorCore's own. A fully independent witness would recompute the chain links with CryptoKit directly and call no product verifier at all."
     },
     {
       "id": "JRN-007",

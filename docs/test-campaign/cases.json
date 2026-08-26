@@ -1046,7 +1046,10 @@
       "count": 3
     },
     "note": "Driven through Session.attachResolved + Session.act with three real steps, with the session's sink set to the production AuditLog.append. The seam is the TEST-PROCESS INTERLOCK in Session.auditSink, not the write path: AuditLog.append still seals with CryptoKit AES-GCM, chains, signs, and lands the bytes with Darwin.open(O_WRONLY|O_APPEND|O_CREAT), Darwin.write and fsync in PolicyStore.swift, unchanged. Three records emitted by the agent, three lines on disk, all three opened with the seal. The line count is checked against what the AGENT emitted rather than against a number the test chose, so no assertion stands on a value the test wrote (DEF-019). PORTABLE FLOOR: no kernel file-open census. The witness runs on a dedicated Thread because AuditLog's seams are process-wide and TrailIsolation must be held across the drive; an async holder of that lock wedged the whole run on 2026-08-21, and the comment above withRedirectedTrail carries the measurement.",
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "journey": "JRN-006",
+    "cuts": "provider-effect",
+    "cutsNote": "The trail's bytes, read back through a channel distinct from the one that wrote them: a fresh FileHandle rather than AuditLog.readTrail or openedTail, which would be the code under test confirming itself. Attached to JRN-006 here because the case existed and carried no journey, so the journey's own note recorded provider-effect as uncut while this was already witnessing it. PARTIAL, and the note says which part: the seals are opened with AuditSeal.open \u2014 ProctorCore's own, a different module from the reader under test but not an independent implementation. A fully independent witness would recompute the chain links with CryptoKit directly and never call the product's verifier."
   },
   {
     "id": "CASE-0062",

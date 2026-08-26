@@ -14,3 +14,31 @@ Forty-three of fifty durable boundaries are cut. The seven that are not sit acro
 2. A journey whose five cuts exist is promoted to critical on evidence rather than assertion.
 3. A cut names the observable it reads and a channel distinct from the one that performed the step.
 4. The boundaries-cut fraction is published on every run whether it moved or not.
+
+## What the first pass at this found, and why the row stays open
+
+**The journey's list of cut boundaries is asserted on the journey, not derived from cases.**
+A case carries a journey field and no boundary field, so nothing ties a cut to the thing that cuts it: an
+asserted cut and a cut with a passing effect-rung case behind it are the same five strings in the
+same list. The fraction `43/50` was therefore a count of assertions.
+
+That showed up immediately. JRN-006's own note read *"no case witnesses the encrypted bytes on
+disk independently of the code that wrote them"* while CASE-0061 was already doing exactly that —
+driving a real audited run and reading the sealed bytes back through a fresh file handle rather
+than `AuditLog.readTrail`. The case existed, carried no journey, and nothing joined the two. It is
+attached now, with what it does and does not cover recorded: the seals are opened with
+`AuditSeal.open`, ProctorCore's own, so the witness is a different module from the reader under
+test rather than an independent implementation.
+
+So the work this row still owes, in order:
+
+1. A case declares the boundary it cuts, and the journey's list is **derived** from
+   passing effect-rung cases rather than declared beside them. Until then criterion 1 cannot be
+   checked, because "cut" is not an observable.
+2. The remaining six: JRN-002 and JRN-007 at `user-acknowledged`, JRN-006 at `user-acknowledged`,
+   and JRN-008 at `provider-effect`, `client-persisted` and `user-acknowledged`. Each journey's
+   note already names what is owed; none is recorded as structurally uncuttable, and on reading
+   them none is — JRN-002's note says the run HUD draws an account of a background batch, and
+   JRN-008's live lane needs a simulator runtime that this machine has.
+3. Criterion 2's promotion to critical follows from 1, not from the count.
+
