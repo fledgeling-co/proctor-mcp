@@ -33,14 +33,14 @@ and both were invisible until something else forced a look.
 
 | File | What the path is for |
 |---|---|
-| `ProctorCore/SwitchStore.swift` | `…/settings` — **operator settings, written** |
-| `ProctorAgent/Session/SessionMaestro.swift` | `…/maestro` |
-| `ProctorAgent/Session/SessionIOSProcess.swift` | `…/captures` |
-| `ProctorCore/GuestInventory.swift` | `…/guests/<handle>`, and the agent socket |
-| `ProctorCore/Wire.swift` | the agent socket |
-| `ProctorReflector/ProctorReflector.swift` | the app-support root |
-| `ProctorCore/TUISurface.swift` | a displayed path |
-| `ProctorCore/ToolCatalogue.swift` | prose in a tool description |
+| `Sources/ProctorCore/SwitchStore.swift` | `…/settings` — **operator settings, written** |
+| `Sources/ProctorAgent/Session/SessionMaestro.swift` | `…/maestro` |
+| `Sources/ProctorAgent/Session/SessionIOSProcess.swift` | `…/captures` |
+| `Sources/ProctorCore/GuestInventory.swift` | `…/guests/<handle>`, and the agent socket |
+| `Sources/ProctorCore/Wire.swift` | the agent socket |
+| `Sources/ProctorReflector/ProctorReflector.swift` | the app-support root |
+| `Sources/ProctorCore/TUISurface.swift` | a displayed path |
+| `Sources/ProctorCore/ToolCatalogue.swift` | prose in a tool description |
 
 **`SwitchStore` is the sharp one.** It writes the operator's settings, which is the same kind of
 state `PolicyStore`'s defect was about — a suite run that changes what the agent is allowed to do,
@@ -72,7 +72,7 @@ tell a diverted write from a write that never happened.
 
 **Then close the class rather than the instances.** A test that fails when a new static computes an
 operator path without a seam is worth more than eight fixes, because the ninth is what this brief is
-about. `scripts/campaign/` is where it belongs, beside `defect_gate.py`.
+about. `scripts/campaign/` is where it belongs, beside `scripts/campaign/defect_gate.py`.
 
 ## The stray files already written
 
@@ -89,7 +89,7 @@ them.
 - A witness per converted writer showing both the absence under the operator's root and the presence
   under the diverted root.
 - A check that refuses a new un-seamed operator-path writer, armed against one.
-- `./scripts/test.sh` green with the suite count before and after, and `defect_gate.py` exit 0 in
+- `./scripts/test.sh` green with the suite count before and after, and `scripts/campaign/defect_gate.py` exit 0 in
   both modes.
 
 ## What this brief does not do

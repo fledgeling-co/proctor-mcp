@@ -32,7 +32,7 @@ indistinguishable from a predicate that cannot fire.
 ## The two about the mutation runner
 
 **DEF-032 — an operator that spends a slot on an edit the compiler must reject.**
-`mutate_swift.py`'s integer-literal increment matched the `0` in a closure shorthand parameter.
+`scripts/campaign/mutate_swift.py`'s integer-literal increment matched the `0` in a closure shorthand parameter.
 Mutant 24 rewrote `{ bind(fd, $0, size) }` to `bind(fd, $1, size)`, which cannot compile because the
 closure takes one parameter. `$0` and `$1` are not integer literals. The operator table's stated
 contract is that every operator keeps the types the same so the file still compiles — an
@@ -40,7 +40,7 @@ unbuildable mutant is a wasted sample, and with 24 slots against 3,189 sites the
 scarce thing.
 
 **DEF-055 — a note that contradicts its own evidence.** CASE-0074 records the mutation run's
-starting load as 11.20; `evidence/mutation-agent.txt` records 22.92. One substring. It matters
+starting load as 11.20; `docs/test-campaign/evidence/mutation-agent.txt` records 22.92. One substring. It matters
 because the load figure is what makes a timeout-scored kill trustworthy or not.
 
 ## The two about classification
@@ -65,10 +65,10 @@ status that exists for exactly this.
 
 ## The one about a hand merge
 
-**DEF-058 — an orchestrator merge dropped a flow.** Reconciling `inventory.json` at the PRO-0081
+**DEF-058 — an orchestrator merge dropped a flow.** Reconciling `docs/test-campaign/inventory.json` at the PRO-0081
 merge, only `defect` and `requirement` were merged and ours was taken as the base document, so
 PRO-0081's addition to `flow` was lost with it. The capture stayed on disk and its verdict stayed in
-`witness-verdicts.json`; only the subject left the published set, and judged fell 6 to 5 against a
+`docs/test-campaign/witness-verdicts.json`; only the subject left the published set, and judged fell 6 to 5 against a
 ratchet of 6. `capture-lineage --gate` exited 2 and named it.
 
 Already repaired. It is here because the remedy is mechanical rather than a resolution to be

@@ -30,7 +30,7 @@ Three properties, and each of them is where this gets interesting:
 - **Every display.** One panel per screen, never one spanning the union: a panel
   sized to the union of this machine's displays is a ~26-megapixel backing store
   that the window server accepts, reports `onscreen=1, alpha=1`, and never presents.
-  That measurement is in `CursorOverlay.swift`'s header and cost most of a session
+  That measurement is in `Sources/ProctorAgent/Overlay/CursorOverlay.swift`'s header and cost most of a session
   to find. Do not re-derive it.
 - **It must not contaminate the evidence.** Proctor's captures are window-scoped
   through ScreenCaptureKit to the app under test, so a separate overlay window is

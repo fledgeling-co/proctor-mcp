@@ -11,13 +11,13 @@
    "total": 46
   },
   "evidence-integrity": {
-   "coverage": 0.9116,
-   "covered": 196,
+   "coverage": 0.912,
+   "covered": 197,
    "green": false,
    "lineage_gaps": 19,
    "surfaces_matched": 16,
    "threshold": 1.0,
-   "total": 215
+   "total": 216
   },
   "operator-state": {
    "coverage": 0.9455,
@@ -29,13 +29,13 @@
    "total": 55
   },
   "registry-drift": {
-   "coverage": 0.973,
-   "covered": 36,
+   "coverage": 0.9737,
+   "covered": 37,
    "green": false,
    "lineage_gaps": 1,
    "surfaces_matched": 3,
    "threshold": 1.0,
-   "total": 37
+   "total": 38
   },
   "release-integrity": {
    "coverage": 1.0,
@@ -65,7 +65,7 @@
    "total": 119
   }
  },
- "generated_at": "2026-08-26T10:08:40.583921+00:00",
+ "generated_at": "2026-08-26T10:33:37.247687+00:00",
  "note": "`figures` is cases on that surface and `sourced` is those on an effect rung \u2014 a check that could catch a wrong answer. Run warrant's rollup_classes.py to key this by defect class using the warrant's own globs.",
  "source": "test-campaign",
  "surfaces": [
@@ -250,15 +250,15 @@
    "unsourced": 0
   },
   {
-   "figures": 26,
+   "figures": 27,
    "file": "tool://spec-citation/measure",
-   "sourced": 26,
+   "sourced": 27,
    "unsourced": 0
   },
   {
-   "figures": 17,
+   "figures": 18,
    "file": "tool://standing-registers/unread-gates",
-   "sourced": 17,
+   "sourced": 18,
    "unsourced": 0
   },
   {

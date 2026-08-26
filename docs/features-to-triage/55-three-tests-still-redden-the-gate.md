@@ -27,7 +27,7 @@ validated-provider: none
 
 # Three tests still redden the gate at random, and PRO-0053 only fixed one of them
 
-**Read `00-WAVE-7-DIRECTION.md` first.** This is a gate-reliability item, the second of its
+**Read `docs/features-to-triage/00-WAVE-7-DIRECTION.md` first.** This is a gate-reliability item, the second of its
 kind, and it exists because the first one worked: PRO-0053 went looking for a flaky test and
 found a live production concurrency defect that was silently breaking PRO-0026's overlay and
 PRO-0033's Stop tap. **Treat these three the same way: assume the test is right until

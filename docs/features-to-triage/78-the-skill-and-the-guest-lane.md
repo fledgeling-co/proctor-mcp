@@ -11,7 +11,7 @@ validated-provider: none
 `~/Dev/fledgeling-plugins/plugins/proctor/skills/proctor/`, not the repo — the work lands there and
 this brief lives here because the repo is what it is meant to describe.
 
-Supersedes the still-open `53-the-proctor-skill-tracks-what-shipped.md`, which found the same drift
+Supersedes the still-open `docs/features-to-triage/53-the-proctor-skill-tracks-what-shipped.md`, which found the same drift
 on 2026-08-15 and named a smaller version of it. Fold that brief in rather than running both.
 
 ## The measurement, taken 2026-08-21

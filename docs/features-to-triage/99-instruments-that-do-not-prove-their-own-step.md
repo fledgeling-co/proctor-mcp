@@ -13,8 +13,8 @@ the form *the tool performed a step and published the result without establishin
 
 ## The four
 
-- **DEF-207.** `mutate_swift.py`'s `apply()` splices by byte offset and never re-reads, so it cannot
-  report that the substitution happened. Its own sibling, `mutation_seam_arm.py`, asserts an
+- **DEF-207.** `scripts/campaign/mutate_swift.py`'s `apply()` splices by byte offset and never re-reads, so it cannot
+  report that the substitution happened. Its own sibling, `scripts/campaign/mutation_seam_arm.py`, asserts an
   occurrence count of 1 and then re-reads requiring `after` present and `before` gone — **the repair is
   porting a check the same repository already contains.**
 - **DEF-208.** That sibling then scores `armed = code != 0`, so a process that dies in setup counts as

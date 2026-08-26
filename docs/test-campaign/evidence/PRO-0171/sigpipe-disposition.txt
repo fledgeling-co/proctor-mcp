@@ -1,5 +1,20 @@
-# sigpipe_disposition_probe.py, both families, both dispositions — 2026-08-26
-unix  bare        exit=141    
-unix  --suppress  exit=0     family=unix listener_opt=1 accepted_opt=1 EPIPE on write 1; the process survived 
-inet  bare        exit=141    
-inet  --suppress  exit=0     family=inet listener_opt=1 accepted_opt=1 EPIPE on write 1; the process survived 
+# sigpipe_disposition_probe.py — all four cells, four consecutive runs each, 2026-08-26
+# Deterministic after two corrections: write through the first errno rather than
+# returning on it, and settle after a write that succeeded so the next is asked
+# after the RST rather than beside it.
+unix  bare        exit=141   
+unix  --suppress  exit=0     EPIPE on write 1, 60 of 60 writes errored; the process survived
+inet  bare        exit=141   
+inet  --suppress  exit=0     EPIPE on write 2, 59 of 60 writes errored; the process survived
+unix  bare        exit=141   
+unix  --suppress  exit=0     EPIPE on write 1, 60 of 60 writes errored; the process survived
+inet  bare        exit=141   
+inet  --suppress  exit=0     EPIPE on write 2, 59 of 60 writes errored; the process survived
+unix  bare        exit=141   
+unix  --suppress  exit=0     EPIPE on write 1, 60 of 60 writes errored; the process survived
+inet  bare        exit=141   
+inet  --suppress  exit=0     EPIPE on write 2, 59 of 60 writes errored; the process survived
+unix  bare        exit=141   
+unix  --suppress  exit=0     EPIPE on write 1, 60 of 60 writes errored; the process survived
+inet  bare        exit=141   
+inet  --suppress  exit=0     EPIPE on write 2, 59 of 60 writes errored; the process survived

@@ -22,7 +22,7 @@ cannot be defended, change the code.
 
 ## What it does today
 
-`SessionAssert.swift` resolves the subject's frame and a reference rect (an
+`Sources/ProctorAgent/Session/SessionAssert.swift` resolves the subject's frame and a reference rect (an
 explicit `container` from the spec, else the window frame), then:
 
 ```swift
@@ -77,5 +77,5 @@ count stays 19 and `theToolSurfaceGainsNoVerb` should keep passing.
   hang (PRO-0041). Gate with
   `swift test --skip ObscuraPresenceWiringTests --skip BrowserLaneWiringTests`
   and say so in the progress note.
-- Geometry assertions have an existing house style in `SessionAssert.swift`
+- Geometry assertions have an existing house style in `Sources/ProctorAgent/Session/SessionAssert.swift`
   (`Outcome` with `observed`, `expected`, `reason`, `node`, `detail`). Match it.

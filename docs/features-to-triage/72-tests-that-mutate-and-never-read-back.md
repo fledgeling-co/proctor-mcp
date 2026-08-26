@@ -51,7 +51,7 @@ is a subscript on the value it returned. Three tests written this session — `a
 `noMachineFieldIsLeftAlone`, `everyAdvertisedActionIsRouted` — are exactly this, and all three are
 false positives. The `handle` and `apply` buckets are this shape.
 
-**Vocabulary drift.** The Swift reader list is declared in `campaign.json` as `blindVocabulary`
+**Vocabulary drift.** The Swift reader list is declared in `docs/test-campaign/campaign.json` as `blindVocabulary`
 (33 mutators, 60 readers) because the tool's defaults are Rust/RPC shaped and gave
 `examined=1857 mutating=1 blind=1` against Swift. The first Swift vocabulary reported 121 findings
 and named three tests that read their latch on the very next line; adding Swift's parenless
@@ -84,7 +84,7 @@ deliberately absent, and that note is the reason nobody re-adds them.
 
 ## The conversion contract
 
-- A sampled false-positive rate with its denominator, written into `REPORT.md`.
+- A sampled false-positive rate with its denominator, written into `docs/test-campaign/REPORT.md`.
 - Every finding classed genuine gets its read added and the test re-run; every finding classed
   false positive names its shape.
 - `blindVocabulary` updated only where a sampled finding proves a missing idiom, with the reason

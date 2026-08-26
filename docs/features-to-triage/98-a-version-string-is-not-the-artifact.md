@@ -24,7 +24,7 @@ Both were verified. **Neither is the artifact that runs.**
 
 The cached copy is the pre-fix classifier, not fixed code wearing a stale label. That is **DEF-216**.
 
-**DEF-204** is the same error inside the repair for it. `reckoning.py`'s `compare` refuses a tool on
+**DEF-204** is the same error inside the repair for it. `scripts/reckoning/reckoning.py`'s `compare` refuses a tool on
 disk that is not the one that took the current reading — and keys the refusal on a declared version
 string. The relabelled 1.0.0 cache is caught, but by a class-vocabulary check rather than by the
 version. The **real** 1.1.0 source, `CLASSES` and `ratchet` intact, `classify()` altered to

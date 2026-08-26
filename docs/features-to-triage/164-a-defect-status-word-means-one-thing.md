@@ -2,7 +2,7 @@
 generated-by: tailings
 tailings-sources: [site-read]
 reckon-sources: [REQ-046, REQ-130]
-status: to-triage
+status: triaged
 ---
 # A defect's status word means one thing, and matches its own note
 

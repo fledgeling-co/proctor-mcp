@@ -2,7 +2,7 @@
 generated-by: tailings
 tailings-sources: [R2]
 reckon-sources: [REQ-134, REQ-151]
-status: to-triage
+status: triaged
 ---
 # Repository-Relative Path Citation Resolver
 

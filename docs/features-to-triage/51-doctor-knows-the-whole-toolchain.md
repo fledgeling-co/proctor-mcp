@@ -7,8 +7,8 @@ validated-provider: Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swi
 ---
 # Doctor knows the whole toolchain
 
-**Read `00-WAVE-7-DIRECTION.md` first.** This item supersedes brief 32, which is
-retired: its `doctor.sh` half survives here and its policy-block half is folded in.
+**Read `docs/features-to-triage/00-WAVE-7-DIRECTION.md` first.** This item supersedes brief 32, which is
+retired: its `scripts/doctor.sh` half survives here and its policy-block half is folded in.
 
 ## The problem
 

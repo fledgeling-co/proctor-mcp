@@ -7,7 +7,7 @@ validated-provider: Process() in Sources/ProctorAgent/Session/SessionIOSProcess.
 ---
 # Drive iOS through deep links
 
-**Read `00-WAVE-7-DIRECTION.md` first.**
+**Read `docs/features-to-triage/00-WAVE-7-DIRECTION.md` first.**
 
 ## The problem
 

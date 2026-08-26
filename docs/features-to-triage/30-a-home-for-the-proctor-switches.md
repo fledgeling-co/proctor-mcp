@@ -5,7 +5,7 @@ validated-by: REQ-033, REQ-041 via CASE-0041, CASE-0043, CASE-0051, CASE-0083, C
 validated-rungs: effect-witness, outcome
 validated-provider: Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift
 ---
-> **REVISED for wave 7, 2026-08-15.** Still wanted, and the switch list changes. The UI switches (`PROCTOR_CURSOR`, `PROCTOR_HUD`, `PROCTOR_YIELD`, `PROCTOR_YIELD_INPUT`, `PROCTOR_TAKEOVER_INPUT`) survive because the supervision surface survives. `PROCTOR_SECOND_LANE` may not, since brief 45 hands browser work to Cua. Read `00-WAVE-7-DIRECTION.md` and enumerate the switches that actually exist when this is built rather than trusting the list below.
+> **REVISED for wave 7, 2026-08-15.** Still wanted, and the switch list changes. The UI switches (`PROCTOR_CURSOR`, `PROCTOR_HUD`, `PROCTOR_YIELD`, `PROCTOR_YIELD_INPUT`, `PROCTOR_TAKEOVER_INPUT`) survive because the supervision surface survives. `PROCTOR_SECOND_LANE` may not, since brief 45 hands browser work to Cua. Read `docs/features-to-triage/00-WAVE-7-DIRECTION.md` and enumerate the switches that actually exist when this is built rather than trusting the list below.
 
 # A home for the PROCTOR_* switches
 
@@ -52,7 +52,7 @@ when they want to know what Proctor is doing and change it.
   reading what it means. Whatever the surface says next to it has to carry that.
 - **Writing a launchd environment from a GUI app** touches the agent's own
   installation. Say what it writes, where, and what happens on the next
-  `install.sh`, which rewrites the plist.
+  `scripts/install.sh`, which rewrites the plist.
 
 ## Not in scope
 

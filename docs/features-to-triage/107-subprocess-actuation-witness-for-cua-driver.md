@@ -13,7 +13,7 @@ validated-provider: Process() in Sources/ProctorAgent/Actuation/CuaClients.swift
 - proposed-by-ai: true
 
 ## What and why
-REQ-024 declares a `subprocess` effect for Cua actuation (`Process()` in `Actuation/CuaClients.swift`) and currently forms BLOCK-0001 because no external recorder witnesses the spawned driver process. Building an independent process-lifecycle witness that observes driver PID launch, argument passing, clean termination, and absence of orphaned daemon processes will unblock the case and close the effect boundary.
+REQ-024 declares a `subprocess` effect for Cua actuation (`Process()` in `Sources/ProctorAgent/Actuation/CuaClients.swift`) and currently forms BLOCK-0001 because no external recorder witnesses the spawned driver process. Building an independent process-lifecycle witness that observes driver PID launch, argument passing, clean termination, and absence of orphaned daemon processes will unblock the case and close the effect boundary.
 
 ## Acceptance sketch
 - An independent process-table recorder observes `cua-driver` spawn, execution, and exit.

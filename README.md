@@ -363,5 +363,5 @@ work.
 | `Sources/ProctorShim` | The permissionless stdio MCP front end. Holds no grants. |
 | `Sources/ProctorReflector` | Embeddable in-process style and layer source. |
 | `Apps/Proctor` | Bundle `Info.plist` and icon. |
-| `scripts` | `build-app.sh`, `install.sh`, `uninstall.sh`, `doctor.sh`, `notarize.sh`. |
+| `scripts` | `scripts/build-app.sh`, `scripts/install.sh`, `scripts/uninstall.sh`, `scripts/doctor.sh`, `scripts/notarize.sh`. |
 | `docs/architecture.md` | Process model, planes, settling, determinism. Read before changing anything load-bearing. |

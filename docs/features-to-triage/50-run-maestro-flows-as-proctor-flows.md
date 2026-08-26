@@ -7,7 +7,7 @@ validated-provider: Process() in Sources/ProctorAgent/Session/SessionIOSProcess.
 ---
 # Run Maestro flows as Proctor flows
 
-**Read `00-WAVE-7-DIRECTION.md` first.**
+**Read `docs/features-to-triage/00-WAVE-7-DIRECTION.md` first.**
 
 ## The problem
 

@@ -37,7 +37,7 @@ question.
   version baked by the release workflow and absent from a local build gives every
   developer machine a null, which is the state we are in now wearing a different
   hat.
-- **Do not break the release pipeline.** `release.yml` extracts the CHANGELOG
+- **Do not break the release pipeline.** `.github/workflows/release.yml` extracts the CHANGELOG
   section matching the tagged version. Anything here that touches how a version
   is named has to keep that match working.
 - **PRO-0027's inode+size check should be reconsidered, not automatically
@@ -47,5 +47,5 @@ question.
 
 ## Worth knowing
 
-`docs/specs/spec-PRO-0027.md` and `spec-PRO-0028.md` both record this as child
+`docs/specs/spec-PRO-0027.md` and `docs/specs/spec-PRO-0028.md` both record this as child
 work, from the staleness side and the `agentVersion` side respectively.

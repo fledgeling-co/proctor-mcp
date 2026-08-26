@@ -48,7 +48,7 @@ a number moved because the instrument changed, not because the project did.
 ## What this asks for
 
 1. A **per-file disposition** for all thirty-five: published into the manifest with the subject it
-   shows, or given an `unpublishedReason` on its `captures.json` entry.
+   shows, or given an `unpublishedReason` on its `docs/test-campaign/evidence/shots/captures.json` entry.
 2. **Deletion is not the default**, even though the tool offers it. Discarding evidence to clear a gate
    is the move this campaign refuses, and a surface capture from wave 9 that nobody published is
    evidence somebody meant to keep.

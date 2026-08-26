@@ -75,7 +75,7 @@ says so: `NSHostingView` subtrees walk as ordinary `NSView`s, and there is no su
 read a resolved SwiftUI modifier value from outside the framework. What the harness settles
 fully is identifiers, roles, geometry and pixels; layer-level style is settled only where
 SwiftUI materialises it into a `CALayer`, and anything else is reported
-`inconclusive(.notMaterialisedInLayer)` rather than as agreement. `spec-PRO-0065.md` carries
+`inconclusive(.notMaterialisedInLayer)` rather than as agreement. `docs/specs/spec-PRO-0065.md` carries
 the full channel table. `reflectorIdle` is unaffected and is still worth the embedding on its
 own.
 

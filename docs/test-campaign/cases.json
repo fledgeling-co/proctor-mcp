@@ -9693,5 +9693,42 @@
       "docs/test-campaign/evidence/PRO-0171/accepted-socket-signal-tests.txt"
     ],
     "note": "PRO-0171. Server.swift asserted in a comment that an accepted descriptor does not inherit SO_NOSIGPIPE from its listener. On Darwin 25.6.0 it does, in all four cells. The cost of the unmeasured comment was not the redundant setsockopt it justified \u2014 it was that an audit reading the tree against it counted three defective servers where there was one, and the commit correcting them was written before anyone measured. DEF-343."
+  },
+  {
+    "id": "CASE-0829",
+    "req": "REQ-130",
+    "surface": "SURF-024",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "A two-citation fixture in a temp tree: the bare `Transport.swift` is reported with the path that would fix it and the fully-qualified `Sources/ProctorAgent/Server.swift` beside it is not, so the check is reading the citation rather than the line. Both directions in one arm.",
+    "defects": [],
+    "evidence": [
+      "scripts/campaign/path_citation_check.py",
+      "docs/test-campaign/evidence/PRO-0167/path-citations.txt",
+      "docs/test-campaign/evidence/PRO-0167/citations.json"
+    ],
+    "note": "PRO-0167. An out-of-family audit reported thirty cited paths as existing nowhere, over files that all exist \u2014 every one a bare filename. 1,901 citations examined, 1,428 resolve, and the 473 that do not are split four ways rather than counted together: 347 sit in docs/specs and docs/feature-specs where another tool reads the citation FORM, 78 name several real files, 48 name none, 0 are mechanically fixable. The --fix run that expanded them everywhere took spec_citation_measure from 19/19 to 16/19, which is what FIXED_FORM records \u2014 UNCLAIMED-BRIEFS.md had already measured the same result from an out-of-family review and the fixer did it anyway."
+  },
+  {
+    "id": "CASE-0830",
+    "req": "REQ-046",
+    "surface": "SURF-029",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Two arms on a copied registry: an undefined status word takes the gate red and the refusal names it, and a `fixed` row whose note says half of it is RECORDED rather than fixed takes it red too.",
+    "defects": [
+      "DEF-221"
+    ],
+    "evidence": [
+      "scripts/campaign/defect_status_gate.py",
+      "docs/test-campaign/evidence/PRO-0172/defect-status.txt"
+    ],
+    "note": "PRO-0172. reckon decides the owing set from a defect's status word, so a wrong word removes a piece of work from the only report that counts it. DEF-221 read `fixed` while its own note closed its second arm with \"RECORDED rather than fixed\". The gate caught two more rows on first use and both were false positives \u2014 DEF-202 quotes reckon's reasoning, DEF-219 attributes the remainder to another row \u2014 so each carries a recorded per-row waiver rather than the phrase being deleted. Deleting \"still broken\" would clear both runs and let the next row that genuinely is still broken through unflagged, which is tuning toward zero."
   }
 ]

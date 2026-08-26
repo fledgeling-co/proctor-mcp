@@ -13,12 +13,12 @@ status: triaged
 
 ## What and why
 DEF-338 established that a write to a peer that had gone raised SIGPIPE and terminated the
-process at exit 141, and it was fixed by setting `SO_NOSIGPIPE`. `Server.swift` justified the
+process at exit 141, and it was fixed by setting `SO_NOSIGPIPE`. `Sources/ProctorAgent/Server.swift` justified the
 fix with a comment asserting that an accepted descriptor does not inherit the option from its
 listener. Nobody had measured that, and on Darwin 25.6.0 it is the reverse: an accepted
 descriptor inherits the option on `AF_UNIX` and `AF_INET` alike, and inherits its absence too.
 
-Two things follow. `ProctorShim/RemoteServer.swift` suppressed on neither its listener nor the
+Two things follow. `Sources/ProctorShim/RemoteServer.swift` suppressed on neither its listener nor the
 descriptor it accepted, and writes the HTTP reply down that descriptor, so a model on another
 machine whose connection dies mid-reply terminated proctor-shim by signal. And an audit reading
 the tree against the false comment counted three defective servers where there was one, because
@@ -28,7 +28,7 @@ The work is the fix, the measurement that settles the rule, and a census that ma
 applied in one of four places visible — because that gap passed every gate in the repository.
 
 ## Acceptance sketch
-- `ProctorShim/RemoteServer.swift` suppresses on both its listener and the descriptor it accepts
+- `Sources/ProctorShim/RemoteServer.swift` suppresses on both its listener and the descriptor it accepts
 - The inheritance rule is measured across four cells — two families by suppressed and bare — and
   the comment that asserted the opposite is corrected to what was measured
 - A probe writes into a hung-up peer in a child process and the child's ending is the result:

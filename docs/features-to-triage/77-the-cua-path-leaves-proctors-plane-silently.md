@@ -36,8 +36,8 @@ the work; it was assumed once in drafting this brief and did not survive a check
 > another process, so nothing could have armed them. Saying so is the only honest thing left.
 
 **Nothing on the cua path reaches the pointer overlay.** A grep for `PointerOverlay`,
-`pointerMarker` or `drawnPointer` across `Sources/ProctorAgent/Actuation/` and `SessionAct.swift`
-returns **zero** matches. `CursorOverlay.swift` carries the covered-target rule wave 9 built — the
+`pointerMarker` or `drawnPointer` across `Sources/ProctorAgent/Actuation/` and `Sources/ProctorAgent/Session/SessionAct.swift`
+returns **zero** matches. `Sources/ProctorAgent/Overlay/CursorOverlay.swift` carries the covered-target rule wave 9 built — the
 `.hidden` case at line 273, *"over a target fully covered by another app"* — and the cua path never
 consults it, because there is no Proctor-drawn pointer on that path to hide.
 

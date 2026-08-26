@@ -1,0 +1,38 @@
+{
+  "examined": 173,
+  "counts": {
+    "fixed": 168,
+    "closed": 1,
+    "partially-fixed": 2,
+    "open": 2
+  },
+  "unknown": [],
+  "remainders": [],
+  "waived": [
+    {
+      "id": "DEF-202",
+      "status": "fixed",
+      "phrases": [
+        "still broken"
+      ],
+      "title": "An unrecognised status word decides the headline, and it can fail in either direction",
+      "why": "The phrase \"still broken\" appears inside a quotation of reckon's reasoning about a status word list \u2014 \"a half still broken owes a reproduction for that half\" \u2014 and describes what partially-fixed means, not an unrepaired arm of this defect. This row's own subject, the word list, was corrected."
+    },
+    {
+      "id": "DEF-219",
+      "status": "fixed",
+      "phrases": [
+        "RECORDED rather than fixed"
+      ],
+      "title": "Three files named for the takeover shield contain no image at all",
+      "why": "\"RECORDED rather than fixed\" here attaches to the UNDERLYING capture-channel fault, which belongs to CASE-0059, not to this row. This row's subject was three files claiming the takeover shield with nothing declaring them, and the note says \"Now declared\"."
+    }
+  ],
+  "phrasesSearched": 7,
+  "vocabulary": {
+    "open": "measured and still failing \u2014 stays in the owing set",
+    "fixed": "measured, repaired, and a case watches the repair \u2014 leaves the owing set",
+    "partially-fixed": "one arm repaired and another recorded \u2014 stays in the owing set",
+    "closed": "ended without a repair, because the subject went away \u2014 leaves the owing set"
+  }
+}

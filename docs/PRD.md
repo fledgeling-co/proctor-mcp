@@ -1283,7 +1283,7 @@ block:
 section or with a signing identifier that is not the app's.
 
 `CHANGELOG.md` follows Keep a Changelog and SemVer, and its heading format is load-bearing:
-`release.yml` extracts the section matching the tagged version, so a heading it cannot match ships
+`.github/workflows/release.yml` extracts the section matching the tagged version, so a heading it cannot match ships
 empty release notes. Entry prose goes through the `create-luke-content` skill in the `marketing`
 format rather than being written by hand.
 
@@ -1316,8 +1316,8 @@ campaign state is an unreachable oracle rather than a pass proved against a desi
 transparent frame. Measured: window-scoped capture of the shield returned `SCFrameStatus=complete`
 frames that were 100% transparent.
 
-`docs/test-campaign/ledger.md` and `REPORT.md` still describe the pre-fix run (23 pass, 3 fail) and
-are stale against `cases.json` and `strict-ratchet.json`, which record the three resolutions dated
+`docs/test-campaign/ledger.md` and `docs/test-campaign/REPORT.md` still describe the pre-fix run (23 pass, 3 fail) and
+are stale against `docs/test-campaign/cases.json` and `docs/test-campaign/strict-ratchet.json`, which record the three resolutions dated
 2026-08-19. Regenerate both before quoting them.
 
 ---

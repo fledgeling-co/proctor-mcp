@@ -17,7 +17,7 @@ validated-provider: CGEventTap in Sources/ProctorAgent/Session/ContentionMonitor
 
 # `TakeoverWiringTests` reddens the gate at random, and `swift test` exits 0 when it does
 
-**Read `00-WAVE-7-DIRECTION.md` first.** This is a gate-reliability item, not a feature.
+**Read `docs/features-to-triage/00-WAVE-7-DIRECTION.md` first.** This is a gate-reliability item, not a feature.
 Sequence it early in whatever stage has room: every other item in the wave is gated by
 the suite this defect makes untrustworthy.
 

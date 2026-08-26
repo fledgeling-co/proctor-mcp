@@ -79,7 +79,7 @@ about what to do first, so sequence this with PRO-0086 or hand it to the same ru
 
 ## The conversion contract
 
-- All four files' user-facing literals moved to a Core type, `status_literals.py` reporting
+- All four files' user-facing literals moved to a Core type, `scripts/campaign/status_literals.py` reporting
   `display 0` on each, run as evidence rather than described.
 - The duplicated copy resolved to one source, with a test that the *rendered* surface — not the
   constant — carries the sentence.

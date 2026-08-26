@@ -7,7 +7,7 @@ validated-provider: none
 ---
 # Decide what happens to the native planes
 
-**Read `00-WAVE-7-DIRECTION.md` first.** Do not start this before brief 45 has merged.
+**Read `docs/features-to-triage/00-WAVE-7-DIRECTION.md` first.** Do not start this before brief 45 has merged.
 
 ## The problem
 

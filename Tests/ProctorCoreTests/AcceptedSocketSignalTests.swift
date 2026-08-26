@@ -198,6 +198,8 @@ struct AcceptedSocketSignalTests {
         // claim asserted is the one that matters: an error return, not a signal.
         #expect(run.output.contains("EPIPE on write") || run.output.contains("ECONNRESET on write"),
                 Comment(rawValue: "the write should fail with an errno rather than a signal: \(run.output)"))
+        #expect(run.output.contains("writes errored"),
+                Comment(rawValue: "and the probe should say how many of its writes errored, so a run where none did is not read as a pass: \(run.output)"))
     }
 
     @Test("Every descriptor Sources/ produces suppresses the signal — the census that would have caught DEF-342")

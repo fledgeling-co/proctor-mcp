@@ -1,7 +1,7 @@
 # Spec PRO-0172 — A Defect's Status Word Means One Thing
 
 **Brief:** `docs/features-to-triage/164-a-defect-status-word-means-one-thing.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-26
 **Surfaces:** SURF-029
 **Defects:** DEF-221

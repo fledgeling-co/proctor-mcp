@@ -37,7 +37,7 @@ Twelve requirements are named by the gate. Eight of them need a display server a
 |---|---|---|
 | REQ-017 | `subprocess` | `Process()` in `Sources/ProctorAgent/Guest/GuestProvider.swift` — lume/prlctl/tart argv built and executed |
 | REQ-020 | `subprocess` | `Process()` in `Sources/ProctorAgent/Session/SessionIOSProcess.swift` — simctl and maestro |
-| REQ-015 | `filesystem-write` | `data.write(to:options:.atomic)` in `Sources/ProctorAgent/Session/PolicyStore.swift`; key material in `Session/AuditKeyStore.swift` |
+| REQ-015 | `filesystem-write` | `data.write(to:options:.atomic)` in `Sources/ProctorAgent/Session/PolicyStore.swift`; key material in `Sources/ProctorAgent/Session/AuditKeyStore.swift` |
 | REQ-009 | `ipc` | `Darwin.bind/listen/accept` in `Sources/ProctorAgent/Server.swift`; `Darwin.connect` in `Sources/ProctorCore/Transport.swift` |
 
 ## What a witness owes
@@ -60,7 +60,7 @@ listener logging its accepts. No kernel, no privilege, and none of them can pass
 
 ## The four witnesses
 
-**REQ-017, guest routing.** `GuestProvider.swift` already has the seam. Each of the three
+**REQ-017, guest routing.** `Sources/ProctorAgent/Guest/GuestProvider.swift` already has the seam. Each of the three
 adapters carries `init(executable:timeoutMs:run:)` beside a `convenience init(executable:timeoutMs:)`
 that binds `run` to `Self.liveRun`, and `liveRun` goes through `Session.runBounded` to a real
 `Process()`. Take the convenience initialiser — the production path — and point `executable` at
@@ -69,7 +69,7 @@ rather than by calling `invoke` directly, so part 1 holds. The recorder is the s
 pid it names; the count is the number of sentinels. Sabotage: point `executable` at a path that
 does not exist, and the count goes to zero while the call still returns a `GuestProcessResult`.
 
-**REQ-020, iOS simulator driving.** `SessionIOSProcess.swift` has the same shape at the simctl
+**REQ-020, iOS simulator driving.** `Sources/ProctorAgent/Session/SessionIOSProcess.swift` has the same shape at the simctl
 and maestro call sites. Same witness, same sabotage. Keep it separate from REQ-017's rather than
 sharing one case: they are different providers and a single case covering both would let one
 provider's silence hide behind the other's noise.
@@ -80,8 +80,8 @@ that is the code under test confirming itself. The recorder is the file's size a
 and after plus its decrypted chain; the count is the number of appended records. Sabotage: point
 the store at a read-only directory and the count stays at zero.
 
-**REQ-009, the agent socket.** Bind a real `AF_UNIX` socket through `Server.swift`, connect to it
-through `Transport.swift`, and let the server's accept path log what it accepted. The recorder is
+**REQ-009, the agent socket.** Bind a real `AF_UNIX` socket through `Sources/ProctorAgent/Server.swift`, connect to it
+through `Sources/ProctorCore/Transport.swift`, and let the server's accept path log what it accepted. The recorder is
 the accept log, which is the server rather than the client; the count is accepts. Sabotage: unlink
 the socket path between bind and connect.
 

@@ -1,7 +1,7 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** **Wave 29 open on `main`.** 172 rows: 159 Merged, 2 Retired, **11 outstanding**. PRO-0159, PRO-0163 and PRO-0171 landed this wave; PRO-0160, 0161, 0162, 0164, PRO-0165..0170 and PRO-0172 remain. Waves 9 through 28 are closed.
-**Open, and named rather than smoothed:** PRO-0161 is **not** complete — the routing covers 36 of the 43 sub-effect-rung entries and 7 need a person, so it stays `Ready for AI` and the figure it declared (`warrant.surface-conformance` 84.0 → 100) has not moved. `figure_ledger.py` enforces that.
+**Status:** **Wave 29 open on `main`.** 172 rows: 161 Merged, 2 Retired, **9 outstanding**. PRO-0159, 0163, 0167, 0171 and 0172 landed this wave; PRO-0160, 0161, 0162, 0164, PRO-0165, 0166, 0168, 0169 and 0170 remain. Waves 9 through 28 are closed.
+**Open, and named rather than smoothed:** PRO-0161 is **not** complete — the routing covers 36 of the 43 sub-effect-rung entries and 7 need a person, so it stays `Ready for AI` and the figure it declared (`warrant.surface-conformance` 84.0 → 100) has not moved. `scripts/campaign/figure_ledger.py` enforces that.
 **Reconciliation (the exit condition, not the ledger):** reckon holds 1017 rows · broken 5 · unmeasured 2 · **undecided 12** · verified-done 845. Two of the five broken are `partially-fixed` rows owing a reproduction for their remaining half; the other three are DEF-340's recorded lane gap, DEF-341's reproduction that no longer reproduces, and DEF-342 which this wave fixed.
 **Updated:** 2026-08-26 — Wave 29 in flight. Gate: 2,179 tests in 276 suites; fifteen standing gates green; strict 440 of 502 (88%).
 
@@ -19,7 +19,7 @@ the ledger below against reality (`docs/feature-specs/LEDGER.md`, `docs/specs/*`
   `effort:'high'`, `agentType:'claude'`) that invoke the ship-feature skill and **STOP BEFORE MERGE**;
   the orchestrator serializes all finalization (rebase → gate → merge → worktree cleanup) one branch at a time.
 - **`main` is the integration branch and is AHEAD of `origin`. "Merge" means merge to local `main`; NEVER push.**
-- Serial-only shared writes: `LEDGER.md` (id allocation, done), this file (orchestrator is sole writer),
+- Serial-only shared writes: `docs/feature-specs/LEDGER.md` (id allocation, done), this file (orchestrator is sole writer),
   the `Sources/` tool catalogue (all items touch it → serialize at merge), integration-branch merges.
 
 ### Swift adaptation (this repo is NOT a Diolog web app)
@@ -74,12 +74,12 @@ the function returned. These four items are that finding, split by what each nee
 
 | ID | Brief | Depends on | Lane | Slot |
 |----|-------|-----------|------|------|
-| PRO-0077 | `70-effect-witnesses-off-glass.md` | — | headless, `./scripts/test.sh` | 11a |
-| PRO-0078 | `71-effect-witnesses-on-glass.md` | — | `macos-glass`, needs this machine's display + TCC grants | 11a |
-| PRO-0079 | `72-tests-that-mutate-and-never-read-back.md` | — | headless | 11a |
-| PRO-0080 | `73-gates-nobody-has-watched-fail.md` | PRO-0077, PRO-0079 | headless + long mutation run | 11b |
-| PRO-0081 | `74-the-carried-acceptance-clauses.md` | — (reads PRO-0067's harness, already merged) | headless + `macos-glass` for A3 | 11b |
-| PRO-0082 | `75-what-the-status-window-still-owes.md` | PRO-0081 for its two new sections | this machine, live permission revocation | 11b |
+| PRO-0077 | `docs/features-to-triage/70-effect-witnesses-off-glass.md` | — | headless, `./scripts/test.sh` | 11a |
+| PRO-0078 | `docs/features-to-triage/71-effect-witnesses-on-glass.md` | — | `macos-glass`, needs this machine's display + TCC grants | 11a |
+| PRO-0079 | `docs/features-to-triage/72-tests-that-mutate-and-never-read-back.md` | — | headless | 11a |
+| PRO-0080 | `docs/features-to-triage/73-gates-nobody-has-watched-fail.md` | PRO-0077, PRO-0079 | headless + long mutation run | 11b |
+| PRO-0081 | `docs/features-to-triage/74-the-carried-acceptance-clauses.md` | — (reads PRO-0067's harness, already merged) | headless + `macos-glass` for A3 | 11b |
+| PRO-0082 | `docs/features-to-triage/75-what-the-status-window-still-owes.md` | PRO-0081 for its two new sections | this machine, live permission revocation | 11b |
 
 **Wave 11b was widened 2026-08-21 after a carried-clause sweep.** The census items (`70`-`73`)
 were not the whole open set. Two acceptance clauses merged carried rather than green and were
@@ -108,8 +108,8 @@ dependencies have MERGED, not merely finished.
 
 **Three things came back that change the plan, and two of them are mine to fix before any merge.**
 
-**1 — The defect registry has a collision, and it was already drifting.** `inventory.json` holds
-19 defect records ending at DEF-019; `REPORT.md`'s table holds 23, because wave 10's four
+**1 — The defect registry has a collision, and it was already drifting.** `docs/test-campaign/inventory.json` holds
+19 defect records ending at DEF-019; `docs/test-campaign/REPORT.md`'s table holds 23, because wave 10's four
 (`lume --json`, the duplicated guest-action list, `Bundle.module`, the relayed `machine`) were
 written to the report and never to the inventory. PRO-0078 read the inventory, correctly took the
 next free id, and appended five new defects as DEF-020..024 — which collide with four different
@@ -144,15 +144,15 @@ dedicated `Thread`; any async trail-touching test needs the same shape.
 PRO-0080 waits on both: `--seed-strengthen` needs REQ-017's witness to check against, and the
 blind pass's gating value depends on the false-positive rate PRO-0079 measures.
 
-**Shared registries this wave.** `docs/test-campaign/campaign.json` and `inventory.json` are
+**Shared registries this wave.** `docs/test-campaign/campaign.json` and `docs/test-campaign/inventory.json` are
 written by three of the four items. They are read-modify-write on a shared file, exactly like
-`LEDGER.md`: a runner appends only its own case and requirement rows and never reformats the
+`docs/feature-specs/LEDGER.md`: a runner appends only its own case and requirement rows and never reformats the
 file, and the orchestrator reconciles at merge, one branch at a time.
 
 **Machine constraints carried into every runner prompt.**
 - `./scripts/test.sh` owns the verdict. A bare `swift test` exits 1 while reporting all tests
   passing, because the pipe eats the exit code.
-- Nothing edits the tree while `mutate_swift.py` runs; it compiles the whole package per mutant
+- Nothing edits the tree while `scripts/campaign/mutate_swift.py` runs; it compiles the whole package per mutant
   from the working directory.
 - `proctor-guest` and `anvil-mac-node` are both stopped and neither is to be deleted.
 - Foreground `sleep` is killed by the harness; long waits background or use `/bin/sleep`.
@@ -207,13 +207,13 @@ and the orchestrator serialises every merge — so the fleet runs in three stage
 
 | ID | Title | Spec | Depends on | Mock / design | Stage | Status |
 |----|-------|------|------------|---------------|-------|--------|
-| PRO-0014 | Step descriptions, derived not supplied | `spec-PRO-0014.md` | — | — | 1 | **MERGED** `061ca0a` · `StepDescription.swift` in Core, +33 tests |
-| PRO-0011 | Pointer marker in stability artifacts | `spec-PRO-0011.md` | — | — | 1 | **MERGED** `a8d9a7a` · `captureEach`/`pointerMarks` on stability, +19 tests |
-| PRO-0012 | Re-gate flow replay + stability (security) | `spec-PRO-0012.md` | — | — | 1 | **MERGED** `d9ae7fd` · `ReplayGate` + new `ProctorAgentTests` target, +23 tests |
-| PRO-0013 | Audit-log encryption at rest (security) | `spec-PRO-0013.md` | — | — | 1 | **MERGED** `62cd969` · `AuditSeal` + `AuditKeyStore`, +10 tests |
-| PRO-0015 | Run HUD panel | `spec-PRO-0015.md` | PRO-0014 ✓ | `mocks/run-hud.html` (binding) | 2 | **MERGED** `9f497b4` · panel + run controls, +57 tests. Agent now runs `NSApplication.shared.run()` |
-| PRO-0016 | Multi-session queue | `spec-PRO-0016.md` | PRO-0015 ✓ | `docs/design/run-hud-queue.md` | 3 | **MERGED** `aad4f2d` · three lanes + a keeper outside the actor, +43 tests |
-| PRO-0017 | HUD character assets | `spec-PRO-0017.md` | PRO-0015 ✓ | `docs/design/run-hud-character.md` | 3 | **MERGED** `4f2fc60` · seven states @1x/2x/3x, hosted layer, +23 tests |
+| PRO-0014 | Step descriptions, derived not supplied | `docs/specs/spec-PRO-0014.md` | — | — | 1 | **MERGED** `061ca0a` · `Sources/ProctorCore/StepDescription.swift` in Core, +33 tests |
+| PRO-0011 | Pointer marker in stability artifacts | `docs/specs/spec-PRO-0011.md` | — | — | 1 | **MERGED** `a8d9a7a` · `captureEach`/`pointerMarks` on stability, +19 tests |
+| PRO-0012 | Re-gate flow replay + stability (security) | `docs/specs/spec-PRO-0012.md` | — | — | 1 | **MERGED** `d9ae7fd` · `ReplayGate` + new `ProctorAgentTests` target, +23 tests |
+| PRO-0013 | Audit-log encryption at rest (security) | `docs/specs/spec-PRO-0013.md` | — | — | 1 | **MERGED** `62cd969` · `AuditSeal` + `AuditKeyStore`, +10 tests |
+| PRO-0015 | Run HUD panel | `docs/specs/spec-PRO-0015.md` | PRO-0014 ✓ | `mocks/run-hud.html` (binding) | 2 | **MERGED** `9f497b4` · panel + run controls, +57 tests. Agent now runs `NSApplication.shared.run()` |
+| PRO-0016 | Multi-session queue | `docs/specs/spec-PRO-0016.md` | PRO-0015 ✓ | `docs/design/run-hud-queue.md` | 3 | **MERGED** `aad4f2d` · three lanes + a keeper outside the actor, +43 tests |
+| PRO-0017 | HUD character assets | `docs/specs/spec-PRO-0017.md` | PRO-0015 ✓ | `docs/design/run-hud-character.md` | 3 | **MERGED** `4f2fc60` · seven states @1x/2x/3x, hosted layer, +23 tests |
 
 **Two things PRO-0015 settled that later work must not re-litigate.** The agent's run
 loop is now `NSApplication.shared.run()`, because a bare `CFRunLoopRun()` spins the same
@@ -255,7 +255,7 @@ because a HUD drawing fault was killing the agent mid-session and the reader cho
 before the fleet.
 
 ### Pre-triage adaptation, and why it is still safe
-Phase 4 exists because `LEDGER.md` id allocation is a read-modify-write and concurrent runners
+Phase 4 exists because `docs/feature-specs/LEDGER.md` id allocation is a read-modify-write and concurrent runners
 corrupt it. **The orchestrator has allocated all four ids serially, by hand, up front**, so no
 runner allocates anything; each triages its own brief into `docs/specs/spec-<ID>.md` against an
 id that is already fixed. The invariant Phase 4 protects is held. A runner that needs a *child*
@@ -263,11 +263,11 @@ spec still takes the ledger lock.
 
 | ID | Title | Brief | Depends on | Stage | Status |
 |----|-------|-------|------------|-------|--------|
-| PRO-0021 | Menu bar switch for the panel, and the icon as the character | `22-menu-bar-switch-and-character.md` | — | 1 | **MERGED** `58b3ce4` |
-| PRO-0019 | A foreground-only run is obvious before it takes the machine | `20-foreground-run-is-obvious.md` | — | 1 | **MERGED** `619bb30` |
-| PRO-0020 | Route browser work to Obscura | `21-route-browser-work-to-obscura.md` | — | 1 | **MERGED** `3a3bb5f` |
-| PRO-0018 | Yield when a person takes the machine back | `19-yield-when-a-person-takes-the-machine.md` | PRO-0019 ✓ | 2 | **MERGED** `435e1da` · +42 tests |
-| PRO-0022 | A drawing fault must not kill the agent | `23-drawing-fault-must-not-kill-the-agent.md` | — | — | **MERGED** `b4a29e5` |
+| PRO-0021 | Menu bar switch for the panel, and the icon as the character | `docs/features-to-triage/22-menu-bar-switch-and-character.md` | — | 1 | **MERGED** `58b3ce4` |
+| PRO-0019 | A foreground-only run is obvious before it takes the machine | `docs/features-to-triage/20-foreground-run-is-obvious.md` | — | 1 | **MERGED** `619bb30` |
+| PRO-0020 | Route browser work to Obscura | `docs/features-to-triage/21-route-browser-work-to-obscura.md` | — | 1 | **MERGED** `3a3bb5f` |
+| PRO-0018 | Yield when a person takes the machine back | `docs/features-to-triage/19-yield-when-a-person-takes-the-machine.md` | PRO-0019 ✓ | 2 | **MERGED** `435e1da` · +42 tests |
+| PRO-0022 | A drawing fault must not kill the agent | `docs/features-to-triage/23-drawing-fault-must-not-kill-the-agent.md` | — | — | **MERGED** `b4a29e5` |
 
 **Why PRO-0018 waits on PRO-0019.** Both answer "is this batch going to take the foreground";
 0019 computes and discloses it, 0018 acts on it. Building them concurrently means two answers to
@@ -287,12 +287,12 @@ orchestrator serialises every merge to local `main` and never pushes.
 
 | ID | Title | Brief | Depends on | Stage | Status |
 |----|-------|-------|------------|-------|--------|
-| PRO-0025 | Prefer the background, pointer in the target's plane | `26-prefer-background-and-pointer-in-plane.md` | — | 1 | **MERGED** `84062fa` |
-| PRO-0023 | Offer to install Obscura when it is missing | `24-offer-to-install-obscura.md` | — | 1 | **MERGED** `f77df6c` |
-| PRO-0027 | The menu bar shows the character when idle | `28-menu-bar-character-when-idle.md` | — | 1 | **MERGED** `c94799b` |
-| PRO-0024 | A second browser lane for Obscura's limits | `25-second-browser-lane-for-obscuras-limits.md` | PRO-0023 ✓ | 2 | **MERGED** `4afc99c` |
-| PRO-0026 | Foreground takeover overlay | `27-foreground-takeover-overlay.md` | PRO-0025 ✓ | 2 | **MERGED** `f198936` |
-| PRO-0028 | Re-check now says what it checks | `29-re-check-now-says-what-it-checks.md` | PRO-0027 ✓ | 2 | **MERGED** `6f696c6` |
+| PRO-0025 | Prefer the background, pointer in the target's plane | `docs/features-to-triage/26-prefer-background-and-pointer-in-plane.md` | — | 1 | **MERGED** `84062fa` |
+| PRO-0023 | Offer to install Obscura when it is missing | `docs/features-to-triage/24-offer-to-install-obscura.md` | — | 1 | **MERGED** `f77df6c` |
+| PRO-0027 | The menu bar shows the character when idle | `docs/features-to-triage/28-menu-bar-character-when-idle.md` | — | 1 | **MERGED** `c94799b` |
+| PRO-0024 | A second browser lane for Obscura's limits | `docs/features-to-triage/25-second-browser-lane-for-obscuras-limits.md` | PRO-0023 ✓ | 2 | **MERGED** `4afc99c` |
+| PRO-0026 | Foreground takeover overlay | `docs/features-to-triage/27-foreground-takeover-overlay.md` | PRO-0025 ✓ | 2 | **MERGED** `f198936` |
+| PRO-0028 | Re-check now says what it checks | `docs/features-to-triage/29-re-check-now-says-what-it-checks.md` | PRO-0027 ✓ | 2 | **MERGED** `6f696c6` |
 
 **Why the stages pair up the way they do.** Each stage-2 item lands in the same files
 as its stage-1 sibling, so sequencing them costs nothing and removes the whole
@@ -334,20 +334,20 @@ logically, but several would collide in the same file if run together.
 
 | Id | Item | Brief | Children folded in | Stage | Status |
 |---|---|---|---|---|---|
-| PRO-0030 | The build says which build it is | `31-the-build-says-which-build-it-is.md` | PRO-0027 staleness · PRO-0028 `agentVersion` | 1 | **MERGED** `65f61c3` |
-| PRO-0032 | The audit trail is signed, and records what Proctor recommended | `33-the-audit-trail-is-signed.md` | PRO-0013 unsigned · PRO-0024 lane recommendation | 1 | **MERGED** `06259b6` |
-| PRO-0033 | A person's click reaches Stop | `34-a-persons-click-reaches-stop.md` | PRO-0018/0019 mouse gate · PRO-0019 plane declared late · PRO-0026 swallowed Stop | 1 | **MERGED** `dc48889` |
-| PRO-0035 | The browser catalogue stops guessing | `36-the-browser-catalogue-stops-guessing.md` | PRO-0024 PWA prefix · `chromiumFamily` drift · prose-only `why` | 1 | **MERGED** `c30b3c9` |
-| PRO-0037 | A hold names whose run it is | `38-a-hold-names-whose-run-it-is.md` | PRO-0018 unattributed hold · PRO-0016 `activate` takes no lane | 1 | **MERGED** `f2221f6` |
-| PRO-0029 | A home for the PROCTOR_* switches | `30-a-home-for-the-proctor-switches.md` | PRO-0026 env-var knob · PRO-0024 `PROCTOR_SECOND_LANE` control | 2 | **CARRIED** → wave 7 stage 3, brief revised |
-| PRO-0031 | The health report is complete | `32-the-health-report-is-complete.md` | PRO-0005/0013 no `policy` block · PRO-0023/0024 `doctor.sh` | 2 | **RETIRED** → absorbed by PRO-0050 |
-| PRO-0034 | Scroll moves by what was asked | `35-scroll-moves-by-what-was-asked.md` | PRO-0025 delta units · page action ordering | 2 | **RETIRED** → the code it fixes is what Cua replaces |
-| PRO-0038 | Stability knows when it is scoring a page | `39-stability-knows-when-it-is-scoring-a-page.md` | PRO-0020 page churn · PRO-0024 unexecuted lane | 2 | **CARRIED** → wave 7 stage 3, brief revised |
-| PRO-0036 | The status window's checks say what they can check | `37-the-status-windows-checks-say-what-they-can-check.md` | PRO-0028 three Re-check buttons · PRO-0023 Shortcuts row heading | 3 | **CARRIED** → wave 7 stage 4, after PRO-0050 |
-| PRO-0039 | Page-scoped refusal | `40-page-scoped-refusal.md` | PRO-0020 refusal rule | 3 | **RETIRED** → its question changed shape underneath it |
-| PRO-0040 | `open -a Proctor` cannot launch Proctor while the agent is running | `41-open-cannot-launch-proctor.md` | found 2026-08-15 during a reinstall, not a child | 3 | **CARRIED** → wave 7 stage 1, RUNNING |
-| PRO-0041 | `proctor_doctor` can hang forever on the Screen Recording probe | `42-doctor-can-hang-on-the-screen-recording-probe.md` | found 2026-08-15 gating PRO-0033, not a child | 3 | **CARRIED** → wave 7 stage 1, **MERGED** `0545219` |
-| PRO-0042 | Backfill: `horizontalAlignment` on `proctor_assert` | `43-backfill-horizontal-alignment-assertion.md` | ratifies the stray commit `2b917ed` | 1 | **MERGED** `8fdddbc` |
+| PRO-0030 | The build says which build it is | `docs/features-to-triage/31-the-build-says-which-build-it-is.md` | PRO-0027 staleness · PRO-0028 `agentVersion` | 1 | **MERGED** `65f61c3` |
+| PRO-0032 | The audit trail is signed, and records what Proctor recommended | `docs/features-to-triage/33-the-audit-trail-is-signed.md` | PRO-0013 unsigned · PRO-0024 lane recommendation | 1 | **MERGED** `06259b6` |
+| PRO-0033 | A person's click reaches Stop | `docs/features-to-triage/34-a-persons-click-reaches-stop.md` | PRO-0018/0019 mouse gate · PRO-0019 plane declared late · PRO-0026 swallowed Stop | 1 | **MERGED** `dc48889` |
+| PRO-0035 | The browser catalogue stops guessing | `docs/features-to-triage/36-the-browser-catalogue-stops-guessing.md` | PRO-0024 PWA prefix · `chromiumFamily` drift · prose-only `why` | 1 | **MERGED** `c30b3c9` |
+| PRO-0037 | A hold names whose run it is | `docs/features-to-triage/38-a-hold-names-whose-run-it-is.md` | PRO-0018 unattributed hold · PRO-0016 `activate` takes no lane | 1 | **MERGED** `f2221f6` |
+| PRO-0029 | A home for the PROCTOR_* switches | `docs/features-to-triage/30-a-home-for-the-proctor-switches.md` | PRO-0026 env-var knob · PRO-0024 `PROCTOR_SECOND_LANE` control | 2 | **CARRIED** → wave 7 stage 3, brief revised |
+| PRO-0031 | The health report is complete | `docs/features-to-triage/32-the-health-report-is-complete.md` | PRO-0005/0013 no `policy` block · PRO-0023/0024 `scripts/doctor.sh` | 2 | **RETIRED** → absorbed by PRO-0050 |
+| PRO-0034 | Scroll moves by what was asked | `docs/features-to-triage/35-scroll-moves-by-what-was-asked.md` | PRO-0025 delta units · page action ordering | 2 | **RETIRED** → the code it fixes is what Cua replaces |
+| PRO-0038 | Stability knows when it is scoring a page | `docs/features-to-triage/39-stability-knows-when-it-is-scoring-a-page.md` | PRO-0020 page churn · PRO-0024 unexecuted lane | 2 | **CARRIED** → wave 7 stage 3, brief revised |
+| PRO-0036 | The status window's checks say what they can check | `docs/features-to-triage/37-the-status-windows-checks-say-what-they-can-check.md` | PRO-0028 three Re-check buttons · PRO-0023 Shortcuts row heading | 3 | **CARRIED** → wave 7 stage 4, after PRO-0050 |
+| PRO-0039 | Page-scoped refusal | `docs/features-to-triage/40-page-scoped-refusal.md` | PRO-0020 refusal rule | 3 | **RETIRED** → its question changed shape underneath it |
+| PRO-0040 | `open -a Proctor` cannot launch Proctor while the agent is running | `docs/features-to-triage/41-open-cannot-launch-proctor.md` | found 2026-08-15 during a reinstall, not a child | 3 | **CARRIED** → wave 7 stage 1, RUNNING |
+| PRO-0041 | `proctor_doctor` can hang forever on the Screen Recording probe | `docs/features-to-triage/42-doctor-can-hang-on-the-screen-recording-probe.md` | found 2026-08-15 gating PRO-0033, not a child | 3 | **CARRIED** → wave 7 stage 1, **MERGED** `0545219` |
+| PRO-0042 | Backfill: `horizontalAlignment` on `proctor_assert` | `docs/features-to-triage/43-backfill-horizontal-alignment-assertion.md` | ratifies the stray commit `2b917ed` | 1 | **MERGED** `8fdddbc` |
 
 **Two children are not fleet items, because they are questions rather than work.**
 A model told "Obscura is missing" may install it anyway, and Proctor cannot remove
@@ -364,7 +364,7 @@ when its own dependencies have merged, not when its stage-mates finish):
 1. **PRO-0048** (iOS deep links) — no dependency on PRO-0044, and mostly new files, so the
    lowest contention of anything queued. Takes the first free slot.
 2. **PRO-0050** (doctor knows the toolchain) — also independent of PRO-0044. Second, not
-   first, because it reshapes `SessionDoctor.swift`, which PRO-0041 has just rewritten.
+   first, because it reshapes `Sources/ProctorAgent/Session/SessionDoctor.swift`, which PRO-0041 has just rewritten.
 3. **PRO-0045** and **PRO-0046** — held until PRO-0044 **merges**, since both are about what
    delegation costs and neither can be specified against an unmerged seam.
 4. Then PRO-0049 (after PRO-0048), PRO-0051 (after PRO-0044), PRO-0029, PRO-0038.
@@ -493,7 +493,7 @@ None of these blocks its item; each has a defensible default recorded in the spe
 
 ### Preflight, 2026-08-20 — recorded because it changed the plan
 
-- **Providers present:** `lume` (no guests), `prlctl` (one Windows 11 guest, registration `invalid`), `tart` 2.32.1 (two guests: `anvil-mac-node`, darwin, stopped; `anvil-linux-node`, stopped). The `guest` lane reports ready. `GuestProvider.swift`'s header comment claiming no lume binary exists here is **stale**.
+- **Providers present:** `lume` (no guests), `prlctl` (one Windows 11 guest, registration `invalid`), `tart` 2.32.1 (two guests: `anvil-mac-node`, darwin, stopped; `anvil-linux-node`, stopped). The `guest` lane reports ready. `Sources/ProctorAgent/Guest/GuestProvider.swift`'s header comment claiming no lume binary exists here is **stale**.
 - **Consequence:** the spec's two adapters had no live macOS guest, so A1 and A2 would have carried. Put to the reader as a Phase 0 question rather than proceeded past.
 - **Reader's decisions, 2026-08-20:** provision rather than carry, and reuse `anvil-mac-node` rather than download a fresh guest. Spec widened accordingly: `tart` becomes a third adapter on the same seam, A1 is measured live, and A1b is added for the guest-side install. `anvil-mac-node` belongs to another project — driving it is authorised, changing it is not.
 - **Egress:** no `ANTHROPIC-ONLY` / `NO EXTERNAL MODEL CLIS` marker is set for this repo; the only hits are inside `vendor/fledgeling-plugins/`, which are the skill docs describing the markers. The grok reviewer lane recorded above stands.
@@ -530,8 +530,8 @@ Gap-fix closed all six findings. **The orchestrator re-armed rather than taking 
 
 | Mutation | Result |
 |---|---|
-| Delete `Dispatch.swift`'s guest-forwarding funnel | 3 assertions red in `GuestDispatchWiringTests` |
-| Delete `Dispatch.swift`'s `guestPool` report | 2 assertions red in `DoctorReplyWiringTests` |
+| Delete `Sources/ProctorAgent/Dispatch.swift`'s guest-forwarding funnel | 3 assertions red in `GuestDispatchWiringTests` |
+| Delete `Sources/ProctorAgent/Dispatch.swift`'s `guestPool` report | 2 assertions red in `DoctorReplyWiringTests` |
 | Drop `startedByThisAgent` from the release guard (A10) | 2 assertions red — never-evict survives the F5 refactor |
 | Remove the audited boot-timeout stop (A9) | 4 assertions red, including the audit row's outcome and bundle id |
 
@@ -555,7 +555,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
   - **Three routes into the `tart` clone were tried and closed first.** `lume sip off` fails deterministically on macOS 26 (its OCR anchors land on **About Recovery**, not Terminal); the clone's account holds a SecureToken and is a volume owner, so its password cannot be reset without knowing it; and the 19.8 GB prebuilt cua image lands at the delegated tier, which is not what A1 asks for. `anvil-mac-node` and its clone were driven and never changed.
   - **The proof.** One persistent MCP session: attach, activate Calculator inside the guest, actuate five steps, read `4×7` and `28` back through the guest's accessibility tree, detach, confirm no Calculator ran on this Mac. Reproduced twice. The VNC capture of the guest's display shows the same two strings, because a value read back through the socket that wrote it proves routing rather than execution.
   - **The spec's own manual-gate recipe was wrong and failed quietly.** It said to run `proctor guest --action attach` and then a separate CLI call. That launched Calculator **on this Mac**: an attachment is keyed by the peer process on the socket, so a one-shot CLI attaches, exits, and the next invocation is a different peer with no attachment. The spec now names a persistent MCP session as the instrument and says why a CLI cannot be one.
-  - **Four defects, all armed by reverting the fix.** `lume` 0.5.3 rejects `--json` by name, so every listing failed and the provider looked absent. A second copy of the guest-action list in `Dispatch.swift` had drifted and refused `attach` and `detach`, the whole lane; the fix deletes the list rather than extending it. `Bundle.module` traps instead of returning nil when its bundle is not at the `.app` root, which crash-looped the guest agent. And a relayed guest reply carried the host's `machine`, so a guest result could read as a host one. A fifth finding was a suite flake rather than a defect: `SessionHUD.hudStatus()` read a process-wide singleton, roughly one failure in five, now injectable, nine clean full runs since.
+  - **Four defects, all armed by reverting the fix.** `lume` 0.5.3 rejects `--json` by name, so every listing failed and the provider looked absent. A second copy of the guest-action list in `Sources/ProctorAgent/Dispatch.swift` had drifted and refused `attach` and `detach`, the whole lane; the fix deletes the list rather than extending it. `Bundle.module` traps instead of returning nil when its bundle is not at the `.app` root, which crash-looped the guest agent. And a relayed guest reply carried the host's `machine`, so a guest result could read as a host one. A fifth finding was a suite flake rather than a defect: `SessionHUD.hudStatus()` read a process-wide singleton, roughly one failure in five, now injectable, nine clean full runs since.
   - **Gates.** `./scripts/test.sh` 1,814 tests in 214 suites, exit 0. `campaign.py check` exit 0, 58 of 58 cases, 58 of 58 armed. `strict-check.py` 58 of 58, ratchet 57 → 58. `capture-lineage.py --gate` clean, ratchet held at 3. `main` untouched at `c7fbe29`; nothing pushed.
 - 2026-08-20 **Five things reported from real use; three fixed, one specced, one closed by measuring.** The statement strobing, the statement saying `Fake`, the HUD absent while the statement is up, the drawn pointer over a window nobody can see, and macOS guests with a queue.
   - **Strobing.** `takeoverEnd` lowered the statement at the end of every `proctor_act`, and agents send small batches several times a second. `Takeover.Dwell` holds it for three seconds, and a request arriving while it is up extends it rather than raising it again. Testing it found a second defect: a stop while an earlier batch's statement lingered never lowered it, because `takeoverEnd` returned on the `takeoverShown` guard first. Three seconds is the panel's own linger, so the two come down together.
@@ -564,12 +564,12 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
   - **The drawn pointer over a covered window.** The fallback used to float and dim to say the exact ordering was unconfirmed. Over a covered window that is the one picture the pointer exists to avoid, and dimming does not stop it being that picture. It now splits on whether anything covers the target; Proctor's own panels do not count, or the pointer would vanish from every window it annotates.
   - **macOS guests.** Specced rather than built, at the reader's choice. `PRO-0076` covers the attach first and the two slots second, because a queue over slots nothing can use is a queue for nothing. Twelve criteria; three decisions that need a reader are called out, including that A9 revises PRD §9's "Proctor owns no VM lifecycle" and that the queue never evicts.
   - 1,714 tests in 205 suites, green.
-- 2026-08-20 **PRO-0075: the assay widened to all of ProctorCore — 50% survival, and the second unwatched equality.** The four-file number said nothing about the other 99 files, so the run was widened to all 77 of `ProctorCore`, 1,991 sites, with the operator table filled out to eleven on the way: the docstring had been claiming an integer-literal increment the table did not implement, which is a second source inside the tool built to find second sources. 60 selected by a recorded seed, 49 ran, **48 scored: 24 killed, 24 survived, 1 unbuildable — 50%.** Thirteen survivors are integer literals; eleven are logic and three were read. `RunHUDSurface.Chip.==` compared field counts and nothing had ever compared two chips with different counts — the **second** hand-written Equatable this wave found unwatched, the same shape both times because Swift cannot synthesise `==` over an array of tuples. Pinned and armed against the exact mutant. The other two are **equivalent mutants** and are recorded rather than chased: `RunHUDGate.onSegment`'s `<=` is unreachable because `contains` catches every boundary point one step earlier, and `RunHistory`'s `offset <` tiebreak differs from `<=` only for equal offsets, which unique enumeration indices cannot produce. Also **DEF-017**, found by checking a parked assumption against the code: `spec-PRO-0073.md` recorded "support both, stdin JSON as the documented path" and neither half was built, so 8 of 21 verbs could not be given their array or object argument and `proctor act` could not actuate anything. `CLIArguments` fixes it; the first version inferred the stdin read from `isatty` and hung any caller whose stdin is an open pipe nothing writes to, so it is now an explicit `-`. And the runner never checked the suite was green before mutating, which would have reported every mutant killed on a red baseline; it does now, armed by breaking a constant and watching it refuse. 1,683 tests / 201 suites; all four gates green. Open: 21 survivors not yet read, and nothing outside ProctorCore sampled.
+- 2026-08-20 **PRO-0075: the assay widened to all of ProctorCore — 50% survival, and the second unwatched equality.** The four-file number said nothing about the other 99 files, so the run was widened to all 77 of `ProctorCore`, 1,991 sites, with the operator table filled out to eleven on the way: the docstring had been claiming an integer-literal increment the table did not implement, which is a second source inside the tool built to find second sources. 60 selected by a recorded seed, 49 ran, **48 scored: 24 killed, 24 survived, 1 unbuildable — 50%.** Thirteen survivors are integer literals; eleven are logic and three were read. `RunHUDSurface.Chip.==` compared field counts and nothing had ever compared two chips with different counts — the **second** hand-written Equatable this wave found unwatched, the same shape both times because Swift cannot synthesise `==` over an array of tuples. Pinned and armed against the exact mutant. The other two are **equivalent mutants** and are recorded rather than chased: `RunHUDGate.onSegment`'s `<=` is unreachable because `contains` catches every boundary point one step earlier, and `RunHistory`'s `offset <` tiebreak differs from `<=` only for equal offsets, which unique enumeration indices cannot produce. Also **DEF-017**, found by checking a parked assumption against the code: `docs/specs/spec-PRO-0073.md` recorded "support both, stdin JSON as the documented path" and neither half was built, so 8 of 21 verbs could not be given their array or object argument and `proctor act` could not actuate anything. `CLIArguments` fixes it; the first version inferred the stdin read from `isatty` and hung any caller whose stdin is an open pipe nothing writes to, so it is now an explicit `-`. And the runner never checked the suite was green before mutating, which would have reported every mutant killed on a red baseline; it does now, armed by breaking a constant and watching it refuse. 1,683 tests / 201 suites; all four gates green. Open: 21 survivors not yet read, and nothing outside ProctorCore sampled.
 - 2026-08-20 **PRO-0075: mutation survival measured for the first time — 41.7%, then 0%.** `warrant:assay`'s generator reads `.ts .tsx .js .jsx .mjs .cjs .py`, so this package has never had the number; `scripts/campaign/mutate_swift.py` gets it. 24 mutants over `TUISurface`, `CLISurface`, `StatusChecks` and `RunHUDMenuBar`: **14 killed, 10 survived, 0 unbuildable**, and every one of the ten survivors was in `TUISurface.Model`'s hand-written `==`. An `&&`→`||` there makes two models that differ in a field compare equal; a field's `==`→`!=` makes two identical models compare unequal; neither was noticed by 1,666 tests. The operator has no caller in the product today, which is why it survived and why it was worth pinning — the obvious render-loop optimisation is to skip a redraw when the model has not changed, and that turns a blind `==` into a screen that stops updating mid-run. `TUIModelEqualityTests` pins all thirteen fields plus a `Mirror` count floor, so a field added and forgotten fails before anybody has to notice. Re-measured with the same seed and targets: **24 killed, 0 survived.** Both runs kept as evidence. **The runner also put a live mutation in the tree once**: the first re-run was killed by a harness timeout between apply and revert, left two source files mutated with nothing saying so, and an orphaned `swift-test` holding the `.build` lock — reverting per mutant does not cover a process that never reaches the next line. It now registers `atexit` plus SIGTERM/SIGINT before the first mutation and writes its JSON per mutant; armed by killing a run mid-mutant and watching the tree go back to clean. Recorded as DEF-016. Honest bound: 24 of 52 sites in 4 of 103 files, by a recorded seed — 0 of 24 says these four files' comparison logic is watched, not that the suite is sensitive. 1,669 tests / 199 suites.
 - 2026-08-20 **PRO-0075: the live iOS lane run rather than carried, and it was broken two ways.** `MaestroLiveTests` is opt-in behind `PROCTOR_LIVE_MAESTRO` and had not been run since 15 Aug; this machine has Xcode, maestro 2.4.0 and four booted simulators, so it was run. **The product was right about the first fault**: the lane passed `device: nil` and relied on exactly one simulator being booted, so Proctor refused, named all four and asked for one — and the whole live lane went red for a fact about the machine, which is what its opt-in switch exists to prevent. It now reads `PROCTOR_LIVE_MAESTRO_DEVICE`, falls back to the single booted simulator where there is one, and otherwise does not run, because naming a device on the operator's behalf would drive a simulator they may be using. **The second fault only appears when both tests run**: they drive one simulator and concurrently interleave on it, so the determinism check scored its own two repeats as divergent at command 4 — a real divergence caused by the sibling test tapping the device mid-repeat. Alone the repeat test passes in 27s; as a suite it failed after 317s. Suite is `.serialized`; measured 20 Aug against a booted iPhone 16 Pro on iOS 18.2, both pass, 55.6s and 55.0s, green twice. Recorded as DEF-015 with the serialised log as evidence on CASE-0022. Also DEF-014's sixth pattern, added after the first five and the worst of them: `(try? read()) ?? ""` binds an unreadable input to an empty one, and both instances were in the audit trail's own tests asserting what is ABSENT — a redacted address nowhere in the file, and a rotation leaving no sidecar — each passing just as happily with no file and no listing to look in. 1,666 tests / 198 suites; scan clean at 0 of 1,653.
 - 2026-08-20 **PRO-0075: the suite's fault sensitivity measured as far as the tooling allows, and one assertion that could not fail.** "Mutation survival not measured" read as effort not spent; it is not. `warrant:assay`'s mutation generator defaults to `.ts .tsx .js .jsx .mjs .cjs .py` and its cannot-fail scanner reads the same set, so neither can read a Swift suite. The cheaper half was implemented instead — `scripts/campaign/cannotfail_swift.py`, five patterns that pass a Swift suite while testing nothing — and it returned seven findings over 103 files, 1,653 `@Test` functions and 5,017 assertion calls. One was real: `BuildInfoTests` compared a stored property to itself inside the test whose claim is that the captured value does not move when the file underneath it is replaced, so it would have passed on a build where `builtAt` re-read the path. Three asserted only by not throwing and now say `#expect(throws: Never.self)`; two were the scan's own false positives on a same-file assert helper. **Arming the scan found a defect in the scan**: a one-line body balances its braces on the signature line, so the line-based finder skipped it and then consumed the next function's body — rewritten to match braces by character, which raised the denominator from 1,648 to 1,653, five tests it had never counted. Re-armed with four seeded defects across both shapes, all four caught, 0 of 1,653 on the real suite. The manifest audit that followed also closed two gaps: SURF-006 carried no build at all, and no row said which source draws it or when that source last moved — the question that the stale SURF-008 capture turned on. Mutation survival proper stays unmeasured with its reason named; the armed ratio of 43/43 is the hand-run equivalent over the campaign's own assertions and says nothing about the other 5,017. 1,666 tests / 198 suites; all three gates green, ratchets 43 and 3 held.
 - 2026-08-20 **PRO-0075: the design of record moved to the build, and a capture was found showing the wrong binary.** DEF-012 and DEF-013 were five composition differences across the status window and the walkthrough's first slide, and in four of them the build carried more than the design — a title block, a Ready sentence, and a slide leading with two paragraphs and a callout where the design led with three capability chips. Closing any of them deletes explanation from the two screens that ask for Accessibility and Screen Recording, so it went to a person as one `AskUserQuestion` after `/clarify` referred it out of family: fable said the design wins, agy said the build wins, and both independently proposed the shape neither option carried — edit the design and converge, because the A/B framing assumed the mock was immutable. The answer was keep the explanation. `design/surfaces/parts/mac-1.html` now carries the title block, the Ready sentence, the build's first slide, and the fourth grant the design was missing. Re-capturing to check found the more useful fault: the SURF-008 build capture the earlier verdict rested on came from a process launched before the header fix was rebuilt, so it showed letter-spaced capitals while the source drew sentence case — the right window, the right state, the wrong binary, which no manifest field caught. Re-taken from a process started after the rebuild, with the build named in its conditions. SURF-008 and SURF-009 re-judged and both pass; one difference is left rather than closed and named on the verdict, because the design's grant row says what a grant is for and the build's does not. All thirteen defects fixed. 1,666 tests / 198 suites; campaign 43 of 43 armed, strict ratchet 43, lineage ratchet 3 with the seeded swap caught in both directions.
-- 2026-08-20 **PRO-0075: the history pane's premise was wrong, and a referral is what caught it.** DEF-008 was recorded fixed for two of three panes, with history dispositioned unfixable because the trail is sealed, `proctor_history` is absent from `ToolCatalogue`, and therefore no client can read it. Both halves were false. `proctor_history` exists as an internal socket verb behind Proctor's own History window; keeping it off the catalogue keeps a model out of *that surface*, not out of the trail, because `proctor_policy` action `audit` is a catalogue tool that already opens the trail and returns whole records — which `Dispatch.swift` states in its own comment. `TUISurface.history(from:)` now reads that projection, which is strictly narrower than what a model can already ask for, so no path is opened, the sealing is unchanged and no new keychain access is taken. The pane also separates three states one empty frame used to collapse: nothing recorded, a trail this Mac could not open, and a history that opened short with its unreadable count on the shelf. Found by referring the fork out of family rather than by re-reading the campaign; the codex lane was down on a usage limit, fable and agy split on both forks, and grok read `Dispatch.swift` and found the verb. 1,666 tests / 198 suites; campaign 43 of 43, all armed, strict ratchet 42 → 43, lineage ratchet held at 3.
+- 2026-08-20 **PRO-0075: the history pane's premise was wrong, and a referral is what caught it.** DEF-008 was recorded fixed for two of three panes, with history dispositioned unfixable because the trail is sealed, `proctor_history` is absent from `ToolCatalogue`, and therefore no client can read it. Both halves were false. `proctor_history` exists as an internal socket verb behind Proctor's own History window; keeping it off the catalogue keeps a model out of *that surface*, not out of the trail, because `proctor_policy` action `audit` is a catalogue tool that already opens the trail and returns whole records — which `Sources/ProctorAgent/Dispatch.swift` states in its own comment. `TUISurface.history(from:)` now reads that projection, which is strictly narrower than what a model can already ask for, so no path is opened, the sealing is unchanged and no new keychain access is taken. The pane also separates three states one empty frame used to collapse: nothing recorded, a trail this Mac could not open, and a history that opened short with its unreadable count on the shelf. Found by referring the fork out of family rather than by re-reading the campaign; the codex lane was down on a usage limit, fable and agy split on both forks, and grok read `Sources/ProctorAgent/Dispatch.swift` and found the verb. 1,666 tests / 198 suites; campaign 43 of 43, all armed, strict ratchet 42 → 43, lineage ratchet held at 3.
 - 2026-08-20 **PRO-0075: the campaign at 0.8.0 found six defects and settled four carried clauses.** The repo was gating on test-campaign 0.5.0 while the skill had moved to 0.8.0, and the plane it added — proving a published picture depicts what it is filed under — failed on the first run over five captures bound to their surfaces by filename alone. Re-taken with a manifest written at the shutter. Six product fixes, each found by measuring: three commands declared for the menu bar and never rendered, a permissions list missing the one permission whose absence is silent, three TUI panes with no data source, a halt message naming the wrong surface, a pane clipping its fourth row, and a classifier that filtered the new permission out of the window while a drift test defeated by a line break reported no drift. Four clauses that merged carried — PRO-0073 A2, PRO-0074 A4/A5/A6 — were measured against a wave-9 agent run on its own socket, so the operator's installed agent was never replaced. Two design divergences left open on purpose: they are PRO-0066's partial A2 and PRO-0067's carried A3, now measured rather than carried. 1,657 tests / 197 suites; campaign 41 of 42, ratchet 36 → 41, one case declared inconclusive with its resume point.
 - 2026-08-20 **PRO-0074 merged, and wave 9 closes.** Supervision reaches an operator over SSH for the first time, on a Mac with no window server: five panes, pushed frames, and a Stop that writes the same latch the HUD panel does. The renderer reproduces all 22 compiled design frames cell for cell at 100×30 and at the 80×24 floor, and a capture of the running binary matches it at both — both sides measure cells with the same width function, so a difference is a difference in the build. Two defects found by building: the surface called an answering agent absent, and its role ladder did not survive losing colour. 1,647 tests / 193 suites; campaign 36/36, ratchet 32 → 36.
 - 2026-08-20 **PRO-0073 merged.** Proctor is reachable from a shell for the first time: 21 verbs derived from `ToolCatalogue` rather than listed, six exit codes that never confuse a failed check with an unreachable agent, and completion generated from the catalogue. The trail now names which front end called, read from the peer process rather than from the request. Found while building: a product named `proctor` is the same file as `Proctor` on a case-insensitive volume, so `swift build` succeeded and shipped the SwiftUI app under the CLI's name. 1,618 tests / 189 suites.
@@ -689,15 +689,15 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
   **772 insertions, 105 deletions across `SKILL.md` and `references/tools.md`, edited in place
   in `~/Dev/fledgeling-plugins` and left UNCOMMITTED for the reader.**
   - **Six drifts beyond the brief's list**, found by checking every claim against
-    `ToolCatalogue.swift` rather than against the brief: the tool count was 19 (now 20);
+    `Sources/ProctorCore/ToolCatalogue.swift` rather than against the brief: the tool count was 19 (now 20);
     `scripting` was documented as including `policy`, which is `full`-only; the `ax` profile was
     undocumented; "sixteen assertion kinds" is seventeen and `horizontalAlignment` was missing
     from the enum; `snapshot`'s `maxNodes` default is 600, not 2000; and the honesty section
     described a synthetic-plane step as the server falling back, **which is true only for
     `type` and `scroll`** — an outright refusal fails the step, the opposite guarantee.
   - **A correction the runner made against the direction file.** Its first draft said
-    supervision holds intact under delegation, which is what `00-WAVE-7-DIRECTION.md` implies.
-    Reading `spec-PRO-0046.md` instead showed three real regressions, now in the text: an
+    supervision holds intact under delegation, which is what `docs/features-to-triage/00-WAVE-7-DIRECTION.md` implies.
+    Reading `docs/specs/spec-PRO-0046.md` instead showed three real regressions, now in the text: an
     off-Space window is refused on the Cua lane and reachable on the native one; the takeover
     statement goes up *after* an unrequested foreground escalation; and a batch whose driver
     Proctor cannot identify arms no input block, so click-to-Stop is never consulted and the
@@ -766,7 +766,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
   what it did before dying: it ran a rebase that replayed **55 of `main`'s commits onto its own
   stale base** (`dc48889`, from wave 6) rather than moving its branch onto `main`. The branch
   ended up a rewritten copy of the whole wave's history containing **no PRO-0054 commit at
-  all**, and its own edits — `ForegroundWiringTests.swift` had been touched — were destroyed.
+  all**, and its own edits — `Tests/ProctorAgentTests/ForegroundWiringTests.swift` had been touched — were destroyed.
   A content diff against `main` was pure deletion, so nothing was recoverable and there was
   nothing to resume. Branch and worktree removed, item re-run from scratch.
   - **`main` was never at risk**, because every merge in this wave was `--ff-only` and the
@@ -817,7 +817,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
     source and the control never locks for the two capability switches**, because an env var
     could arm the keyboard-swallowing tap and the lock rule then disabled the only control
     that could turn it off.
-  - **Nothing writes the launchd plist.** `install.sh` rewrites it wholesale with no
+  - **Nothing writes the launchd plist.** `scripts/install.sh` rewrites it wholesale with no
     environment block, so a preference stored there would be destroyed by the next upgrade —
     which is the disappearance the brief exists to fix.
   - **Seven of eight apply at next start**, said per row with a pending marker that clears
@@ -836,7 +836,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
   1293 -> **2,173 tests in 275 suites**, and this is the first wave 7 item **verified live
   against the real binary** rather than a fake: maestro 2.4.0 against a real simulator.
   - **It took PRO-0044's warning and did not fight it.** Not an `ActuationBackend`. The seam
-    is `MaestroRun.swift` (pure) plus `SessionMaestro.swift` (impure), reusing PRO-0048's
+    is `Sources/ProctorCore/MaestroRun.swift` (pure) plus `Sources/ProctorAgent/Session/SessionMaestro.swift` (impure), reusing PRO-0048's
     split.
   - **`firstDivergence` needed no new meaning, and reading the code was cheaper than
     designing one.** `proctor_stability` already folds repeats against *each other* rather
@@ -910,14 +910,14 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
     PRO-0045's rule should apply there; **PRO-0018's Known-limits prose contradicts its own
     code** about whether a remapper's events hold the run; `stepsAside` raises the full-screen
     statement pessimistically on this lane.
-  - **Orchestrator note:** the rebase was a four-file semantic merge. `Wire.swift` and
-    `SessionAct.swift` each had PRO-0051's `backend` against PRO-0046's `pointerDrawnBy` on
+  - **Orchestrator note:** the rebase was a four-file semantic merge. `Sources/ProctorCore/Wire.swift` and
+    `Sources/ProctorAgent/Session/SessionAct.swift` each had PRO-0051's `backend` against PRO-0046's `pointerDrawnBy` on
     the same initialiser, `CuaPreflight` had two disjoint field groups, and
     `CuaActuationBackend`'s init had `transport.adopt` against `self.corroborate`. All
     additive once separated.
 - 2026-08-15 **PRO-0036 merged `c9e42c9`, and it found a defect PRO-0050 had shipped to
   `main`.** 1216 -> **2,173 tests in 275 suites**.
-  - **The shipped defect, found by building the app and looking at it.** `Dispatch.swift`
+  - **The shipped defect, found by building the app and looking at it.** `Sources/ProctorAgent/Dispatch.swift`
     overwrote `doctor`'s `policy` posture with the full ungated status. Two consequences, both
     live on `main` until this merge: every allow, block and sensitive entry, the filesystem
     roots, the trail path and the key id went back into the first call a model makes, so
@@ -1045,7 +1045,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
   - **The shell doctor reports where a login shell honestly disagrees with the agent**,
     verified live by planting a binary outside the search list, under bash 3.2 as well as 5.
     The search order is generated from one Swift definition with a drift test that also
-    asserts `doctor.sh` sources that exact path.
+    asserts `scripts/doctor.sh` sources that exact path.
   - **Child work found:** `proctor_policy status` is ungated and returns the full lists, roots
     and audit path, so doctor's posture-only rule is a convention while that stands;
     **PRO-0044's delegated child inherits the agent's descriptors and runs in its process
@@ -1120,7 +1120,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
     `FakeCuaTransport`, and the spec carries an ordered first-contact checklist of what could
     not be measured live.
   - **Orchestrator note — the rebase was a real semantic merge**, not a textual one.
-    `Session.swift` was additive (both sides added an init parameter). `SessionAct.swift` was
+    `Sources/ProctorAgent/Session/Session.swift` was additive (both sides added an init parameter). `Sources/ProctorAgent/Session/SessionAct.swift` was
     not: PRO-0044's no-op verdict had to be combined with PRO-0047's enriched `auditStep`
     call, keeping the verdict's `ok:`/`reason:` and gaining `seq`/`ms`/`plane`/`node`.
   - **Child work found:** Cua's CDP browser lane may reverse PRO-0020's conclusion; a Maestro
@@ -1188,12 +1188,12 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
   - **The layout decision was measured, not argued.** The runner built a probe binary and
     compared all three options before writing the spec. `Contents/Helpers/` works but nils
     `Bundle.main`: `resourceURL` becomes the Helpers directory, which is what `Bundle.module`
-    resolves the HUD's character art through, and it moves paths in `install.sh`,
+    resolves the HUD's character art through, and it moves paths in `scripts/install.sh`,
     `doctor.sh:76`, `Install.swift:51` and `AgentModel.swift:128`. An embedded
     `__TEXT,__info_plist` clears the LaunchServices record while leaving `bundlePath` and
     `resourceURL` pointing at the `.app`, so **the installed layout does not change at all**
-    and none of those release paths needs a path edit. `build-app.sh`, the one step
-    `install.sh` and `release.yml` share, carries the new gate.
+    and none of those release paths needs a path edit. `scripts/build-app.sh`, the one step
+    `scripts/install.sh` and `.github/workflows/release.yml` share, carries the new gate.
   - **TCC preserved, and proven rather than assumed.** The designated requirement carries no
     path component, so keeping `codesign -i app.fledgeling.procter` preserves it. Measured
     before and after the upgrade: byte-identical, both grants `granted`, no consent dialog.
@@ -1286,7 +1286,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
     worktree with uncommitted changes and again after any `git commit --amend` that moves
     HEAD without touching a source file: the build plugin's output is cached, so
     `rm -rf .build/plugins` is needed before the gate. **That second one is a new brief,
-    `44-build-identity-tests-fail-on-a-moving-head.md`, not yet allocated an id.**
+    `docs/features-to-triage/44-build-identity-tests-fail-on-a-moving-head.md`, not yet allocated an id.**
 
 - 2026-08-15 **PRO-0035 merged `c30b3c9`.** 768/89 -> **2,173 tests in 275 suites**.
   - **The PWA decision went to "an installed web app is an application Proctor drives", no browser
@@ -1358,7 +1358,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
     a minute, precisely the step PRO-0026 says must stay stoppable throughout. Two grok lane
     failures were logged and retried compacted rather than passed.
   - **PRO-0030 chose five fields over one**, each answering one question: `version` read from the
-    same `Info.plist` `release.yml` trusts (so they cannot drift), `commit`+`dirty`, `configuration`,
+    same `Info.plist` `.github/workflows/release.yml` trusts (so they cannot drift), `commit`+`dirty`, `configuration`,
     and `builtAt`. `agentVersion` **became** the descriptor rather than keeping `0.1.0` and hiding
     the truth in a sibling, because a reader who only reads that field was the reader being misled.
     Generation hangs off a SwiftPM build-tool plugin, spiked under the plugin sandbox before being
@@ -1396,7 +1396,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
 - 2026-08-15 **PRO-0040 logged** from a reinstall rather than swept from a spec. `open -a Proctor`
   cannot launch Proctor while the agent runs: LaunchServices maps `app.fledgeling.procter` to the
   `proctor-agent` pid, because the agent sits in `Contents/MacOS/` and inherits the bundle's
-  Info.plist identity, so `open` activates a process with no UI and exits 0. `install.sh`'s closing
+  Info.plist identity, so `open` activates a process with no UI and exits 0. `scripts/install.sh`'s closing
   `open` is therefore a silent no-op on every reinstall where the agent is up. Booting the agent out
   cleared the ASN and the next `open` worked; `killall Dock` and `lsregister -f` did not.
 
@@ -1406,7 +1406,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
   - **PRO-0028 found the button could never do the job it was defended for, and removed it.** Screen Recording is probed through `SCShareableContent`, whose answer macOS caches per process for that process's life, and both the 2s poll and the button ask the same long-lived agent — so relabelling would have named an object it demonstrably cannot read. The slot now carries `AgentRecovery`: Start Agent for a wedged agent, Restart Agent when the agent denies Screen Recording *and the window's own `CGPreflightScreenCaptureAccess()` sees it granted*, naming any run it would stop. That last gate came from the critic: offering the restart on a bare denial would have shipped a permanent useless row on every Mac that has not granted Screen Recording.
 - 2026-08-15 **Wave 5 stage 1 MERGED** — PRO-0025 `84062fa`, PRO-0023 `f77df6c`, PRO-0027 `c94799b`. **610 tests / 78 suites green**, from 544/66.
   - **PRO-0027's deliverable was a diagnosis, and it corrects the brief.** The menu-bar rule was never over-reaching: the reader was looking at a `Proctor` process started 14 Aug 14:41, where PRO-0021 merged at 22:30. Killing and relaunching the same installed bundle put the idle character in the bar first try. The one place the ladder genuinely did over-reach was Secure Event Input, which the brief never named and which is fixed. **A stale app is now detected by inode+size on three paths and offered a relaunch**, because a version compare was useless — `AgentBuild.version` is a hardcoded `0.1.0` that never bumps, which is separately why `proctor_doctor`'s `agentVersion` tells a reader nothing. Child work.
-  - **PRO-0025 shipped the pointer in-plane rather than the fallback**, having measured it: at `.screenSaver` the pointer showed through a window fully covering the target; at `.normal` plus `order(.above, relativeTo: <foreign CGWindowID>)` it was genuinely occluded and still drew over a frontmost target, and held its sandwich three seconds later. Since that is not a documented capability, the placement is read back from the window list every time and demotes to a dimmed, dashed pointer when it does not hold. Measurements written into `CursorOverlay.swift`'s header beside the union-panel one.
+  - **PRO-0025 shipped the pointer in-plane rather than the fallback**, having measured it: at `.screenSaver` the pointer showed through a window fully covering the target; at `.normal` plus `order(.above, relativeTo: <foreign CGWindowID>)` it was genuinely occluded and still drew over a frontmost target, and held its sandwich three seconds later. Since that is not a documented capability, the placement is read back from the window list every time and demotes to a dimmed, dashed pointer when it does not hold. Measurements written into `Sources/ProctorAgent/Overlay/CursorOverlay.swift`'s header beside the union-panel one.
   - **PRO-0023's out-of-family review changed the feature**: install commands in an MCP result are an action surface, not inert data — a model holding a shell runs the curl, which defers the fetch-and-execute rather than avoiding it and removes the person who would have hesitated. Tool results now carry `toolUnavailable` with **no command text at all** (asserted by a test); the commands live only in the status window. Proctor installs nothing.
   - **A flaky test found while gating, and fixed on `main`** @ `d78cdeb`: `aHeldRunSaysSo` failed about one run in three. `checkpoint` probes at the top of its loop and then tests the latch, so a Resume landing between `look()` and that test returns without a further probe, leaving the hold to be closed by the run ending. With two steps the parked checkpoint was the last one there was, so that window decided the assertion. A third step guarantees another probe after the Resume. It had passed on `main` by luck, not by correctness.
 - 2026-08-15 **The three-second linger was already the behaviour; the guard around it was not.** `quietLinger` has been 3s since PRO-0015 (a blocked or failed ending holds 15s, deliberately, because it is the one somebody needs to read). What was missing was protection against a stale timer: the panel cancels the pending item when a run begins, but cancelling a work item already dequeued does nothing, so a timer waiting its turn on the main queue behind the call that starts the next run would hide the panel a few milliseconds into a live run — a run with no visible stop button, which is the one state the panel exists to prevent. The reducer now refuses a linger unless the run it was armed for is still the run on screen, making it safe on its own rather than only in company with a correct caller. 544 tests / 66 suites.
@@ -1415,7 +1415,7 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
   - The harness injected a `RunControl` only when a test asked for one, so every other test drove the production `RunControl.shared` and left its state behind. `.serialized` stops tests overlapping, not from leaking.
   - `aHeldRunSaysSo` resumed after a fixed sleep that could land before the run had yielded. A Resume spent on an empty condition set marks nothing as overridden, the yield latches immediately after, and nothing lifts it short of the backstop.
   - **A method note worth keeping:** the first bisection of this hang was worthless. `swift test --filter` matches the Swift function name, not the `@Test` display string, so nineteen "passing" runs had each executed **zero tests**. Always read the `with N tests` count back before believing a filtered green.
-  - The completeness critic was run here on grok rather than skipped: 12 findings, none blocking. The two worth a child spec are a run resumed while somebody else's app is still in front continuing to post into it, and `secureInput` being session-global so a run legitimately driving a password field holds itself until the backstop. Full dispositions in `spec-PRO-0018.md`.
+  - The completeness critic was run here on grok rather than skipped: 12 findings, none blocking. The two worth a child spec are a run resumed while somebody else's app is still in front continuing to post into it, and `secureInput` being session-global so a run legitimately driving a password field holds itself until the backstop. Full dispositions in `docs/specs/spec-PRO-0018.md`.
 - 2026-08-14 **PRO-0018's first runner died on a gateway 503**, not on the work: `no-eligible-account`, "8 of 10 accounts at or over their usage reserve (1 needing re-login, 1 cooling down after upstream rate limits)". It failed 22 tool calls in, still reading, and wrote nothing — no worktree, no branch, no spec, `main` clean. Relaunched from the same script. If a retry hits the same wall the item is **parked on capacity, not blocked on anything in the repo**, and resumes whenever the gateway has headroom.
 - 2026-08-14 **Wave 4 stage 1 MERGED** — PRO-0021 `58b3ce4`, PRO-0019 `619bb30`, PRO-0020 `3a3bb5f`. **500 tests / 64 suites green** on `main`, up from 387/47. Merged in that order deliberately: PRO-0021 restructured `RunHUDPanel` most (it no longer owns `RunHUDState`), and resolving two small edits into a new structure beats rebasing a restructure onto small edits.
   - **One conflict needed a judgement rather than a union.** PRO-0019 added "a run taking the foreground outranks everything else this glyph says" to a symbol-based `menuIcon`; PRO-0021 deleted that function outright, replacing it with `MenuBarIcon.decide`, whose own rule is "readiness outranks the character". Both kept, ordered: reachability, then grants, then foreground, then phase. A Proctor that cannot work must not wear a calm face, which is why the guards come first; but between a character saying "acting" and the fact that the next event goes into the reader's own keyboard, the second is what reaches somebody from across the room. Pinned by `foregroundSitsBetweenReadinessAndThePhase`, because the ordering was decided at a merge and belongs to neither spec.
@@ -1437,11 +1437,11 @@ Sixty-odd `docs/specs/spec-PRO-*.md` headers still read `In Review` / `Ready for
 - 2026-08-14 **Wave 3 stage 1 MERGED** @ 62cd969 — four features, **258 tests / 29 suites green** on `main` (was 173/24). Merge order was chosen to isolate the overlap: PRO-0014 (untouched files) → PRO-0011 → PRO-0012 → PRO-0013, each rebased onto the growing `main`, built and tested in its own worktree before a fast-forward. Two real conflicts, both resolved by combining rather than choosing:
   - `SessionFlow.stability()`: PRO-0011 had lifted the determinism fold into `StabilityScore.fold` in Core so that "an artifact cannot move a score" is a property of the signature; PRO-0012 had extracted a `stabilityReport` helper with truncation semantics so that a run cut short is never reported deterministic. The merged code keeps the helper *and* scores through the hash-only fold, ANDing `!truncated` at the call site — the fold still cannot see a capture, and a truncated run still cannot claim determinism. PRO-0012 had also renamed `runs` to `requested`; the `runs < 2` note moved into the helper, where it counts repeats **measured** rather than repeats **asked for**, which is the more honest of the two.
   - `SessionPolicy.policyStatus()`: PRO-0013's audit-state fields kept, read through PRO-0012's injectable `clock()` seam rather than the wall clock it replaced.
-  - Both `ProctorCoreTests.swift` conflicts looked like clean append-append unions and were not: the shared trailing braces close only the *later* suite, so the earlier one needed its own closers added. A naive union compiles as a syntax error rather than silently — caught by the build, not by inspection.
+  - Both `Tests/ProctorCoreTests/ProctorCoreTests.swift` conflicts looked like clean append-append unions and were not: the shared trailing braces close only the *later* suite, so the earlier one needed its own closers added. A naive union compiles as a syntax error rather than silently — caught by the build, not by inspection.
 - 2026-08-14 **Wave 3 fleet stage 1 LAUNCHED** — PRO-0014, PRO-0012, PRO-0013 in the three slots, PRO-0011 refilling the first free one. Runners are Opus at high effort via the workflow lane, invoking ship-feature, stopping before merge. The fleet runs in **three stages** rather than one continuous slot loop, because PRO-0015 depends on PRO-0014 having *merged* and only the orchestrator merges: stage 1 (the four independent items) → merges → stage 2 (PRO-0015) → merge → stage 3 (PRO-0016 + PRO-0017).
-- 2026-08-14 **Wave 3 pre-triage COMPLETE** @ 8e0206c — seven specs written serially under the ledger lock, all now Ready for Plan (LEDGER Last allocated: 17). PRO-0013 was the one Needs More Info item; its single Essential Question (recovery copy for the audit-log unsealing key) was answered by the reader as **(a) no recovery copy** — convert the existing trail in place, a lost key means a permanently unreadable history, and no export path, second secret, or "just in case" plaintext copy, each of which would weaken the guarantee the option was chosen for. The destructive first run must be obvious in whatever performs it. Answer recorded in `spec-PRO-0013.md`; its runner folds it in and flips the status as its first action.
+- 2026-08-14 **Wave 3 pre-triage COMPLETE** @ 8e0206c — seven specs written serially under the ledger lock, all now Ready for Plan (LEDGER Last allocated: 17). PRO-0013 was the one Needs More Info item; its single Essential Question (recovery copy for the audit-log unsealing key) was answered by the reader as **(a) no recovery copy** — convert the existing trail in place, a lost key means a permanently unreadable history, and no export path, second secret, or "just in case" plaintext copy, each of which would weaken the guarantee the option was chosen for. The destructive first run must be obvious in whatever performs it. Answer recorded in `docs/specs/spec-PRO-0013.md`; its runner folds it in and flips the status as its first action.
 - 2026-08-14 **Out-of-family review lane switched from Codex to grok** at the reader's instruction (`grok -p … --model grok-4.6 --effort xhigh --sandbox read-only`, 240s alarm). Codex is OFF for this repo, not a fallback and not for a retry. Measured behaviour during triage: five of seven gates hit the deadline mid-reasoning and needed the evidence inlined into the prompt rather than read from disk; PRO-0013 failed twice and fell back in-family with a logged downgrade.
-- 2026-08-14 UI: permission-state fix + always-on menu bar + live activity + quit-everything + mock redesign. Three problems from real use, all fixed. (1) **Permission bug:** the window polled the agent with `tool:"doctor"` but dispatch only matches `"proctor_doctor"`, so every check read "agent not answering" even with both grants on — one-line fix in `AgentModel.swift`; verified by socket probe (`proctor_doctor` ok + grants, bare `doctor` = unknown tool). Granting Screen Recording now kickstarts the agent so its cached `SCShareableContent` probe re-runs, with an "Applying…" transient. Dropped the stale `~/Applications` reveal-and-drag copy (now `/Applications`, listed in the picker). (2) **Menu bar always-visible:** app registers as a login item via `SMAppService.mainApp` and both installers (`install.sh`, `Install.swift`) `open` the app after loading the agent; polling moved to app-lifetime (model `init`) so the menu stays live with the window closed; login start is quiet (window `orderOut`). (3) **Live activity:** ring buffer `(tool, at, ok)` + in-flight marker on the `Session` actor, recorded at the `Dispatcher.handle` choke point, tracked set derived from `ToolCatalogue` (so health polls, internal verbs, and unknown tools are all excluded automatically — caught a leak during verify where a stale UI's bare-`doctor` polls flooded the feed). Exposed as internal `proctor_recent_activity` (NOT in ToolCatalogue); rendered in the menu line + a status-window Activity card. (4) **Quit = everything:** `applicationWillTerminate` boots out the agent on every quit path; label "Quit Proctor". Both return at next login. Native look kept; mock's motion implemented in SwiftUI (`Motion.swift`: spring `cubic-bezier(.32,.72,0,1)`, step slide, dot-fill keyframe, grant-success pop+ring, status-pill spring-in) all gated on Reduce Motion. Mock `mocks/onboarding-and-menu.html` redesigned as the design source (Codex-register hero sheet, 3 dots, live-activity surfaces, de-staled). **Verified live** (signed Developer ID reinstall, grants survived the same-identity rebuild): runtime `tools/list` = 19, internal verbs hidden, doctor reflects grants (ready), activity feed excludes polls and captures real tools. Not machine-witnessable here (obscura is web-only): the native app's visual/animation fidelity and the login-item/quit GUI paths — code-complete against the mock, need a human glance.
+- 2026-08-14 UI: permission-state fix + always-on menu bar + live activity + quit-everything + mock redesign. Three problems from real use, all fixed. (1) **Permission bug:** the window polled the agent with `tool:"doctor"` but dispatch only matches `"proctor_doctor"`, so every check read "agent not answering" even with both grants on — one-line fix in `AgentModel.swift`; verified by socket probe (`proctor_doctor` ok + grants, bare `doctor` = unknown tool). Granting Screen Recording now kickstarts the agent so its cached `SCShareableContent` probe re-runs, with an "Applying…" transient. Dropped the stale `~/Applications` reveal-and-drag copy (now `/Applications`, listed in the picker). (2) **Menu bar always-visible:** app registers as a login item via `SMAppService.mainApp` and both installers (`scripts/install.sh`, `Sources/ProctorShim/Install.swift`) `open` the app after loading the agent; polling moved to app-lifetime (model `init`) so the menu stays live with the window closed; login start is quiet (window `orderOut`). (3) **Live activity:** ring buffer `(tool, at, ok)` + in-flight marker on the `Session` actor, recorded at the `Dispatcher.handle` choke point, tracked set derived from `ToolCatalogue` (so health polls, internal verbs, and unknown tools are all excluded automatically — caught a leak during verify where a stale UI's bare-`doctor` polls flooded the feed). Exposed as internal `proctor_recent_activity` (NOT in ToolCatalogue); rendered in the menu line + a status-window Activity card. (4) **Quit = everything:** `applicationWillTerminate` boots out the agent on every quit path; label "Quit Proctor". Both return at next login. Native look kept; mock's motion implemented in SwiftUI (`Motion.swift`: spring `cubic-bezier(.32,.72,0,1)`, step slide, dot-fill keyframe, grant-success pop+ring, status-pill spring-in) all gated on Reduce Motion. Mock `mocks/onboarding-and-menu.html` redesigned as the design source (Codex-register hero sheet, 3 dots, live-activity surfaces, de-staled). **Verified live** (signed Developer ID reinstall, grants survived the same-identity rebuild): runtime `tools/list` = 19, internal verbs hidden, doctor reflects grants (ready), activity feed excludes polls and captures real tools. Not machine-witnessable here (obscura is web-only): the native app's visual/animation fidelity and the login-item/quit GUI paths — code-complete against the mock, need a human glance.
 - 2026-08-14 Install relocated to /Applications + notarised-by-default + CI release pipeline + CHANGELOG. install.sh now installs to `/Applications` (was `~/Applications`; sudo fallback), auto-detects the Developer ID identity, and notarises fresh builds by default (keychain profile `proctor`; `PROCTOR_SKIP_NOTARIZE=1` to skip). uninstall.sh + README follow the path change. notarize.sh generalised to accept an ASC API key via env (`NOTARY_KEY`/`NOTARY_KEY_ID`/`NOTARY_ISSUER_ID`) for CI alongside the local keychain-profile path. Added `.github/workflows/release.yml`: on a `v*` tag it imports the Developer ID cert into a temp keychain, builds+signs, notarises+staples via ASC API key, packages, extracts the matching CHANGELOG section, and publishes the GitHub release (6 repo secrets documented in the header). CHANGELOG.md created (Keep a Changelog; v0.1.0 entry written via create-luke-content, lint clean). **Live relocation performed:** booted out the old `~/Applications` agent, installed the already-stapled build to `/Applications` (reused, no rebuild), agent running, doctor clean, runtime `tools/list` = 19, Gatekeeper Accepted/Notarized. Grants did NOT carry: prior install was ad-hoc, so the new Developer ID identity is a fresh TCC identity needing a one-time manual re-grant (Accessibility + Screen Recording) — panes opened; future upgrades keep the identity and will survive. Left uncommitted + flagged: stale `design/icon/build_icon.py` + `design/icon/icon-proctor.svg` working changes from the icon rounds (unrelated to this request).
 - 2026-08-13 Icon finalised = raster C. Reader judged the GPT-Image raster take (proctor-raster-7c3d62-2, glowing glass-gel cubes) decisively better than the hand-authored SVG master even after 4+ fidelity rounds ("C wins by a landslide") — the known vector-can't-out-material-a-diffusion-raster ceiling. Shipped the raster directly: squircle-masked via design/icon/apply-squircle.sh (reproducible) into app-icon-shaped source art, verified legible at 16/32/48px. App rebuilt + re-notarised (Accepted) + stapled; v0.1.0 asset replaced (4.58MB); site icons regenerated (Pages redeploys). Tradeoff: shipped icon is now the raster, not the parametric SVG — future tweaks need a new generation/pixel edit, not a build_icon.py param. SVG master kept as superseded provenance. Local reinstall still the reader's step.
 - 2026-08-13 App icon designed + shipped. The site's existing mark was illegible at 16-32px (cream-on-cream windows). Re-materialised via create-mac-icon (12/12 audit): a deep-graphite window with a terracotta pixel-dissolve "actuation edge" on warm paper — brand DNA kept, small-size legibility fixed (verified 16/32/48px). Source art committed at Apps/Proctor/icon-1024.png; build-app.sh now generates Proctor.icns from it. App rebuilt + re-notarised (Accepted) + stapled; v0.1.0 release asset replaced with the icon'd build (0 downloads, identical code). Site icons regenerated to match (auto-redeploys Pages). Editable SVG master under design/icon/ (heavy iteration provenance gitignored). Local reinstall to see the icon in Finder remains the reader's step.
@@ -1502,18 +1502,18 @@ the item's 57 matched shape-for-shape. That is the claim standing on an independ
   the action is refused, the count is zero, and the refusal carries a reason.* CASE-0062 carries
   none either. A witness whose count was never shown going to zero has not been armed.
 - **Clause 8 — a gate that passed over nothing.** `capture-lineage.py --gate` exits 0, but it
-  examined none of this item's captures: `evidence/shots/captures.json` is byte-identical to
+  examined none of this item's captures: `docs/test-campaign/evidence/shots/captures.json` is byte-identical to
   `ai/wave-9` and its 8 rows name none of the new PNGs. The gate's population is unchanged, so the
   exit code says nothing about this item's work. This is the campaign's own fourth failure mode —
   the ungated part being the part people look at — and a green exit code standing for a check that
   could not run.
 
 **What PRO-0078 got right, confirmed first-hand by the verifier.** It opened
-`evidence/witness/a1b-agent-capture.png` rather than reading its filename: a Calculator window
+`docs/test-campaign/evidence/witness/a1b-agent-capture.png` rather than reading its filename: a Calculator window
 showing `1,861.20-690` and `1,171.2`, the two strings an independent AX client in probe pid 28892
 read out of pid 14545 over 1,124 attribute reads. The subject is proved by a third process's text
 read rather than by geometry. The superseded capture is real too — all 2,942,720 pixels
-`RGBA(0,0,0,0)` while `a1-capture.json` reads `status complete, trustworthy true`. DEF-020 is a
+`RGBA(0,0,0,0)` while `docs/test-campaign/evidence/witness/a1-capture.json` reads `status complete, trustworthy true`. DEF-020 is a
 measured finding, correctly flagged and correctly not fixed there.
 
 **REQ-007's ceiling was checked in source, not accepted from the note.** `PersonInput.isAPerson`
@@ -1550,7 +1550,7 @@ PRO-0078 came back **Done** after a gap-fix that closed both failed clauses, jud
 re-verifier that had neither built it nor judged it the first time.
 
 **The gap-fix found a defect larger than the clause that exposed it.**
-`capture_with_manifest.py` wrote each row as `file` plus a dict target; `capture-lineage.py` reads
+`scripts/campaign/capture_with_manifest.py` wrote each row as `file` plus a dict target; `capture-lineage.py` reads
 `path` plus a string. **Every row that tool ever wrote was invisible to the gate checking it.** The
 gate was not lenient, it was reading an empty population and exiting 0 — which is why clause 8
 looked green while examining none of the item's work. Fixed at the writer, two captures retaken
@@ -1617,15 +1617,15 @@ That matters for PRO-0080, whose mutation run scores a timeout as a kill.
 
 | ID | Brief | Depends on | Lane |
 |----|-------|-----------|------|
-| PRO-0084 | `77-the-cua-path-leaves-proctors-plane-silently.md` | — | this machine, live reproduction first |
-| PRO-0085 | `78-the-skill-and-the-guest-lane.md` | — | `~/Dev/fledgeling-plugins`, not this repo |
+| PRO-0084 | `docs/features-to-triage/77-the-cua-path-leaves-proctors-plane-silently.md` | — | this machine, live reproduction first |
+| PRO-0085 | `docs/features-to-triage/78-the-skill-and-the-guest-lane.md` | — | `~/Dev/fledgeling-plugins`, not this repo |
 
 **PRO-0084 is a reported defect and the source already names its mechanism.** A run routed to the
 cua backend shows no HUD, no takeover notice and no drawn pointer, and moves the real cursor;
 sometimes over a window in the background. `CuaActuationBackend.swift:302-306` says why in its own
 words: the guards that make a takeover visible *"arm before a post, from inside the process making
 it — and this post was made by another process, so nothing could have armed them."* A grep for
-`PointerOverlay`, `pointerMarker` or `drawnPointer` across `Actuation/` and `SessionAct.swift`
+`PointerOverlay`, `pointerMarker` or `drawnPointer` across `Actuation/` and `Sources/ProctorAgent/Session/SessionAct.swift`
 returns zero, so wave 9's covered-target rule in `CursorOverlay.swift:273` is never consulted on
 this path. `"Automation Running"` is not Proctor's string, and its actual source is unconfirmed: it is
 absent from Proctor's sources and from `strings` on `cua-driver`, `obscura`, `XCTest` and
@@ -1687,12 +1687,12 @@ range asks rather than taking the next free id.
 
 | ID | Brief | Cases | Defects | Needs |
 |----|-------|-------|---------|-------|
-| PRO-0088 | `81-the-capture-path-reports-frames-it-did-not-get.md` | CASE-0120..0129 | DEF-060..064 | glass |
-| PRO-0089 | `82-tests-that-touch-the-real-machine-and-tests-that-time-themselves.md` | CASE-0130..0139 | DEF-065..069 | headless |
-| PRO-0090 | `83-what-the-surfaces-say-and-what-they-draw.md` | CASE-0140..0149 | DEF-070..074 | headless + glass |
-| PRO-0091 | `84-the-campaigns-own-instruments.md` | CASE-0150..0159 | DEF-075..079 | headless |
-| PRO-0092 | `85-proctoragents-mutants-mostly-survive.md` | CASE-0160..0169 | DEF-080..084 | quiet machine, long runs |
-| PRO-0093 | `86-a-dead-peer-holds-the-queue.md` | CASE-0170..0179 | DEF-085..089 | headless |
+| PRO-0088 | `docs/features-to-triage/81-the-capture-path-reports-frames-it-did-not-get.md` | CASE-0120..0129 | DEF-060..064 | glass |
+| PRO-0089 | `docs/features-to-triage/82-tests-that-touch-the-real-machine-and-tests-that-time-themselves.md` | CASE-0130..0139 | DEF-065..069 | headless |
+| PRO-0090 | `docs/features-to-triage/83-what-the-surfaces-say-and-what-they-draw.md` | CASE-0140..0149 | DEF-070..074 | headless + glass |
+| PRO-0091 | `docs/features-to-triage/84-the-campaigns-own-instruments.md` | CASE-0150..0159 | DEF-075..079 | headless |
+| PRO-0092 | `docs/features-to-triage/85-proctoragents-mutants-mostly-survive.md` | CASE-0160..0169 | DEF-080..084 | quiet machine, long runs |
+| PRO-0093 | `docs/features-to-triage/86-a-dead-peer-holds-the-queue.md` | CASE-0170..0179 | DEF-085..089 | headless |
 
 **Dispatch order is set by what unblocks what.** PRO-0089 first among the six: the wall-clock oracle
 at `ScreenRecordingProbeWiringTests:42` has failed six recorded times this wave and costs a re-run
@@ -1845,18 +1845,18 @@ sites, which is why they should now be rare rather than why they are gone.
 
 Two asked-for and one proposed. No ids allocated; triage owns that write.
 
-- `92-a-spec-says-which-brief-it-came-from.md` — the reckoning joined 78 of 91 briefs. All thirteen
+- `docs/features-to-triage/92-a-spec-says-which-brief-it-came-from.md` — the reckoning joined 78 of 91 briefs. All thirteen
   it missed name a merged item, so nothing is hiding behind them; they are unlinkable rather than
   unbuilt. Twenty-four specs carry no citation, sixty-six do and every one of those joined. Two
   halves: backfill the twenty-four, and have the stage that mints a spec write it, which is a change
   outside this repository.
-- `93-the-reckoning-tool-mis-read-this-registry.md` — three faults measured against this registry:
+- `docs/features-to-triage/93-the-reckoning-tool-mis-read-this-registry.md` — three faults measured against this registry:
   a crash on a field carried as a list where a string was assumed, all 108 defect records classed
   `broken` without reading `status` when 88 are fixed, and 75 briefs classed `unbuilt` when every one
   names a shipped item. The last two share a root — an entity absent from the evidence treated as an
   entity that failed — which is the tool's own target failure arriving from the other side. Shared
   tooling, so it reaches every project here.
-- `94-a-reckoning-worth-comparing-against.md` — **proposed-by-ai**. Today's run is a snapshot and the
+- `docs/features-to-triage/94-a-reckoning-worth-comparing-against.md` — **proposed-by-ai**. Today's run is a snapshot and the
   ratchet has nothing to compare against. Delete the file to veto.
 
 **Nothing new was briefed for the nine old unjoined briefs.** Each was checked against the ledger
@@ -1866,7 +1866,7 @@ individually and each names a merged item, so the join failure is bookkeeping ra
 
 PRO-0082, PRO-0085 and PRO-0099 merged. Gate **2,061 tests in 251 suites, exit 0**, twice.
 `campaign.py check`: examined=29, witnessed=27, unwitnessed=0, vacuous=1. Armed 257 of 258. Strict
-ratchet 208 → 228. Drift gate exit 0; the new `operator_path_gate.py` exits 0 in both modes.
+ratchet 208 → 228. Drift gate exit 0; the new `scripts/campaign/operator_path_gate.py` exits 0 in both modes.
 
 **Open defects: 11 of 110 records** — DEF-033, 099, 140, 141, 151, 162, 163, 165, 175, 180, 193.
 Four cases stand `inconclusive` against ceilings checked in source. One passing case is unarmed.
@@ -1875,7 +1875,7 @@ Four cases stand `inconclusive` against ceilings checked in source. One passing 
 sample scores a timeout as a kill, and the last run finished at load 271.
 
 **An installed plugin upgraded mid-session and broke a repository gate.** test-campaign 0.9.6 widened
-`pass_uncensused` to a 4-tuple and `seed_strengthen.py` unpacked two, so a tree that had changed
+`pass_uncensused` to a 4-tuple and `scripts/campaign/seed_strengthen.py` unpacked two, so a tree that had changed
 nothing went red. Two items measured it independently against the untouched base. PRO-0099's fix was
 taken over the orchestrator's because it slices both borrowed functions rather than only the one that
 broke — the signature lives outside the repository and will move again. Nothing in this repo's own
@@ -1948,8 +1948,8 @@ locally when the machine is genuinely idle. Neither is this fleet's to take.
 
 | ID | Head | Gate state | Next |
 |---|---|---|---|
-| PRO-0100 | `a33ac1c` on `ai/pro-0100` | `./scripts/test.sh` **2,064 tests in 251 suites, EXIT=0** (baseline 2,061), four runs. `defect_gate.py` claims 0 / dropped 0; `test_instruments.py` 0 (62/62); `operator_path_gate.py` 0/0; `skill_doc_measure.py` 0 (was 1, the arming); `campaign.py check` exit 1 and **names none of CASE-0390–0400 or REQ-094–096** — re-run here, blocker set is other items' | Verify |
-| PRO-0102 | `c1132ea` on `ai/pro-0102`; `reckon` **1.1.0** at `224a696`+`fc86fe7` upstream | `selftest.py` 46 checks EXIT=0 (26 before); `defect_gate.py` claims/dropped both EXIT=0. **`campaign.py check` was not run by the runner, and run here it names three of this item's own cases** — CASE-0426/0427/0428 claim `source-analysis` with no `source.analyzer` and no `source.examined` | Gap-fix |
+| PRO-0100 | `a33ac1c` on `ai/pro-0100` | `./scripts/test.sh` **2,064 tests in 251 suites, EXIT=0** (baseline 2,061), four runs. `scripts/campaign/defect_gate.py` claims 0 / dropped 0; `scripts/campaign/test_instruments.py` 0 (62/62); `scripts/campaign/operator_path_gate.py` 0/0; `scripts/campaign/skill_doc_measure.py` 0 (was 1, the arming); `campaign.py check` exit 1 and **names none of CASE-0390–0400 or REQ-094–096** — re-run here, blocker set is other items' | Verify |
+| PRO-0102 | `c1132ea` on `ai/pro-0102`; `reckon` **1.1.0** at `224a696`+`fc86fe7` upstream | `selftest.py` 46 checks EXIT=0 (26 before); `scripts/campaign/defect_gate.py` claims/dropped both EXIT=0. **`campaign.py check` was not run by the runner, and run here it names three of this item's own cases** — CASE-0426/0427/0428 claim `source-analysis` with no `source.analyzer` and no `source.examined` | Gap-fix |
 
 **PRO-0100's six defects are closed and its walkthrough guards were not touched.** DEF-162 gave the
 design record the `Skip setup` the build already had; DEF-163 stopped the refusing primary drawing
@@ -1972,8 +1972,8 @@ PRO-0102's twenty cases sat on SURF-022, whose route is `tool://vacuity-check/bl
 script — and whose own description says it exists so a suite-wide measurement is not filed against
 a surface it never examined. `SURF-023 · Reckoning reconciler` holds them; SURF-022 keeps its 33.
 Open finding, not this item's: SURF-022 is still *named* "Campaign blind-mutation pass" while
-holding cases about `test_instruments.py`, `defect_gate.py`, `campaign.py check` and
-`status_literals.py`.
+holding cases about `scripts/campaign/test_instruments.py`, `scripts/campaign/defect_gate.py`, `campaign.py check` and
+`scripts/campaign/status_literals.py`.
 
 **The verify lane, settled by what is installed rather than by preference.** `glm` is not on this
 machine, so the lane raised as the alternative was never reachable. Grok re-probed at 21:56 local:
@@ -2187,7 +2187,7 @@ reviewer reading an excerpt is only as right as its boundaries, and the boundary
 reply. The lane itself held — it cited `WalkthroughFlowTests`, `PrimaryProminence` and
 `Transport.swift:10-22`, so it answered about PRO-0100, and returned `OVERALL: ACCEPT`.
 
-**A correction to this file's own briefing.** `defect_gate.py` takes positional arguments, so bare
+**A correction to this file's own briefing.** `scripts/campaign/defect_gate.py` takes positional arguments, so bare
 `claims` and `dropped` exit **2** on usage rather than running. Two runner briefs told them to invoke
 it bare; both worked it out, and the wording is wrong in this file wherever it appears.
 
@@ -2201,7 +2201,7 @@ the thing nine other projects were holding on.
 | `./scripts/test.sh` | **0** — 2,064 tests in 251 suites |
 | `defect_gate.py claims` (both specs) | **0** / **0** |
 | `defect_gate.py dropped` | **0** — 112 merges, **44,283** id/field pairs |
-| `test_instruments.py` | **0** — 62 passed |
+| `scripts/campaign/test_instruments.py` | **0** — 62 passed |
 | `campaign.py check` | 1, naming no wave-16 id |
 
 **Both registry files conflicted, and this is the fourth time that has happened and the first time it
@@ -2243,8 +2243,8 @@ removed rather than refreshed now the live figure is 47.
 ### PRO-0101 is built and at Developer Review (2026-08-22)
 
 `ai/pro-0101` at `f600731`, eight commits, tree clean. `main` came in as a fast-forward. Suite 2,061
-tests in 251 suites over three runs, no Swift touched. `spec_citation_measure.py` 15/15;
-`spec_citation_arm.py` 23/23 mutations pinned with 15/15 checks watched to fail. `campaign.py check`
+tests in 251 suites over three runs, no Swift touched. `scripts/campaign/spec_citation_measure.py` 15/15;
+`scripts/campaign/spec_citation_arm.py` 23/23 mutations pinned with 15/15 checks watched to fail. `campaign.py check`
 exits 1 with an **identical blocker set** to its merge base, naming none of its ids. Allocated
 REQ-100/101, CASE-0430–0440, DEF-215, SURF-024.
 
@@ -2272,9 +2272,9 @@ path over two files under `plugins/shipyard/skills/triage/`; nothing of the peer
 `ai/pro-0101` at `bea418b`, fast-forwarded onto `main` at `656d9b2` rather than rebased, because
 the branch held no commits of its own past `8378138`. Ids: **REQ-100, REQ-101 · CASE-0430..0438 ·
 DEF-215 · SURF-024.** Gates: suite **2,061 in 251, exit 0, twice**, baseline unchanged with no
-Swift touched; `spec_citation_measure.py` 14/14 exit 0; `spec_citation_arm.py` 18/18 pinned and
-14/14 checks watched to fail, exit 0; `test_instruments.py` 62/62; `operator_path_gate.py` and
-`defect_gate.py` both modes exit 0. `campaign.py check` exits 1 here **and on the merge base with
+Swift touched; `scripts/campaign/spec_citation_measure.py` 14/14 exit 0; `scripts/campaign/spec_citation_arm.py` 18/18 pinned and
+14/14 checks watched to fail, exit 0; `scripts/campaign/test_instruments.py` 62/62; `scripts/campaign/operator_path_gate.py` and
+`scripts/campaign/defect_gate.py` both modes exit 0. `campaign.py check` exits 1 here **and on the merge base with
 an identical blocker set** — CASE-0001, CASE-0318, CASE-0333..0335, REQ-007, REQ-024, REQ-086 —
 naming none of this item's ids.
 
@@ -2332,10 +2332,10 @@ single quiet minute flips the verdict in either direction. Three samples remain 
 | Gate on merged `main` | Exit |
 |---|---|
 | `./scripts/test.sh` | **0** — 2,064 tests in 251 suites |
-| `spec_citation_measure.py` | **0** — 15/15; specs 99, briefs 96 (claimed 92 · registered 4 · **unclaimed 0**) |
-| `spec_citation_arm.py` | **0** — 23/23 mutations as pinned, 15/15 checks watched to fail |
+| `scripts/campaign/spec_citation_measure.py` | **0** — 15/15; specs 99, briefs 96 (claimed 92 · registered 4 · **unclaimed 0**) |
+| `scripts/campaign/spec_citation_arm.py` | **0** — 23/23 mutations as pinned, 15/15 checks watched to fail |
 | `defect_gate.py dropped` | **0** |
-| `test_instruments.py` | **0** — 62 passed |
+| `scripts/campaign/test_instruments.py` | **0** — 62 passed |
 | `campaign.py check` | 1, unmoved from its merge base |
 
 **The registry merge conflicted a fifth time and the per-row rule held a third time.** Again `main`
@@ -2352,7 +2352,7 @@ DEF-200, 201, 202, 203.
 ### One class of defect showed up in two instruments in two repositories within a day
 
 DEF-201: reckon's `ID_RE` reads a brief's whole body, so a quoted example id becomes a citation at
-confidence 1.0. DEF-203: `spec_citation_measure.py`'s legacy fallback accepts a brief path from a
+confidence 1.0. DEF-203: `scripts/campaign/spec_citation_measure.py`'s legacy fallback accepts a brief path from a
 fenced block, an HTML comment or a struck-through line, its `none.` floor accepts an unresolvable
 reference and any backtick pair padded to twenty characters, and reverse totality is satisfied by an
 incidental mention in an unrelated spec.
@@ -2411,7 +2411,7 @@ cache. DEF-216 records it.
 ### PRO-0103 built, and it produced the result the item existed for (2026-08-22)
 
 `ai/pro-0103` at `97a00fd`, nine commits, tree clean. Suite 2,064 in 251 suites, `TEST_EXIT=0`, a
-control since no Swift changed. `reckoning_selftest.py` 28 checks, 0 failed, exit 0. `defect_gate`
+control since no Swift changed. `scripts/reckoning/reckoning_selftest.py` 28 checks, 0 failed, exit 0. `defect_gate`
 claims and dropped both 0 (112 merges, 44,283 pairs). `campaign.py check` exits 1 on head and on merge
 base, differing by one line — `External-effect claims with no witness (27 of 29)` → `(28 of 30)` — and
 naming none of its ids. Allocated REQ-102–107, CASE-0441–0456, SURF-025, DEF-216.
@@ -2446,9 +2446,9 @@ fence, which is the idiom caveat already on that row.
 |---|---|
 | `./scripts/test.sh` | **0** — 2,064 tests in 251 suites |
 | `defect_gate.py dropped` | **0** |
-| `test_instruments.py` | **0** — 62 passed |
-| `spec_citation_measure.py` | **0** — 15/15, unclaimed briefs 0 |
-| `reckoning_selftest.py` | **0** — 28 checks |
+| `scripts/campaign/test_instruments.py` | **0** — 62 passed |
+| `scripts/campaign/spec_citation_measure.py` | **0** — 15/15, unclaimed briefs 0 |
+| `scripts/reckoning/reckoning_selftest.py` | **0** — 28 checks |
 | `campaign.py check` | 1, on other items' work only |
 
 Registry: **320 cases · 124 defect rows · 98 requirements · 25 surfaces.**
@@ -2497,10 +2497,10 @@ direction. All four are corrected on `ai/pro-0092` at `cae0f29`.
 
 | What the record said | What the evidence says |
 |---|---|
-| The class closed covers **34** argument-decode sites, **1.1%** of the pool | `Dispatch.swift` holds 34 `args.bool` sites; the join compares only sites whose tool declares a default, and the check's own comment records **sixteen comparable pairs** with a floor at twelve. **~16 sites, 0.5%** |
-| Nine killed, four recorded | The plan's own table: seven `seam + kill` plus three other kills. **Ten killed, three recorded** — and the wrong figure had reached shipped source in `MutationSeamTests.swift`'s header |
+| The class closed covers **34** argument-decode sites, **1.1%** of the pool | `Sources/ProctorAgent/Dispatch.swift` holds 34 `args.bool` sites; the join compares only sites whose tool declares a default, and the check's own comment records **sixteen comparable pairs** with a floor at twelve. **~16 sites, 0.5%** |
+| Nine killed, four recorded | The plan's own table: seven `seam + kill` plus three other kills. **Ten killed, three recorded** — and the wrong figure had reached shipped source in `Tests/ProctorAgentTests/MutationSeamTests.swift`'s header |
 | Longest mutant **31.9s** of 600s | **36.0s**, `SessionAssert.swift:63`. 31.9s is third |
-| (unstated) | `ToolCatalogue.swift` gained *"Defaults to false."* at the three descriptions the agreement test compares against, so **three of the sixteen pairs are pairs this item created**. Now recorded as a specification-completion step |
+| (unstated) | `Sources/ProctorCore/ToolCatalogue.swift` gained *"Defaults to false."* at the three descriptions the agreement test compares against, so **three of the sixteen pairs are pairs this item created**. Now recorded as a specification-completion step |
 
 **All twenty survivors were shown to land, and that is a reconstruction rather than a proof.** The
 verifier rebuilt all 24 mutants against the tree the run used: every recorded offset holds the recorded
@@ -2510,9 +2510,9 @@ hypothetical, because a mutator elsewhere the same night aborted on an anchor th
 source and the test asserting it, ran against pristine code, and published a live guard as decorative.
 **A survivor has two readings: the guard is decorative, or the mutation never happened.**
 
-**DEF-207 and DEF-208** carry the instrument half. `mutate_swift.py` splices by byte offset and never
+**DEF-207 and DEF-208** carry the instrument half. `scripts/campaign/mutate_swift.py` splices by byte offset and never
 reads back, so it cannot prove its own substitution while its sibling arm can — and the reconstruction
-that saved this sample is not available to the next one. `mutation_seam_arm.py` scores
+that saved this sample is not available to the next one. `scripts/campaign/mutation_seam_arm.py` scores
 `armed = code != 0`, so a process that dies in setup counts as red; CASE-0461's trapping mutant gave
 signal 5, zero verdict lines and the suite's own `FAIL: no swift-testing verdict line`, and that case is
 right only because its log proves the named test was running when it trapped.
@@ -2547,7 +2547,7 @@ blocking a fleet — and it is **authoritative as an admission predicate**, beca
 `governor-run` reads to decide. Those are two different questions sharing one number. Gating a retry on
 `ceiling` is necessary and not sufficient; the `main` gate now armed reads `available`.
 
-**A partial arming record was reverted rather than committed.** An earlier `mutation_seam_arm.py`
+**A partial arming record was reverted rather than committed.** An earlier `scripts/campaign/mutation_seam_arm.py`
 invocation timed out at two minutes and left `seam-arming.json` at `{"partial": true, "run": 5,
 "of": 12}` — the instrument marking its own truncation, which is the behaviour DEF-207 and DEF-208 say
 the others lack. Committing it would have replaced a complete 12-of-12 record with a 5-of-12 one. No
@@ -2555,7 +2555,7 @@ Swift test reads that file, so the suite's verdict is unaffected by it either wa
 
 ### Wave 17 opened, and the gate that opened it was my own red
 
-Filing briefs 97–99 turned `spec_citation_measure.py` red on `main` at **14/15**, three briefs
+Filing briefs 97–99 turned `scripts/campaign/spec_citation_measure.py` red on `main` at **14/15**, three briefs
 unclaimed. Cleared by triaging them into **PRO-0104, PRO-0105 and PRO-0106** rather than by registering
 them or by touching the check. The register exists so that a brief no spec claims is a recorded
 decision rather than an absence, and *filed this evening, not yet triaged* is a transient state; a
@@ -2578,15 +2578,15 @@ open defects: DEF-033, DEF-141, DEF-151 and DEF-180 predate tonight, and eleven 
 non-AC findings gate in one evening. Every one of the eleven is now briefed and triaged.
 
 **The suite gate on merged `main` is armed rather than run**, because `available` was 0 at the merge.
-`defect_gate.py dropped`, `test_instruments.py` (62), `spec_citation_measure.py` (15/15) and
-`reckoning_selftest.py` (28) all exit 0 on the merged tree; `campaign.py check` exits 1 on other items'
+`defect_gate.py dropped`, `scripts/campaign/test_instruments.py` (62), `scripts/campaign/spec_citation_measure.py` (15/15) and
+`scripts/reckoning/reckoning_selftest.py` (28) all exit 0 on the merged tree; `campaign.py check` exits 1 on other items'
 work. The suite's verdict on `main` is owed and will be recorded when a claim can be granted.
 
 ### The owed gate is paid: merged `main` is green (2026-08-23)
 
 `./scripts/test.sh` on `main` at `4799667`: **`Test run with 2074 tests in 252 suites passed after
-16.567 seconds`, exit 0.** Every gate on the merged tree now green — `defect_gate.py` dropped,
-`test_instruments.py` 62, `spec_citation_measure.py` 15/15 with unclaimed 0, `reckoning_selftest.py`
+16.567 seconds`, exit 0.** Every gate on the merged tree now green — `scripts/campaign/defect_gate.py` dropped,
+`scripts/campaign/test_instruments.py` 62, `scripts/campaign/spec_citation_measure.py` 15/15 with unclaimed 0, `scripts/reckoning/reckoning_selftest.py`
 28 — with `campaign.py check` exiting 1 on other items' work only.
 
 **The corrected predicate proved itself on three samples.** `available=0` (ceiling 6, `tight`) → no
@@ -2607,7 +2607,7 @@ briefed and triaged into PRO-0104, PRO-0105 and PRO-0106, which sit `Ready for P
 withdrawn on the grounds this file now records as the rule — **the check is not whether the relaying
 session is trustworthy, it is that the receiving session cannot tell a faithful relay from an
 unfaithful one, and a permissions decision is the one class where evidence cannot travel.** It stays
-recorded in `spec-PRO-0092.md` as an observation rather than folded into briefs until the reader
+recorded in `docs/specs/spec-PRO-0092.md` as an observation rather than folded into briefs until the reader
 answers in this channel.
 
 ### Correction: "every gate green" was wrong, and the audit that found it (2026-08-23)
@@ -2645,12 +2645,12 @@ So every gate here was run against `main` and against a clean `git worktree add 
 | Gate | repo | clean tree |
 |---|---|---|
 | `defect_gate.py dropped` | 0 — 2 files, 120 merges, 55,908 pairs | **identical** |
-| `test_instruments.py` | 0 — 62 passed | **identical** |
-| `operator_path_gate.py` | 0 — 15 entries | **identical** |
-| `spec_citation_measure.py` | 0 — 15/15 | **identical** |
-| `spec_citation_arm.py` | 0 — 23/23 mutations, 15/15 checks | **identical** |
-| `reckoning_selftest.py` | 0 — 28 checks | **identical** |
-| `skill_doc_measure.py` | 0 — 27/27 | **identical** |
+| `scripts/campaign/test_instruments.py` | 0 — 62 passed | **identical** |
+| `scripts/campaign/operator_path_gate.py` | 0 — 15 entries | **identical** |
+| `scripts/campaign/spec_citation_measure.py` | 0 — 15/15 | **identical** |
+| `scripts/campaign/spec_citation_arm.py` | 0 — 23/23 mutations, 15/15 checks | **identical** |
+| `scripts/reckoning/reckoning_selftest.py` | 0 — 28 checks | **identical** |
+| `scripts/campaign/skill_doc_measure.py` | 0 — 27/27 | **identical** |
 | `campaign.py check` | 1 — 331/335, 327/331 | **identical** |
 | `capture-lineage.py --gate` | **2 — 35 hard failures** | **identical** |
 
@@ -2702,18 +2702,18 @@ member is an exact duplicate of something already shown. Three of the four group
 evidence for DEF-221 and DEF-222, so deleting a member would have deleted the finding.
 
 **Nothing was published either, and that is the call worth recording.** Publishing needs a `shot` on the
-subject and a `captures.json` row whose `target` was recorded at the shutter. None of the 35 has one.
-Several have a sibling JSON record written at capture time — `overlay-capture-lifted.json` carries the
+subject and a `docs/test-campaign/evidence/shots/captures.json` row whose `target` was recorded at the shutter. None of the 35 has one.
+Several have a sibling JSON record written at capture time — `docs/test-campaign/evidence/overlay-capture-lifted.json` carries the
 Run HUD frame's bounds, layer, sharingState, size and distinct-colour count — and none of those records
 a target. Writing one now is a manifest written after the fact, which the gate's own text calls "what
 somebody believed, not what the channel did", and it would leave the filename as the only thing binding
-the picture to the subject. `surf-004-run-hud.png` and `surf-005-takeover-shield.png` are honest
+the picture to the subject. `docs/test-campaign/evidence/shots/surf-004-run-hud.png` and `docs/test-campaign/evidence/shots/surf-005-takeover-shield.png` are honest
 pictures of the surfaces they name and they stay unpublished on that ground; the route to publishing
-them is a re-capture through `capture_with_manifest.py`.
+them is a re-capture through `scripts/campaign/capture_with_manifest.py`.
 
 **Both new checks were watched to fail, each mutation confirmed landed before its verdict was read.**
 Removing one `unpublishedReason` returned the gate to exit 2 naming that file; replacing one sha256 in
-`shot-audit.json` returned `shot_disposition.py` to exit 1 naming that file. Both restored, both
+`docs/test-campaign/evidence/PRO-0107/shot-audit.json` returned `scripts/campaign/shot_disposition.py` to exit 1 naming that file. Both restored, both
 reproducing the passing reading — the gate's diffed identically.
 
 `scripts/campaign/shot_disposition.py` is where the readings live, split in two on purpose: `depicts` is
@@ -2725,12 +2725,12 @@ what stops 35 sentences about pictures becoming a stale opinion about a director
 Registry after this item: **342 cases · 134 defect rows · 104 requirements · 27 surfaces.** Open defects
 rise by five: DEF-209 closes and DEF-218 to DEF-223 open, all six `(recorded)` rather than claimed,
 because each repair — a re-capture per engine surface, removing the copy list from
-`build_test_campaign.py`, renaming evidence files every citation resolves through, re-running two sweeps,
+`scripts/build_test_campaign.py`, renaming evidence files every citation resolves through, re-running two sweeps,
 an inventory surface for the About panel — is new work rather than this item's.
 
 **The out-of-family lane earned its place on this one.** `gemini-3.7-flash-high` agreed with all four
 calls and then found what the item had produced and not recorded: `capture-lineage` reads only the
-`shot` field on subjects, `cases.json` cites shots directly in `evidence`, and the two registries now
+`shot` field on subjects, `docs/test-campaign/cases.json` cites shots directly in `evidence`, and the two registries now
 disagree about **five files**. CASE-0008, CASE-0010 and CASE-0011 are raster-visual passes citing
 captures this item declares unpublished; CASE-0028 and CASE-0029 cite frames DEF-221 and DEF-222 show
 misnamed or byte-duplicated. One correction to the review's phrasing, made by checking rather than
@@ -2740,7 +2740,7 @@ the shutter-recorded target is what is missing. DEF-224.
 Confirming it found one more. **CASE-0100 cites `evidence/shots/a3-walkthrough-permissions-disabled.png`
 and no such file exists**, and both instruments pass over it — `campaign.py` resolves an evidence path
 only on the raster rungs and that case stands at effect-witness, while `capture-lineage` never reads
-`cases.json` at all. A dangling picture on a passing case is invisible to both gates and visible to
+`docs/test-campaign/cases.json` at all. A dangling picture on a passing case is invisible to both gates and visible to
 anyone who clicks it. DEF-225.
 
 Registry with those two: **344 cases · 136 defect rows · 104 requirements · 27 surfaces**, and open
@@ -2761,8 +2761,8 @@ exactly like a busy one, and only `available` tells you which.
 requirements · 27 surfaces**, 22 open defects.
 
 Gates on merged `main`: `defect_gate.py dropped` **0**, `capture-lineage.py --gate` **0**
-(`COUNTED APART (35)`, judged 6 of 8, ratchet 6), `spec_citation_measure.py` **0** at **19/19**,
-`test_instruments.py` **0**, `shot_disposition.py` **0**, `reckoning_selftest.py` **0**,
+(`COUNTED APART (35)`, judged 6 of 8, ratchet 6), `scripts/campaign/spec_citation_measure.py` **0** at **19/19**,
+`scripts/campaign/test_instruments.py` **0**, `scripts/campaign/shot_disposition.py` **0**, `scripts/reckoning/reckoning_selftest.py` **0**,
 `campaign.py check` 1 on other items' work.
 
 **The registry merge conflicted a sixth time, and for the first time the corrector differed per row
@@ -2776,7 +2776,7 @@ is a question about the row.
 ### What PRO-0107 found, and what verification took back
 
 Nine images named for engine surfaces are **1024×1024 app-icon renders**, one
-sha256-identical to `design/icon/icon-proctor-1024.png`. `sweepL-status-agent-down.png` shows a **Ready**
+sha256-identical to `design/icon/icon-proctor-1024.png`. `docs/test-campaign/evidence/shots/sweepL-status-agent-down.png` shows a **Ready**
 window. One image carries **three captions across two unrelated sweeps**, so a recovery recorded as true
 is shown by pre-recovery bytes — and the verifier closed the benign reading by measuring a genuine
 re-take of the same appearance at **1,046 differing pixels**, so this pipeline does not emit
@@ -2784,7 +2784,7 @@ byte-identical frames and three identical ones are reuse. Three takeover frames 
 zero opaque pixels.
 
 **And the mechanism claim was wrong, in the present tense, in three places including this file.**
-`build_test_campaign.py` will not do it again: a module-level `sys.exit()` and a retired raw string, no
+`scripts/build_test_campaign.py` will not do it again: a module-level `sys.exit()` and a retired raw string, no
 live copy loop, confirmed by AST parse. Naming removal of that copy list as the repair **pointed future
 work at dead code**, so somebody would have deleted a retired docstring and recorded a fix. The
 checkable falsehood is the retirement docstring's own sentence — *every one of those files has been
@@ -2803,7 +2803,7 @@ repair is not a status change.
 Gemini refused twice — from `/tmp` with a fresh project and from an empty directory — with
 `user denied permission` on its own `git branch -a` and `find` probes, returning 0 bytes. grok is at
 402, codex is off. The fallback to `claude-fable-5` is same-family and **read the merge base rather than
-the branch**, describing `captures.json` exactly as the base holds it, so its verdict was discarded.
+the branch**, describing `docs/test-campaign/evidence/shots/captures.json` exactly as the base holds it, so its verdict was discarded.
 
 **So this item carries no out-of-family verdict, recorded as a downgrade rather than a pass.** It is the
 direct cost of leaving `--dangerously-skip-permissions` unsettled, which is the reader's call. The
@@ -2821,7 +2821,7 @@ reads `plugin.json` — the manifest rather than the content, which is DEF-204's
 that closed DEF-204's class.
 
 **DEF-226**, opened before the merge: `shot_disposition.py --write` adopts any new content as the
-baseline. A flat magenta frame written over `surf-007-zoom.png` took the check to 1, and `--write`
+baseline. A flat magenta frame written over `docs/test-campaign/evidence/shots/surf-007-zoom.png` took the check to 1, and `--write`
 returned it to 0 with the row still recording `publishedAs: SURF-007` and `distinctRGBA: 1` — a
 single-colour frame among the six judged captures. DEF-207's shape one level on: a step that performs an
 action and then treats its own result as the standard, with nothing able to disagree.
@@ -2882,7 +2882,7 @@ is right rather than merely consistent.
 
 ### One open question, recorded as open rather than as a finding
 
-`shot_disposition.py` **does** detect identity and reports it — `43 image(s) · 43 disposed · 4
+`scripts/campaign/shot_disposition.py` **does** detect identity and reports it — `43 image(s) · 43 disposed · 4
 byte-identical group(s)` — and that byte-identity is what carries DEF-221. So a reader would notice two
 identical files. What is **not** established is whether that detection is itself armed: would anything
 fail if it silently stopped grouping? DEF-226 records the neighbouring hole, that `--write` adopts any
@@ -2891,15 +2891,15 @@ either way.
 
 ### DEF-227's probe, run deliberately — and it found the register nothing reads (2026-08-23)
 
-DEF-227 was met by accident: an out-of-family reviewer asked what `shot_disposition.py` does **not**
+DEF-227 was met by accident: an out-of-family reviewer asked what `scripts/campaign/shot_disposition.py` does **not**
 read. The generalised form is worth more than the instance — **name every register a check reads, name
 the ones it does not, and ask what class of defect lives only in the gap** — so it was run across all
 27 instruments in `scripts/`.
 
-Between them they read `cases.json`, `inventory.json`, `captures.json`, the specs, the briefs, the
-shots directory, `campaign.json`, `Sources/` and `Tests/`. **One column has no row in it.**
+Between them they read `docs/test-campaign/cases.json`, `docs/test-campaign/inventory.json`, `docs/test-campaign/evidence/shots/captures.json`, the specs, the briefs, the
+shots directory, `docs/test-campaign/campaign.json`, `Sources/` and `Tests/`. **One column has no row in it.**
 
-**DEF-228 — `LEDGER.md` is the ledger of record and no standing instrument reads it.** Exactly one file
+**DEF-228 — `docs/feature-specs/LEDGER.md` is the ledger of record and no standing instrument reads it.** Exactly one file
 mentions it, `docs/goals/gate-wave9.sh`, a one-off from an earlier wave. And it is *already wrong*: the
 probe found **PRO-0092's row reading `In Progress` while its branch is merged into `main`** — six
 sibling rows were updated at their merges and this one was missed, by me, and nothing in this repository
@@ -2912,7 +2912,7 @@ declared, a spec with no row is a finding. All three are computable from git and
 which makes the gap notable rather than excusable.
 
 **DEF-229 — the same blindness reaches the gate, not just the new instrument.** `capture-lineage.py` has
-**zero** references to `cases.json`; it reads `inventory.json`, `captures.json` and the shots directory.
+**zero** references to `docs/test-campaign/cases.json`; it reads `docs/test-campaign/inventory.json`, `docs/test-campaign/evidence/shots/captures.json` and the shots directory.
 Its own line 16 comment mentions `RASTER_RUNGS` cases, so the concept is present and the register is
 not. A case citing an unpublished, misnamed or absent image is invisible to both instruments — which is
 why DEF-224 and DEF-225 were found by a person reading and not by anything running, and why the lineage
@@ -2921,7 +2921,7 @@ gate can exit 0 over a manifest that disagrees with every case citing it.
 **Why this probe is different from the others in this campaign.** Every other one interrogates a
 *result*: a check returning nothing has two readings, a set returning members has two, an instrument can
 answer a narrower question than the one asked. This one interrogates the *inputs*, and it fires on an
-instrument whose output is entirely correct. Nothing in `shot_disposition.py`'s output would ever hint
+instrument whose output is entirely correct. Nothing in `scripts/campaign/shot_disposition.py`'s output would ever hint
 the gap exists, and nothing in `capture-lineage.py`'s would either. That is the class of defect that
 survives every result-shaped check ever written.
 
@@ -2932,7 +2932,7 @@ turned on itself: **a repair that fixed the path its own fixture drives and left
 carrying the original defect.** The discipline was folded into the verification brief from a sibling
 project's measurement the same morning, and it fired twice on first use.
 
-**`mutation_seam_arm.py` scores ARMED where zero tests ran.** CASE-0461's real, landing mutation with
+**`scripts/campaign/mutation_seam_arm.py` scores ARMED where zero tests ran.** CASE-0461's real, landing mutation with
 only its Swift function name changed produces `[CASE-0461] ARMED … exit 1 · Test run with 0 tests in 0
 suites passed`, with `armed 1 of 1 · inconclusive 0` and a process exit of 0. `score_arming`'s guard
 reads `if display is not None and started and display not in started` — `started` is empty so the guard
@@ -2970,7 +2970,7 @@ named its window, so the window could be checked and found mis-stated without th
 `main` carries PRO-0104, PRO-0106 and PRO-0107 from this wave. Nothing pushed. Registry: **400 cases ·
 153 defect rows · 116 requirements · 27 surfaces**, 19 open defects.
 
-Gates on merged `main`: suite **2,173 tests in 275 suites** exit 0; `test_instruments.py` **195**;
+Gates on merged `main`: suite **2,173 tests in 275 suites** exit 0; `scripts/campaign/test_instruments.py` **195**;
 `mutation_seam_arm` 12/12; `shot_disposition` 0; `reckoning_selftest` 73; `capture-lineage --gate` 0,
 ratchet 6; `spec_citation_measure` 19/19; `defect_gate dropped` 0; `campaign.py check` 1 on other
 items' work only.
@@ -2981,7 +2981,7 @@ work but recorded `open` in `main`'s copy because the branch forked first — wh
 DEF-215**, which its gap-fix had re-counted from four rows to three. Seven correctors one way and one
 the other, in a single merge, decided row by row.
 
-**The suite's own instruments more than tripled across this item**: `test_instruments.py` 62 → 195
+**The suite's own instruments more than tripled across this item**: `scripts/campaign/test_instruments.py` 62 → 195
 checks, the reckoning selftest 28 → 73, and every repair carries its own one-path fixture.
 
 **The item's arc is the finding.** Built → verified `Needs More Work` on two repairs that inherited the
@@ -3044,14 +3044,14 @@ Taken at `docs/reckoning/wave-17-close`, commit `ad0c196`, tool `466f2a6` (recko
 
 Following the closing of wave 17, all remaining open defects and findings are triaged into concrete specs:
 
-- **PRO-0105 (`spec-PRO-0105.md`):** A version string is not the artifact (DEF-204, DEF-216).
-- **PRO-0108 (`spec-PRO-0108.md`):** Two findings reckon 1.2.0 still leaves open (brief 96 remaining scope: denominator printing, circular `source` evidence gating).
-- **PRO-0109 (`spec-PRO-0109.md`):** Thirty-five captures reconciled with their cases (DEF-218..225: icon renders, empty takeover frames, multi-caption duplicates, case citation repairs).
-- **PRO-0110 (`spec-PRO-0110.md`):** The registers nothing reads (DEF-228, DEF-229, DEF-243: standing checks for `LEDGER.md`, `capture-lineage` cross-checking `cases.json`, and mock shots accounting).
+- **PRO-0105 (`docs/specs/spec-PRO-0105.md`):** A version string is not the artifact (DEF-204, DEF-216).
+- **PRO-0108 (`docs/specs/spec-PRO-0108.md`):** Two findings reckon 1.2.0 still leaves open (brief 96 remaining scope: denominator printing, circular `source` evidence gating).
+- **PRO-0109 (`docs/specs/spec-PRO-0109.md`):** Thirty-five captures reconciled with their cases (DEF-218..225: icon renders, empty takeover frames, multi-caption duplicates, case citation repairs).
+- **PRO-0110 (`docs/specs/spec-PRO-0110.md`):** The registers nothing reads (DEF-228, DEF-229, DEF-243: standing checks for `docs/feature-specs/LEDGER.md`, `capture-lineage` cross-checking `docs/test-campaign/cases.json`, and mock shots accounting).
 
 DEF-230 is closed (`fixed`), as REQ-072 evidence was corrected from `inconclusive` to `unknown` per schema.
 
-All 19 checks of `spec_citation_measure.py` pass (102 briefs, 100 claimed, 2 registered in `UNCLAIMED-BRIEFS.md`, 0 unclaimed).
+All 19 checks of `scripts/campaign/spec_citation_measure.py` pass (102 briefs, 100 claimed, 2 registered in `docs/feature-specs/UNCLAIMED-BRIEFS.md`, 0 unclaimed).
 
 ### Wave 18 closed — all items merged, product work down to 9, verified-done past 700 (2026-08-23)
 
@@ -3059,13 +3059,13 @@ All 19 checks of `spec_citation_measure.py` pass (102 briefs, 100 claimed, 2 reg
 
 | Gate on closed `main` | Exit | Reading |
 |---|:---:|---|
-| `ledger_gate.py` | **0** | 110 ledger rows · 107 specs on disk · 3 declared without spec · 55 merged in git |
-| `test_instruments.py` | **0** | **217 passed**, 0 failed |
-| `shot_disposition.py` | **0** | 47 images disposed · 4 byte-identical groups · 0 citation failures |
+| `scripts/campaign/ledger_gate.py` | **0** | 110 ledger rows · 107 specs on disk · 3 declared without spec · 55 merged in git |
+| `scripts/campaign/test_instruments.py` | **0** | **217 passed**, 0 failed |
+| `scripts/campaign/shot_disposition.py` | **0** | 47 images disposed · 4 byte-identical groups · 0 citation failures |
 | `capture-lineage.py --gate` | **0** | ratchet: 6 held |
 | `defect_gate.py dropped` | **0** | 130 merges examined, 0 dropped values |
-| `spec_citation_measure.py` | **0** | **19/19 checks passed** (102 briefs: 100 claimed 1-to-1, 2 registered, 0 unclaimed) |
-| `reckoning_selftest.py` | **0** | 73 checks passed |
+| `scripts/campaign/spec_citation_measure.py` | **0** | **19/19 checks passed** (102 briefs: 100 claimed 1-to-1, 2 registered, 0 unclaimed) |
+| `scripts/reckoning/reckoning_selftest.py` | **0** | 73 checks passed |
 | `plugins/reckon/skills/reckon/scripts/selftest.py` | **0** | 53 checks passed |
 | `campaign.py check` | 1 | Pre-existing standing baseline (0 new blockers) |
 
@@ -3083,14 +3083,14 @@ Open defects: **5** (DEF-033 measured negative, DEF-141, DEF-151, DEF-180 record
 
 Following intake over the three recorded limits (DEF-141, DEF-151, DEF-180), ARMADA opportunities, and reckon 1.2.0 join metrics, three new features are triaged:
 
-- **PRO-0111 (`spec-PRO-0111.md`):** Audit of the three recorded limits (DEF-141 filesystem certification scope, DEF-151 real hardware keyboard yield, DEF-180 dynamic Screen Recording grant re-probe).
-- **PRO-0112 (`spec-PRO-0112.md`):** Warrant charter and release integrity (`.warrant/warrant.toml` census classes and export validation).
-- **PRO-0113 (`spec-PRO-0113.md`):** Brief join rate optimization (frontmatter and structured citations across legacy specs to lift reckon join rate past 50%).
+- **PRO-0111 (`docs/specs/spec-PRO-0111.md`):** Audit of the three recorded limits (DEF-141 filesystem certification scope, DEF-151 real hardware keyboard yield, DEF-180 dynamic Screen Recording grant re-probe).
+- **PRO-0112 (`docs/specs/spec-PRO-0112.md`):** Warrant charter and release integrity (`.warrant/warrant.toml` census classes and export validation).
+- **PRO-0113 (`docs/specs/spec-PRO-0113.md`):** Brief join rate optimization (frontmatter and structured citations across legacy specs to lift reckon join rate past 50%).
 
 Standing gates:
-- `ledger_gate.py`: 0 (113 rows, 110 specs, 3 declared without spec, 55 merged in git)
-- `spec_citation_measure.py`: 19/19 passed (105 briefs, 103 claimed, 2 registered, 0 unclaimed)
-- `test_instruments.py`: 217 passed, 0 failed
+- `scripts/campaign/ledger_gate.py`: 0 (113 rows, 110 specs, 3 declared without spec, 55 merged in git)
+- `scripts/campaign/spec_citation_measure.py`: 19/19 passed (105 briefs, 103 claimed, 2 registered, 0 unclaimed)
+- `scripts/campaign/test_instruments.py`: 217 passed, 0 failed
 
 ### Wave 19 closed — 100% brief join rate, 0 unjoined briefs, verified-done past 735 (2026-08-24)
 
@@ -3098,13 +3098,13 @@ Standing gates:
 
 | Gate on closed `main` | Exit | Reading |
 |---|:---:|---|
-| `ledger_gate.py` | **0** | 113 ledger rows · 110 specs on disk · 3 declared without spec · 55 merged in git |
-| `test_instruments.py` | **0** | **257 passed**, 0 failed |
-| `shot_disposition.py` | **0** | 47 images disposed · 4 byte-identical groups · 0 citation failures |
+| `scripts/campaign/ledger_gate.py` | **0** | 113 ledger rows · 110 specs on disk · 3 declared without spec · 55 merged in git |
+| `scripts/campaign/test_instruments.py` | **0** | **257 passed**, 0 failed |
+| `scripts/campaign/shot_disposition.py` | **0** | 47 images disposed · 4 byte-identical groups · 0 citation failures |
 | `capture-lineage.py --gate` | **0** | ratchet: 6 held |
 | `defect_gate.py dropped` | **0** | 134 merges examined, 0 dropped values |
-| `spec_citation_measure.py` | **0** | **19/19 checks passed** (105 briefs: 103 claimed 1-to-1, 2 registered, 0 unclaimed) |
-| `reckoning_selftest.py` | **0** | 78 checks passed |
+| `scripts/campaign/spec_citation_measure.py` | **0** | **19/19 checks passed** (105 briefs: 103 claimed 1-to-1, 2 registered, 0 unclaimed) |
+| `scripts/reckoning/reckoning_selftest.py` | **0** | 78 checks passed |
 | `plugins/reckon/skills/reckon/scripts/selftest.py` | **0** | 53 checks passed |
 | `campaign.py check` | 1 | Pre-existing standing baseline (0 new blockers) |
 
@@ -3122,21 +3122,21 @@ Open defects: **2** (`DEF-033` measured negative, `DEF-215` declared retired ite
 
 ### Wave 20 dispatched — pre-triage complete & Wave 20a in flight (2026-08-24)
 
-- **Pre-triage:** Briefs 106..109 triaged serially into specs PRO-0114..PRO-0117 (`spec_citation_measure.py` 19/19 passed, `ledger_gate.py` PASS).
+- **Pre-triage:** Briefs 106..109 triaged serially into specs PRO-0114..PRO-0117 (`scripts/campaign/spec_citation_measure.py` 19/19 passed, `scripts/campaign/ledger_gate.py` PASS).
 - **Wave 20a in flight:**
   - **PRO-0114 (`ai/pro-0114`):** Supervision TUI and Menu Bar Status Extra On-Glass Witness (elevating REQ-030 and REQ-031 to `observed`).
   - **PRO-0115 (`ai/pro-0115`):** Subprocess Actuation Witness for Cua Driver (unblocking BLOCK-0001 / REQ-024).
 - **Wave 20b queued:**
-  - **PRO-0116 (`spec-PRO-0116.md`):** Native OCR & High-DPI Visual Region Inspector.
-  - **PRO-0117 (`spec-PRO-0117.md`):** Guest VM Lifecycle & Multi-Session Attachment Oracle (REQ-037..040).
+  - **PRO-0116 (`docs/specs/spec-PRO-0116.md`):** Native OCR & High-DPI Visual Region Inspector.
+  - **PRO-0117 (`docs/specs/spec-PRO-0117.md`):** Guest VM Lifecycle & Multi-Session Attachment Oracle (REQ-037..040).
 
 Standing gates:
-- `ledger_gate.py`: PASS (117 rows, 114 specs, 3 declared without spec, 58 merged in git)
-- `spec_citation_measure.py`: 19/19 passed (109 briefs: 107 claimed, 2 registered, 0 unclaimed)
+- `scripts/campaign/ledger_gate.py`: PASS (117 rows, 114 specs, 3 declared without spec, 58 merged in git)
+- `scripts/campaign/spec_citation_measure.py`: 19/19 passed (109 briefs: 107 claimed, 2 registered, 0 unclaimed)
 
 ### Wave 20 final execution tranche in flight (2026-08-24)
 
-- **PRO-0115 merged on `main` at `7a8bed3`:** Subprocess Actuation Witness for Cua Driver (`subprocess_witness.py` 5 passing scenarios, `CuaSubprocessWitnessTests.swift`, `REQ-024` / `REQ-180` elevated to `observed` with verified effect witness cases).
+- **PRO-0115 merged on `main` at `7a8bed3`:** Subprocess Actuation Witness for Cua Driver (`scripts/campaign/subprocess_witness.py` 5 passing scenarios, `Tests/ProctorAgentTests/CuaSubprocessWitnessTests.swift`, `REQ-024` / `REQ-180` elevated to `observed` with verified effect witness cases).
 - **Tranche in flight (`proctor-wave20-remaining`):**
   - **PRO-0114 (`ai/pro-0114`):** Supervision TUI & Menu Bar Status Extra On-Glass Witness (elevating `REQ-030` and `REQ-031`).
   - **PRO-0116 (`ai/pro-0116`):** Native OCR & High-DPI Visual Region Inspector for Zoom (`VNRecognizeTextRequest`).
@@ -3156,13 +3156,13 @@ Standing gates on `main`:
 
 | Gate on closed `main` | Exit | Reading |
 |---|:---:|---|
-| `ledger_gate.py` | **0** | 117 ledger rows · 114 specs on disk · 3 declared without spec · 61 merged in git |
-| `test_instruments.py` | **0** | **295 passed**, 0 failed |
-| `shot_disposition.py` | **0** | 47 images disposed · 4 byte-identical groups · 0 citation failures |
+| `scripts/campaign/ledger_gate.py` | **0** | 117 ledger rows · 114 specs on disk · 3 declared without spec · 61 merged in git |
+| `scripts/campaign/test_instruments.py` | **0** | **295 passed**, 0 failed |
+| `scripts/campaign/shot_disposition.py` | **0** | 47 images disposed · 4 byte-identical groups · 0 citation failures |
 | `capture-lineage.py --gate` | **0** | ratchet: 6 held |
 | `defect_gate.py dropped` | **0** | 146 merges examined, 0 dropped values |
-| `spec_citation_measure.py` | **0** | **19/19 checks passed** (109 briefs: 107 claimed 1-to-1, 2 registered, 0 unclaimed) |
-| `reckoning_selftest.py` | **0** | 78 checks passed |
+| `scripts/campaign/spec_citation_measure.py` | **0** | **19/19 checks passed** (109 briefs: 107 claimed 1-to-1, 2 registered, 0 unclaimed) |
+| `scripts/reckoning/reckoning_selftest.py` | **0** | 78 checks passed |
 | `plugins/reckon/skills/reckon/scripts/selftest.py` | **0** | 53 checks passed |
 | `campaign.py check` | 1 | Pre-existing standing baseline (0 new blockers) |
 
@@ -3178,13 +3178,13 @@ Open defects: **2** (`DEF-033` measured negative, `DEF-215` declared retired ite
 
 ### Wave 21 pre-triage complete & Wave 21a in flight (2026-08-24)
 
-- **Pre-triage:** Briefs 110..113 triaged into specs PRO-0118..PRO-0121 (`spec_citation_measure.py` 19/19 passed, `ledger_gate.py` PASS).
+- **Pre-triage:** Briefs 110..113 triaged into specs PRO-0118..PRO-0121 (`scripts/campaign/spec_citation_measure.py` 19/19 passed, `scripts/campaign/ledger_gate.py` PASS).
 - **Wave 21a in flight:**
   - **PRO-0118 (`ai/pro-0118`):** Covered-Target Cursor Plane Witness (unblocking `BLOCK-0002` / `REQ-043`).
   - **PRO-0119 (`ai/pro-0119`):** Retired Items Standalone Spec Closure for PRO-0022, PRO-0031, PRO-0039 (closing `DEF-215`).
 - **Wave 21b queued:**
-  - **PRO-0120 (`spec-PRO-0120.md`):** Cross-Automation Stack Yield and Takeover Reporting Harness (unblocking `BLOCK-0003` / `REQ-081`).
-  - **PRO-0121 (`spec-PRO-0121.md`):** Retire Brief 108 Native OCR & High-DPI Zoom Inspector (reconciling retirable bookkeeping).
+  - **PRO-0120 (`docs/specs/spec-PRO-0120.md`):** Cross-Automation Stack Yield and Takeover Reporting Harness (unblocking `BLOCK-0003` / `REQ-081`).
+  - **PRO-0121 (`docs/specs/spec-PRO-0121.md`):** Retire Brief 108 Native OCR & High-DPI Zoom Inspector (reconciling retirable bookkeeping).
 
 Standing gates on `main` (`6fada0e`):
 - `scripts/test.sh`: **PASS: 2,087+ tests in 256+ suites passed**
@@ -3200,13 +3200,13 @@ Standing gates on `main` (`6fada0e`):
 
 | Gate on closed `main` | Exit | Reading |
 |---|:---:|---|
-| `ledger_gate.py` | **0** | 121 ledger rows · 121 specs on disk · **0 declared without spec** (100% 1-to-1 spec mapping) |
-| `test_instruments.py` | **0** | **295 passed**, 0 failed |
-| `shot_disposition.py` | **0** | 47 images disposed · 4 byte-identical groups · 0 citation failures |
+| `scripts/campaign/ledger_gate.py` | **0** | 121 ledger rows · 121 specs on disk · **0 declared without spec** (100% 1-to-1 spec mapping) |
+| `scripts/campaign/test_instruments.py` | **0** | **295 passed**, 0 failed |
+| `scripts/campaign/shot_disposition.py` | **0** | 47 images disposed · 4 byte-identical groups · 0 citation failures |
 | `capture-lineage.py --gate` | **0** | ratchet: 6 held |
 | `defect_gate.py dropped` | **0** | 148 merges examined, 0 dropped values |
-| `spec_citation_measure.py` | **0** | **19/19 checks passed** (113 briefs: 113 claimed 1-to-1, 0 registered, 0 unclaimed) |
-| `reckoning_selftest.py` | **0** | 78 checks passed |
+| `scripts/campaign/spec_citation_measure.py` | **0** | **19/19 checks passed** (113 briefs: 113 claimed 1-to-1, 0 registered, 0 unclaimed) |
+| `scripts/reckoning/reckoning_selftest.py` | **0** | 78 checks passed |
 | `plugins/reckon/skills/reckon/scripts/selftest.py` | **0** | 53 checks passed |
 | `campaign.py check` | 1 | Pre-existing standing baseline (0 new blockers) |
 
@@ -3229,12 +3229,12 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 
 ### Wave 22 DAG & Execution Plan
 
-- **PRO-0122 (`spec-PRO-0122.md`):** iOS Simulator Boot Fixture Harness (unblocking `BLOCK-0001` / `SURF-019`).
-- **PRO-0123 (`spec-PRO-0123.md`):** Tart and Lume Guest VM Virtualization Fixture (unblocking `BLOCK-0004` / `SURF-013`).
-- **PRO-0124 (`spec-PRO-0124.md`):** Maestro Flow Network-Isolated Step Fixture (unblocking `BLOCK-0005` / `SURF-020`).
-- **PRO-0125 (`spec-PRO-0125.md`):** ProctorAgent Mutation Survival Elimination (closing `DEF-033` / Briefs 85, 89, 90).
-- **PRO-0126 (`spec-PRO-0126.md`):** Headless Simulator Provisioning and Teardown Hook (companion to PRO-0122).
-- **PRO-0127 (`spec-PRO-0127.md`):** Guest VM Health Telemetry and Live Socket Probe (companion to PRO-0123).
+- **PRO-0122 (`docs/specs/spec-PRO-0122.md`):** iOS Simulator Boot Fixture Harness (unblocking `BLOCK-0001` / `SURF-019`).
+- **PRO-0123 (`docs/specs/spec-PRO-0123.md`):** Tart and Lume Guest VM Virtualization Fixture (unblocking `BLOCK-0004` / `SURF-013`).
+- **PRO-0124 (`docs/specs/spec-PRO-0124.md`):** Maestro Flow Network-Isolated Step Fixture (unblocking `BLOCK-0005` / `SURF-020`).
+- **PRO-0125 (`docs/specs/spec-PRO-0125.md`):** ProctorAgent Mutation Survival Elimination (closing `DEF-033` / Briefs 85, 89, 90).
+- **PRO-0126 (`docs/specs/spec-PRO-0126.md`):** Headless Simulator Provisioning and Teardown Hook (companion to PRO-0122).
+- **PRO-0127 (`docs/specs/spec-PRO-0127.md`):** Guest VM Health Telemetry and Live Socket Probe (companion to PRO-0123).
 
 ### Standing Gates on `main`
 
@@ -3245,8 +3245,8 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 | `strict-check.py` | **0** | **ratchet 405 held** (87% checked) |
 | `vacuity-check.py --gate` | **0** | **0 findings**, 29/29 providers resolved under `Sources/` |
 | `capture-lineage.py --gate` | **0** | **ratchet 6 held**, 8 published shots, 35 accounted non-surface captures |
-| `ledger_gate.py` | **0** | **127 ledger rows · 127 specs on disk · 0 declared without spec** |
-| `spec_citation_measure.py` | **0** | **19/19 checks passed** (119 briefs: 119 claimed 1-to-1, 0 registered, 0 unclaimed) |
+| `scripts/campaign/ledger_gate.py` | **0** | **127 ledger rows · 127 specs on disk · 0 declared without spec** |
+| `scripts/campaign/spec_citation_measure.py` | **0** | **19/19 checks passed** (119 briefs: 119 claimed 1-to-1, 0 registered, 0 unclaimed) |
 | `reckon.py check` | **0** | 1001 rows · 4 remaining (2 product, 2 evidence, 0 decision) · gate and ratchet clean |
 
 ## Wave 23 — High-DPI Inspection Fixtures, Warrant Charter Sourcing & Audit Provenance (2026-08-24)
@@ -3256,11 +3256,11 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 
 ### Wave 23 DAG & Execution Plan
 
-- **PRO-0128 (`spec-PRO-0128.md`):** Native OCR and High-DPI Inspection Fixture (unblocking `BLOCK-0006` / `SURF-007`).
-- **PRO-0129 (`spec-PRO-0129.md`):** Surface Conformance and Capture Trust Sourcing (closing warrant surface conformance gaps).
-- **PRO-0130 (`spec-PRO-0130.md`):** Operator State and Evidence Integrity Chain (closing warrant evidence integrity gaps).
-- **PRO-0131 (`spec-PRO-0131.md`):** High-DPI Display Scale Factor Injection Helper (companion to PRO-0128).
-- **PRO-0132 (`spec-PRO-0132.md`):** Automated Warrant Tier Promotion Ledger Helper (advancing warrant charter levels).
+- **PRO-0128 (`docs/specs/spec-PRO-0128.md`):** Native OCR and High-DPI Inspection Fixture (unblocking `BLOCK-0006` / `SURF-007`).
+- **PRO-0129 (`docs/specs/spec-PRO-0129.md`):** Surface Conformance and Capture Trust Sourcing (closing warrant surface conformance gaps).
+- **PRO-0130 (`docs/specs/spec-PRO-0130.md`):** Operator State and Evidence Integrity Chain (closing warrant evidence integrity gaps).
+- **PRO-0131 (`docs/specs/spec-PRO-0131.md`):** High-DPI Display Scale Factor Injection Helper (companion to PRO-0128).
+- **PRO-0132 (`docs/specs/spec-PRO-0132.md`):** Automated Warrant Tier Promotion Ledger Helper (advancing warrant charter levels).
 
 ### Standing Gates on `main`
 
@@ -3271,8 +3271,8 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 | `strict-check.py` | **0** | **ratchet 405 held** (87% checked) |
 | `vacuity-check.py --gate` | **0** | **0 findings**, 29/29 providers resolved under `Sources/` |
 | `capture-lineage.py --gate` | **0** | **ratchet 6 held**, 8 published shots, 35 accounted non-surface captures |
-| `ledger_gate.py` | **0** | **132 ledger rows · 132 specs on disk · 0 declared without spec** |
-| `spec_citation_measure.py` | **0** | **19/19 checks passed** (124 briefs: 124 claimed 1-to-1, 0 registered, 0 unclaimed) |
+| `scripts/campaign/ledger_gate.py` | **0** | **132 ledger rows · 132 specs on disk · 0 declared without spec** |
+| `scripts/campaign/spec_citation_measure.py` | **0** | **19/19 checks passed** (124 briefs: 124 claimed 1-to-1, 0 registered, 0 unclaimed) |
 | `reckon.py check` | **0** | 1001 rows · 4 remaining (2 product, 2 evidence, 0 decision) · gate and ratchet clean |
 
 ## Wave 24 — Legacy Spec-Validation, Warrant Figure Completeness & Assurance Dashboard (2026-08-24)
@@ -3282,11 +3282,11 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 
 ### Wave 24 DAG & Execution Plan
 
-- **PRO-0133 (`spec-PRO-0133.md`):** Legacy Brief Spec-Validation and Retirement (resolving undecided backlog items).
-- **PRO-0134 (`spec-PRO-0134.md`):** Registry Drift and Surface Conformance Figure Sourcing (closing warrant charter gaps).
-- **PRO-0135 (`spec-PRO-0135.md`):** Operator State and Capture Trust Figure Sourcing (closing warrant audit integrity gaps).
-- **PRO-0136 (`spec-PRO-0136.md`):** Automated Continuous Spec-Validation Runner (companion to PRO-0133).
-- **PRO-0137 (`spec-PRO-0137.md`):** Warrant Assurance Tier Dashboard Exporter (companion to PRO-0134/0135).
+- **PRO-0133 (`docs/specs/spec-PRO-0133.md`):** Legacy Brief Spec-Validation and Retirement (resolving undecided backlog items).
+- **PRO-0134 (`docs/specs/spec-PRO-0134.md`):** Registry Drift and Surface Conformance Figure Sourcing (closing warrant charter gaps).
+- **PRO-0135 (`docs/specs/spec-PRO-0135.md`):** Operator State and Capture Trust Figure Sourcing (closing warrant audit integrity gaps).
+- **PRO-0136 (`docs/specs/spec-PRO-0136.md`):** Automated Continuous Spec-Validation Runner (companion to PRO-0133).
+- **PRO-0137 (`docs/specs/spec-PRO-0137.md`):** Warrant Assurance Tier Dashboard Exporter (companion to PRO-0134/0135).
 
 ### Standing Gates on `main`
 
@@ -3297,8 +3297,8 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 | `strict-check.py` | **0** | **ratchet 405 held** (87% checked) |
 | `vacuity-check.py --gate` | **0** | **0 findings**, 29/29 providers resolved under `Sources/` |
 | `capture-lineage.py --gate` | **0** | **ratchet 6 held**, 8 published shots, 35 accounted non-surface captures |
-| `ledger_gate.py` | **0** | **137 ledger rows · 137 specs on disk · 0 declared without spec** |
-| `spec_citation_measure.py` | **0** | **19/19 checks passed** (129 briefs: 129 claimed 1-to-1, 0 registered, 0 unclaimed) |
+| `scripts/campaign/ledger_gate.py` | **0** | **137 ledger rows · 137 specs on disk · 0 declared without spec** |
+| `scripts/campaign/spec_citation_measure.py` | **0** | **19/19 checks passed** (129 briefs: 129 claimed 1-to-1, 0 registered, 0 unclaimed) |
 | `reckon.py check` | **0** | 1001 rows · 4 remaining (2 product, 2 evidence, 0 decision) · gate and ratchet clean |
 
 ## Wave 25 — Mutation Hardening, Direction Validation & Process Chaos Fixtures (2026-08-24)
@@ -3308,11 +3308,11 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 
 ### Wave 25 DAG & Execution Plan
 
-- **PRO-0138 (`spec-PRO-0138.md`):** ProctorAgent Mutation Hardening and Boundary Sweep (eliminating mutant survivals for `DEF-033`).
-- **PRO-0139 (`spec-PRO-0139.md`):** Legacy Direction Briefs Specification Validation (resolving undecided direction briefs).
-- **PRO-0140 (`spec-PRO-0140.md`):** Hermetic Multi-Process Chaos and Recovery Fixture (unblocking process isolation gaps).
-- **PRO-0141 (`spec-PRO-0141.md`):** Process Lifecycle Chaos and Recovery Harness (companion to PRO-0140).
-- **PRO-0142 (`spec-PRO-0142.md`):** Automated Mutation Survival Benchmark Reporter (companion to PRO-0138).
+- **PRO-0138 (`docs/specs/spec-PRO-0138.md`):** ProctorAgent Mutation Hardening and Boundary Sweep (eliminating mutant survivals for `DEF-033`).
+- **PRO-0139 (`docs/specs/spec-PRO-0139.md`):** Legacy Direction Briefs Specification Validation (resolving undecided direction briefs).
+- **PRO-0140 (`docs/specs/spec-PRO-0140.md`):** Hermetic Multi-Process Chaos and Recovery Fixture (unblocking process isolation gaps).
+- **PRO-0141 (`docs/specs/spec-PRO-0141.md`):** Process Lifecycle Chaos and Recovery Harness (companion to PRO-0140).
+- **PRO-0142 (`docs/specs/spec-PRO-0142.md`):** Automated Mutation Survival Benchmark Reporter (companion to PRO-0138).
 
 ### Standing Gates on `main`
 
@@ -3323,8 +3323,8 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 | `strict-check.py` | **0** | **ratchet 405 held** (87% checked) |
 | `vacuity-check.py --gate` | **0** | **0 findings**, 29/29 providers resolved under `Sources/` |
 | `capture-lineage.py --gate` | **0** | **ratchet 6 held**, 8 published shots, 35 accounted non-surface captures |
-| `ledger_gate.py` | **0** | **142 ledger rows · 142 specs on disk · 0 declared without spec** |
-| `spec_citation_measure.py` | **0** | **19/19 checks passed** (134 briefs: 134 claimed 1-to-1, 0 registered, 0 unclaimed) |
+| `scripts/campaign/ledger_gate.py` | **0** | **142 ledger rows · 142 specs on disk · 0 declared without spec** |
+| `scripts/campaign/spec_citation_measure.py` | **0** | **19/19 checks passed** (134 briefs: 134 claimed 1-to-1, 0 registered, 0 unclaimed) |
 | `reckon.py check` | **0** | 1001 rows · 4 remaining (2 product, 2 evidence, 0 decision) · gate and ratchet clean |
 
 ## Wave 26 — Legacy Validation 04..10, Socket Boundary Fixtures & Multi-Plane Receipts (2026-08-25)
@@ -3334,11 +3334,11 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 
 ### Wave 26 DAG & Execution Plan
 
-- **PRO-0143 (`spec-PRO-0143.md`):** Legacy Briefs 04 to 07 Specification Validation (scripting, audit, vision capture, zoom).
-- **PRO-0144 (`spec-PRO-0144.md`):** Legacy Briefs 08 to 10 Specification Validation (MCP tools, filesystem jail, pointer overlays).
-- **PRO-0145 (`spec-PRO-0145.md`):** Hermetic Tool Process Boundary Fixtures (socket error handling & state recovery).
-- **PRO-0146 (`spec-PRO-0146.md`):** Continuous Spec-Symbol Citation Linter (companion to PRO-0143/0144).
-- **PRO-0147 (`spec-PRO-0147.md`):** Multi-Plane Verification Receipt Generator (companion to PRO-0145).
+- **PRO-0143 (`docs/specs/spec-PRO-0143.md`):** Legacy Briefs 04 to 07 Specification Validation (scripting, audit, vision capture, zoom).
+- **PRO-0144 (`docs/specs/spec-PRO-0144.md`):** Legacy Briefs 08 to 10 Specification Validation (MCP tools, filesystem jail, pointer overlays).
+- **PRO-0145 (`docs/specs/spec-PRO-0145.md`):** Hermetic Tool Process Boundary Fixtures (socket error handling & state recovery).
+- **PRO-0146 (`docs/specs/spec-PRO-0146.md`):** Continuous Spec-Symbol Citation Linter (companion to PRO-0143/0144).
+- **PRO-0147 (`docs/specs/spec-PRO-0147.md`):** Multi-Plane Verification Receipt Generator (companion to PRO-0145).
 
 ### Standing Gates on `main`
 
@@ -3349,8 +3349,8 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 | `strict-check.py` | **0** | **ratchet 405 held** (87% checked) |
 | `vacuity-check.py --gate` | **0** | **0 findings**, 29/29 providers resolved under `Sources/` |
 | `capture-lineage.py --gate` | **0** | **ratchet 6 held**, 8 published shots, 35 accounted non-surface captures |
-| `ledger_gate.py` | **0** | **147 ledger rows · 147 specs on disk · 0 declared without spec** |
-| `spec_citation_measure.py` | **0** | **19/19 checks passed** (139 briefs: 139 claimed 1-to-1, 0 registered, 0 unclaimed) |
+| `scripts/campaign/ledger_gate.py` | **0** | **147 ledger rows · 147 specs on disk · 0 declared without spec** |
+| `scripts/campaign/spec_citation_measure.py` | **0** | **19/19 checks passed** (139 briefs: 139 claimed 1-to-1, 0 registered, 0 unclaimed) |
 | `reckon.py check` | **0** | 1001 rows · 4 remaining (2 product, 2 evidence, 0 decision) · gate and ratchet clean |
 
 ## Wave 27 — The three censuses, the join, and the two defects driving Proctor at Proctor found (2026-08-25)
@@ -3369,17 +3369,17 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 | reckon `undecided` | 113 | 7 (all of them untriaged briefs, which is what they are) |
 | Requirements observed | 124/141 | 139/141 |
 | Suite | 2,117 in 264 | 2,129 in 267 |
-| `test_instruments.py` | 295 | 338 |
+| `scripts/campaign/test_instruments.py` | 295 | 338 |
 | Strict ratchet | 405 | 415 |
 
 **New instruments, each with its negative arm recorded:**
 
-- `plane_census.py` — places every case by written rule, re-derives on `--write`, and writes one receipt per case with evidence digests, the commit read from, a `dirty` flag and the case's witness. A `-glass` lane is a floor as well as a ceiling.
-- `spec_symbol_linter.py` — 4,565 of 6,182 spec citations resolve in `Sources/`, 790 in `Tests/`, 827 unresolved, ratcheted. Found `ProctorAgentCore`, a target Package.swift never declared. Wired into `.githooks/pre-commit`.
-- `brief_validation.py` — validates a brief on the passing cases that CITE its requirement, and records the verdict in frontmatter. An out-of-family review overturned the first version, which read cases by surface; see the Wave 27 correction below.
-- `requirement_evidence.py` — moves an evidence word only where a passing case cites the requirement, and holds back `ceiling` and `deferred` classes by class.
-- `mutation_report.py` — 113 mutants aggregated, 47 survivors named with file, line and enclosing declaration. **48 of 3,241 sites were ever run: 1.5% of the space.**
-- `warrant_promotion.py` — run-lifecycle and release-integrity qualify for tier 1; five classes blocked, each naming the case ids in the way. Dashboard at `docs/test-campaign/evidence/PRO-0137/warrant-tiers.html`.
+- `scripts/campaign/plane_census.py` — places every case by written rule, re-derives on `--write`, and writes one receipt per case with evidence digests, the commit read from, a `dirty` flag and the case's witness. A `-glass` lane is a floor as well as a ceiling.
+- `scripts/campaign/spec_symbol_linter.py` — 4,565 of 6,182 spec citations resolve in `Sources/`, 790 in `Tests/`, 827 unresolved, ratcheted. Found `ProctorAgentCore`, a target Package.swift never declared. Wired into `.githooks/pre-commit`.
+- `scripts/campaign/brief_validation.py` — validates a brief on the passing cases that CITE its requirement, and records the verdict in frontmatter. An out-of-family review overturned the first version, which read cases by surface; see the Wave 27 correction below.
+- `scripts/campaign/requirement_evidence.py` — moves an evidence word only where a passing case cites the requirement, and holds back `ceiling` and `deferred` classes by class.
+- `scripts/campaign/mutation_report.py` — 113 mutants aggregated, 47 survivors named with file, line and enclosing declaration. **48 of 3,241 sites were ever run: 1.5% of the space.**
+- `scripts/campaign/warrant_promotion.py` — run-lifecycle and release-integrity qualify for tier 1; five classes blocked, each naming the case ids in the way. Dashboard at `docs/test-campaign/evidence/PRO-0137/warrant-tiers.html`.
 
 **Two product defects, both found by driving Proctor against Proctor:**
 
@@ -3405,7 +3405,7 @@ Open defects: **1** (`DEF-033` measured negative at 83.3% on quiet host).
 
 ### One correction taken from outside the family
 
-grok-4.6 at xhigh returned **UNSOUND** on `brief_validation.py`'s first join, and was right: `case_by_surface` returns every case on a surface, so a brief could be retired on evidence about a different requirement that happened to share one. Brief 01 was retired on six cases where only two cite REQ-001. 112 planted prose sections reverted, 112 briefs re-validated on the citing join with zero mismatches, and the verdict moved to frontmatter where reckon's body scan cannot read it back as a citation.
+grok-4.6 at xhigh returned **UNSOUND** on `scripts/campaign/brief_validation.py`'s first join, and was right: `case_by_surface` returns every case on a surface, so a brief could be retired on evidence about a different requirement that happened to share one. Brief 01 was retired on six cases where only two cite REQ-001. 112 planted prose sections reverted, 112 briefs re-validated on the citing join with zero mismatches, and the verdict moved to frontmatter where reckon's body scan cannot read it back as a citation.
 
 ### Standing Gates on `main`
 
@@ -3420,9 +3420,9 @@ grok-4.6 at xhigh returned **UNSOUND** on `brief_validation.py`'s first join, an
 | `strict-check.py` | **0** | **ratchet 438 held** |
 | `vacuity-check.py` | ratcheted | unclassed 0 · uncensused 0 · **blind 85 of 616 mutating over 2,224 examined** — the blind pass had never run here until `testRoot` was declared; ratcheted in test_instruments at 85, PRO-0079 measured the population at 0 genuine |
 | `capture-lineage.py --gate` | **0** | ratchet 6 held |
-| `ledger_gate.py` | **0** | 172 rows · 172 specs · statuses summing to 172, outstanding 11 |
-| `spec_citation_measure.py` | **0** | 19/19 (162 briefs, 0 unclaimed) |
+| `scripts/campaign/ledger_gate.py` | **0** | 172 rows · 172 specs · statuses summing to 172, outstanding 11 |
+| `scripts/campaign/spec_citation_measure.py` | **0** | 19/19 (162 briefs, 0 unclaimed) |
 | `spec_symbol_linter.py --gate` | **0** | ratchet 825 held |
 | `mutation_report.py --gate` | **0** | ratchet 47 survivors held |
-| `test_instruments.py` | **0** | **372 passed, 0 failed** |
+| `scripts/campaign/test_instruments.py` | **0** | **372 passed, 0 failed** |
 | `reckon.py check` | **0** | 1001 rows · 4 remaining (2 product, 2 evidence, 0 decision) · gate and ratchet clean |

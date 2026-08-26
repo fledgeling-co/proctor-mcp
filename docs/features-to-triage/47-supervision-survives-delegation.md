@@ -7,7 +7,7 @@ validated-provider: Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swi
 ---
 # Supervision survives delegation
 
-**Read `00-WAVE-7-DIRECTION.md` first.**
+**Read `docs/features-to-triage/00-WAVE-7-DIRECTION.md` first.**
 
 ## The problem
 

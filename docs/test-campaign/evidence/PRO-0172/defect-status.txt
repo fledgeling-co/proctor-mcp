@@ -1,0 +1,16 @@
+173 defect(s) examined · open 2 · fixed 168 · partially-fixed 2 · closed 1
+remainder phrases searched: 7, over the 169 note(s) whose status leaves the owing set · 2 matched, of which 2 carry a recorded waiver
+
+The vocabulary, and what each word means to reckon:
+  open             measured and still failing — stays in the owing set
+  fixed            measured, repaired, and a case watches the repair — leaves the owing set
+  partially-fixed  one arm repaired and another recorded — stays in the owing set
+  closed           ended without a repair, because the subject went away — leaves the owing set
+
+2 matched row(s) declare the phrase is not about their own remainder, and stay visible rather than being matched away:
+  DEF-202  fixed  matched "still broken"
+      The phrase "still broken" appears inside a quotation of reckon's reasoning about a status word list — "a half still broken owes a reproduction for that half" — and describes what partially-fixed means, not an unrepaired arm of this defect. This row's own subject, the word list, was corrected.
+  DEF-219  fixed  matched "RECORDED rather than fixed"
+      "RECORDED rather than fixed" here attaches to the UNDERLYING capture-channel fault, which belongs to CASE-0059, not to this row. This row's subject was three files claiming the takeover shield with nothing declaring them, and the note says "Now declared".
+
+PASS: all 173 status words are defined, and no row that leaves the owing set declares an unwaived remainder (2 waived, named above).

@@ -1,0 +1,54 @@
+1901 path citation(s) examined across 345 durable artifact(s)
+  resolved                 1428  (1288 from this root, 140 naming a file the installed plugins own)
+  bare, one match          0  (mechanically fixable)
+  form is another tool's input  347  (resolvable, deliberately left — see FIXED_FORM)
+  bare, several matches    78
+  no file of that name     48
+
+Bare filenames matching several files — reported, never resolved to the first,
+because that is how a citation comes to point at the wrong file while looking fixed:
+  ORCHESTRATOR.md:87  `MainWindow.swift`  2 candidates: Sources/ProctorUI/MainWindow.swift, docs/test-campaign/evidence/PRO-0090/pre/MainWindow.swift
+  ORCHESTRATOR.md:225  `main.swift`  3 candidates: Sources/ProctorAgent/main.swift, Sources/ProctorCLI/main.swift, Sources/ProctorShim/main.swift
+  ORCHESTRATOR.md:562  `main.swift`  3 candidates: Sources/ProctorAgent/main.swift, Sources/ProctorCLI/main.swift, Sources/ProctorShim/main.swift
+  ORCHESTRATOR.md:611  `main.swift`  3 candidates: Sources/ProctorAgent/main.swift, Sources/ProctorCLI/main.swift, Sources/ProctorShim/main.swift
+  ORCHESTRATOR.md:627  `main.swift`  3 candidates: Sources/ProctorAgent/main.swift, Sources/ProctorCLI/main.swift, Sources/ProctorShim/main.swift
+  ORCHESTRATOR.md:971  `main.swift`  3 candidates: Sources/ProctorAgent/main.swift, Sources/ProctorCLI/main.swift, Sources/ProctorShim/main.swift
+  ORCHESTRATOR.md:1444  `AgentModel.swift`  2 candidates: Sources/ProctorUI/AgentModel.swift, docs/test-campaign/evidence/PRO-0090/pre/AgentModel.swift
+  ORCHESTRATOR.md:1444  `Motion.swift`  2 candidates: Sources/ProctorUI/Motion.swift, docs/test-campaign/evidence/PRO-0090/pre/Motion.swift
+  ORCHESTRATOR.md:2171  `Walkthrough.swift`  2 candidates: Sources/ProctorUI/Walkthrough.swift, docs/test-campaign/evidence/PRO-0090/pre/Walkthrough.swift
+  ORCHESTRATOR.md:2551  `seam-arming.json`  2 candidates: docs/test-campaign/evidence/PRO-0092/seam-arming.json, docs/test-campaign/evidence/PRO-0106/seam-arming.json
+  docs/PRD.md:177  `main.swift`  3 candidates: Sources/ProctorAgent/main.swift, Sources/ProctorCLI/main.swift, Sources/ProctorShim/main.swift
+  docs/specs/spec-PRO-0015.md:113  `main.swift`  3 candidates: Sources/ProctorAgent/main.swift, Sources/ProctorCLI/main.swift, Sources/ProctorShim/main.swift
+  docs/specs/spec-PRO-0015.md:171  `main.swift`  3 candidates: Sources/ProctorAgent/main.swift, Sources/ProctorCLI/main.swift, Sources/ProctorShim/main.swift
+  docs/specs/spec-PRO-0021.md:96  `main.swift`  3 candidates: Sources/ProctorAgent/main.swift, Sources/ProctorCLI/main.swift, Sources/ProctorShim/main.swift
+  docs/specs/spec-PRO-0027.md:239  `MainWindow.swift`  2 candidates: Sources/ProctorUI/MainWindow.swift, docs/test-campaign/evidence/PRO-0090/pre/MainWindow.swift
+  docs/specs/spec-PRO-0027.md:239  `MenuBarCharacter.swift`  2 candidates: Sources/ProctorUI/MenuBarCharacter.swift, docs/test-campaign/evidence/PRO-0090/pre/MenuBarCharacter.swift
+  docs/specs/spec-PRO-0027.md:239  `ProctorUIApp.swift`  2 candidates: Sources/ProctorUI/ProctorUIApp.swift, docs/test-campaign/evidence/PRO-0090/pre/ProctorUIApp.swift
+  docs/specs/spec-PRO-0040.md:151  `main.swift`  3 candidates: Sources/ProctorAgent/main.swift, Sources/ProctorCLI/main.swift, Sources/ProctorShim/main.swift
+  docs/specs/spec-PRO-0040.md:159  `main.swift`  3 candidates: Sources/ProctorAgent/main.swift, Sources/ProctorCLI/main.swift, Sources/ProctorShim/main.swift
+  docs/specs/spec-PRO-0046.md:803  `MenuBarCharacter.swift`  2 candidates: Sources/ProctorUI/MenuBarCharacter.swift, docs/test-campaign/evidence/PRO-0090/pre/MenuBarCharacter.swift
+
+Cited, and no file of that name exists anywhere in the tree:
+  ORCHESTRATOR.md:865  `config.yaml`
+  ORCHESTRATOR.md:1912  `errand.toml`
+  ORCHESTRATOR.md:1944  `errand.toml`
+  ORCHESTRATOR.md:2686  `surf-016-install-notarize.png`
+  ORCHESTRATOR.md:2740  `evidence/shots/a3-walkthrough-permissions-disabled.png`
+  docs/PRD.md:1397  `docs/specs/spec-PRO-NNNN.md`
+  docs/PRD.md:1397  `docs/plans/plan-PRO-NNNN.md`
+  docs/specs/spec-PRO-0049.md:296  `config.yaml`
+  docs/specs/spec-PRO-0049.md:394  `config.yaml`
+  docs/specs/spec-PRO-0049.md:531  `config.yaml`
+  docs/specs/spec-PRO-0076.md:15  `lab-mac.sh`
+  docs/specs/spec-PRO-0082.md:43  `docs/test-campaign/evidence/pro-0082/doctor-baseline.json`
+  docs/specs/spec-PRO-0087.md:27  `-2.txt`
+  docs/specs/spec-PRO-0089.md:98  `policy.json`
+  docs/specs/spec-PRO-0094.md:54  `/tmp/pro0094-agy.md`
+  docs/specs/spec-PRO-0094.md:72  `TartInventory.swift`
+  docs/specs/spec-PRO-0094.md:73  `LumeInventory.swift`
+  docs/specs/spec-PRO-0094.md:75  `config.json`
+  docs/specs/spec-PRO-0094.md:104  `config.json`
+  docs/specs/spec-PRO-0094.md:273  `/tmp/pro0094-critic.md`
+
+ratchet: 473 unresolvable allowed, 473 measured (1428 of 1901 resolve). Of the 473: 347 are resolvable and deliberately left because another tool reads their form, 78 name several real files, 48 name none, and 0 are mechanically fixable and should be zero after --fix.
+held.

@@ -3386,6 +3386,77 @@ def test_the_signal_probe_runs_in_both_directions() -> None:
               safe.stdout)
 
 
+def test_a_defect_status_word_matches_its_note() -> None:
+    script = ROOT / "scripts" / "campaign" / "defect_status_gate.py"
+    out = subprocess.run([sys.executable, str(script), "--gate"], capture_output=True, text=True)
+    check(out.returncode == 0, "every defect status word is defined and agrees with its note",
+          out.stdout[-700:])
+    check("remainder phrases searched" in out.stdout,
+          "and the run prints how many phrases it searched over how many notes", out.stdout[:400])
+
+    # Two arms on a copy: an undefined word, and a `fixed` row whose note says
+    # half of it is not. Both must fire, and the waived rows must stay waived.
+    with tempfile.TemporaryDirectory() as td:
+        d = Path(td) / "campaign"
+        shutil.copytree(CAMPAIGN_DIR, d)
+        inv = json.loads((d / "inventory.json").read_text())
+        inv["defect"][0]["status"] = "sort-of-done"
+        (d / "inventory.json").write_text(json.dumps(inv, indent=2) + "\n")
+        red = subprocess.run([sys.executable, str(script), "--campaign", str(d), "--gate"],
+                             capture_output=True, text=True)
+        check(red.returncode == 1, "an undefined status word takes the gate red",
+              f"exit {red.returncode}")
+        check("sort-of-done" in red.stdout, "and the refusal names the word", red.stdout[-400:])
+
+        inv = json.loads((d / "inventory.json").read_text())
+        inv["defect"][0]["status"] = "fixed"
+        inv["defect"][1]["status"] = "fixed"
+        inv["defect"][1]["note"] = "The first half landed. The second is RECORDED rather than fixed."
+        inv["defect"][1].pop("statusRemainderWaiver", None)
+        (d / "inventory.json").write_text(json.dumps(inv, indent=2) + "\n")
+        red = subprocess.run([sys.executable, str(script), "--campaign", str(d), "--gate"],
+                             capture_output=True, text=True)
+        check(red.returncode == 1, "a fixed row whose note declares a remainder takes the gate red",
+              f"exit {red.returncode}\n{red.stdout[-400:]}")
+
+
+def test_a_path_citation_resolves_from_the_root() -> None:
+    script = ROOT / "scripts" / "campaign" / "path_citation_check.py"
+    out = subprocess.run([sys.executable, str(script), "--gate"], capture_output=True, text=True)
+    check(out.returncode == 0, "the unresolvable-citation ratchet holds", out.stdout[-600:])
+    check("path citation(s) examined across" in out.stdout,
+          "and the run prints how many citations it examined", out.stdout[:200])
+    check("mechanically fixable" in out.stdout and " 0  (mechanically fixable)" in out.stdout,
+          "with nothing left that --fix would have repaired", out.stdout[:400])
+
+    # The arm: a bare citation written into a durable artifact must be caught.
+    # A copy of the tree, because the check reads the repository it is given.
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td) / "repo"
+        root.mkdir()
+        (root / "docs").mkdir()
+        (root / "docs" / "architecture.md").write_text(
+            "The transport lives in `Transport.swift` and the server in "
+            "`Sources/ProctorAgent/Server.swift`.\n")
+        (root / "Sources").mkdir()
+        (root / "Sources" / "ProctorCore").mkdir(parents=True)
+        (root / "Sources" / "ProctorCore" / "Transport.swift").write_text("// x\n")
+        (root / "Sources" / "ProctorAgent").mkdir(parents=True)
+        (root / "Sources" / "ProctorAgent" / "Server.swift").write_text("// x\n")
+        red = subprocess.run([sys.executable, str(script), "--root", str(root), "--gate",
+                              "--ratchet", str(root / "nonexistent.json")],
+                             capture_output=True, text=True)
+        check(red.returncode == 1, "a bare citation in a durable artifact takes the gate red",
+              f"exit {red.returncode}\n{red.stdout[-500:]}")
+        check("`Transport.swift`" in red.stdout and "Sources/ProctorCore/Transport.swift" in red.stdout,
+              "and the finding carries the path that would fix it", red.stdout[-500:])
+
+        # The other direction: the fully-qualified citation in the same file is
+        # not reported, so the check is reading the citation rather than the line.
+        check(red.stdout.count("bare, one match          1") == 1,
+              "while the fully-qualified citation beside it is not a finding", red.stdout[:400])
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -3455,7 +3526,9 @@ def main() -> int:
                test_every_declared_pass_ran_over_a_named_population,
                test_a_spec_that_names_a_figure_is_checked_against_it,
                test_every_socket_suppresses_the_signal_that_terminates,
-               test_the_signal_probe_runs_in_both_directions):
+               test_the_signal_probe_runs_in_both_directions,
+               test_a_defect_status_word_matches_its_note,
+               test_a_path_citation_resolves_from_the_root):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001

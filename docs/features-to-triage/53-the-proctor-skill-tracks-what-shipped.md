@@ -7,7 +7,7 @@ validated-provider: none
 ---
 # The proctor skill tracks what actually shipped
 
-**Read `00-WAVE-7-DIRECTION.md` first.** Sequence this last in the wave: it documents
+**Read `docs/features-to-triage/00-WAVE-7-DIRECTION.md` first.** Sequence this last in the wave: it documents
 the surface the other items build, so it cannot be written before they land.
 
 ## The problem

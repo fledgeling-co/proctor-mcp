@@ -14,7 +14,7 @@ item's verdict unreliable.
 
 ## The measurement
 
-`inventory.json` reports **23 open defects**. Many are fixed and merged. DEF-025 and DEF-028 are the
+`docs/test-campaign/inventory.json` reports **23 open defects**. Many are fixed and merged. DEF-025 and DEF-028 are the
 clearest case: PRO-0088 built and merged their fixes, its verifier confirmed them by intervention,
 and both records still read `open` — on PRO-0088's own branch as well as on `ai/wave-9`, so this is
 not a merge dropping the flip. The items fixed the defects and never updated the records.
@@ -38,7 +38,7 @@ are recorded open deliberately.
 **Then make the drift structural rather than remembered.** An item that fixes a defect should not be
 able to merge without the record moving. The mechanism is a check, not an instruction: something
 that reads the defects an item's spec claims to fix and refuses when a claimed one still reads
-`open`. `scripts/campaign/` is where it belongs, beside `merge_registry.py`.
+`open`. `scripts/campaign/` is where it belongs, beside `scripts/campaign/merge_registry.py`.
 
 ## The gate findings nobody owns
 

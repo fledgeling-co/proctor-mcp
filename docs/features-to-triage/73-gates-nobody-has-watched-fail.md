@@ -38,7 +38,7 @@ Mutation survival is measured and thin, and the report says so: **11 of 188 site
 with 29 selected mutants unrun because another build on the machine made their kills unreadable.
 Every one of those sites is in `ProctorCore`. A later run took 24 mutants over `TUISurface`,
 `CLISurface`, `StatusChecks` and `RunHUDMenuBar` from 14 killed / 10 survived to 24 killed / 0
-survived, and both runs are kept as `mutation-survival-before.txt` and `-after.txt`.
+survived, and both runs are kept as `docs/test-campaign/evidence/mutation-survival-before.txt` and `-after.txt`.
 
 `ProctorAgent` is the package that holds the session, the queue, the overlay, the actuation
 backend and every guest adapter, and no mutant has ever been generated in it. That is the largest
@@ -48,7 +48,7 @@ sampled.
 
 Three operating facts, each measured the hard way:
 
-- **Nothing may edit the tree while `mutate_swift.py` runs.** It compiles the whole package per
+- **Nothing may edit the tree while `scripts/campaign/mutate_swift.py` runs.** It compiles the whole package per
   mutant and picks up whatever is in the working directory.
 - **A 900-second timeout under CPU contention produces false kills.** The runner scores a timeout
   as killed. Survivors are trustworthy in both directions; a kill under contention is not.
@@ -65,7 +65,7 @@ recorded as one, and a suite contorted to kill an unkillable mutant is worse tha
 a job that has since been done, larger than as described. What follows is what is actually true.
 
 Wave 11a's merge reconciled the registry: it backfilled wave 10's four defects into
-`inventory.json`, renumbered PRO-0078's five from DEF-020..024 to DEF-025..029, and flipped DEF-019
+`docs/test-campaign/inventory.json`, renumbered PRO-0078's five from DEF-020..024 to DEF-025..029, and flipped DEF-019
 to `fixed`. So the one-line fix this item asked for is already made, and the "other 18" it asked to
 audit is now 28. **DEF-024 does not exist and that is deliberate** — the backfilled four took
 DEF-020..023 while PRO-0078's fifth moved to DEF-029, so 23 + 5 = 28 with a gap in the sequence and
@@ -74,7 +74,7 @@ nothing recording why.
 Verified rather than redone: the inventory holds 28 records, and of the ids present in both
 registries there are **zero status disagreements**. That work is sound.
 
-**What the verification found instead.** The drift has reversed direction. `REPORT.md`'s defect
+**What the verification found instead.** The drift has reversed direction. `docs/test-campaign/REPORT.md`'s defect
 table held **18 of the 28** — DEF-001..005 and DEF-025..029 appeared nowhere in it, not in the table
 and not in the prose. All five open defects were among the missing ten, so a reader of the report
 saw **no open defect at all**, under a heading reading "Eighteen defects, all eighteen fixed". Same
@@ -83,17 +83,17 @@ against the thing it describes. Recorded as DEF-031 and fixed by completing the 
 
 ## The conversion contract
 
-- `--seed-strengthen` run in both directions with the output pasted into `REPORT.md`, not
+- `--seed-strengthen` run in both directions with the output pasted into `docs/test-campaign/REPORT.md`, not
   summarised.
 - A `ProctorAgent` mutation sample with its denominator, its seed, and its unrun count named. A
   partial sample honestly reported is the deliverable; a full sweep is not required and the machine
   contention makes one unreliable anyway.
 - Every surviving mutant either gets a test that kills it or a recorded reason it is equivalent.
-- `inventory.json` and `REPORT.md` agreeing on every defect record. ~~19~~ 32 after PRO-0080:
+- `docs/test-campaign/inventory.json` and `docs/test-campaign/REPORT.md` agreeing on every defect record. ~~19~~ 32 after PRO-0080:
   28 inherited plus the four this item found. Zero status disagreements, neither registry ahead of
   the other.
 - The four campaign gates re-run afterwards — `check`, `strict-check`, `capture-lineage --gate`,
-  `vacuity-check --gate` — with `evidence.html` regenerated and `export-warrant` run.
+  `vacuity-check --gate` — with `docs/test-campaign/evidence.html` regenerated and `export-warrant` run.
 
 ## What this brief does not do
 

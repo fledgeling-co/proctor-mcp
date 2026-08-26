@@ -1,0 +1,3865 @@
+{
+  "examined": 1901,
+  "resolved": 1428,
+  "fixable": [],
+  "ambiguous": [
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 87,
+      "cited": "MainWindow.swift",
+      "candidates": [
+        "Sources/ProctorUI/MainWindow.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/MainWindow.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 225,
+      "cited": "main.swift",
+      "candidates": [
+        "Sources/ProctorAgent/main.swift",
+        "Sources/ProctorCLI/main.swift",
+        "Sources/ProctorShim/main.swift"
+      ],
+      "matchCount": 3
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 562,
+      "cited": "main.swift",
+      "candidates": [
+        "Sources/ProctorAgent/main.swift",
+        "Sources/ProctorCLI/main.swift",
+        "Sources/ProctorShim/main.swift"
+      ],
+      "matchCount": 3
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 611,
+      "cited": "main.swift",
+      "candidates": [
+        "Sources/ProctorAgent/main.swift",
+        "Sources/ProctorCLI/main.swift",
+        "Sources/ProctorShim/main.swift"
+      ],
+      "matchCount": 3
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 627,
+      "cited": "main.swift",
+      "candidates": [
+        "Sources/ProctorAgent/main.swift",
+        "Sources/ProctorCLI/main.swift",
+        "Sources/ProctorShim/main.swift"
+      ],
+      "matchCount": 3
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 971,
+      "cited": "main.swift",
+      "candidates": [
+        "Sources/ProctorAgent/main.swift",
+        "Sources/ProctorCLI/main.swift",
+        "Sources/ProctorShim/main.swift"
+      ],
+      "matchCount": 3
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1444,
+      "cited": "AgentModel.swift",
+      "candidates": [
+        "Sources/ProctorUI/AgentModel.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/AgentModel.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1444,
+      "cited": "Motion.swift",
+      "candidates": [
+        "Sources/ProctorUI/Motion.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/Motion.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2171,
+      "cited": "Walkthrough.swift",
+      "candidates": [
+        "Sources/ProctorUI/Walkthrough.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/Walkthrough.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2551,
+      "cited": "seam-arming.json",
+      "candidates": [
+        "docs/test-campaign/evidence/PRO-0092/seam-arming.json",
+        "docs/test-campaign/evidence/PRO-0106/seam-arming.json"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/PRD.md",
+      "line": 177,
+      "cited": "main.swift",
+      "candidates": [
+        "Sources/ProctorAgent/main.swift",
+        "Sources/ProctorCLI/main.swift",
+        "Sources/ProctorShim/main.swift"
+      ],
+      "matchCount": 3
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0015.md",
+      "line": 113,
+      "cited": "main.swift",
+      "candidates": [
+        "Sources/ProctorAgent/main.swift",
+        "Sources/ProctorCLI/main.swift",
+        "Sources/ProctorShim/main.swift"
+      ],
+      "matchCount": 3
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0015.md",
+      "line": 171,
+      "cited": "main.swift",
+      "candidates": [
+        "Sources/ProctorAgent/main.swift",
+        "Sources/ProctorCLI/main.swift",
+        "Sources/ProctorShim/main.swift"
+      ],
+      "matchCount": 3
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0021.md",
+      "line": 96,
+      "cited": "main.swift",
+      "candidates": [
+        "Sources/ProctorAgent/main.swift",
+        "Sources/ProctorCLI/main.swift",
+        "Sources/ProctorShim/main.swift"
+      ],
+      "matchCount": 3
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0027.md",
+      "line": 239,
+      "cited": "MainWindow.swift",
+      "candidates": [
+        "Sources/ProctorUI/MainWindow.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/MainWindow.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0027.md",
+      "line": 239,
+      "cited": "MenuBarCharacter.swift",
+      "candidates": [
+        "Sources/ProctorUI/MenuBarCharacter.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/MenuBarCharacter.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0027.md",
+      "line": 239,
+      "cited": "ProctorUIApp.swift",
+      "candidates": [
+        "Sources/ProctorUI/ProctorUIApp.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/ProctorUIApp.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0040.md",
+      "line": 151,
+      "cited": "main.swift",
+      "candidates": [
+        "Sources/ProctorAgent/main.swift",
+        "Sources/ProctorCLI/main.swift",
+        "Sources/ProctorShim/main.swift"
+      ],
+      "matchCount": 3
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0040.md",
+      "line": 159,
+      "cited": "main.swift",
+      "candidates": [
+        "Sources/ProctorAgent/main.swift",
+        "Sources/ProctorCLI/main.swift",
+        "Sources/ProctorShim/main.swift"
+      ],
+      "matchCount": 3
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0046.md",
+      "line": 803,
+      "cited": "MenuBarCharacter.swift",
+      "candidates": [
+        "Sources/ProctorUI/MenuBarCharacter.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/MenuBarCharacter.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0051.md",
+      "line": 158,
+      "cited": "main.swift",
+      "candidates": [
+        "Sources/ProctorAgent/main.swift",
+        "Sources/ProctorCLI/main.swift",
+        "Sources/ProctorShim/main.swift"
+      ],
+      "matchCount": 3
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0051.md",
+      "line": 226,
+      "cited": "main.swift",
+      "candidates": [
+        "Sources/ProctorAgent/main.swift",
+        "Sources/ProctorCLI/main.swift",
+        "Sources/ProctorShim/main.swift"
+      ],
+      "matchCount": 3
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0051.md",
+      "line": 311,
+      "cited": "main.swift",
+      "candidates": [
+        "Sources/ProctorAgent/main.swift",
+        "Sources/ProctorCLI/main.swift",
+        "Sources/ProctorShim/main.swift"
+      ],
+      "matchCount": 3
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0051.md",
+      "line": 458,
+      "cited": "main.swift",
+      "candidates": [
+        "Sources/ProctorAgent/main.swift",
+        "Sources/ProctorCLI/main.swift",
+        "Sources/ProctorShim/main.swift"
+      ],
+      "matchCount": 3
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0054.md",
+      "line": 79,
+      "cited": "main.swift",
+      "candidates": [
+        "Sources/ProctorAgent/main.swift",
+        "Sources/ProctorCLI/main.swift",
+        "Sources/ProctorShim/main.swift"
+      ],
+      "matchCount": 3
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0055.md",
+      "line": 69,
+      "cited": "main.swift",
+      "candidates": [
+        "Sources/ProctorAgent/main.swift",
+        "Sources/ProctorCLI/main.swift",
+        "Sources/ProctorShim/main.swift"
+      ],
+      "matchCount": 3
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0055.md",
+      "line": 76,
+      "cited": "main.swift",
+      "candidates": [
+        "Sources/ProctorAgent/main.swift",
+        "Sources/ProctorCLI/main.swift",
+        "Sources/ProctorShim/main.swift"
+      ],
+      "matchCount": 3
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0055.md",
+      "line": 100,
+      "cited": "main.swift",
+      "candidates": [
+        "Sources/ProctorAgent/main.swift",
+        "Sources/ProctorCLI/main.swift",
+        "Sources/ProctorShim/main.swift"
+      ],
+      "matchCount": 3
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0066.md",
+      "line": 10,
+      "cited": "MainWindow.swift",
+      "candidates": [
+        "Sources/ProctorUI/MainWindow.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/MainWindow.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0066.md",
+      "line": 24,
+      "cited": "MainWindow.swift",
+      "candidates": [
+        "Sources/ProctorUI/MainWindow.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/MainWindow.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0067.md",
+      "line": 10,
+      "cited": "Walkthrough.swift",
+      "candidates": [
+        "Sources/ProctorUI/Walkthrough.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/Walkthrough.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0067.md",
+      "line": 74,
+      "cited": "Walkthrough.swift",
+      "candidates": [
+        "Sources/ProctorUI/Walkthrough.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/Walkthrough.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0071.md",
+      "line": 10,
+      "cited": "HistoryWindow.swift",
+      "candidates": [
+        "Sources/ProctorUI/HistoryWindow.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/HistoryWindow.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0081.md",
+      "line": 15,
+      "cited": "MainWindow.swift",
+      "candidates": [
+        "Sources/ProctorUI/MainWindow.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/MainWindow.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0081.md",
+      "line": 27,
+      "cited": "Walkthrough.swift",
+      "candidates": [
+        "Sources/ProctorUI/Walkthrough.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/Walkthrough.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0081.md",
+      "line": 113,
+      "cited": "MainWindow.swift",
+      "candidates": [
+        "Sources/ProctorUI/MainWindow.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/MainWindow.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0083.md",
+      "line": 421,
+      "cited": "gate.txt",
+      "candidates": [
+        "docs/test-campaign/evidence/PRO-0077/gate.txt",
+        "docs/test-campaign/evidence/PRO-0083/gate.txt",
+        "docs/test-campaign/evidence/PRO-0093/gate.txt"
+      ],
+      "matchCount": 3
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0086.md",
+      "line": 78,
+      "cited": "Walkthrough.swift",
+      "candidates": [
+        "Sources/ProctorUI/Walkthrough.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/Walkthrough.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0086.md",
+      "line": 136,
+      "cited": "Walkthrough.swift",
+      "candidates": [
+        "Sources/ProctorUI/Walkthrough.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/Walkthrough.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0090.md",
+      "line": 15,
+      "cited": "HistoryWindow.swift",
+      "candidates": [
+        "Sources/ProctorUI/HistoryWindow.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/HistoryWindow.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0090.md",
+      "line": 16,
+      "cited": "ProctorUIApp.swift",
+      "candidates": [
+        "Sources/ProctorUI/ProctorUIApp.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/ProctorUIApp.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0090.md",
+      "line": 17,
+      "cited": "Walkthrough.swift",
+      "candidates": [
+        "Sources/ProctorUI/Walkthrough.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/Walkthrough.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0090.md",
+      "line": 18,
+      "cited": "HistoryModel.swift",
+      "candidates": [
+        "Sources/ProctorUI/HistoryModel.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/HistoryModel.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0090.md",
+      "line": 19,
+      "cited": "AgentModel.swift",
+      "candidates": [
+        "Sources/ProctorUI/AgentModel.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/AgentModel.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0090.md",
+      "line": 20,
+      "cited": "MainWindow.swift",
+      "candidates": [
+        "Sources/ProctorUI/MainWindow.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/MainWindow.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0090.md",
+      "line": 21,
+      "cited": "MenuBarCharacter.swift",
+      "candidates": [
+        "Sources/ProctorUI/MenuBarCharacter.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/MenuBarCharacter.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0090.md",
+      "line": 22,
+      "cited": "Motion.swift",
+      "candidates": [
+        "Sources/ProctorUI/Motion.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/Motion.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0098.md",
+      "line": 75,
+      "cited": "AgentModel.swift",
+      "candidates": [
+        "Sources/ProctorUI/AgentModel.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/AgentModel.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0099.md",
+      "line": 29,
+      "cited": "main.swift",
+      "candidates": [
+        "Sources/ProctorAgent/main.swift",
+        "Sources/ProctorCLI/main.swift",
+        "Sources/ProctorShim/main.swift"
+      ],
+      "matchCount": 3
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0100.md",
+      "line": 184,
+      "cited": "Walkthrough.swift",
+      "candidates": [
+        "Sources/ProctorUI/Walkthrough.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/Walkthrough.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0100.md",
+      "line": 278,
+      "cited": "Walkthrough.swift",
+      "candidates": [
+        "Sources/ProctorUI/Walkthrough.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/Walkthrough.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0102.md",
+      "line": 181,
+      "cited": "source-denominators.txt",
+      "candidates": [
+        "docs/test-campaign/evidence/PRO-0097/source-denominators.txt",
+        "docs/test-campaign/evidence/PRO-0102/source-denominators.txt"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0103.md",
+      "line": 196,
+      "cited": "run.json",
+      "candidates": [
+        "docs/reckoning/2026-08-22-2bdc808/run.json",
+        "docs/reckoning/2026-08-22/run.json",
+        "docs/reckoning/wave-17-close-2/run.json",
+        "docs/reckoning/wave-17-close-final/run.json",
+        "docs/reckoning/wave-17-close/run.json",
+        "docs/reckoning/wave-18-close/run.json"
+      ],
+      "matchCount": 9
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0103.md",
+      "line": 205,
+      "cited": "run.json",
+      "candidates": [
+        "docs/reckoning/2026-08-22-2bdc808/run.json",
+        "docs/reckoning/2026-08-22/run.json",
+        "docs/reckoning/wave-17-close-2/run.json",
+        "docs/reckoning/wave-17-close-final/run.json",
+        "docs/reckoning/wave-17-close/run.json",
+        "docs/reckoning/wave-18-close/run.json"
+      ],
+      "matchCount": 9
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0103.md",
+      "line": 234,
+      "cited": "run.json",
+      "candidates": [
+        "docs/reckoning/2026-08-22-2bdc808/run.json",
+        "docs/reckoning/2026-08-22/run.json",
+        "docs/reckoning/wave-17-close-2/run.json",
+        "docs/reckoning/wave-17-close-final/run.json",
+        "docs/reckoning/wave-17-close/run.json",
+        "docs/reckoning/wave-18-close/run.json"
+      ],
+      "matchCount": 9
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0103.md",
+      "line": 327,
+      "cited": "delta.md",
+      "candidates": [
+        "docs/reckoning/2026-08-22-2bdc808/delta.md",
+        "docs/reckoning/wave-17-close/delta.md",
+        "docs/reckoning/wave-19-close/delta.md"
+      ],
+      "matchCount": 3
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0103.md",
+      "line": 337,
+      "cited": "run.json",
+      "candidates": [
+        "docs/reckoning/2026-08-22-2bdc808/run.json",
+        "docs/reckoning/2026-08-22/run.json",
+        "docs/reckoning/wave-17-close-2/run.json",
+        "docs/reckoning/wave-17-close-final/run.json",
+        "docs/reckoning/wave-17-close/run.json",
+        "docs/reckoning/wave-18-close/run.json"
+      ],
+      "matchCount": 9
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0103.md",
+      "line": 346,
+      "cited": "run.json",
+      "candidates": [
+        "docs/reckoning/2026-08-22-2bdc808/run.json",
+        "docs/reckoning/2026-08-22/run.json",
+        "docs/reckoning/wave-17-close-2/run.json",
+        "docs/reckoning/wave-17-close-final/run.json",
+        "docs/reckoning/wave-17-close/run.json",
+        "docs/reckoning/wave-18-close/run.json"
+      ],
+      "matchCount": 9
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0105.md",
+      "line": 27,
+      "cited": "run.json",
+      "candidates": [
+        "docs/reckoning/2026-08-22-2bdc808/run.json",
+        "docs/reckoning/2026-08-22/run.json",
+        "docs/reckoning/wave-17-close-2/run.json",
+        "docs/reckoning/wave-17-close-final/run.json",
+        "docs/reckoning/wave-17-close/run.json",
+        "docs/reckoning/wave-18-close/run.json"
+      ],
+      "matchCount": 9
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 251,
+      "cited": "step-a3-walkthrough-primary-disabled.png",
+      "candidates": [
+        "docs/test-campaign/evidence/shots/mock/step-a3-walkthrough-primary-disabled.png",
+        "docs/test-campaign/evidence/shots/step-a3-walkthrough-primary-disabled.png"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0109.md",
+      "line": 31,
+      "cited": "step-a3-walkthrough-primary-disabled.png",
+      "candidates": [
+        "docs/test-campaign/evidence/shots/mock/step-a3-walkthrough-primary-disabled.png",
+        "docs/test-campaign/evidence/shots/step-a3-walkthrough-primary-disabled.png"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0109.md",
+      "line": 49,
+      "cited": "icon-proctor-1024.png",
+      "candidates": [
+        "design/icon/icon-proctor-1024.png",
+        "docs/test-campaign/evidence/shots/icon-proctor-1024.png"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0109.md",
+      "line": 56,
+      "cited": "step-a3-walkthrough-primary-disabled.png",
+      "candidates": [
+        "docs/test-campaign/evidence/shots/mock/step-a3-walkthrough-primary-disabled.png",
+        "docs/test-campaign/evidence/shots/step-a3-walkthrough-primary-disabled.png"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/features-to-triage/101-reconcile-captures-with-cases.md",
+      "line": 27,
+      "cited": "step-a3-walkthrough-primary-disabled.png",
+      "candidates": [
+        "docs/test-campaign/evidence/shots/mock/step-a3-walkthrough-primary-disabled.png",
+        "docs/test-campaign/evidence/shots/step-a3-walkthrough-primary-disabled.png"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/features-to-triage/42-doctor-can-hang-on-the-screen-recording-probe.md",
+      "line": 82,
+      "cited": "AgentModel.swift",
+      "candidates": [
+        "Sources/ProctorUI/AgentModel.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/AgentModel.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/features-to-triage/60-status-window-to-the-mock.md",
+      "line": 51,
+      "cited": "MainWindow.swift",
+      "candidates": [
+        "Sources/ProctorUI/MainWindow.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/MainWindow.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/features-to-triage/60-status-window-to-the-mock.md",
+      "line": 61,
+      "cited": "MainWindow.swift",
+      "candidates": [
+        "Sources/ProctorUI/MainWindow.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/MainWindow.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/features-to-triage/61-walkthrough-to-the-mock.md",
+      "line": 15,
+      "cited": "Walkthrough.swift",
+      "candidates": [
+        "Sources/ProctorUI/Walkthrough.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/Walkthrough.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/features-to-triage/65-history-window-to-the-mock.md",
+      "line": 15,
+      "cited": "HistoryWindow.swift",
+      "candidates": [
+        "Sources/ProctorUI/HistoryWindow.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/HistoryWindow.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/features-to-triage/74-the-carried-acceptance-clauses.md",
+      "line": 17,
+      "cited": "MainWindow.swift",
+      "candidates": [
+        "Sources/ProctorUI/MainWindow.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/MainWindow.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/features-to-triage/79-the-walkthrough-will-not-advance-without-its-grants.md",
+      "line": 18,
+      "cited": "Walkthrough.swift",
+      "candidates": [
+        "Sources/ProctorUI/Walkthrough.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/Walkthrough.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/features-to-triage/83-what-the-surfaces-say-and-what-they-draw.md",
+      "line": 16,
+      "cited": "MainWindow.swift",
+      "candidates": [
+        "Sources/ProctorUI/MainWindow.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/MainWindow.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/features-to-triage/83-what-the-surfaces-say-and-what-they-draw.md",
+      "line": 22,
+      "cited": "HistoryWindow.swift",
+      "candidates": [
+        "Sources/ProctorUI/HistoryWindow.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/HistoryWindow.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/features-to-triage/83-what-the-surfaces-say-and-what-they-draw.md",
+      "line": 23,
+      "cited": "ProctorUIApp.swift",
+      "candidates": [
+        "Sources/ProctorUI/ProctorUIApp.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/ProctorUIApp.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/features-to-triage/83-what-the-surfaces-say-and-what-they-draw.md",
+      "line": 24,
+      "cited": "Walkthrough.swift",
+      "candidates": [
+        "Sources/ProctorUI/Walkthrough.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/Walkthrough.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/features-to-triage/83-what-the-surfaces-say-and-what-they-draw.md",
+      "line": 25,
+      "cited": "HistoryModel.swift",
+      "candidates": [
+        "Sources/ProctorUI/HistoryModel.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/HistoryModel.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/features-to-triage/83-what-the-surfaces-say-and-what-they-draw.md",
+      "line": 26,
+      "cited": "AgentModel.swift",
+      "candidates": [
+        "Sources/ProctorUI/AgentModel.swift",
+        "docs/test-campaign/evidence/PRO-0090/pre/AgentModel.swift"
+      ],
+      "matchCount": 2
+    },
+    {
+      "artifact": "docs/features-to-triage/98-a-version-string-is-not-the-artifact.md",
+      "line": 32,
+      "cited": "run.json",
+      "candidates": [
+        "docs/reckoning/2026-08-22-2bdc808/run.json",
+        "docs/reckoning/2026-08-22/run.json",
+        "docs/reckoning/wave-17-close-2/run.json",
+        "docs/reckoning/wave-17-close-final/run.json",
+        "docs/reckoning/wave-17-close/run.json",
+        "docs/reckoning/wave-18-close/run.json"
+      ],
+      "matchCount": 9
+    }
+  ],
+  "absent": [
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 865,
+      "cited": "config.yaml"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1912,
+      "cited": "errand.toml"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1944,
+      "cited": "errand.toml"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2686,
+      "cited": "surf-016-install-notarize.png"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2740,
+      "cited": "evidence/shots/a3-walkthrough-permissions-disabled.png"
+    },
+    {
+      "artifact": "docs/PRD.md",
+      "line": 1397,
+      "cited": "docs/specs/spec-PRO-NNNN.md"
+    },
+    {
+      "artifact": "docs/PRD.md",
+      "line": 1397,
+      "cited": "docs/plans/plan-PRO-NNNN.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0049.md",
+      "line": 296,
+      "cited": "config.yaml"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0049.md",
+      "line": 394,
+      "cited": "config.yaml"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0049.md",
+      "line": 531,
+      "cited": "config.yaml"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0076.md",
+      "line": 15,
+      "cited": "lab-mac.sh"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0082.md",
+      "line": 43,
+      "cited": "docs/test-campaign/evidence/pro-0082/doctor-baseline.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0087.md",
+      "line": 27,
+      "cited": "-2.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0089.md",
+      "line": 98,
+      "cited": "policy.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0094.md",
+      "line": 54,
+      "cited": "/tmp/pro0094-agy.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0094.md",
+      "line": 72,
+      "cited": "TartInventory.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0094.md",
+      "line": 73,
+      "cited": "LumeInventory.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0094.md",
+      "line": 75,
+      "cited": "config.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0094.md",
+      "line": 104,
+      "cited": "config.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0094.md",
+      "line": 273,
+      "cited": "/tmp/pro0094-critic.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0095.md",
+      "line": 17,
+      "cited": "audit.jsonl"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0095.md",
+      "line": 102,
+      "cited": "policy.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0095.md",
+      "line": 103,
+      "cited": "policy.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0098.md",
+      "line": 182,
+      "cited": ".full.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0098.md",
+      "line": 209,
+      "cited": "login-flow.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0098.md",
+      "line": 210,
+      "cited": "sweep.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0099.md",
+      "line": 84,
+      "cited": "audit/audit.jsonl"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0103.md",
+      "line": 271,
+      "cited": "docs/plans/plan-PRO-0103.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0103.md",
+      "line": 353,
+      "cited": "ocs/test-campaign/cases.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0106.md",
+      "line": 268,
+      "cited": "docs/test-campaign/evidence/shots/x.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 83,
+      "cited": "surf-016-install-notarize.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 98,
+      "cited": "surf-004-drawn-pointer.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 99,
+      "cited": "surf-008-about.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 173,
+      "cited": "evidence/shots/a3-walkthrough-permissions-disabled.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0109.md",
+      "line": 16,
+      "cited": "surf-016-install-notarize.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0109.md",
+      "line": 30,
+      "cited": "evidence/shots/a3-walkthrough-permissions-disabled.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0109.md",
+      "line": 54,
+      "cited": "surf-004-drawn-pointer.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0109.md",
+      "line": 54,
+      "cited": "surf-008-about.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0110.md",
+      "line": 31,
+      "cited": "spec-PRO-XXXX.md"
+    },
+    {
+      "artifact": "docs/features-to-triage/100-a-screenshot-gallery-the-gate-cannot-see.md",
+      "line": 22,
+      "cited": "surf-001-mcp-stdio.png"
+    },
+    {
+      "artifact": "docs/features-to-triage/100-a-screenshot-gallery-the-gate-cannot-see.md",
+      "line": 23,
+      "cited": "surf-016-install-notarize.png"
+    },
+    {
+      "artifact": "docs/features-to-triage/73-gates-nobody-has-watched-fail.md",
+      "line": 41,
+      "cited": "-after.txt"
+    },
+    {
+      "artifact": "docs/features-to-triage/87-a-warning-this-project-has-already-disproved.md",
+      "line": 45,
+      "cited": "config.json"
+    },
+    {
+      "artifact": "docs/features-to-triage/88-three-that-slipped-the-grouping.md",
+      "line": 14,
+      "cited": "policy.json"
+    },
+    {
+      "artifact": "docs/features-to-triage/88-three-that-slipped-the-grouping.md",
+      "line": 20,
+      "cited": "audit.jsonl"
+    },
+    {
+      "artifact": "docs/features-to-triage/88-three-that-slipped-the-grouping.md",
+      "line": 67,
+      "cited": "policy.json"
+    },
+    {
+      "artifact": "docs/features-to-triage/99-instruments-that-do-not-prove-their-own-step.md",
+      "line": 32,
+      "cited": "ocs/test-campaign/cases.json"
+    },
+    {
+      "artifact": "tailings/PASS-2026-08-26-wave-29.md",
+      "line": 78,
+      "cited": "-t14.png"
+    }
+  ],
+  "external": [
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 559,
+      "cited": "strict-check.py"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 689,
+      "cited": "SKILL.md"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 689,
+      "cited": "references/tools.md"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 710,
+      "cited": "references/methodology.md"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 711,
+      "cited": "references/evidence.md"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1553,
+      "cited": "capture-lineage.py"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1641,
+      "cited": "references/tools.md"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 1952,
+      "cited": "selftest.py"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2015,
+      "cited": "berths.py"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2127,
+      "cited": "pressure.py"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2222,
+      "cited": "reckon.py"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2266,
+      "cited": ".claude-plugin/marketplace.json"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2388,
+      "cited": "plugin.json"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2741,
+      "cited": "campaign.py"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2815,
+      "cited": "reckon.py"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2820,
+      "cited": "plugin.json"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2914,
+      "cited": "capture-lineage.py"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 2925,
+      "cited": "capture-lineage.py"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3069,
+      "cited": "plugins/reckon/skills/reckon/scripts/selftest.py"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3108,
+      "cited": "plugins/reckon/skills/reckon/scripts/selftest.py"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3166,
+      "cited": "plugins/reckon/skills/reckon/scripts/selftest.py"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3210,
+      "cited": "plugins/reckon/skills/reckon/scripts/selftest.py"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3228,
+      "cited": "berths.py"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3245,
+      "cited": "strict-check.py"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3255,
+      "cited": "berths.py"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3271,
+      "cited": "strict-check.py"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3281,
+      "cited": "berths.py"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3297,
+      "cited": "strict-check.py"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3307,
+      "cited": "berths.py"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3323,
+      "cited": "strict-check.py"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3333,
+      "cited": "berths.py"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3349,
+      "cited": "strict-check.py"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3395,
+      "cited": "campaign.py"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3420,
+      "cited": "strict-check.py"
+    },
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "line": 3421,
+      "cited": "vacuity-check.py"
+    },
+    {
+      "artifact": "docs/PRD.md",
+      "line": 946,
+      "cited": "mock_check.py"
+    },
+    {
+      "artifact": "docs/PRD.md",
+      "line": 947,
+      "cited": "ux-lint.py"
+    },
+    {
+      "artifact": "docs/PRD.md",
+      "line": 948,
+      "cited": "tui_gates.py"
+    },
+    {
+      "artifact": "docs/PRD.md",
+      "line": 948,
+      "cited": "tui_design_gates.py"
+    },
+    {
+      "artifact": "docs/PRD.md",
+      "line": 1305,
+      "cited": "mock_check.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0029.md",
+      "line": 439,
+      "cited": "settings.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0048.md",
+      "line": 10,
+      "cited": "diolog-plugins/plugins/acceptance-e2e/skills/acceptance-e2e/SKILL.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0052.md",
+      "line": 16,
+      "cited": "SKILL.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0052.md",
+      "line": 16,
+      "cited": "references/tools.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0052.md",
+      "line": 22,
+      "cited": "references/methodology.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0052.md",
+      "line": 22,
+      "cited": "references/evidence.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0052.md",
+      "line": 23,
+      "cited": "methodology.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0052.md",
+      "line": 24,
+      "cited": "evidence.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0052.md",
+      "line": 26,
+      "cited": "SKILL.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0052.md",
+      "line": 45,
+      "cited": "tools.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0052.md",
+      "line": 126,
+      "cited": "SKILL.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0052.md",
+      "line": 126,
+      "cited": "references/tools.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0064.md",
+      "line": 50,
+      "cited": "mock_check.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0070.md",
+      "line": 72,
+      "cited": "mock_check.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0078.md",
+      "line": 26,
+      "cited": "references/effect-boundary.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0078.md",
+      "line": 168,
+      "cited": "references/effect-boundary.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0078.md",
+      "line": 183,
+      "cited": "capture-lineage.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0079.md",
+      "line": 6,
+      "cited": "vacuity-check.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0080.md",
+      "line": 18,
+      "cited": "capture-lineage.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0083.md",
+      "line": 33,
+      "cited": "references/effect-boundary.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0085.md",
+      "line": 19,
+      "cited": "SKILL.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0085.md",
+      "line": 20,
+      "cited": "references/tools.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0085.md",
+      "line": 41,
+      "cited": "references/tools.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0085.md",
+      "line": 62,
+      "cited": "tools.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0085.md",
+      "line": 72,
+      "cited": "tools.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0085.md",
+      "line": 90,
+      "cited": "SKILL.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0085.md",
+      "line": 91,
+      "cited": "references/tools.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0085.md",
+      "line": 91,
+      "cited": "references/methodology.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0085.md",
+      "line": 91,
+      "cited": "references/evidence.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0085.md",
+      "line": 110,
+      "cited": "tools.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0085.md",
+      "line": 124,
+      "cited": "references/tools.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0085.md",
+      "line": 139,
+      "cited": "SKILL.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0085.md",
+      "line": 184,
+      "cited": "tools.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0085.md",
+      "line": 198,
+      "cited": "references/tools.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0085.md",
+      "line": 199,
+      "cited": "references/tools.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0085.md",
+      "line": 203,
+      "cited": "SKILL.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0085.md",
+      "line": 240,
+      "cited": "SKILL.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0085.md",
+      "line": 252,
+      "cited": "SKILL.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0091.md",
+      "line": 61,
+      "cited": "campaign.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0095.md",
+      "line": 47,
+      "cited": "vacuity-check.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0095.md",
+      "line": 51,
+      "cited": "vacuity-check.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0095.md",
+      "line": 59,
+      "cited": "campaign.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0096.md",
+      "line": 86,
+      "cited": "campaign.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0100.md",
+      "line": 225,
+      "cited": "gemini.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0101.md",
+      "line": 126,
+      "cited": "references/spec-format.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0101.md",
+      "line": 160,
+      "cited": "references/spec-format.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0102.md",
+      "line": 97,
+      "cited": "skills/reckon/scripts/reckon.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0102.md",
+      "line": 105,
+      "cited": "plugins/reckon/.claude-plugin/plugin.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0102.md",
+      "line": 109,
+      "cited": "reckon.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0102.md",
+      "line": 173,
+      "cited": "selftest.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0102.md",
+      "line": 174,
+      "cited": "selftest.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0102.md",
+      "line": 175,
+      "cited": "selftest.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0102.md",
+      "line": 178,
+      "cited": "marketplace.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0102.md",
+      "line": 197,
+      "cited": "selftest.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0102.md",
+      "line": 221,
+      "cited": "campaign.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0102.md",
+      "line": 238,
+      "cited": "selftest.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0102.md",
+      "line": 246,
+      "cited": "reckon.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0102.md",
+      "line": 249,
+      "cited": "reckon.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0103.md",
+      "line": 339,
+      "cited": "campaign.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0104.md",
+      "line": 96,
+      "cited": "campaign.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0104.md",
+      "line": 143,
+      "cited": "campaign.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0105.md",
+      "line": 15,
+      "cited": "plugin.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0105.md",
+      "line": 17,
+      "cited": "reckon.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0106.md",
+      "line": 102,
+      "cited": "capture-lineage.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 174,
+      "cited": "campaign.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 192,
+      "cited": "capture-lineage.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 270,
+      "cited": "capture-lineage.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0108.md",
+      "line": 52,
+      "cited": "reckon.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0108.md",
+      "line": 52,
+      "cited": "selftest.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0108.md",
+      "line": 62,
+      "cited": "reckon.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0108.md",
+      "line": 62,
+      "cited": "selftest.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0110.md",
+      "line": 19,
+      "cited": "capture-lineage.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0110.md",
+      "line": 20,
+      "cited": "capture-lineage.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0111.md",
+      "line": 22,
+      "cited": "capture-lineage.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0112.md",
+      "line": 16,
+      "cited": "charter_validate.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0112.md",
+      "line": 22,
+      "cited": "charter_validate.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0112.md",
+      "line": 35,
+      "cited": "rollup_classes.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0113.md",
+      "line": 16,
+      "cited": "reckon.py"
+    },
+    {
+      "artifact": "docs/features-to-triage/102-standing-checks-for-the-unread-registers.md",
+      "line": 17,
+      "cited": "capture-lineage.py"
+    },
+    {
+      "artifact": "docs/features-to-triage/102-standing-checks-for-the-unread-registers.md",
+      "line": 17,
+      "cited": "capture-lineage.py"
+    },
+    {
+      "artifact": "docs/features-to-triage/53-the-proctor-skill-tracks-what-shipped.md",
+      "line": 20,
+      "cited": "tools.md"
+    },
+    {
+      "artifact": "docs/features-to-triage/58-swiftui-conversion-direction.md",
+      "line": 151,
+      "cited": "mock_check.py"
+    },
+    {
+      "artifact": "docs/features-to-triage/58-swiftui-conversion-direction.md",
+      "line": 153,
+      "cited": "references/measurement-enforcement.md"
+    },
+    {
+      "artifact": "docs/features-to-triage/58-swiftui-conversion-direction.md",
+      "line": 161,
+      "cited": "DESIGN.md"
+    },
+    {
+      "artifact": "docs/features-to-triage/58-swiftui-conversion-direction.md",
+      "line": 164,
+      "cited": "references/native-foundation.md"
+    },
+    {
+      "artifact": "docs/features-to-triage/59-design-tokens-as-a-swift-value.md",
+      "line": 41,
+      "cited": "mock_check.py"
+    },
+    {
+      "artifact": "docs/features-to-triage/59-design-tokens-as-a-swift-value.md",
+      "line": 68,
+      "cited": "references/native-foundation.md"
+    },
+    {
+      "artifact": "docs/features-to-triage/59-design-tokens-as-a-swift-value.md",
+      "line": 84,
+      "cited": "mock_check.py"
+    },
+    {
+      "artifact": "docs/features-to-triage/67-the-fidelity-harness-proctor-on-proctor.md",
+      "line": 40,
+      "cited": "mock_check.py"
+    },
+    {
+      "artifact": "docs/features-to-triage/71-effect-witnesses-on-glass.md",
+      "line": 63,
+      "cited": "capture-lineage.py"
+    },
+    {
+      "artifact": "docs/features-to-triage/72-tests-that-mutate-and-never-read-back.md",
+      "line": 16,
+      "cited": "vacuity-check.py"
+    },
+    {
+      "artifact": "docs/features-to-triage/73-gates-nobody-has-watched-fail.md",
+      "line": 23,
+      "cited": "vacuity-check.py"
+    },
+    {
+      "artifact": "docs/features-to-triage/78-the-skill-and-the-guest-lane.md",
+      "line": 19,
+      "cited": "references/tools.md"
+    },
+    {
+      "artifact": "docs/features-to-triage/78-the-skill-and-the-guest-lane.md",
+      "line": 24,
+      "cited": "SKILL.md"
+    },
+    {
+      "artifact": "docs/features-to-triage/78-the-skill-and-the-guest-lane.md",
+      "line": 24,
+      "cited": "tools.md"
+    },
+    {
+      "artifact": "docs/features-to-triage/78-the-skill-and-the-guest-lane.md",
+      "line": 46,
+      "cited": "tools.md"
+    },
+    {
+      "artifact": "docs/features-to-triage/84-the-campaigns-own-instruments.md",
+      "line": 49,
+      "cited": "campaign.py"
+    },
+    {
+      "artifact": "docs/features-to-triage/98-a-version-string-is-not-the-artifact.md",
+      "line": 16,
+      "cited": "plugin.json"
+    },
+    {
+      "artifact": "docs/features-to-triage/99-instruments-that-do-not-prove-their-own-step.md",
+      "line": 28,
+      "cited": "campaign.py"
+    },
+    {
+      "artifact": "tailings/PASS-2026-08-26-wave-29.md",
+      "line": 90,
+      "cited": "capture-lineage.py"
+    }
+  ],
+  "formLocked": [
+    {
+      "artifact": "docs/feature-specs/UNCLAIMED-BRIEFS.md",
+      "line": 26,
+      "cited": "spec_citation_measure.py",
+      "fix": "scripts/campaign/spec_citation_measure.py"
+    },
+    {
+      "artifact": "docs/feature-specs/UNCLAIMED-BRIEFS.md",
+      "line": 30,
+      "cited": "00-WAVE-7-DIRECTION.md",
+      "fix": "docs/features-to-triage/00-WAVE-7-DIRECTION.md"
+    },
+    {
+      "artifact": "docs/feature-specs/UNCLAIMED-BRIEFS.md",
+      "line": 31,
+      "cited": "55-three-tests-still-redden-the-gate.md",
+      "fix": "docs/features-to-triage/55-three-tests-still-redden-the-gate.md"
+    },
+    {
+      "artifact": "docs/feature-specs/UNCLAIMED-BRIEFS.md",
+      "line": 32,
+      "cited": "57-vm-targets.md",
+      "fix": "docs/features-to-triage/57-vm-targets.md"
+    },
+    {
+      "artifact": "docs/feature-specs/UNCLAIMED-BRIEFS.md",
+      "line": 33,
+      "cited": "58-swiftui-conversion-direction.md",
+      "fix": "docs/features-to-triage/58-swiftui-conversion-direction.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0009.md",
+      "line": 68,
+      "cited": "Session/SessionFSJail.swift",
+      "fix": "Sources/ProctorAgent/Session/SessionFSJail.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0009.md",
+      "line": 72,
+      "cited": "Session/SessionKill.swift",
+      "fix": "Sources/ProctorAgent/Session/SessionKill.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0013.md",
+      "line": 121,
+      "cited": "ProctorCore/AuditSeal.swift",
+      "fix": "Sources/ProctorCore/AuditSeal.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0013.md",
+      "line": 123,
+      "cited": "ProctorAgent/Session/AuditKeyStore.swift",
+      "fix": "Sources/ProctorAgent/Session/AuditKeyStore.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0014.md",
+      "line": 86,
+      "cited": "Wire.swift",
+      "fix": "Sources/ProctorCore/Wire.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0020.md",
+      "line": 280,
+      "cited": "Wire.swift",
+      "fix": "Sources/ProctorCore/Wire.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0021.md",
+      "line": 112,
+      "cited": "sprite-frames-sheet-d03536.png",
+      "fix": "design/character/sprite-frames-sheet-d03536.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0024.md",
+      "line": 666,
+      "cited": "BrowserTarget.swift",
+      "fix": "Sources/ProctorCore/BrowserTarget.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0025.md",
+      "line": 135,
+      "cited": "RunQueue.swift",
+      "fix": "Sources/ProctorCore/RunQueue.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0026.md",
+      "line": 197,
+      "cited": "CursorOverlay.swift",
+      "fix": "Sources/ProctorAgent/Overlay/CursorOverlay.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0027.md",
+      "line": 241,
+      "cited": "RunHUDMenuBarTests.swift",
+      "fix": "Tests/ProctorCoreTests/RunHUDMenuBarTests.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0027.md",
+      "line": 241,
+      "cited": "YieldWiringTests.swift",
+      "fix": "Tests/ProctorAgentTests/YieldWiringTests.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0029.md",
+      "line": 9,
+      "cited": "StatusChecks.swift",
+      "fix": "Sources/ProctorCore/StatusChecks.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0029.md",
+      "line": 14,
+      "cited": "00-WAVE-7-DIRECTION.md",
+      "fix": "docs/features-to-triage/00-WAVE-7-DIRECTION.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0029.md",
+      "line": 61,
+      "cited": "install.sh",
+      "fix": "scripts/install.sh"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0029.md",
+      "line": 192,
+      "cited": "install.sh",
+      "fix": "scripts/install.sh"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0029.md",
+      "line": 265,
+      "cited": "install.sh",
+      "fix": "scripts/install.sh"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0029.md",
+      "line": 274,
+      "cited": "install.sh",
+      "fix": "scripts/install.sh"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0029.md",
+      "line": 287,
+      "cited": "install.sh",
+      "fix": "scripts/install.sh"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0029.md",
+      "line": 290,
+      "cited": "install.sh",
+      "fix": "scripts/install.sh"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0029.md",
+      "line": 297,
+      "cited": "install.sh",
+      "fix": "scripts/install.sh"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0030.md",
+      "line": 42,
+      "cited": "release.yml",
+      "fix": ".github/workflows/release.yml"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0030.md",
+      "line": 52,
+      "cited": "spec-PRO-0028.md",
+      "fix": "docs/specs/spec-PRO-0028.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0030.md",
+      "line": 103,
+      "cited": "release.yml",
+      "fix": ".github/workflows/release.yml"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0030.md",
+      "line": 144,
+      "cited": "build-app.sh",
+      "fix": "scripts/build-app.sh"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0030.md",
+      "line": 209,
+      "cited": "release.yml",
+      "fix": ".github/workflows/release.yml"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0030.md",
+      "line": 301,
+      "cited": "release.yml",
+      "fix": ".github/workflows/release.yml"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0030.md",
+      "line": 318,
+      "cited": "release.yml",
+      "fix": ".github/workflows/release.yml"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0030.md",
+      "line": 342,
+      "cited": "build-app.sh",
+      "fix": "scripts/build-app.sh"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0030.md",
+      "line": 394,
+      "cited": "ToolOutputSchemas.swift",
+      "fix": "Sources/ProctorCore/ToolOutputSchemas.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0030.md",
+      "line": 394,
+      "cited": "BuildStamp.swift",
+      "fix": "Sources/ProctorCore/BuildStamp.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0030.md",
+      "line": 395,
+      "cited": "SessionDoctor.swift",
+      "fix": "Sources/ProctorAgent/Session/SessionDoctor.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0030.md",
+      "line": 417,
+      "cited": "release.yml",
+      "fix": ".github/workflows/release.yml"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0034.md",
+      "line": 22,
+      "cited": "BackgroundRouteTests.swift",
+      "fix": "Tests/ProctorAgentTests/BackgroundRouteTests.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0035.md",
+      "line": 585,
+      "cited": "BrowserTarget.swift",
+      "fix": "Sources/ProctorCore/BrowserTarget.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0036.md",
+      "line": 437,
+      "cited": "Dispatch.swift",
+      "fix": "Sources/ProctorAgent/Dispatch.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0040.md",
+      "line": 237,
+      "cited": "build-app.sh",
+      "fix": "scripts/build-app.sh"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0040.md",
+      "line": 345,
+      "cited": "build-app.sh",
+      "fix": "scripts/build-app.sh"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0044.md",
+      "line": 24,
+      "cited": "00-WAVE-7-DIRECTION.md",
+      "fix": "docs/features-to-triage/00-WAVE-7-DIRECTION.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0044.md",
+      "line": 210,
+      "cited": "Actuator.swift",
+      "fix": "Sources/ProctorAgent/AX/Actuator.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0045.md",
+      "line": 15,
+      "cited": "00-WAVE-7-DIRECTION.md",
+      "fix": "docs/features-to-triage/00-WAVE-7-DIRECTION.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0046.md",
+      "line": 26,
+      "cited": "00-WAVE-7-DIRECTION.md",
+      "fix": "docs/features-to-triage/00-WAVE-7-DIRECTION.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0046.md",
+      "line": 803,
+      "cited": "RunHUDCharacter.swift",
+      "fix": "Sources/ProctorCore/RunHUDCharacter.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0046.md",
+      "line": 803,
+      "cited": "RunHUDCharacterView.swift",
+      "fix": "Sources/ProctorAgent/Overlay/RunHUDCharacterView.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0046.md",
+      "line": 803,
+      "cited": "run-hud-character.md",
+      "fix": "docs/design/run-hud-character.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0047.md",
+      "line": 15,
+      "cited": "00-WAVE-7-DIRECTION.md",
+      "fix": "docs/features-to-triage/00-WAVE-7-DIRECTION.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0050.md",
+      "line": 15,
+      "cited": "00-WAVE-7-DIRECTION.md",
+      "fix": "docs/features-to-triage/00-WAVE-7-DIRECTION.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0050.md",
+      "line": 16,
+      "cited": "doctor.sh",
+      "fix": "scripts/doctor.sh"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0050.md",
+      "line": 221,
+      "cited": "Wire.swift",
+      "fix": "Sources/ProctorCore/Wire.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0050.md",
+      "line": 296,
+      "cited": "doctor.sh",
+      "fix": "scripts/doctor.sh"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0050.md",
+      "line": 423,
+      "cited": "ProctorCoreTests/ToolchainTests.swift",
+      "fix": "Tests/ProctorCoreTests/ToolchainTests.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0050.md",
+      "line": 424,
+      "cited": "ProctorAgentTests/ToolchainDoctorTests.swift",
+      "fix": "Tests/ProctorAgentTests/ToolchainDoctorTests.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0051.md",
+      "line": 22,
+      "cited": "00-WAVE-7-DIRECTION.md",
+      "fix": "docs/features-to-triage/00-WAVE-7-DIRECTION.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0051.md",
+      "line": 308,
+      "cited": "Wire.swift",
+      "fix": "Sources/ProctorCore/Wire.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0051.md",
+      "line": 457,
+      "cited": "Wire.swift",
+      "fix": "Sources/ProctorCore/Wire.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0051.md",
+      "line": 458,
+      "cited": "CuaDriverTool.swift",
+      "fix": "Sources/ProctorCore/CuaDriverTool.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0053.md",
+      "line": 14,
+      "cited": "00-WAVE-7-DIRECTION.md",
+      "fix": "docs/features-to-triage/00-WAVE-7-DIRECTION.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0063.md",
+      "line": 35,
+      "cited": "ImageEncoding.swift",
+      "fix": "Sources/ProctorCore/ImageEncoding.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0064.md",
+      "line": 40,
+      "cited": "head.html",
+      "fix": "design/surfaces/parts/head.html"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0064.md",
+      "line": 87,
+      "cited": "head.html",
+      "fix": "design/surfaces/parts/head.html"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0064.md",
+      "line": 113,
+      "cited": "head.html",
+      "fix": "design/surfaces/parts/head.html"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0066.md",
+      "line": 86,
+      "cited": "StatusSurface.swift",
+      "fix": "Sources/ProctorCore/StatusSurface.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0066.md",
+      "line": 94,
+      "cited": "evidence/PRO-0081/a2-baseline-pre-comparison.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0081/a2-baseline-pre-comparison.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0066.md",
+      "line": 95,
+      "cited": "a2-identifier-baseline.json",
+      "fix": "docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0066.md",
+      "line": 97,
+      "cited": "evidence/PRO-0081/a2-baseline-bite.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0081/a2-baseline-bite.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0066.md",
+      "line": 100,
+      "cited": "status_literals.py",
+      "fix": "scripts/campaign/status_literals.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0073.md",
+      "line": 121,
+      "cited": "build-app.sh",
+      "fix": "scripts/build-app.sh"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0076.md",
+      "line": 551,
+      "cited": "Dispatch.swift",
+      "fix": "Sources/ProctorAgent/Dispatch.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0076.md",
+      "line": 592,
+      "cited": "warrant.toml",
+      "fix": ".warrant/warrant.toml"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0077.md",
+      "line": 107,
+      "cited": "PolicyStore.swift",
+      "fix": "Sources/ProctorAgent/Session/PolicyStore.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0077.md",
+      "line": 168,
+      "cited": "campaign.json",
+      "fix": "docs/test-campaign/campaign.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0077.md",
+      "line": 187,
+      "cited": "cases.json",
+      "fix": "docs/test-campaign/cases.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0078.md",
+      "line": 47,
+      "cited": "campaign.json",
+      "fix": "docs/test-campaign/campaign.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0078.md",
+      "line": 70,
+      "cited": "capture_with_manifest.py",
+      "fix": "scripts/campaign/capture_with_manifest.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0078.md",
+      "line": 89,
+      "cited": "AX/Actuator.swift",
+      "fix": "Sources/ProctorAgent/AX/Actuator.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0078.md",
+      "line": 217,
+      "cited": "campaign.json",
+      "fix": "docs/test-campaign/campaign.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0078.md",
+      "line": 217,
+      "cited": "inventory.json",
+      "fix": "docs/test-campaign/inventory.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0079.md",
+      "line": 51,
+      "cited": "rate.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0079/rate.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0079.md",
+      "line": 52,
+      "cited": "REPORT.md",
+      "fix": "docs/test-campaign/REPORT.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0079.md",
+      "line": 62,
+      "cited": "REPORT.md",
+      "fix": "docs/test-campaign/REPORT.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0079.md",
+      "line": 94,
+      "cited": "evidence/PRO-0079/arming-control.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0079/arming-control.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0080.md",
+      "line": 17,
+      "cited": "capture_with_manifest.py",
+      "fix": "scripts/campaign/capture_with_manifest.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0080.md",
+      "line": 27,
+      "cited": "REPORT.md",
+      "fix": "docs/test-campaign/REPORT.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0080.md",
+      "line": 61,
+      "cited": "REPORT.md",
+      "fix": "docs/test-campaign/REPORT.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0080.md",
+      "line": 108,
+      "cited": "mutate_swift.py",
+      "fix": "scripts/campaign/mutate_swift.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0080.md",
+      "line": 122,
+      "cited": "mutate_swift.py",
+      "fix": "scripts/campaign/mutate_swift.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0080.md",
+      "line": 131,
+      "cited": "REPORT.md",
+      "fix": "docs/test-campaign/REPORT.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0080.md",
+      "line": 140,
+      "cited": "inventory.json",
+      "fix": "docs/test-campaign/inventory.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0080.md",
+      "line": 147,
+      "cited": "REPORT.md",
+      "fix": "docs/test-campaign/REPORT.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0080.md",
+      "line": 156,
+      "cited": "REPORT.md",
+      "fix": "docs/test-campaign/REPORT.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0080.md",
+      "line": 157,
+      "cited": "inventory.json",
+      "fix": "docs/test-campaign/inventory.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0080.md",
+      "line": 158,
+      "cited": "seed_unclass.py",
+      "fix": "scripts/campaign/seed_unclass.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0080.md",
+      "line": 159,
+      "cited": "evidence/mutation-agent.json",
+      "fix": "docs/test-campaign/evidence/mutation-agent.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0080.md",
+      "line": 160,
+      "cited": "REPORT.md",
+      "fix": "docs/test-campaign/REPORT.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0080.md",
+      "line": 162,
+      "cited": "inventory.json",
+      "fix": "docs/test-campaign/inventory.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0080.md",
+      "line": 162,
+      "cited": "REPORT.md",
+      "fix": "docs/test-campaign/REPORT.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0080.md",
+      "line": 163,
+      "cited": "evidence.html",
+      "fix": "docs/test-campaign/evidence.html"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0081.md",
+      "line": 119,
+      "cited": "capture_with_manifest.py",
+      "fix": "scripts/campaign/capture_with_manifest.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0081.md",
+      "line": 134,
+      "cited": "a2-identifier-baseline.json",
+      "fix": "docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0081.md",
+      "line": 137,
+      "cited": "a2-identifier-baseline-pre.json",
+      "fix": "docs/test-campaign/evidence/PRO-0081/a2-identifier-baseline-pre.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0081.md",
+      "line": 146,
+      "cited": "evidence/PRO-0081/a2-baseline-pre-comparison.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0081/a2-baseline-pre-comparison.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0081.md",
+      "line": 148,
+      "cited": "evidence/PRO-0081/a2-baseline-bite.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0081/a2-baseline-bite.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0081.md",
+      "line": 155,
+      "cited": "status_literals.py",
+      "fix": "scripts/campaign/status_literals.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0081.md",
+      "line": 162,
+      "cited": "a2-arming.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0081/a2-arming.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0081.md",
+      "line": 191,
+      "cited": "cases.json",
+      "fix": "docs/test-campaign/cases.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0081.md",
+      "line": 191,
+      "cited": "inventory.json",
+      "fix": "docs/test-campaign/inventory.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0081.md",
+      "line": 191,
+      "cited": "campaign.json",
+      "fix": "docs/test-campaign/campaign.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0082.md",
+      "line": 44,
+      "cited": "agent-start.txt",
+      "fix": "docs/test-campaign/evidence/pro-0082/agent-start.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0083.md",
+      "line": 22,
+      "cited": "REPORT.md",
+      "fix": "docs/test-campaign/REPORT.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0083.md",
+      "line": 177,
+      "cited": "Actuation/CuaClients.swift",
+      "fix": "Sources/ProctorAgent/Actuation/CuaClients.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0083.md",
+      "line": 212,
+      "cited": "ProctorReflector/SocketServer.swift",
+      "fix": "Sources/ProctorReflector/SocketServer.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0083.md",
+      "line": 284,
+      "cited": "cases.json",
+      "fix": "docs/test-campaign/cases.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0083.md",
+      "line": 285,
+      "cited": "REPORT.md",
+      "fix": "docs/test-campaign/REPORT.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0083.md",
+      "line": 287,
+      "cited": "inventory.json",
+      "fix": "docs/test-campaign/inventory.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0083.md",
+      "line": 287,
+      "cited": "cases.json",
+      "fix": "docs/test-campaign/cases.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0083.md",
+      "line": 418,
+      "cited": "evidence/PRO-0083/arming-counts-after-refactor.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0083/arming-counts-after-refactor.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0083.md",
+      "line": 418,
+      "cited": "arming-sabotage-after-refactor.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0083/arming-sabotage-after-refactor.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0083.md",
+      "line": 421,
+      "cited": "evidence/PRO-0083/suite-before-after.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0083/suite-before-after.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0085.md",
+      "line": 5,
+      "cited": "53-the-proctor-skill-tracks-what-shipped.md",
+      "fix": "docs/features-to-triage/53-the-proctor-skill-tracks-what-shipped.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0085.md",
+      "line": 65,
+      "cited": "AgentVerbs.swift",
+      "fix": "Sources/ProctorCore/AgentVerbs.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0085.md",
+      "line": 173,
+      "cited": "AgentVerbs.swift",
+      "fix": "Sources/ProctorCore/AgentVerbs.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0085.md",
+      "line": 224,
+      "cited": "skill_doc_arm.py",
+      "fix": "scripts/campaign/skill_doc_arm.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0085.md",
+      "line": 245,
+      "cited": "doc-description-anchor-arming.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0085/doc-description-anchor-arming.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0085.md",
+      "line": 255,
+      "cited": "skill_doc_arm.py",
+      "fix": "scripts/campaign/skill_doc_arm.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0090.md",
+      "line": 169,
+      "cited": "status_literals.py",
+      "fix": "scripts/campaign/status_literals.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0091.md",
+      "line": 21,
+      "cited": "mutate_swift.py",
+      "fix": "scripts/campaign/mutate_swift.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0091.md",
+      "line": 31,
+      "cited": "evidence/PRO-0091/def041-denominator.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0091/def041-denominator.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0091.md",
+      "line": 32,
+      "cited": "evidence/PRO-0091/def030-both-passes-armed.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0091/def030-both-passes-armed.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0091.md",
+      "line": 33,
+      "cited": "evidence/PRO-0091/instrument-suite.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0091/instrument-suite.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0091.md",
+      "line": 36,
+      "cited": "evidence/PRO-0091/campaign-check-after.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0091/campaign-check-after.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0091.md",
+      "line": 38,
+      "cited": "evidence/PRO-0091/instrument-arming.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0091/instrument-arming.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0091.md",
+      "line": 39,
+      "cited": "evidence/PRO-0091/gate-run.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0091/gate-run.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0092.md",
+      "line": 103,
+      "cited": "REPORT.md",
+      "fix": "docs/test-campaign/REPORT.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0092.md",
+      "line": 110,
+      "cited": "mutation-agent.json",
+      "fix": "docs/test-campaign/evidence/mutation-agent.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0092.md",
+      "line": 162,
+      "cited": "Dispatch.swift",
+      "fix": "Sources/ProctorAgent/Dispatch.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0092.md",
+      "line": 194,
+      "cited": "Dispatch.swift",
+      "fix": "Sources/ProctorAgent/Dispatch.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0092.md",
+      "line": 216,
+      "cited": "test_instruments.py",
+      "fix": "scripts/campaign/test_instruments.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0092.md",
+      "line": 217,
+      "cited": "operator_path_gate.py",
+      "fix": "scripts/campaign/operator_path_gate.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0092.md",
+      "line": 218,
+      "cited": "mutation_seam_arm.py",
+      "fix": "scripts/campaign/mutation_seam_arm.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0092.md",
+      "line": 219,
+      "cited": "mutation_timeout_arm.py",
+      "fix": "scripts/campaign/mutation_timeout_arm.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0092.md",
+      "line": 242,
+      "cited": "defect_gate.py",
+      "fix": "scripts/campaign/defect_gate.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0092.md",
+      "line": 243,
+      "cited": "test_instruments.py",
+      "fix": "scripts/campaign/test_instruments.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0092.md",
+      "line": 244,
+      "cited": "operator_path_gate.py",
+      "fix": "scripts/campaign/operator_path_gate.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0092.md",
+      "line": 244,
+      "cited": "mutation_seam_arm.py",
+      "fix": "scripts/campaign/mutation_seam_arm.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0092.md",
+      "line": 245,
+      "cited": "mutation_timeout_arm.py",
+      "fix": "scripts/campaign/mutation_timeout_arm.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0092.md",
+      "line": 266,
+      "cited": "Dispatch.swift",
+      "fix": "Sources/ProctorAgent/Dispatch.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0092.md",
+      "line": 272,
+      "cited": "MutationSeamTests.swift",
+      "fix": "Tests/ProctorAgentTests/MutationSeamTests.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0092.md",
+      "line": 278,
+      "cited": "ToolCatalogue.swift",
+      "fix": "Sources/ProctorCore/ToolCatalogue.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0092.md",
+      "line": 287,
+      "cited": "mutate_swift.py",
+      "fix": "scripts/campaign/mutate_swift.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0092.md",
+      "line": 288,
+      "cited": "mutation_seam_arm.py",
+      "fix": "scripts/campaign/mutation_seam_arm.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0092.md",
+      "line": 306,
+      "cited": "mutate_swift.py",
+      "fix": "scripts/campaign/mutate_swift.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0094.md",
+      "line": 57,
+      "cited": "Wire.swift",
+      "fix": "Sources/ProctorCore/Wire.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0094.md",
+      "line": 66,
+      "cited": "SessionGuest.swift",
+      "fix": "Sources/ProctorAgent/Session/SessionGuest.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0094.md",
+      "line": 73,
+      "cited": "GuestInventory.swift",
+      "fix": "Sources/ProctorCore/GuestInventory.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0094.md",
+      "line": 190,
+      "cited": "GuestInventory.swift",
+      "fix": "Sources/ProctorCore/GuestInventory.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0094.md",
+      "line": 295,
+      "cited": "spec-PRO-0076.md",
+      "fix": "docs/specs/spec-PRO-0076.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0095.md",
+      "line": 55,
+      "cited": "seed_unclass.py",
+      "fix": "scripts/campaign/seed_unclass.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0095.md",
+      "line": 107,
+      "cited": "evidence/PRO-0095/def068-arming.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0095/def068-arming.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0095.md",
+      "line": 111,
+      "cited": "evidence/PRO-0095/def075-refusal.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0095/def075-refusal.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0095.md",
+      "line": 114,
+      "cited": "evidence/PRO-0095/gate-after.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0095/gate-after.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0097.md",
+      "line": 11,
+      "cited": "inventory.json",
+      "fix": "docs/test-campaign/inventory.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0097.md",
+      "line": 59,
+      "cited": "evidence/PRO-0097/defect-reconciliation.md",
+      "fix": "docs/test-campaign/evidence/PRO-0097/defect-reconciliation.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0097.md",
+      "line": 60,
+      "cited": "evidence/PRO-0097/dropped-values.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0097/dropped-values.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0097.md",
+      "line": 67,
+      "cited": "evidence/PRO-0097/census-after.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0097/census-after.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0097.md",
+      "line": 68,
+      "cited": "evidence/PRO-0097/gate-before.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0097/gate-before.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0097.md",
+      "line": 68,
+      "cited": "evidence/PRO-0097/gate-after.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0097/gate-after.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0097.md",
+      "line": 69,
+      "cited": "evidence/PRO-0097/def-106-arming.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0097/def-106-arming.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0097.md",
+      "line": 70,
+      "cited": "evidence/PRO-0097/dropped-values.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0097/dropped-values.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0097.md",
+      "line": 71,
+      "cited": "evidence/PRO-0097/case-0113-arming.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0097/case-0113-arming.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0097.md",
+      "line": 84,
+      "cited": "inventory.json",
+      "fix": "docs/test-campaign/inventory.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0098.md",
+      "line": 24,
+      "cited": "ProctorCoreTests.swift",
+      "fix": "Tests/ProctorCoreTests/ProctorCoreTests.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0098.md",
+      "line": 85,
+      "cited": "PolicyStoreSeamTests.swift",
+      "fix": "Tests/ProctorAgentTests/PolicyStoreSeamTests.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0098.md",
+      "line": 231,
+      "cited": "flow-write-caught.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0098/flow-write-caught.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0098.md",
+      "line": 231,
+      "cited": "flow-interlock-arming.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0098/flow-interlock-arming.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0099.md",
+      "line": 29,
+      "cited": "ProctorCore/SwitchStore.swift",
+      "fix": "Sources/ProctorCore/SwitchStore.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0099.md",
+      "line": 30,
+      "cited": "ProctorAgent/Session/SessionMaestro.swift",
+      "fix": "Sources/ProctorAgent/Session/SessionMaestro.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0099.md",
+      "line": 31,
+      "cited": "ProctorAgent/Session/SessionIOSProcess.swift",
+      "fix": "Sources/ProctorAgent/Session/SessionIOSProcess.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0099.md",
+      "line": 32,
+      "cited": "ProctorCore/Wire.swift",
+      "fix": "Sources/ProctorCore/Wire.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0099.md",
+      "line": 33,
+      "cited": "ProctorCore/GuestInventory.swift",
+      "fix": "Sources/ProctorCore/GuestInventory.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0099.md",
+      "line": 34,
+      "cited": "ProctorReflector/ProctorReflector.swift",
+      "fix": "Sources/ProctorReflector/ProctorReflector.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0099.md",
+      "line": 35,
+      "cited": "ProctorCore/TUISurface.swift",
+      "fix": "Sources/ProctorCore/TUISurface.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0099.md",
+      "line": 36,
+      "cited": "ProctorCore/ToolCatalogue.swift",
+      "fix": "Sources/ProctorCore/ToolCatalogue.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0099.md",
+      "line": 74,
+      "cited": "evidence/PRO-0099/sabotage-production-unchanged.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0099/sabotage-production-unchanged.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0099.md",
+      "line": 86,
+      "cited": "evidence/PRO-0099/README.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0099/README.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0099.md",
+      "line": 95,
+      "cited": "evidence/PRO-0099/diversion-positive.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0099/diversion-positive.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0099.md",
+      "line": 101,
+      "cited": "test_instruments.py",
+      "fix": "scripts/campaign/test_instruments.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0099.md",
+      "line": 115,
+      "cited": "Wire.swift",
+      "fix": "Sources/ProctorCore/Wire.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0099.md",
+      "line": 124,
+      "cited": "PolicyStore.swift",
+      "fix": "Sources/ProctorAgent/Session/PolicyStore.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0099.md",
+      "line": 127,
+      "cited": "evidence/PRO-0099/gate-arming.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0099/gate-arming.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0099.md",
+      "line": 192,
+      "cited": "evidence/PRO-0099/witness-arming.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0099/witness-arming.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0100.md",
+      "line": 119,
+      "cited": "spec-PRO-0103.md",
+      "fix": "docs/specs/spec-PRO-0103.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0100.md",
+      "line": 203,
+      "cited": "skill_doc_measure.py",
+      "fix": "scripts/campaign/skill_doc_measure.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0100.md",
+      "line": 227,
+      "cited": "campaign-check-baseline.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0100/campaign-check-baseline.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0100.md",
+      "line": 227,
+      "cited": "campaign-check.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0100/campaign-check.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0100.md",
+      "line": 244,
+      "cited": "defect_gate.py",
+      "fix": "scripts/campaign/defect_gate.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0100.md",
+      "line": 245,
+      "cited": "test_instruments.py",
+      "fix": "scripts/campaign/test_instruments.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0100.md",
+      "line": 245,
+      "cited": "operator_path_gate.py",
+      "fix": "scripts/campaign/operator_path_gate.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0100.md",
+      "line": 246,
+      "cited": "skill_doc_measure.py",
+      "fix": "scripts/campaign/skill_doc_measure.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0100.md",
+      "line": 246,
+      "cited": "skill_doc_arm.py",
+      "fix": "scripts/campaign/skill_doc_arm.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0101.md",
+      "line": 133,
+      "cited": "spec-PRO-0103.md",
+      "fix": "docs/specs/spec-PRO-0103.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0101.md",
+      "line": 175,
+      "cited": "spec_citation_measure.py",
+      "fix": "scripts/campaign/spec_citation_measure.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0101.md",
+      "line": 175,
+      "cited": "spec_citation_arm.py",
+      "fix": "scripts/campaign/spec_citation_arm.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0101.md",
+      "line": 176,
+      "cited": "test_instruments.py",
+      "fix": "scripts/campaign/test_instruments.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0101.md",
+      "line": 177,
+      "cited": "operator_path_gate.py",
+      "fix": "scripts/campaign/operator_path_gate.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0101.md",
+      "line": 228,
+      "cited": "spec_citation_measure.py",
+      "fix": "scripts/campaign/spec_citation_measure.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0101.md",
+      "line": 229,
+      "cited": "spec_citation_arm.py",
+      "fix": "scripts/campaign/spec_citation_arm.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0101.md",
+      "line": 231,
+      "cited": "test_instruments.py",
+      "fix": "scripts/campaign/test_instruments.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0101.md",
+      "line": 231,
+      "cited": "operator_path_gate.py",
+      "fix": "scripts/campaign/operator_path_gate.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0102.md",
+      "line": 119,
+      "cited": "spec-PRO-0103.md",
+      "fix": "docs/specs/spec-PRO-0103.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0102.md",
+      "line": 181,
+      "cited": "evidence/PRO-0102/source-denominators.py",
+      "fix": "docs/test-campaign/evidence/PRO-0102/source-denominators.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0102.md",
+      "line": 205,
+      "cited": "evidence/PRO-0102/check-blocker-diff.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0102/check-blocker-diff.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0102.md",
+      "line": 216,
+      "cited": "evidence/PRO-0102/swift-suite.txt",
+      "fix": "docs/test-campaign/evidence/PRO-0102/swift-suite.txt"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0102.md",
+      "line": 241,
+      "cited": "defect_gate.py",
+      "fix": "scripts/campaign/defect_gate.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0102.md",
+      "line": 288,
+      "cited": "cases.json",
+      "fix": "docs/test-campaign/cases.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0103.md",
+      "line": 250,
+      "cited": "reckoning_selftest.py",
+      "fix": "scripts/reckoning/reckoning_selftest.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0103.md",
+      "line": 310,
+      "cited": "cases.json",
+      "fix": "docs/test-campaign/cases.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0103.md",
+      "line": 310,
+      "cited": "inventory.json",
+      "fix": "docs/test-campaign/inventory.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0103.md",
+      "line": 315,
+      "cited": "reckoning_selftest.py",
+      "fix": "scripts/reckoning/reckoning_selftest.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0103.md",
+      "line": 316,
+      "cited": "defect_gate.py",
+      "fix": "scripts/campaign/defect_gate.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0103.md",
+      "line": 316,
+      "cited": "test_instruments.py",
+      "fix": "scripts/campaign/test_instruments.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0104.md",
+      "line": 51,
+      "cited": "spec_citation_measure.py",
+      "fix": "scripts/campaign/spec_citation_measure.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0104.md",
+      "line": 65,
+      "cited": "spec_citation_arm.py",
+      "fix": "scripts/campaign/spec_citation_arm.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0104.md",
+      "line": 92,
+      "cited": "spec_citation_measure.py",
+      "fix": "scripts/campaign/spec_citation_measure.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0104.md",
+      "line": 93,
+      "cited": "spec_citation_arm.py",
+      "fix": "scripts/campaign/spec_citation_arm.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0104.md",
+      "line": 95,
+      "cited": "spec-PRO-0096.md",
+      "fix": "docs/specs/spec-PRO-0096.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0104.md",
+      "line": 124,
+      "cited": "spec_citation_measure.py",
+      "fix": "scripts/campaign/spec_citation_measure.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0104.md",
+      "line": 125,
+      "cited": "spec-PRO-0050.md",
+      "fix": "docs/specs/spec-PRO-0050.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0104.md",
+      "line": 192,
+      "cited": "spec_citation_measure.py",
+      "fix": "scripts/campaign/spec_citation_measure.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0106.md",
+      "line": 13,
+      "cited": "mutate_swift.py",
+      "fix": "scripts/campaign/mutate_swift.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0106.md",
+      "line": 14,
+      "cited": "mutation_seam_arm.py",
+      "fix": "scripts/campaign/mutation_seam_arm.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0106.md",
+      "line": 54,
+      "cited": "surf-007-zoom.png",
+      "fix": "docs/test-campaign/evidence/shots/surf-007-zoom.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0106.md",
+      "line": 59,
+      "cited": "captures.json",
+      "fix": "docs/test-campaign/evidence/shots/captures.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0106.md",
+      "line": 60,
+      "cited": "cases.json",
+      "fix": "docs/test-campaign/cases.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0106.md",
+      "line": 76,
+      "cited": "cases.json",
+      "fix": "docs/test-campaign/cases.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0106.md",
+      "line": 85,
+      "cited": "mutate_swift.py",
+      "fix": "scripts/campaign/mutate_swift.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0106.md",
+      "line": 101,
+      "cited": "evidence/shots/mock/surf-008-status-window.png",
+      "fix": "docs/test-campaign/evidence/shots/mock/surf-008-status-window.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0106.md",
+      "line": 143,
+      "cited": "mutation_seam_arm.py",
+      "fix": "scripts/campaign/mutation_seam_arm.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0106.md",
+      "line": 261,
+      "cited": "mutation_seam_arm.py",
+      "fix": "scripts/campaign/mutation_seam_arm.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0106.md",
+      "line": 296,
+      "cited": "mutation_timeout_arm.py",
+      "fix": "scripts/campaign/mutation_timeout_arm.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0106.md",
+      "line": 296,
+      "cited": "skill_doc_arm.py",
+      "fix": "scripts/campaign/skill_doc_arm.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0106.md",
+      "line": 297,
+      "cited": "spec_citation_arm.py",
+      "fix": "scripts/campaign/spec_citation_arm.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0106.md",
+      "line": 298,
+      "cited": "defect_gate.py",
+      "fix": "scripts/campaign/defect_gate.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0106.md",
+      "line": 298,
+      "cited": "spec_citation_measure.py",
+      "fix": "scripts/campaign/spec_citation_measure.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0106.md",
+      "line": 303,
+      "cited": "mutate_swift.py",
+      "fix": "scripts/campaign/mutate_swift.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0106.md",
+      "line": 304,
+      "cited": "mutation_seam_arm.py",
+      "fix": "scripts/campaign/mutation_seam_arm.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0106.md",
+      "line": 305,
+      "cited": "reckoning.py",
+      "fix": "scripts/reckoning/reckoning.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 29,
+      "cited": "captures.json",
+      "fix": "docs/test-campaign/evidence/shots/captures.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 46,
+      "cited": "captures.json",
+      "fix": "docs/test-campaign/evidence/shots/captures.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 64,
+      "cited": "pairs.json",
+      "fix": "docs/test-campaign/evidence/shots/pairs.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 85,
+      "cited": "sweepL-status-agent-down.png",
+      "fix": "docs/test-campaign/evidence/shots/sweepL-status-agent-down.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 88,
+      "cited": "sweepK-theme-before.png",
+      "fix": "docs/test-campaign/evidence/shots/sweepK-theme-before.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 89,
+      "cited": "sweepL-wedged-t1.png",
+      "fix": "docs/test-campaign/evidence/shots/sweepL-wedged-t1.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 89,
+      "cited": "sweepL-wedged-recovered.png",
+      "fix": "docs/test-campaign/evidence/shots/sweepL-wedged-recovered.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 95,
+      "cited": "sweepK-scaling.json",
+      "fix": "docs/test-campaign/evidence/sweepK-scaling.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 108,
+      "cited": "evidence/PRO-0107/shot-audit.json",
+      "fix": "docs/test-campaign/evidence/PRO-0107/shot-audit.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 109,
+      "cited": "captures.json",
+      "fix": "docs/test-campaign/evidence/shots/captures.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 114,
+      "cited": "shot_disposition.py",
+      "fix": "scripts/campaign/shot_disposition.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 140,
+      "cited": "test_instruments.py",
+      "fix": "scripts/campaign/test_instruments.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 141,
+      "cited": "spec_citation_measure.py",
+      "fix": "scripts/campaign/spec_citation_measure.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 142,
+      "cited": "shot_disposition.py",
+      "fix": "scripts/campaign/shot_disposition.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 163,
+      "cited": "cases.json",
+      "fix": "docs/test-campaign/cases.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 164,
+      "cited": "cases.json",
+      "fix": "docs/test-campaign/cases.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 166,
+      "cited": "surf-004-run-hud.png",
+      "fix": "docs/test-campaign/evidence/shots/surf-004-run-hud.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 167,
+      "cited": "surf-005-takeover-shield.png",
+      "fix": "docs/test-campaign/evidence/shots/surf-005-takeover-shield.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 167,
+      "cited": "surf-008-tools.png",
+      "fix": "docs/test-campaign/evidence/shots/surf-008-tools.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 176,
+      "cited": "cases.json",
+      "fix": "docs/test-campaign/cases.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 188,
+      "cited": "shot_disposition.py",
+      "fix": "scripts/campaign/shot_disposition.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 189,
+      "cited": "defect_gate.py",
+      "fix": "scripts/campaign/defect_gate.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 190,
+      "cited": "test_instruments.py",
+      "fix": "scripts/campaign/test_instruments.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 190,
+      "cited": "spec_citation_measure.py",
+      "fix": "scripts/campaign/spec_citation_measure.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 198,
+      "cited": "build_test_campaign.py",
+      "fix": "scripts/build_test_campaign.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 212,
+      "cited": "overlay-capture-lifted.json",
+      "fix": "docs/test-campaign/evidence/overlay-capture-lifted.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 213,
+      "cited": "surf-004-run-hud.png",
+      "fix": "docs/test-campaign/evidence/shots/surf-004-run-hud.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 215,
+      "cited": "capture_with_manifest.py",
+      "fix": "scripts/campaign/capture_with_manifest.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 235,
+      "cited": "captures.json",
+      "fix": "docs/test-campaign/evidence/shots/captures.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 247,
+      "cited": "surf-007-zoom.png",
+      "fix": "docs/test-campaign/evidence/shots/surf-007-zoom.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 254,
+      "cited": "sweepL-halfopen.json",
+      "fix": "docs/test-campaign/evidence/sweepL-halfopen.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 263,
+      "cited": "shot_disposition.py",
+      "fix": "scripts/campaign/shot_disposition.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 277,
+      "cited": "shot_disposition.py",
+      "fix": "scripts/campaign/shot_disposition.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 277,
+      "cited": "captures.json",
+      "fix": "docs/test-campaign/evidence/shots/captures.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 278,
+      "cited": "cases.json",
+      "fix": "docs/test-campaign/cases.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0107.md",
+      "line": 286,
+      "cited": "sweepL-status-agent-down.png",
+      "fix": "docs/test-campaign/evidence/shots/sweepL-status-agent-down.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0109.md",
+      "line": 20,
+      "cited": "sweepK-scaling.json",
+      "fix": "docs/test-campaign/evidence/sweepK-scaling.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0109.md",
+      "line": 25,
+      "cited": "sweepL-status-agent-down.png",
+      "fix": "docs/test-campaign/evidence/shots/sweepL-status-agent-down.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0109.md",
+      "line": 28,
+      "cited": "cases.json",
+      "fix": "docs/test-campaign/cases.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0109.md",
+      "line": 29,
+      "cited": "capture_with_manifest.py",
+      "fix": "scripts/campaign/capture_with_manifest.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0109.md",
+      "line": 45,
+      "cited": "shot_disposition.py",
+      "fix": "scripts/campaign/shot_disposition.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0109.md",
+      "line": 51,
+      "cited": "sweepK-scaling.json",
+      "fix": "docs/test-campaign/evidence/sweepK-scaling.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0109.md",
+      "line": 51,
+      "cited": "sweepK-scale-1x.png",
+      "fix": "docs/test-campaign/evidence/shots/sweepK-scale-1x.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0109.md",
+      "line": 51,
+      "cited": "sweepK-scale-small.png",
+      "fix": "docs/test-campaign/evidence/shots/sweepK-scale-small.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0109.md",
+      "line": 52,
+      "cited": "sweepL-wedged-recovered.png",
+      "fix": "docs/test-campaign/evidence/shots/sweepL-wedged-recovered.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0109.md",
+      "line": 52,
+      "cited": "sweepL-wedged-t1.png",
+      "fix": "docs/test-campaign/evidence/shots/sweepL-wedged-t1.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0109.md",
+      "line": 53,
+      "cited": "sweepL-status-agent-down.png",
+      "fix": "docs/test-campaign/evidence/shots/sweepL-status-agent-down.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0109.md",
+      "line": 53,
+      "cited": "sweepL-status-t0.6.png",
+      "fix": "docs/test-campaign/evidence/shots/sweepL-status-t0.6.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0109.md",
+      "line": 54,
+      "cited": "surf-003-drawn-pointer.png",
+      "fix": "docs/test-campaign/evidence/shots/surf-003-drawn-pointer.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0109.md",
+      "line": 54,
+      "cited": "surf-028-about.png",
+      "fix": "docs/test-campaign/evidence/shots/surf-028-about.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0109.md",
+      "line": 55,
+      "cited": "cases.json",
+      "fix": "docs/test-campaign/cases.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0110.md",
+      "line": 15,
+      "cited": "LEDGER.md",
+      "fix": "docs/feature-specs/LEDGER.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0110.md",
+      "line": 19,
+      "cited": "cases.json",
+      "fix": "docs/test-campaign/cases.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0110.md",
+      "line": 20,
+      "cited": "shot_disposition.py",
+      "fix": "scripts/campaign/shot_disposition.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0110.md",
+      "line": 21,
+      "cited": "cases.json",
+      "fix": "docs/test-campaign/cases.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0110.md",
+      "line": 21,
+      "cited": "captures.json",
+      "fix": "docs/test-campaign/evidence/shots/captures.json"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0110.md",
+      "line": 24,
+      "cited": "shot_disposition.py",
+      "fix": "scripts/campaign/shot_disposition.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0110.md",
+      "line": 30,
+      "cited": "LEDGER.md",
+      "fix": "docs/feature-specs/LEDGER.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0110.md",
+      "line": 37,
+      "cited": "shot_disposition.py",
+      "fix": "scripts/campaign/shot_disposition.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0110.md",
+      "line": 42,
+      "cited": "mock/surf-008-status-window.png",
+      "fix": "docs/test-campaign/evidence/shots/mock/surf-008-status-window.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0110.md",
+      "line": 42,
+      "cited": "mock/surf-009-walkthrough.png",
+      "fix": "docs/test-campaign/evidence/shots/mock/surf-009-walkthrough.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0110.md",
+      "line": 42,
+      "cited": "mock/surf-010-menubar.png",
+      "fix": "docs/test-campaign/evidence/shots/mock/surf-010-menubar.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0110.md",
+      "line": 42,
+      "cited": "mock/step-a3-walkthrough-primary-disabled.png",
+      "fix": "docs/test-campaign/evidence/shots/mock/step-a3-walkthrough-primary-disabled.png"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0110.md",
+      "line": 42,
+      "cited": "mock/step-a3-walkthrough-primary-disabled.html",
+      "fix": "docs/test-campaign/evidence/shots/mock/step-a3-walkthrough-primary-disabled.html"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0110.md",
+      "line": 43,
+      "cited": "shot_disposition.py",
+      "fix": "scripts/campaign/shot_disposition.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0110.md",
+      "line": 44,
+      "cited": "test_instruments.py",
+      "fix": "scripts/campaign/test_instruments.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0111.md",
+      "line": 13,
+      "cited": "ReadIsolationPolicyTests.swift",
+      "fix": "Tests/ProctorAgentTests/ReadIsolationPolicyTests.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0111.md",
+      "line": 14,
+      "cited": "HardwareInputBoundaryTests.swift",
+      "fix": "Tests/ProctorCoreTests/HardwareInputBoundaryTests.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0111.md",
+      "line": 15,
+      "cited": "DynamicGrantProbeTests.swift",
+      "fix": "Tests/ProctorCoreTests/DynamicGrantProbeTests.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0111.md",
+      "line": 22,
+      "cited": "test_instruments.py",
+      "fix": "scripts/campaign/test_instruments.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0111.md",
+      "line": 22,
+      "cited": "defect_gate.py",
+      "fix": "scripts/campaign/defect_gate.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0111.md",
+      "line": 22,
+      "cited": "spec_citation_measure.py",
+      "fix": "scripts/campaign/spec_citation_measure.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0111.md",
+      "line": 22,
+      "cited": "shot_disposition.py",
+      "fix": "scripts/campaign/shot_disposition.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0112.md",
+      "line": 25,
+      "cited": "test_instruments.py",
+      "fix": "scripts/campaign/test_instruments.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0113.md",
+      "line": 27,
+      "cited": "spec_citation_measure.py",
+      "fix": "scripts/campaign/spec_citation_measure.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0113.md",
+      "line": 28,
+      "cited": "test_instruments.py",
+      "fix": "scripts/campaign/test_instruments.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0114.md",
+      "line": 18,
+      "cited": "SupervisionTUIPtyWitnessTests.swift",
+      "fix": "Tests/ProctorAgentTests/SupervisionTUIPtyWitnessTests.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0114.md",
+      "line": 19,
+      "cited": "MenuBarHierarchyWitnessTests.swift",
+      "fix": "Tests/ProctorAgentTests/MenuBarHierarchyWitnessTests.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0114.md",
+      "line": 20,
+      "cited": "SupervisionTUIPtyWitnessTests.swift",
+      "fix": "Tests/ProctorAgentTests/SupervisionTUIPtyWitnessTests.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0115.md",
+      "line": 18,
+      "cited": "CuaClients.swift",
+      "fix": "Sources/ProctorAgent/Actuation/CuaClients.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0115.md",
+      "line": 20,
+      "cited": "CuaSubprocessWitnessTests.swift",
+      "fix": "Tests/ProctorAgentTests/CuaSubprocessWitnessTests.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0115.md",
+      "line": 38,
+      "cited": "CuaClients.swift",
+      "fix": "Sources/ProctorAgent/Actuation/CuaClients.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0116.md",
+      "line": 17,
+      "cited": "VisionOCR.swift",
+      "fix": "Sources/ProctorAgent/Capture/VisionOCR.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0116.md",
+      "line": 17,
+      "cited": "SessionZoom.swift",
+      "fix": "Sources/ProctorAgent/Session/SessionZoom.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0116.md",
+      "line": 21,
+      "cited": "ToolCatalogue.swift",
+      "fix": "Sources/ProctorCore/ToolCatalogue.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0116.md",
+      "line": 21,
+      "cited": "ToolOutputSchemas.swift",
+      "fix": "Sources/ProctorCore/ToolOutputSchemas.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0117.md",
+      "line": 16,
+      "cited": "GuestMultiSessionQueueWitnessTests.swift",
+      "fix": "Tests/ProctorAgentTests/GuestMultiSessionQueueWitnessTests.swift"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0119.md",
+      "line": 12,
+      "cited": "spec-PRO-0022.md",
+      "fix": "docs/specs/spec-PRO-0022.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0119.md",
+      "line": 12,
+      "cited": "spec-PRO-0031.md",
+      "fix": "docs/specs/spec-PRO-0031.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0119.md",
+      "line": 12,
+      "cited": "spec-PRO-0039.md",
+      "fix": "docs/specs/spec-PRO-0039.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0121.md",
+      "line": 11,
+      "cited": "108-native-ocr-and-high-dpi-zoom-inspector.md",
+      "fix": "docs/features-to-triage/108-native-ocr-and-high-dpi-zoom-inspector.md"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0125.md",
+      "line": 14,
+      "cited": "mutate_swift.py",
+      "fix": "scripts/campaign/mutate_swift.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0125.md",
+      "line": 16,
+      "cited": "test_instruments.py",
+      "fix": "scripts/campaign/test_instruments.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0138.md",
+      "line": 14,
+      "cited": "mutate_swift.py",
+      "fix": "scripts/campaign/mutate_swift.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0138.md",
+      "line": 16,
+      "cited": "test_instruments.py",
+      "fix": "scripts/campaign/test_instruments.py"
+    },
+    {
+      "artifact": "docs/specs/spec-PRO-0171.md",
+      "line": 17,
+      "cited": "ProctorShim/RemoteServer.swift",
+      "fix": "Sources/ProctorShim/RemoteServer.swift"
+    }
+  ]
+}

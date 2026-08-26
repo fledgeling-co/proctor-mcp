@@ -7,7 +7,7 @@ validated-provider: Terminal.paint in Sources/ProctorCLI/TUI/Terminal.swift; scr
 ---
 # The design tokens are a Swift value, generated from the mock
 
-**Wave 9, brief 1 of 11.** Read `58-swiftui-conversion-direction.md` first. Nothing else in
+**Wave 9, brief 1 of 11.** Read `docs/features-to-triage/58-swiftui-conversion-direction.md` first. Nothing else in
 the wave can start until this lands, because every other brief reads what this one produces.
 
 ## The problem
@@ -73,7 +73,7 @@ the tiebreaker.
 Red before, green after, and every clause is computable with no window:
 
 1. `ProctorTokens.accent(.light)` returns the mock's accent, and the test fails if
-   `head.html` and the generated source disagree — the same drift test
+   `design/surfaces/parts/head.html` and the generated source disagree — the same drift test
    `SwitchCatalogueDriftTests` runs against the switch catalogue.
 2. Every token carries a tier from the closed set, and a token with no tier fails the build.
 3. Every foreground/background pair the design nominates as text clears its floor, computed

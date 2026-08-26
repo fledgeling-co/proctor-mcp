@@ -7,7 +7,7 @@ validated-provider: none
 ---
 # The suite wedges in `haltCheckpoint`, and the singleton is why
 
-**Read `00-WAVE-7-DIRECTION.md` first.** Third gate-reliability item, and the first one where
+**Read `docs/features-to-triage/00-WAVE-7-DIRECTION.md` first.** Third gate-reliability item, and the first one where
 the whole process hangs rather than a test failing. It blocks PRO-0054's merge and it blocks
 any honest full-suite gate, so sequence it before anything that needs one.
 
@@ -82,7 +82,7 @@ wedge legible when it happens anyway.
   parked at all, and a shorter backstop would turn a hang into a wrong result.
 - **A process-wide default is the real defect.** PRO-0046 converted a process-wide `static var`
   seam into a constructor parameter for exactly this reason, and PRO-0047 added
-  `TrailIsolation.swift` for the trail's equivalent. Consider whether `Session` should refuse
+  `Tests/ProctorAgentTests/TrailIsolation.swift` for the trail's equivalent. Consider whether `Session` should refuse
   to default to a shared latch under test at all, rather than every suite remembering.
 - **The wedge is silent, and that is half its cost.** `scripts/test.sh` refuses to score a run
   with no verdict, which is the only reason this was ever seen. Consider whether `checkpoint`

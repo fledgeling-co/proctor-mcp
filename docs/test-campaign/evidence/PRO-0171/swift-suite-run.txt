@@ -1,7 +1,5 @@
-# PRO-0171 — the suite after the SIGPIPE census landed
-# scripts/test.sh at 084f6abb plus this wave's uncommitted work
-# 2026-08-26
+# PRO-0171/0167/0172 — the suite with the three new gates in it
+# scripts/test.sh, 2026-08-26
 
-􀢄  Test run with 2179 tests in 276 suites failed after 130.559 seconds with 1 issue.
-FAIL: swift test exited 1
-      􀢄  Test run with 2179 tests in 276 suites failed after 130.559 seconds with 1 issue.
+􁁛  Test run with 2179 tests in 276 suites passed after 122.473 seconds.
+PASS: 􁁛  Test run with 2179 tests in 276 suites passed after 122.473 seconds.

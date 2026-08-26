@@ -1,0 +1,4 @@
+{
+  "unresolvable": 473,
+  "note": "Citations that cannot be resolved mechanically: a bare name matching several real files, and a name matching none. Both need a person. Lower this only by resolving one, never to make a run green."
+}

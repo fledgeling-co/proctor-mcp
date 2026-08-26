@@ -7,7 +7,7 @@ validated-provider: data.write(to:options:.atomic) in Sources/ProctorAgent/Sessi
 ---
 # A delegated call is still gated and recorded
 
-**Read `00-WAVE-7-DIRECTION.md` first.**
+**Read `docs/features-to-triage/00-WAVE-7-DIRECTION.md` first.**
 
 ## The problem
 

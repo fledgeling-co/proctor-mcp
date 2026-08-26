@@ -18,14 +18,14 @@ are settled off-glass in `70`. These eight cannot be:
 
 | Req | Effect | Provider | What a witness needs |
 |---|---|---|---|
-| REQ-003 | `device` | `CGEventPost` in `Actuation/ActuationBackend.swift` | a posted event observed by something that is not the poster |
-| REQ-004 | `device` | `SCStream`/`SCShareableContent`/`SCFrameStatus` in `Capture/StreamCapture.swift` | a frame off a real display server with its status |
-| REQ-007 | `device` | `CGEventTap` in `Session/ContentionMonitor.swift`; `NSEvent.addGlobalMonitorForEvents` | a tap that fires on an event it did not post |
-| REQ-008 | `device` | `CGEventTap` in `Overlay/TakeoverOverlay.swift` | the same, for the input blocker |
-| REQ-002 | `ipc` | `AXUIElementPerformAction` in `AX/Actuator.swift`; `AXObserverCreate` in `AX/Observers.swift` | an action performed on another process's element |
+| REQ-003 | `device` | `CGEventPost` in `Sources/ProctorAgent/Actuation/ActuationBackend.swift` | a posted event observed by something that is not the poster |
+| REQ-004 | `device` | `SCStream`/`SCShareableContent`/`SCFrameStatus` in `Sources/ProctorAgent/Capture/StreamCapture.swift` | a frame off a real display server with its status |
+| REQ-007 | `device` | `CGEventTap` in `Sources/ProctorAgent/Session/ContentionMonitor.swift`; `NSEvent.addGlobalMonitorForEvents` | a tap that fires on an event it did not post |
+| REQ-008 | `device` | `CGEventTap` in `Sources/ProctorAgent/Overlay/TakeoverOverlay.swift` | the same, for the input blocker |
+| REQ-002 | `ipc` | `AXUIElementPerformAction` in `Sources/ProctorAgent/AX/Actuator.swift`; `AXObserverCreate` in `Sources/ProctorAgent/AX/Observers.swift` | an action performed on another process's element |
 | REQ-012 | `ipc` | same AX pair | AX notifications arriving from another process |
 | REQ-014 | `ipc` | same AX pair | the tri-observer read, across a real process boundary |
-| REQ-006 | `ipc` | `NSPanel` over the window server in `Overlay/RunHUDPanel.swift` | the panel read back through `CGWindowListCopyWindowInfo` |
+| REQ-006 | `ipc` | `NSPanel` over the window server in `Sources/ProctorAgent/Overlay/RunHUDPanel.swift` | the panel read back through `CGWindowListCopyWindowInfo` |
 
 Under `swift test` there is no window server, no Accessibility grant and no host application, so
 none of the eight can be witnessed where the rest of the suite lives. That is a property of the

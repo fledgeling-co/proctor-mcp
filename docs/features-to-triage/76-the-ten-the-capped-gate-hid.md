@@ -30,16 +30,16 @@ time. PRO-0077's runner caught it, from arithmetic rather than from the gate.
 
 | Req | Effect | What it claims | Provider |
 |---|---|---|---|
-| REQ-023 | `ipc` | `ProctorReflector` reads resolved constraints, colours and CALayer models | `Darwin.bind/listen/accept` in `ProctorReflector/SocketServer.swift` |
-| REQ-024 | `subprocess` | web URLs route to Obscura or the cua driver | `Process()` in `Actuation/CuaClients.swift` |
+| REQ-023 | `ipc` | `ProctorReflector` reads resolved constraints, colours and CALayer models | `Darwin.bind/listen/accept` in `Sources/ProctorReflector/SocketServer.swift` |
+| REQ-024 | `subprocess` | web URLs route to Obscura or the cua driver | `Process()` in `Sources/ProctorAgent/Actuation/CuaClients.swift` |
 | REQ-027 | `ipc` | the window stops claiming ready when the agent holds the socket and never answers | agent socket |
 | REQ-028 | `device` | every overlay Proctor draws is excluded from screen capture unless lifted | `SCStream`/`SCShareableContent` |
 | REQ-029 | `ipc` | an operator over SSH watches and halts a run on a Mac with no window server | agent socket |
 | REQ-033 | `ipc` | a supervision client reads readiness, switches and history, not only run and queue | agent socket |
 | REQ-034 | `ipc` | 21 verbs from the tool catalogue, six exit codes, generated completion | agent socket |
-| REQ-035 | `ipc` | a CLI call is not a privilege bypass, and the trail records which front end called | `LOCAL_PEERPID getsockopt` in `SessionIdentity.swift` |
+| REQ-035 | `ipc` | a CLI call is not a privilege bypass, and the trail records which front end called | `LOCAL_PEERPID getsockopt` in `Sources/ProctorAgent/SessionIdentity.swift` |
 | REQ-037 | `ipc` | a session attaches to a macOS guest and executes its steps inside it | agent socket |
-| REQ-039 | `subprocess` | the pool never evicts a guest a person started or another session holds | `Process()` in `Guest/GuestProvider.swift` |
+| REQ-039 | `subprocess` | the pool never evicts a guest a person started or another session holds | `Process()` in `Sources/ProctorAgent/Guest/GuestProvider.swift` |
 
 ## What is cheap here and what is not
 
@@ -79,7 +79,7 @@ Evidence must not change because somebody was watching.
   own sabotage run. No shared case across two requirements.
 - REQ-028's witness shows content in the frame as well as the overlay's absence.
 - The census's own denominator recorded as `len()` of the external set rather than as whatever the
-  gate printed, in `REPORT.md`, so this brief's cause cannot recur silently.
+  gate printed, in `docs/test-campaign/REPORT.md`, so this brief's cause cannot recur silently.
 - `./scripts/test.sh` green, suite count before and after.
 
 ## What this brief does not do

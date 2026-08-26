@@ -27,7 +27,7 @@ A brief whose only id-shaped token was CASE-9999 inside an example command class
 ```
 
   reasoning that the registry holds none of the ids it cites.
-- **DEF-203** — `spec_citation_measure.py`'s legacy fallback accepts a brief path from a fenced block,
+- **DEF-203** — `scripts/campaign/spec_citation_measure.py`'s legacy fallback accepts a brief path from a fenced block,
   an HTML comment or a struck-through line; its `none.` floor accepts an unresolvable reference and
   any backtick pair padded to twenty characters; and reverse totality is satisfied by an incidental
   mention in an unrelated spec.

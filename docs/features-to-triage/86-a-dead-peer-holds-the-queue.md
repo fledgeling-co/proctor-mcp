@@ -18,7 +18,7 @@ queue holding the slot**. Every subsequent `proctor_act` returns `queueBusy` wit
 was driving this Mac … gave up without running any step"*, and the lane is unusable until the agent
 is restarted.
 
-Measured: `evidence/witness/a4-stranded-run-queue.json` reads `heldForSeconds 552` with reason
+Measured: `docs/test-campaign/evidence/witness/a4-stranded-run-queue.json` reads `heldForSeconds 552` with reason
 `frontmostChanged`. The 900-second pause backstop did not release it, because the backstop is about
 a paused run rather than a dead peer.
 

@@ -15,8 +15,9 @@ runner survives.
     python3 sigpipe_disposition_probe.py --family inet [--suppress]
 
 Exit codes
-    0    every write returned, or returned EPIPE — the process survived
-    2    the peer or the listener could not be set up; nothing was measured
+    0    the writes returned errors and the process survived — the option held
+    2    the peer or the listener could not be set up, or no write errored at
+         all, so nothing was measured either way
     -13  (as `wait` reports it) the kernel raised SIGPIPE and the default
          disposition terminated this process. That is the fault.
 
@@ -33,9 +34,9 @@ import errno
 import os
 import signal
 import socket
-import struct
 import sys
 import tempfile
+import time
 
 SO_NOSIGPIPE = 0x1022
 
@@ -44,7 +45,15 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--family", choices=("unix", "inet"), default="inet")
     ap.add_argument("--suppress", action="store_true")
-    ap.add_argument("--writes", type=int, default=40)
+    # Every write is attempted, errors included. Stopping at the first error is
+    # what made this probe non-deterministic on AF_INET: the first write after a
+    # close can return ECONNRESET, which is an error return rather than a signal,
+    # and the run then reported the fault as absent. Measured over six trials
+    # each way — stopping at the first error gave SIGPIPE 4 times in 5, and
+    # writing through gave it 6 times in 6. The rule behind it is the one
+    # DEF-338 already recorded: one send into a closed peer gets an errno back,
+    # and the signal needs a second write after the peer is known gone.
+    ap.add_argument("--writes", type=int, default=60)
     a = ap.parse_args()
 
     # Python installs SIG_IGN for SIGPIPE at startup so that a broken pipe
@@ -69,14 +78,6 @@ def main() -> int:
             listener.bind(("127.0.0.1", 0))
             listener.listen(4)
             client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            # A TCP close() sends FIN, and the server may keep writing into the
-            # loopback buffer for a long time before anything comes back. SO_LINGER
-            # at zero makes close() send RST instead, which is what a peer that
-            # died rather than hung up looks like — and it is the condition under
-            # which the next write fails rather than the fortieth. Measured: with
-            # a plain close, forty 4 KiB writes all returned on AF_INET.
-            client.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER,
-                              struct.pack("ii", 1, 0))
             client.connect(listener.getsockname())
         accepted, _ = listener.accept()
     except OSError as exc:
@@ -88,21 +89,37 @@ def main() -> int:
           f"{accepted.getsockopt(socket.SOL_SOCKET, SO_NOSIGPIPE)}")
 
     client.close()               # the peer hangs up
+    # Let the FIN land before the first write. On AF_INET the first write is
+    # what provokes the RST, and the write after that is the one the kernel can
+    # answer for; without a settle the whole loop can complete into a buffer
+    # that has not heard back yet, and the run measures nothing.
+    time.sleep(0.1)
     payload = b"A" * 4096
+    first: tuple[int, int] | None = None
+    errors = 0
     for attempt in range(a.writes):
         try:
-            accepted.send(payload)   # the write after the FIN is the one that fails
+            accepted.send(payload)
         except OSError as exc:
-            # EPIPE when the FIN was seen and the write is the one after it;
-            # ECONNRESET when the peer's RST arrived first. Both are "an error
-            # return rather than a signal", which is the whole claim — and on
-            # AF_INET which one you get is a race with the RST, so a test that
-            # demands EPIPE specifically is flaky. Measured: 4 EPIPE and 1
-            # ECONNRESET over five consecutive runs.
-            name = errno.errorcode.get(exc.errno, str(exc.errno))
-            print(f"{name} on write {attempt + 1}; the process survived")
-            return 0
-    print(f"all {a.writes} writes returned; the process survived")
+            # EPIPE when the FIN was seen and this is a write after it;
+            # ECONNRESET when the peer's RST is delivered as this write's error.
+            # Both mean the peer is gone, which is why neither ends the loop:
+            # only the write AFTER the connection is known dead raises the
+            # signal, so returning on the first errno reports the fault absent
+            # about one run in five.
+            errors += 1
+            if first is None:
+                first = (attempt + 1, exc.errno)
+        else:
+            # A write that succeeded means the far end has not answered yet.
+            # Pause so the next one is asked after the RST rather than beside it.
+            time.sleep(0.02)
+    if first is None:
+        print(f"all {a.writes} writes returned with no error; nothing was measured")
+        return 2
+    name = errno.errorcode.get(first[1], str(first[1]))
+    print(f"{name} on write {first[0]}, {errors} of {a.writes} writes errored; "
+          f"the process survived")
     return 0
 
 

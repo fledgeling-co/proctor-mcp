@@ -7,7 +7,7 @@ validated-provider: none
 ---
 > **RETIRED 2026-08-15 (PRO-0034), not built.** Scroll is Cua's now. This brief asks Proctor to fix the unit mapping and rung order of an actuation path that brief 45 hands to `cua-driver`. Fixing units in code that is being replaced is spend on both sides of a decision. If Cua's scroll has the same problem, that is a bug report to file upstream, which is a better use of the finding.
 >
-> Kept for the reasoning, not as a plan. See `00-WAVE-7-DIRECTION.md`.
+> Kept for the reasoning, not as a plan. See `docs/features-to-triage/00-WAVE-7-DIRECTION.md`.
 
 # Scroll moves by what was asked
 
