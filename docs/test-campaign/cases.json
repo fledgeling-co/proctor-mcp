@@ -691,7 +691,11 @@
     "armedBy": "Watched to fail twice on the way: a batch of hover steps was refused for want of foreground and ran in 0.239s, so there was no run to stop, and the first capture of a running TUI showed the empty state because nothing was in flight. Both are the vacuous pass this case exists to avoid.",
     "note": "A real keystroke into a TUI under a pty halted a run an MCP client had started. The caller received haltedByPerson after five of ten steps, with the remedy 'Nothing failed. Somebody watching the run decided to end it.' One latch, reached from a terminal. Settles PRO-0074 A4 and A5, both carried as needing a live agent. Recorded at the outcome rung rather than interactive-glass: the keystroke was actuated for real into a running program and the effect was read out of the MCP caller's own result, but a pty is not a display server, and interactive-glass owes one.",
     "plane": "hermetic",
-    "journey": "JRN-009"
+    "journey": "JRN-009",
+    "actuates": [
+      "s"
+    ],
+    "actuatesNote": "The TUI's stop key. This case's note already records it \u2014 a real keystroke into a TUI under a pty halted a run an MCP client had started, and the caller received haltedByPerson after five of ten steps. TUIApp.swift:84 maps `s` to control(\"stop\"), so the key that halts is the key declared. Recorded here rather than inferred from the surface."
   },
   {
     "id": "CASE-0041",
@@ -791,7 +795,13 @@
     "armed": true,
     "armedBy": "Restored DEF-019's original predicate and re-ran the suite: 5 issues across the failed assertion, the skipped assertion, the timed-out wait and the failed kill. The passing-check control did NOT redden, which is what stops an over-broad fix passing the same test.",
     "note": "DEF-019 found here and fixed. Measured against the live agent before and after: a failed assert and a timed-out wait both exited 0, now both exit 1; a genuinely passing assert still exits 0; usage 2, agent unreachable 3, doctor ready 0.",
-    "plane": "hermetic"
+    "plane": "hermetic",
+    "actuates": [
+      "assert",
+      "wait",
+      "doctor"
+    ],
+    "actuatesNote": "Three verbs this case runs and reads the exit code of: a failed assert and a timed-out wait both exited 0 and now exit 1, a passing assert still exits 0, and doctor-ready exits 0. Driving a verb and reading its exit code is the effect; naming the verb is transcription."
   },
   {
     "id": "CASE-0047",

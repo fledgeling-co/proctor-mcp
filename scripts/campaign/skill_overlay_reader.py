@@ -26,6 +26,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -63,6 +64,46 @@ def version_key(name: str) -> tuple:
     return tuple(int(x) if x.isdigit() else -1 for x in name.split("."))
 
 
+# The plugin cache is not a static tree. `plugin install` and the marketplace
+# refresh create `temp_git_<epoch>_<rand>` directories and remove them again, so
+# a walk of the cache races whoever is installing.
+#
+# Measured 2026-08-26: `Path.rglob("SKILL.md")` raised
+# `FileNotFoundError: .../cache/temp_git_1787749743021_1vk8u4` inside
+# `_iterate_directories` and took the whole standing-gate set red — a crash
+# about somebody else's install, in a check about overlay provenance.
+#
+# Two answers, and both are needed. Prune `temp_git_*` by name, because a
+# SKILL.md inside one is a half-cloned copy that will not exist in a minute and
+# a finding from it is noise. And tolerate any directory vanishing anyway, since
+# pruning the known shape does not make the tree static — counting what was
+# skipped so a walk that missed half the cache is visible rather than quiet.
+TRANSIENT = re.compile(r"^temp_git_\d+_\w+$")
+
+
+def walk_skills(cache: Path) -> list[Path]:
+    """Every SKILL.md under the cache, tolerating a tree being mutated under it."""
+    found: list[Path] = []
+    vanished: list[str] = []
+    pruned = 0
+    for root, dirs, files in os.walk(cache, onerror=lambda e: vanished.append(str(e))):
+        keep = []
+        for d in dirs:
+            if TRANSIENT.match(d):
+                pruned += 1
+            else:
+                keep.append(d)
+        dirs[:] = keep
+        if "SKILL.md" in files:
+            found.append(Path(root) / "SKILL.md")
+    if pruned or vanished:
+        print(f"walk: {len(found)} SKILL.md found · {pruned} transient temp_git_* "
+              f"director(ies) pruned · {len(vanished)} vanished mid-walk")
+        for v in vanished[:3]:
+            print(f"      {v}")
+    return found
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--family", default="anthropic",
@@ -93,7 +134,7 @@ def main() -> int:
     # a resolver could pick is a fact worth naming even when it is not read.
     newest: dict[str, Path] = {}
     carriers: dict[str, set[str]] = {}
-    for skill in sorted(a.cache.rglob("SKILL.md")):
+    for skill in sorted(walk_skills(a.cache)):
         parts = skill.relative_to(a.cache).parts
         if len(parts) < 4:
             continue

@@ -1795,7 +1795,9 @@
         "error"
       ],
       "description": "JSON-RPC 2.0 stdio server communicating with ProctorAgent daemon over domain socket",
-      "shot": ""
+      "shot": "",
+      "controls": [],
+      "controlsNote": "No controls: stdio surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-002",
@@ -1809,7 +1811,9 @@
         "full"
       ],
       "description": "Profile-gated 21-tool registry managing schema validation and invocation",
-      "shot": ""
+      "shot": "",
+      "controls": [],
+      "controlsNote": "No controls: core surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-003",
@@ -1824,7 +1828,9 @@
         "settled"
       ],
       "description": "Background AXUIElement actions, attribute mutations, and AppleScript automation",
-      "shot": ""
+      "shot": "",
+      "controls": [],
+      "controlsNote": "No controls: engine surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-004",
@@ -1841,7 +1847,15 @@
         "error"
       ],
       "description": "Per-screen floating panel showing running sprite, step description, and Stop button",
-      "shot": ""
+      "shot": "",
+      "controlSource": "Sources/ProctorCore/CommandSurface.swift#command-surface:.runPanel",
+      "controls": [
+        "Clear Waiting Runs",
+        "Pause Run",
+        "Resume Run",
+        "Stop Run"
+      ],
+      "controlsNote": "Read from Sources/ProctorCore/CommandSurface.swift#command-surface:.runPanel: the run HUD's own commands, split from the menu bar by CommandSurface.Command.surfaces rather than by which file draws them \u2014 one file draws both."
     },
     {
       "id": "SURF-005",
@@ -1856,7 +1870,9 @@
         "dismissed"
       ],
       "description": "Full-screen protective overlay and hardware event tap monitoring",
-      "shot": ""
+      "shot": "",
+      "controls": [],
+      "controlsNote": "A blocker rather than an offer. The takeover shield covers the screen to say the machine is being driven; it carries no affordance a person operates, and the way out is the run ending or the operator taking the machine back \u2014 which is SURF-004's pause and stop. Declared empty rather than left absent, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-006",
@@ -1871,7 +1887,9 @@
         "detail-1568"
       ],
       "description": "Cryptographically trustworthy window frame grabber with SCFrameStatus verification",
-      "shot": "evidence/shots/surf-006-screen-capture.png"
+      "shot": "evidence/shots/surf-006-screen-capture.png",
+      "controls": [],
+      "controlsNote": "No controls: engine surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-007",
@@ -1885,7 +1903,9 @@
         "annotate"
       ],
       "description": "Sub-pixel resolution crop extractor lifting small text grounding accuracy",
-      "shot": "evidence/shots/surf-007-zoom.png"
+      "shot": "evidence/shots/surf-007-zoom.png",
+      "controls": [],
+      "controlsNote": "No controls: engine surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-008",
@@ -1930,7 +1950,17 @@
         "step-complete"
       ],
       "description": "Interactive TCC permissions setup flow with live permission polling",
-      "shot": "evidence/shots/surf-009-walkthrough.png"
+      "shot": "evidence/shots/surf-009-walkthrough.png",
+      "controlSource": "Sources/ProctorUI/Walkthrough.swift",
+      "controls": [
+        "WalkthroughFlow.Copy.allow",
+        "WalkthroughFlow.Copy.back",
+        "WalkthroughFlow.Copy.copyConfig",
+        "WalkthroughFlow.Copy.openSettings",
+        "WalkthroughFlow.Copy.skip",
+        "WalkthroughFlow.primaryAction(for: step.flow)"
+      ],
+      "controlsNote": "Read from Sources/ProctorUI/Walkthrough.swift: the walkthrough's buttons, in the source form the census compares against; primaryAction is a function because its label depends on the step's flow."
     },
     {
       "id": "SURF-010",
@@ -1981,7 +2011,9 @@
         "diverged"
       ],
       "description": "Multi-pass flow recorder, replay hash validator, and determinism scorer",
-      "shot": ""
+      "shot": "",
+      "controls": [],
+      "controlsNote": "No controls: engine surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-012",
@@ -1996,7 +2028,9 @@
         "tampered"
       ],
       "description": "HMAC-SHA256 chain validator and AES-GCM encrypted persistence store",
-      "shot": ""
+      "shot": "",
+      "controls": [],
+      "controlsNote": "No controls: engine surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-013",
@@ -2011,7 +2045,9 @@
         "ssh-forwarding"
       ],
       "description": "Virtual machine provider orchestrating guest agents and SSH socket reachability",
-      "shot": ""
+      "shot": "",
+      "controls": [],
+      "controlsNote": "No controls: engine surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-014",
@@ -2025,7 +2061,9 @@
         "maestro-running"
       ],
       "description": "iOS deep link launcher and Maestro automated flow execution engine",
-      "shot": ""
+      "shot": "",
+      "controls": [],
+      "controlsNote": "No controls: engine surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-015",
@@ -2040,7 +2078,9 @@
         "disconnected"
       ],
       "description": "Debug instrumentation bridge exposing live computed styles and layer models",
-      "shot": ""
+      "shot": "",
+      "controls": [],
+      "controlsNote": "No controls: engine surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-016",
@@ -2054,7 +2094,19 @@
         "ad-hoc"
       ],
       "description": "Release signing and notarization pipeline preserving system TCC grants",
-      "shot": ""
+      "shot": "",
+      "controlSource": "scripts/install.sh#shell",
+      "controls": [
+        "NOTARY_ISSUER_ID",
+        "NOTARY_KEY",
+        "NOTARY_KEY_ID",
+        "PROCTOR_FORCE_BUILD",
+        "PROCTOR_NOTARY_PROFILE",
+        "PROCTOR_REUSE_BUNDLE",
+        "PROCTOR_SIGN_IDENTITY",
+        "PROCTOR_SKIP_NOTARIZE"
+      ],
+      "controlsNote": "Read from scripts/install.sh#shell: what an operator sets, which in a shell script is a ${VAR:-default} read across install.sh, notarize.sh and uninstall.sh \u2014 not the scripts' own working variables."
     },
     {
       "id": "SURF-017",
@@ -2070,7 +2122,17 @@
         "error",
         "done"
       ],
-      "description": "Five panes (run, queue, readiness, history, switches) over SSH. Watches and halts; issues no tool calls, authors no flows, edits no policy. Holds no TCC grants and needs no window server."
+      "description": "Five panes (run, queue, readiness, history, switches) over SSH. Watches and halts; issues no tool calls, authors no flows, edits no policy. Holds no TCC grants and needs no window server.",
+      "controlSource": "Sources/ProctorCLI/TUI/TUIApp.swift#tui",
+      "controls": [
+        "esc",
+        "p",
+        "q",
+        "r",
+        "s",
+        "tab"
+      ],
+      "controlsNote": "Read from Sources/ProctorCLI/TUI/TUIApp.swift#tui: the TUI's key cases."
     },
     {
       "id": "SURF-018",
@@ -2086,7 +2148,34 @@
         "refused",
         "missing-grant"
       ],
-      "description": "21 verbs derived from ToolCatalogue plus service verbs, six exit codes, stdin batch via - or --stdin, completion generated from the catalogue. Same socket, policy gate, queue lane and audit trail as an MCP caller; the trail records which front end called."
+      "description": "21 verbs derived from ToolCatalogue plus service verbs, six exit codes, stdin batch via - or --stdin, completion generated from the catalogue. Same socket, policy gate, queue lane and audit trail as an MCP caller; the trail records which front end called.",
+      "controlSource": "Sources/ProctorCore/CLISurface.swift#cli-verbs",
+      "controls": [
+        "act",
+        "apps",
+        "assert",
+        "capture",
+        "completion",
+        "computer",
+        "dictionary",
+        "doctor",
+        "find",
+        "flow",
+        "guest",
+        "inspect",
+        "ios",
+        "kill",
+        "menu",
+        "openai-computer",
+        "policy",
+        "snapshot",
+        "stability",
+        "tui",
+        "unlock",
+        "wait",
+        "zoom"
+      ],
+      "controlsNote": "Read from Sources/ProctorCore/CLISurface.swift#cli-verbs: the CLI's verbs, built from the tool catalogue plus tui and completion."
     },
     {
       "id": "SURF-019",
@@ -2102,7 +2191,9 @@
         "vanished",
         "refused-host"
       ],
-      "description": "A session bound to a macOS guest, with tool calls forwarded over the socket reach() provides and the host actuating nothing. Seam-level here: executing inside a live guest needs Accessibility and Screen Recording granted at the guest's own console, which nothing outside the guest can do."
+      "description": "A session bound to a macOS guest, with tool calls forwarded over the socket reach() provides and the host actuating nothing. Seam-level here: executing inside a live guest needs Accessibility and Screen Recording granted at the guest's own console, which nothing outside the guest can do.",
+      "controls": [],
+      "controlsNote": "No controls: mcp surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-020",
@@ -2118,7 +2209,9 @@
         "released",
         "vanished"
       ],
-      "description": "A counted lane beside the two mutex lanes: macOS capacity two (Apple's limit), one session per named guest, a third attach queued rather than refused, slots released on detach, vanish and abandonment. Reported by proctor_doctor as capacity, held, holders and waiting."
+      "description": "A counted lane beside the two mutex lanes: macOS capacity two (Apple's limit), one session per named guest, a third attach queued rather than refused, slots released on detach, vanish and abandonment. Reported by proctor_doctor as capacity, held, holders and waiting.",
+      "controls": [],
+      "controlsNote": "No controls: mcp surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-021",
@@ -2131,7 +2224,9 @@
         "claimed",
         "switched-off"
       ],
-      "description": "The takeover statement, the drawn pointer and the input block each require both an operator's switch and a process that has claimed to be the agent. main.swift claims it; nothing else can, and no environment variable grants it."
+      "description": "The takeover statement, the drawn pointer and the input block each require both an operator's switch and a process that has claimed to be the agent. main.swift claims it; nothing else can, and no environment variable grants it.",
+      "controls": [],
+      "controlsNote": "No controls: process surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-022",
@@ -2144,7 +2239,9 @@
         "armed",
         "gated"
       ],
-      "description": "vacuity-check.py's third pass over Tests/, configured by campaign.json blindVocabulary. Not a product surface: it is the campaign's own instrument, given a surface of its own so that a suite-wide measurement is not filed against a product surface it did not examine. Its count is a reading and not a verdict \u2014 PRO-0079 measured a false-positive rate of at least 96.2%, dominated by causes no vocabulary can reach, so the pass is not gate-worthy until its matcher ends a body at the next declaration of any visibility, stops matching the func line that opens the body, and reads any-read-after-any-mutation rather than after the last one."
+      "description": "vacuity-check.py's third pass over Tests/, configured by campaign.json blindVocabulary. Not a product surface: it is the campaign's own instrument, given a surface of its own so that a suite-wide measurement is not filed against a product surface it did not examine. Its count is a reading and not a verdict \u2014 PRO-0079 measured a false-positive rate of at least 96.2%, dominated by causes no vocabulary can reach, so the pass is not gate-worthy until its matcher ends a body at the next declaration of any visibility, stops matching the func line that opens the body, and reads any-read-after-any-mutation rather than after the last one.",
+      "controls": [],
+      "controlsNote": "No controls: tool surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-023",
@@ -2157,7 +2254,9 @@
         "reporting",
         "selftested"
       ],
-      "description": "reckon's classifier, packaged in ~/Dev/fledgeling-plugins/plugins/reckon and run against this repo's registry. It is a shared portfolio instrument rather than a Proctor surface, and it is given a surface of its own because SURF-022 is scoped by its own route to an in-repo script: a case about a tool in another repository filed there would name a denominator that instrument never examined. Its verdict decides which rows appear as unbuilt, broken, unmeasured, unnamed, undecided, retirable, waived or unjoined, so a misclassification here becomes a wrong headline about the whole campaign."
+      "description": "reckon's classifier, packaged in ~/Dev/fledgeling-plugins/plugins/reckon and run against this repo's registry. It is a shared portfolio instrument rather than a Proctor surface, and it is given a surface of its own because SURF-022 is scoped by its own route to an in-repo script: a case about a tool in another repository filed there would name a denominator that instrument never examined. Its verdict decides which rows appear as unbuilt, broken, unmeasured, unnamed, undecided, retirable, waived or unjoined, so a misclassification here becomes a wrong headline about the whole campaign.",
+      "controls": [],
+      "controlsNote": "No controls: tool surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-025",
@@ -2170,7 +2269,9 @@
         "comparing",
         "refusing"
       ],
-      "description": "scripts/reckoning/reckoning.py and its selftest: the take, compare and stamp subcommands that stamp a reading with the commit it was taken on, hold the reckoning tool constant across a version change, run the ratchet on every pair, and write the delta. Given a surface of its own rather than filed under SURF-023 because that surface's route is tool://reckon/build in ~/Dev/fledgeling-plugins and its subject is the shared classifier; this one is in-repo code that calls that classifier and decides what a comparison between two of its ledgers is allowed to claim. SURF-022's route is tool://vacuity-check/blind, a different in-repo script."
+      "description": "scripts/reckoning/reckoning.py and its selftest: the take, compare and stamp subcommands that stamp a reading with the commit it was taken on, hold the reckoning tool constant across a version change, run the ratchet on every pair, and write the delta. Given a surface of its own rather than filed under SURF-023 because that surface's route is tool://reckon/build in ~/Dev/fledgeling-plugins and its subject is the shared classifier; this one is in-repo code that calls that classifier and decides what a comparison between two of its ledgers is allowed to claim. SURF-022's route is tool://vacuity-check/blind, a different in-repo script.",
+      "controls": [],
+      "controlsNote": "No controls: tool surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-024",
@@ -2185,7 +2286,9 @@
         "legacy prose citation",
         "registered as unclaimed"
       ],
-      "description": "Not a product surface: it is the written record this project keeps of where each of its 99 specs came from, plus the 96-file brief queue in docs/features-to-triage and the docs/feature-specs/UNCLAIMED-BRIEFS.md register that accounts for briefs no spec can claim. Read by scripts/campaign/spec_citation_measure.py, which also reads the shipyard triage stage and the reckon join in ~/Dev/fledgeling-plugins because the forward half of PRO-0101 lands there. Given a surface of its own rather than filed on SURF-002 (the proctor skill) or SURF-022, because a measurement over specs and briefs examines neither of those."
+      "description": "Not a product surface: it is the written record this project keeps of where each of its 99 specs came from, plus the 96-file brief queue in docs/features-to-triage and the docs/feature-specs/UNCLAIMED-BRIEFS.md register that accounts for briefs no spec can claim. Read by scripts/campaign/spec_citation_measure.py, which also reads the shipyard triage stage and the reckon join in ~/Dev/fledgeling-plugins because the forward half of PRO-0101 lands there. Given a surface of its own rather than filed on SURF-002 (the proctor skill) or SURF-022, because a measurement over specs and briefs examines neither of those.",
+      "controls": [],
+      "controlsNote": "No controls: tool surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-026",
@@ -2200,7 +2303,9 @@
         "TIMEOUT",
         "near the bound"
       ],
-      "description": "Not a product surface: it is the instrument that measures how much this suite knows about the package that touches the machine. SURF-022 is the campaign's blind-mutation pass over the campaign's own assertions and is a different instrument; this one applies one source mutation at a time to ProctorAgent, builds, runs ./scripts/test.sh and reverts. Its verdict vocabulary is the surface's states, and TIMEOUT is the one PRO-0092 added because the runner had been scoring a starved run as a kill."
+      "description": "Not a product surface: it is the instrument that measures how much this suite knows about the package that touches the machine. SURF-022 is the campaign's blind-mutation pass over the campaign's own assertions and is a different instrument; this one applies one source mutation at a time to ProctorAgent, builds, runs ./scripts/test.sh and reverts. Its verdict vocabulary is the surface's states, and TIMEOUT is the one PRO-0092 added because the runner had been scoring a starved run as a kill.",
+      "controls": [],
+      "controlsNote": "No controls: tool surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-027",
@@ -2213,7 +2318,9 @@
         "declared unpublished",
         "unaccounted"
       ],
-      "description": "Not a product surface: it is the set of files a reader sees as evidence, and the instrument's fourth pass over them. A file here is in exactly one of three states \u2014 a subject's `shot`, an entry carrying an `unpublishedReason`, or unaccounted, which is the state 35 of 43 files were in before PRO-0107. SURF-022 is the campaign's blind-mutation pass over its own assertions; this one is the population its gallery draws from."
+      "description": "Not a product surface: it is the set of files a reader sees as evidence, and the instrument's fourth pass over them. A file here is in exactly one of three states \u2014 a subject's `shot`, an entry carrying an `unpublishedReason`, or unaccounted, which is the state 35 of 43 files were in before PRO-0107. SURF-022 is the campaign's blind-mutation pass over its own assertions; this one is the population its gallery draws from.",
+      "controls": [],
+      "controlsNote": "No controls: tool surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-028",
@@ -2225,7 +2332,9 @@
         "visible",
         "dismissed"
       ],
-      "description": "The About Proctor panel displaying the app icon, app name, version 0.1.0, and MIT license statement. Shown in surf-028-about.png."
+      "description": "The About Proctor panel displaying the app icon, app name, version 0.1.0, and MIT license statement. Shown in surf-028-about.png.",
+      "controls": [],
+      "controlsNote": "The About panel is informational: version, build identity and the links MainWindow already declares under SURF-008. No control is drawn here that is not counted there, and counting a button twice because two surfaces show it would inflate both the declared total and the actuated one."
     },
     {
       "id": "SURF-029",
@@ -2238,7 +2347,9 @@
         "drift-detected",
         "undeclared-gap"
       ],
-      "description": "Standing gate instruments that read the registers previously unread: LEDGER.md status vs merged git commits and spec file declarations (DEF-228), cases.json citation cross-checks against captures.json and disk (DEF-229), and mock files disposition accounting under evidence/shots/mock/ (DEF-243)."
+      "description": "Standing gate instruments that read the registers previously unread: LEDGER.md status vs merged git commits and spec file declarations (DEF-228), cases.json citation cross-checks against captures.json and disk (DEF-229), and mock files disposition accounting under evidence/shots/mock/ (DEF-243).",
+      "controls": [],
+      "controlsNote": "No controls: tool surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-030",
@@ -2251,7 +2362,9 @@
         "content-verified",
         "disparity-refused"
       ],
-      "description": "The tool identity resolution, cache verification, and comparison gate in reckoning.py and campaign test instruments that verify code content by SHA-256 and source commit rather than trusting version strings."
+      "description": "The tool identity resolution, cache verification, and comparison gate in reckoning.py and campaign test instruments that verify code content by SHA-256 and source commit rather than trusting version strings.",
+      "controls": [],
+      "controlsNote": "No controls: tool surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-031",
@@ -2264,7 +2377,9 @@
         "characterized",
         "verified"
       ],
-      "description": "Formal boundaries and characterization instruments for filesystem read-isolation (REQ-160), hardware keyboard event source discrimination (REQ-161), and dynamic Screen Recording TCC grant re-probe lifecycle (REQ-162)."
+      "description": "Formal boundaries and characterization instruments for filesystem read-isolation (REQ-160), hardware keyboard event source discrimination (REQ-161), and dynamic Screen Recording TCC grant re-probe lifecycle (REQ-162).",
+      "controls": [],
+      "controlsNote": "No controls: tool surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-032",
@@ -2277,7 +2392,9 @@
         "classes-rolled-up",
         "census-enforced"
       ],
-      "description": "The warrant charter definition in .warrant/warrant.toml defining seven defect classes (evidence-integrity, surface-conformance, capture-trust, operator-state, run-lifecycle, registry-drift, release-integrity), surfaces globs for class rollups, 100% census requirements, and release boundary verification without charter-absent blocks."
+      "description": "The warrant charter definition in .warrant/warrant.toml defining seven defect classes (evidence-integrity, surface-conformance, capture-trust, operator-state, run-lifecycle, registry-drift, release-integrity), surfaces globs for class rollups, 100% census requirements, and release boundary verification without charter-absent blocks.",
+      "controls": [],
+      "controlsNote": "No controls: tool surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-033",
@@ -2290,7 +2407,9 @@
         "join-threshold-passed",
         "retirement-eligible"
       ],
-      "description": "The feature brief queue in docs/features-to-triage/ and its high-confidence join to campaign requirements and defects in docs/test-campaign/, enabling retirement verification and intent reconciliation."
+      "description": "The feature brief queue in docs/features-to-triage/ and its high-confidence join to campaign requirements and defects in docs/test-campaign/, enabling retirement verification and intent reconciliation.",
+      "controls": [],
+      "controlsNote": "No controls: tool surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-035",
@@ -2303,7 +2422,9 @@
         "stderr-captured",
         "shutdown-interlocked"
       ],
-      "description": "The subprocess execution boundary for Cua driver actuation in Sources/ProctorAgent/Actuation/CuaClients.swift, covering child process spawn, stdio/oneshot argument passing, exit code and stderr capture on failure, and daemon cleanup interlocks."
+      "description": "The subprocess execution boundary for Cua driver actuation in Sources/ProctorAgent/Actuation/CuaClients.swift, covering child process spawn, stdio/oneshot argument passing, exit code and stderr capture on failure, and daemon cleanup interlocks.",
+      "controls": [],
+      "controlsNote": "No controls: tool surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-038",
@@ -2317,7 +2438,9 @@
         "fair-release-witnessed",
         "darwin-native-assigned"
       ],
-      "description": "Multi-session guest VM queue testing harness and attachment oracle in Sources/ProctorAgent/Session/SessionGuest.swift and Tests/ProctorAgentTests/GuestMultiSessionQueueWitnessTests.swift verifying 3 concurrent session requests against a 2-slot guest lane, non-evicting queue policy under slot contention, fair release acquisition, and native witness tier derivation for darwin guest platforms."
+      "description": "Multi-session guest VM queue testing harness and attachment oracle in Sources/ProctorAgent/Session/SessionGuest.swift and Tests/ProctorAgentTests/GuestMultiSessionQueueWitnessTests.swift verifying 3 concurrent session requests against a 2-slot guest lane, non-evicting queue policy under slot contention, fair release acquisition, and native witness tier derivation for darwin guest platforms.",
+      "controls": [],
+      "controlsNote": "No controls: tool surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-037",
@@ -2331,7 +2454,9 @@
         "contrast-verified",
         "timeout-bounded"
       ],
-      "description": "The native Vision OCR and visual region inspection engine in Sources/ProctorAgent/Capture/VisionOCR.swift and SessionZoom.swift, executing VNRecognizeTextRequest and PixelProbe contrast measurement on high-DPI zoom crops."
+      "description": "The native Vision OCR and visual region inspection engine in Sources/ProctorAgent/Capture/VisionOCR.swift and SessionZoom.swift, executing VNRecognizeTextRequest and PixelProbe contrast measurement on high-DPI zoom crops.",
+      "controls": [],
+      "controlsNote": "No controls: tool surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-036",
@@ -2344,7 +2469,9 @@
         "hierarchy-witnessed",
         "latch-observed"
       ],
-      "description": "Automated headless pseudo-terminal (pty) probe and AppKit NSMenu extra hierarchy witness validating Supervision TUI 5-pane rendering at 80x24 floor & 100x30 target geometries without terminal overflow, interactive keypress latch state updates, and menu bar 21-tool command hierarchy completeness."
+      "description": "Automated headless pseudo-terminal (pty) probe and AppKit NSMenu extra hierarchy witness validating Supervision TUI 5-pane rendering at 80x24 floor & 100x30 target geometries without terminal overflow, interactive keypress latch state updates, and menu bar 21-tool command hierarchy completeness.",
+      "controls": [],
+      "controlsNote": "No controls: tool surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-039",
@@ -2357,7 +2484,9 @@
         "point_occluded",
         "window_occluded",
         "unwitnessed"
-      ]
+      ],
+      "controls": [],
+      "controlsNote": "No controls: tool surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-041",
@@ -2369,7 +2498,9 @@
         "idle",
         "yield_recorded",
         "automation_mode_active"
-      ]
+      ],
+      "controls": [],
+      "controlsNote": "No controls: tool surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     },
     {
       "id": "SURF-042",
@@ -2379,7 +2510,9 @@
       "status": "reachable",
       "states": [
         "retired"
-      ]
+      ],
+      "controls": [],
+      "controlsNote": "No controls: tool surfaces are reached by a call rather than a click. An explicit empty list, because absent and zero read identically in a census."
     }
   ],
   "flow": [

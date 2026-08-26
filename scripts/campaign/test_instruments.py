@@ -3710,6 +3710,46 @@ def test_the_inert_build_starts_nothing() -> None:
           out.stdout[:400])
 
 
+def test_the_cache_walk_survives_a_tree_being_mutated() -> None:
+    """The plugin cache is mutated by whoever is installing, and the walk must live.
+
+    `Path.rglob` raised FileNotFoundError on a `temp_git_*` directory that was
+    removed mid-scan and took the whole standing-gate set red — a crash about
+    somebody else's install, inside a check about overlay provenance.
+    """
+    script = ROOT / "scripts" / "campaign" / "skill_overlay_reader.py"
+    out = subprocess.run([sys.executable, str(script), "--gate"], capture_output=True, text=True)
+    check(out.returncode == 0, "the overlay reader walks the real plugin cache without crashing",
+          out.stdout[-500:] + out.stderr[-500:])
+
+    with tempfile.TemporaryDirectory() as td:
+        cache = Path(td) / "cache"
+        # One real skill, and one inside install scratch that must be pruned.
+        real = cache / "market" / "plug" / "1.0.0" / "skills" / "thing"
+        real.mkdir(parents=True)
+        (real / "SKILL.md").write_text("# Thing\n")
+        scratch = cache / "temp_git_1787749743021_1vk8u4" / "market" / "plug" / "1.0.0" / "skills" / "thing"
+        scratch.mkdir(parents=True)
+        (scratch / "SKILL.md").write_text("# Thing, half-cloned\n")
+
+        mod = load(script, "skill_overlay_reader")
+        found = mod.walk_skills(cache)
+        check(len(found) == 1, "a SKILL.md inside a temp_git_* directory is pruned",
+              f"found {[str(f) for f in found]}")
+        check(str(found[0]).endswith("market/plug/1.0.0/skills/thing/SKILL.md"),
+              "and the one outside it is kept", str(found[0]) if found else "(none)")
+
+        # The other direction: a cache with no scratch loses nothing.
+        shutil.rmtree(cache / "temp_git_1787749743021_1vk8u4")
+        check(len(mod.walk_skills(cache)) == 1,
+              "and a cache with no scratch in it is walked unchanged")
+
+        # And a directory that disappears mid-walk is survived, not raised.
+        missing = Path(td) / "gone"
+        check(mod.walk_skills(missing) == [],
+              "a cache directory that does not exist yields nothing rather than raising")
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -3788,7 +3828,8 @@ def main() -> int:
                test_a_wave_rechecks_the_claims_it_wrote,
                test_an_intentional_no_op_says_so,
                test_the_inert_build_starts_nothing,
-               test_parse_charter_agrees_with_tomllib):
+               test_parse_charter_agrees_with_tomllib,
+               test_the_cache_walk_survives_a_tree_being_mutated):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001

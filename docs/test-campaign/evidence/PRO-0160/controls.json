@@ -1,0 +1,611 @@
+{
+  "surfaces": [
+    {
+      "id": "SURF-001",
+      "route": "stdio://proctor-shim",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-002",
+      "route": "core://tools",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-003",
+      "route": "engine://process-directed",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-004",
+      "route": "ui://run-hud",
+      "class": "interactive",
+      "declared": [
+        "Clear Waiting Runs",
+        "Pause Run",
+        "Resume Run",
+        "Stop Run"
+      ],
+      "source": "Sources/ProctorCore/CommandSurface.swift#command-surface:.runPanel",
+      "inSource": [
+        "Clear Waiting Runs",
+        "Pause Run",
+        "Resume Run",
+        "Stop Run"
+      ],
+      "undeclared": [],
+      "actuated": [],
+      "unactuated": [
+        "Clear Waiting Runs",
+        "Pause Run",
+        "Resume Run",
+        "Stop Run"
+      ]
+    },
+    {
+      "id": "SURF-005",
+      "route": "ui://takeover-shield",
+      "class": "interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-006",
+      "route": "engine://screen-capture",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-007",
+      "route": "engine://zoom",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-008",
+      "route": "ui://status-window",
+      "class": "interactive",
+      "declared": [
+        "Open Settings for Automation",
+        "How to grant Automation",
+        "Show details for obscura",
+        "Show details for simctl",
+        "Show details for cua-driver",
+        "Show details for maestro",
+        "Show details for lume",
+        "Show details for prlctl",
+        "Show details for Shortcuts CLI",
+        "Show history",
+        "Copy config",
+        "Copy command path only",
+        "Open log",
+        "Restart agent"
+      ],
+      "source": null,
+      "actuated": [
+        "Show details for obscura",
+        "Show history"
+      ],
+      "unactuated": [
+        "Copy command path only",
+        "Copy config",
+        "How to grant Automation",
+        "Open Settings for Automation",
+        "Open log",
+        "Restart agent",
+        "Show details for Shortcuts CLI",
+        "Show details for cua-driver",
+        "Show details for lume",
+        "Show details for maestro",
+        "Show details for prlctl",
+        "Show details for simctl"
+      ]
+    },
+    {
+      "id": "SURF-009",
+      "route": "ui://walkthrough",
+      "class": "interactive",
+      "declared": [
+        "WalkthroughFlow.Copy.allow",
+        "WalkthroughFlow.Copy.back",
+        "WalkthroughFlow.Copy.copyConfig",
+        "WalkthroughFlow.Copy.openSettings",
+        "WalkthroughFlow.Copy.skip",
+        "WalkthroughFlow.primaryAction(for: step.flow)"
+      ],
+      "source": "Sources/ProctorUI/Walkthrough.swift",
+      "inSource": [
+        "WalkthroughFlow.Copy.allow",
+        "WalkthroughFlow.Copy.back",
+        "WalkthroughFlow.Copy.copyConfig",
+        "WalkthroughFlow.Copy.openSettings",
+        "WalkthroughFlow.Copy.skip",
+        "WalkthroughFlow.primaryAction(for: step.flow)"
+      ],
+      "undeclared": [],
+      "actuated": [],
+      "unactuated": [
+        "WalkthroughFlow.Copy.allow",
+        "WalkthroughFlow.Copy.back",
+        "WalkthroughFlow.Copy.copyConfig",
+        "WalkthroughFlow.Copy.openSettings",
+        "WalkthroughFlow.Copy.skip",
+        "WalkthroughFlow.primaryAction(for: step.flow)"
+      ]
+    },
+    {
+      "id": "SURF-010",
+      "route": "ui://menubar",
+      "class": "interactive",
+      "declared": [
+        "About Proctor",
+        "Run Setup Again\u2026",
+        "Restart the Agent",
+        "Reveal the Socket in Finder",
+        "Quit Proctor",
+        "Pause Run",
+        "Resume Run",
+        "Stop Run",
+        "Clear Waiting Runs",
+        "Show Run Panel",
+        "Hide Run Panel",
+        "Takeover Notice",
+        "Drawn Pointer",
+        "Status",
+        "History",
+        "Minimize",
+        "Bring All to Front",
+        "Proctor Help",
+        "What Proctor Refuses to Do",
+        "Copy Diagnostics"
+      ],
+      "source": null,
+      "actuated": [
+        "History",
+        "Status"
+      ],
+      "unactuated": [
+        "About Proctor",
+        "Bring All to Front",
+        "Clear Waiting Runs",
+        "Copy Diagnostics",
+        "Drawn Pointer",
+        "Hide Run Panel",
+        "Minimize",
+        "Pause Run",
+        "Proctor Help",
+        "Quit Proctor",
+        "Restart the Agent",
+        "Resume Run",
+        "Reveal the Socket in Finder",
+        "Run Setup Again\u2026",
+        "Show Run Panel",
+        "Stop Run",
+        "Takeover Notice",
+        "What Proctor Refuses to Do"
+      ]
+    },
+    {
+      "id": "SURF-011",
+      "route": "engine://stability",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-012",
+      "route": "engine://audit-policy",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-013",
+      "route": "engine://guest-provider",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-014",
+      "route": "engine://ios-maestro",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-015",
+      "route": "engine://reflector",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-016",
+      "route": "cli://install-notarize",
+      "class": "interactive",
+      "declared": [
+        "NOTARY_ISSUER_ID",
+        "NOTARY_KEY",
+        "NOTARY_KEY_ID",
+        "PROCTOR_FORCE_BUILD",
+        "PROCTOR_NOTARY_PROFILE",
+        "PROCTOR_REUSE_BUNDLE",
+        "PROCTOR_SIGN_IDENTITY",
+        "PROCTOR_SKIP_NOTARIZE"
+      ],
+      "source": "scripts/install.sh#shell",
+      "inSource": [
+        "NOTARY_ISSUER_ID",
+        "NOTARY_KEY",
+        "NOTARY_KEY_ID",
+        "PROCTOR_FORCE_BUILD",
+        "PROCTOR_NOTARY_PROFILE",
+        "PROCTOR_REUSE_BUNDLE",
+        "PROCTOR_SIGN_IDENTITY",
+        "PROCTOR_SKIP_NOTARIZE"
+      ],
+      "undeclared": [],
+      "actuated": [],
+      "unactuated": [
+        "NOTARY_ISSUER_ID",
+        "NOTARY_KEY",
+        "NOTARY_KEY_ID",
+        "PROCTOR_FORCE_BUILD",
+        "PROCTOR_NOTARY_PROFILE",
+        "PROCTOR_REUSE_BUNDLE",
+        "PROCTOR_SIGN_IDENTITY",
+        "PROCTOR_SKIP_NOTARIZE"
+      ]
+    },
+    {
+      "id": "SURF-017",
+      "route": "cli://tui",
+      "class": "interactive",
+      "declared": [
+        "esc",
+        "p",
+        "q",
+        "r",
+        "s",
+        "tab"
+      ],
+      "source": "Sources/ProctorCLI/TUI/TUIApp.swift#tui",
+      "inSource": [
+        "esc",
+        "p",
+        "q",
+        "r",
+        "s",
+        "tab"
+      ],
+      "undeclared": [],
+      "actuated": [
+        "s"
+      ],
+      "unactuated": [
+        "esc",
+        "p",
+        "q",
+        "r",
+        "tab"
+      ]
+    },
+    {
+      "id": "SURF-018",
+      "route": "cli://proctor",
+      "class": "interactive",
+      "declared": [
+        "act",
+        "apps",
+        "assert",
+        "capture",
+        "completion",
+        "computer",
+        "dictionary",
+        "doctor",
+        "find",
+        "flow",
+        "guest",
+        "inspect",
+        "ios",
+        "kill",
+        "menu",
+        "openai-computer",
+        "policy",
+        "snapshot",
+        "stability",
+        "tui",
+        "unlock",
+        "wait",
+        "zoom"
+      ],
+      "source": "Sources/ProctorCore/CLISurface.swift#cli-verbs",
+      "inSource": [
+        "act",
+        "apps",
+        "assert",
+        "capture",
+        "completion",
+        "computer",
+        "dictionary",
+        "doctor",
+        "find",
+        "flow",
+        "guest",
+        "inspect",
+        "ios",
+        "kill",
+        "menu",
+        "openai-computer",
+        "policy",
+        "snapshot",
+        "stability",
+        "tui",
+        "unlock",
+        "wait",
+        "zoom"
+      ],
+      "undeclared": [],
+      "actuated": [
+        "assert",
+        "doctor",
+        "wait"
+      ],
+      "unactuated": [
+        "act",
+        "apps",
+        "capture",
+        "completion",
+        "computer",
+        "dictionary",
+        "find",
+        "flow",
+        "guest",
+        "inspect",
+        "ios",
+        "kill",
+        "menu",
+        "openai-computer",
+        "policy",
+        "snapshot",
+        "stability",
+        "tui",
+        "unlock",
+        "zoom"
+      ]
+    },
+    {
+      "id": "SURF-019",
+      "route": "mcp://proctor_guest?action=attach",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-020",
+      "route": "mcp://proctor_doctor#guestPool",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-021",
+      "route": "process://agent-claim",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-022",
+      "route": "tool://vacuity-check/blind",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-023",
+      "route": "tool://reckon/build",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-025",
+      "route": "tool://reckoning/compare",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-024",
+      "route": "tool://spec-citation/measure",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-026",
+      "route": "tool://mutate-swift/agent",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-027",
+      "route": "tool://capture-lineage/unaccounted",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-028",
+      "route": "proctor://panel/about",
+      "class": "interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-029",
+      "route": "tool://standing-registers/unread-gates",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-030",
+      "route": "tool://reckoning/tool-identity",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-031",
+      "route": "tool://boundary-audit/limits",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-032",
+      "route": "tool://warrant/charter-integrity",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-033",
+      "route": "tool://reckon/brief-join",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-035",
+      "route": "tool://actuation/cua-subprocess",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-038",
+      "route": "tool://guest/multi-session-queue",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-037",
+      "route": "tool://inspection/native-ocr-zoom",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-036",
+      "route": "tool://tui-pty/rendering",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-039",
+      "route": "tool://cursor-plane/occlusion",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-041",
+      "route": "tool://automation-yield/cross-stack",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    },
+    {
+      "id": "SURF-042",
+      "route": "tool://bookkeeping/brief-108-retirement",
+      "class": "non-interactive",
+      "declared": [],
+      "source": null,
+      "actuated": [],
+      "unactuated": []
+    }
+  ],
+  "declaredControls": 81,
+  "actuated": 8,
+  "silent": [],
+  "mismatched": [],
+  "unclassified": []
+}
