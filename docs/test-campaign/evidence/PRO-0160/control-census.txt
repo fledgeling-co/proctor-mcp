@@ -1,13 +1,9 @@
 40 surface(s) — 9 interactive, 31 non-interactive, 0 unclassified
   declaring a control list   40 of 40
-  controls declared          81
-  actuated by a passing case at an effect rung   8 of 81
+  controls declared          82
+  actuated by a passing case at an effect rung   17 of 82
 
-Declared and not actuated by any passing effect-rung case (73), named rather than counted in aggregate:
-  SURF-004  Clear Waiting Runs
-  SURF-004  Pause Run
-  SURF-004  Resume Run
-  SURF-004  Stop Run
+Declared and not actuated by any passing effect-rung case (65), named rather than counted in aggregate:
   SURF-008  Copy command path only
   SURF-008  Copy config
   SURF-008  How to grant Automation
@@ -24,8 +20,6 @@ Declared and not actuated by any passing effect-rung case (73), named rather tha
   SURF-009  WalkthroughFlow.Copy.back
   SURF-009  WalkthroughFlow.Copy.copyConfig
   SURF-009  WalkthroughFlow.Copy.openSettings
-  SURF-009  WalkthroughFlow.Copy.skip
-  SURF-009  WalkthroughFlow.primaryAction(for: step.flow)
   SURF-010  About Proctor
   SURF-010  Bring All to Front
   SURF-010  Clear Waiting Runs
@@ -34,6 +28,12 @@ Declared and not actuated by any passing effect-rung case (73), named rather tha
   SURF-010  Hide Run Panel
   SURF-010  Minimize
   SURF-010  Pause Run
-  … and 43 more
+  SURF-010  Proctor Help
+  SURF-010  Quit Proctor
+  SURF-010  Restart the Agent
+  SURF-010  Resume Run
+  SURF-010  Reveal the Socket in Finder
+  SURF-010  Run Setup Again…
+  … and 35 more
 
-PASS: all 40 surfaces declare a control list; every interactive one covers what its source draws; 8 of 81 controls are actuated.
+PASS: all 40 surfaces declare a control list; every interactive one covers what its source draws; 17 of 82 controls are actuated.

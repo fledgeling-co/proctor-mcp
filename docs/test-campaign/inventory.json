@@ -2102,11 +2102,12 @@
         "NOTARY_KEY_ID",
         "PROCTOR_FORCE_BUILD",
         "PROCTOR_NOTARY_PROFILE",
+        "PROCTOR_PLAN_ONLY",
         "PROCTOR_REUSE_BUNDLE",
         "PROCTOR_SIGN_IDENTITY",
         "PROCTOR_SKIP_NOTARIZE"
       ],
-      "controlsNote": "Read from scripts/install.sh#shell: what an operator sets, which in a shell script is a ${VAR:-default} read across install.sh, notarize.sh and uninstall.sh \u2014 not the scripts' own working variables."
+      "controlsNote": "Read from scripts/install.sh#shell: what an operator sets, which in a shell script is a ${VAR:-default} read across install.sh, notarize.sh and uninstall.sh \u2014 not the scripts' own working variables. PROCTOR_PLAN_ONLY is one of them: it was added so these controls could be actuated at all without an install writing to /Applications."
     },
     {
       "id": "SURF-017",

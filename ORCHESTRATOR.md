@@ -1,9 +1,9 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** **Wave 29 open on `main`.** 172 rows: 167 Merged, 2 Retired, **3 outstanding**. PRO-0159, 0163, 0164, 0165, 0166, 0167, 0168, 0169, 0170, 0171 and 0172 landed this wave; PRO-0160, 0161 and 0162 remain. Waves 9 through 28 are closed.
+**Status:** **Wave 30 open on `main`, under the `ship-remaining-work` goal harness.** 172 rows: 168 Merged, 2 Retired, **2 outstanding** — PRO-0161 and PRO-0162. Wave 29 closed with PRO-0160, 0164..0172 merged; waves 9 through 29 are closed.
 **Open, and named rather than smoothed:** PRO-0161 is **not** complete — the routing covers 36 of the 43 sub-effect-rung entries and 7 need a person, so it stays `Ready for AI` and the figure it declared (`warrant.surface-conformance` 84.0 → 100) has not moved. `scripts/campaign/figure_ledger.py` enforces that.
 **Reconciliation (the exit condition, not the ledger):** reckon holds 1032 rows · broken 4 · unmeasured 2 · **undecided 3** · waived 164 · verified-done 859, gate and ratchet clean. The 3 undecided ARE the 3 open ledger rows. Read `waived` carefully for this wave: eleven of those briefs were retired on a measurement rather than a decision — `scripts/campaign/brief_validation.py` found a cited requirement carrying a passing case at the outcome floor and wrote the witnesses into each brief's frontmatter — and reckon has no class for that, so it reports them as somebody having decided not to.
-**Updated:** 2026-08-26 — Wave 29 in flight. Gate: 2,179 tests in 276 suites; seventeen standing gates green; strict 452 of 514 checked, and the 62 that are not split three ways rather than counted together — 41 only proves something rendered, 16 were never watched to fail, 3 status is n/a. Those are three different jobs.
+**Updated:** 2026-08-27 — Gate: 2,188 tests in 279 suites; eighteen standing gates green; strict 455 of 517 checked, and the 62 that are not split three ways rather than counted together — 41 only proves something rendered, 16 were never watched to fail, 3 status is n/a. Those are three different jobs.
 
 ### Repository state (reconciled 2026-08-17)
 - **Git remote:** `origin` → `github.com/fledgeling-co/proctor-mcp`. Local `main` is up to date with `origin/main` at tag `v0.2.0`.

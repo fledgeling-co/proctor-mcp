@@ -88,6 +88,44 @@ if [ "$STAPLED" = yes ]; then
   fi
 fi
 
+# PROCTOR_PLAN_ONLY=1 — print what this run WOULD do and exit, before anything
+# is built, signed, notarised or copied.
+#
+# It exists because the installer's controls could not otherwise be actuated by
+# a test. PRO-0160 asks for every declared control to be driven by a case that
+# reads an effect, and the installer's controls are the environment variables an
+# operator sets; the only way to observe one taking effect used to be to run an
+# install, which writes to /Applications and can submit a build to Apple. Now the
+# decision each variable governs is readable without any of that happening.
+#
+# Every line below is the same expression the run itself uses, so a plan that
+# disagrees with the install would be a bug in one of them rather than a
+# separate model of the script.
+if [ -n "${PROCTOR_PLAN_ONLY:-}" ]; then
+  say "==> plan only, nothing will be built, signed, notarised or installed"
+  IDENTITY_SHOWN="$IDENTITY"
+  [ -z "$IDENTITY_SHOWN" ] && IDENTITY_SHOWN="<none — ad-hoc>"
+  say "    identity:        $IDENTITY_SHOWN"
+  say "    notary profile:  $NOTARY_PROFILE"
+  say "    bundle stapled:  $STAPLED"
+  say "    bundle stale:    $STALE"
+  if [ "$STAPLED" = yes ] && { [ "$STALE" = no ] || [ -n "${PROCTOR_REUSE_BUNDLE:-}" ]; } \
+     && [ -z "${PROCTOR_FORCE_BUILD:-}" ]; then
+    say "    will build:      no — reusing the notarised bundle as built"
+  else
+    say "    will build:      yes"
+  fi
+  if [ -n "$IDENTITY" ] && [ -z "${PROCTOR_SKIP_NOTARIZE:-}" ]; then
+    say "    will notarise:   yes (profile $NOTARY_PROFILE)"
+  else
+    say "    will notarise:   no"
+    [ -n "${PROCTOR_SKIP_NOTARIZE:-}" ] && say "                     because PROCTOR_SKIP_NOTARIZE is set"
+    [ -z "$IDENTITY" ] && say "                     because no Developer ID identity was found"
+  fi
+  say "    destination:     $APP_DEST"
+  exit 0
+fi
+
 if [ "$STAPLED" = yes ] && [ "$STALE" = yes ] && [ -z "${PROCTOR_REUSE_BUNDLE:-}" ]; then
   say "==> the notarised bundle is older than the source it was built from — rebuilding"
   say "    (PROCTOR_REUSE_BUNDLE=1 installs it as it stands anyway)"

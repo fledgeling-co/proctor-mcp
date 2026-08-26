@@ -18,7 +18,7 @@ agrees with, re-anchored against the code as it is at that moment.
 
 | ID | Item | Gate | Status |
 |---|---|---|---|
-| F-001 | PRO-0160 — Control Census Across Every Surface. | `finish-line`, plus `python3 scripts/campaign/control_census.py --gate` | **enumeration done, actuation in flight.** 40 of 40 surfaces now declare a list, checked against the source that draws each one. 81 controls declared against the old 34, and 8 actuated against the old 4. `campaign.py check` blocks on the 3 surfaces whose declared controls no case actuates — SURF-004, SURF-009, SURF-016 — which is the honest half that remains. |
+| F-001 | PRO-0160 — Control Census Across Every Surface. | `control_census.py --gate` | **merged 2026-08-27.** 40 of 40 surfaces declare a list checked against the source that draws it; 17 of 82 controls actuated, up from 4 of 34 across 2 surfaces. |
 | F-002 | PRO-0161 — Raise or Record Every Case Below the Effect Rung. `rung_routing.py` routes 36 of 43; 7 need a person to read them one at a time. Its declared figure `warrant.surface-conformance` 84.0 → 100 has not moved and `figure_ledger.py` enforces that. | `finish-line`, plus `python3 scripts/campaign/rung_routing.py docs/test-campaign --gate` | pending |
 | F-003 | PRO-0162 — Cut or Record Every Durable Boundary. 43 of 50 cut; the 7 uncut sit across 4 journeys recorded non-critical for that reason. | `finish-line` | pending |
 | F-004 | DEF-221 — two byte-identical capture pairs still stand: `sweepK-theme-before.png` with `sweepL-wedged-t1.png` (670a93988315), and `sweepL-wedged-t7.png` with `-t14.png` (5c7d4535e70c). | `finish-line` | pending |

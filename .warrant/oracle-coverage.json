@@ -39,12 +39,12 @@
   },
   "release-integrity": {
    "coverage": 1.0,
-   "covered": 1,
+   "covered": 2,
    "green": true,
    "lineage_gaps": 0,
    "surfaces_matched": 1,
    "threshold": 1.0,
-   "total": 1
+   "total": 2
   },
   "run-lifecycle": {
    "coverage": 1.0,
@@ -56,23 +56,23 @@
    "total": 52
   },
   "surface-conformance": {
-   "coverage": 0.8403,
-   "covered": 100,
+   "coverage": 0.843,
+   "covered": 102,
    "green": false,
    "lineage_gaps": 19,
    "surfaces_matched": 6,
    "threshold": 1.0,
-   "total": 119
+   "total": 121
   }
  },
- "generated_at": "2026-08-26T13:14:58.435022+00:00",
+ "generated_at": "2026-08-26T14:00:22.485492+00:00",
  "note": "`figures` is cases on that surface and `sourced` is those on an effect rung \u2014 a check that could catch a wrong answer. Run warrant's rollup_classes.py to key this by defect class using the warrant's own globs.",
  "source": "test-campaign",
  "surfaces": [
   {
-   "figures": 1,
+   "figures": 2,
    "file": "cli://install-notarize",
-   "sourced": 1,
+   "sourced": 2,
    "unsourced": 0
   },
   {
@@ -286,9 +286,9 @@
    "unsourced": 1
   },
   {
-   "figures": 32,
+   "figures": 33,
    "file": "ui://run-hud",
-   "sourced": 31,
+   "sourced": 32,
    "unsourced": 1
   },
   {
@@ -304,9 +304,9 @@
    "unsourced": 0
   },
   {
-   "figures": 24,
+   "figures": 25,
    "file": "ui://walkthrough",
-   "sourced": 15,
+   "sourced": 16,
    "unsourced": 9
   }
  ]

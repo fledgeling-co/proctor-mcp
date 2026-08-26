@@ -9865,5 +9865,77 @@
       "docs/test-campaign/evidence/PRO-0164/capture-lineage.txt"
     ],
     "note": "PRO-0164. Six of eight judgeable captures carried a verdict and the two that did not were SURF-006 and SURF-007 \u2014 the capture engine and the crop inspector, both recorded as having no design of record. That is a real limit and it is not the same as unjudgeable: a capture engine's frame can still be read against what the surface CLAIMS. SURF-006 is a TextEdit window cropped to its own bounds with no desktop and no Proctor chrome in it, which is what window-scoped asserts and what a display-scoped grab would not look like, and `Untitled 32` is a sequence number a real TextEdit assigns. SURF-007 cuts every body line mid-word at one constant x \u2014 a crop of a rendered surface, where a re-render at a smaller size would have re-wrapped and no line would end mid-word. Each verdict names what it does not cover: pixel fidelity and the scale factor as a number, neither checkable without a reference. Moving the denominator by declaring them unjudgeable was the other way to make this 100% and it measures nothing."
+  },
+  {
+    "id": "CASE-0838",
+    "req": "REQ-113",
+    "surface": "SURF-016",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "actuates": [
+      "PROCTOR_SKIP_NOTARIZE",
+      "PROCTOR_NOTARY_PROFILE",
+      "PROCTOR_SIGN_IDENTITY"
+    ],
+    "armedBy": "Each control is driven against a run with it unset, and the two plans must differ. A control that changed nothing would leave the two lines identical and fail, which is the shape a declared-but-inert control has.",
+    "defects": [],
+    "evidence": [
+      "Tests/ProctorCoreTests/InstallerControlTests.swift",
+      "scripts/install.sh",
+      "docs/test-campaign/evidence/PRO-0160/control-census.txt"
+    ],
+    "note": "PRO-0160. SURF-016's controls are the environment variables an operator sets, and until now the only way to observe one taking effect was to run an install \u2014 which writes to /Applications and can submit a build to Apple. So eight controls were declared and none was actuatable without a destructive, outward-facing act. PROCTOR_PLAN_ONLY prints the decision each variable governs, using the same expressions the run itself uses, and exits before anything is built, signed, notarised or copied. The inertness of the plan is asserted rather than assumed: the installed bundle's modification date is read either side and must not move."
+  },
+  {
+    "id": "CASE-0839",
+    "req": "REQ-113",
+    "surface": "SURF-009",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "in-tree",
+    "status": "pass",
+    "armed": true,
+    "actuates": [
+      "WalkthroughFlow.primaryAction(for: step.flow)",
+      "WalkthroughFlow.Copy.skip"
+    ],
+    "armedBy": "Three ways to fail rather than one: a transition table that revisits a step fails on the repeat, one that does not reach four steps fails on the count, and a primary label shared by every step fails because a control that predicts nothing about where it goes is the defect A2 already names. The skip arm fails in both directions \u2014 never offered, and offered unconditionally.",
+    "defects": [],
+    "evidence": [
+      "Tests/ProctorCoreTests/WalkthroughControlTests.swift",
+      "docs/test-campaign/evidence/PRO-0160/control-census.txt"
+    ],
+    "note": "PRO-0160. The walkthrough declared six controls and nothing pressed any of them. Its existing tests assert structure \u2014 a step is a pure function of three inputs, identifiers are unique, every step has a heading and a lede \u2014 which is why the surface could carry fifteen passing effect-rung cases and still actuate nothing. The effect read here is the flow moving: the primary walks intro to connect and then reports the end rather than a fifth step."
+  },
+  {
+    "id": "CASE-0840",
+    "req": "REQ-113",
+    "surface": "SURF-004",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "actuates": [
+      "Pause Run",
+      "Resume Run",
+      "Stop Run",
+      "Clear Waiting Runs"
+    ],
+    "armedBy": "An action no control sends \u2014 `obliterate` \u2014 must be REFUSED by the same server in the same run. Without that arm, a server replying ok to anything would pass all four real controls, which is precisely the shape of a check that cannot fail.",
+    "witness": {
+      "recorder": "a real Server bound to a temporary AF_UNIX socket, answering real SocketClient connections",
+      "effect": "ipc",
+      "count": 5
+    },
+    "defects": [],
+    "evidence": [
+      "Tests/ProctorAgentTests/RunHUDControlTests.swift",
+      "docs/test-campaign/evidence/PRO-0160/control-census.txt"
+    ],
+    "note": "PRO-0160. Twenty-nine passing effect-rung cases already sat on SURF-004 and none pressed a button: they measure the overlay's window level, its exclusion from captures and its raster \u2014 what it looks like rather than what it does. ProctorUI is an executable target with no test target, so the handlers cannot be called directly; what can be driven is the request each one sends. AgentModel.control sends proctor_hud with the action and dropWaiting sends proctor_queue with clear, so those are sent, and the effect read is the agent's answer rather than the model's own state."
   }
 ]

@@ -1,0 +1,5 @@
+# PRO-0160 — the suite with the control-actuation cases in it
+# scripts/test.sh, 2026-08-27
+
+􁁛  Test run with 2188 tests in 279 suites passed after 172.950 seconds.
+PASS: 􁁛  Test run with 2188 tests in 279 suites passed after 172.950 seconds.

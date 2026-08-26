@@ -45,13 +45,13 @@
         "Stop Run"
       ],
       "undeclared": [],
-      "actuated": [],
-      "unactuated": [
+      "actuated": [
         "Clear Waiting Runs",
         "Pause Run",
         "Resume Run",
         "Stop Run"
-      ]
+      ],
+      "unactuated": []
     },
     {
       "id": "SURF-005",
@@ -142,14 +142,15 @@
         "WalkthroughFlow.primaryAction(for: step.flow)"
       ],
       "undeclared": [],
-      "actuated": [],
+      "actuated": [
+        "WalkthroughFlow.Copy.skip",
+        "WalkthroughFlow.primaryAction(for: step.flow)"
+      ],
       "unactuated": [
         "WalkthroughFlow.Copy.allow",
         "WalkthroughFlow.Copy.back",
         "WalkthroughFlow.Copy.copyConfig",
-        "WalkthroughFlow.Copy.openSettings",
-        "WalkthroughFlow.Copy.skip",
-        "WalkthroughFlow.primaryAction(for: step.flow)"
+        "WalkthroughFlow.Copy.openSettings"
       ]
     },
     {
@@ -259,6 +260,7 @@
         "NOTARY_KEY_ID",
         "PROCTOR_FORCE_BUILD",
         "PROCTOR_NOTARY_PROFILE",
+        "PROCTOR_PLAN_ONLY",
         "PROCTOR_REUSE_BUNDLE",
         "PROCTOR_SIGN_IDENTITY",
         "PROCTOR_SKIP_NOTARIZE"
@@ -270,21 +272,24 @@
         "NOTARY_KEY_ID",
         "PROCTOR_FORCE_BUILD",
         "PROCTOR_NOTARY_PROFILE",
+        "PROCTOR_PLAN_ONLY",
         "PROCTOR_REUSE_BUNDLE",
         "PROCTOR_SIGN_IDENTITY",
         "PROCTOR_SKIP_NOTARIZE"
       ],
       "undeclared": [],
-      "actuated": [],
+      "actuated": [
+        "PROCTOR_NOTARY_PROFILE",
+        "PROCTOR_SIGN_IDENTITY",
+        "PROCTOR_SKIP_NOTARIZE"
+      ],
       "unactuated": [
         "NOTARY_ISSUER_ID",
         "NOTARY_KEY",
         "NOTARY_KEY_ID",
         "PROCTOR_FORCE_BUILD",
-        "PROCTOR_NOTARY_PROFILE",
-        "PROCTOR_REUSE_BUNDLE",
-        "PROCTOR_SIGN_IDENTITY",
-        "PROCTOR_SKIP_NOTARIZE"
+        "PROCTOR_PLAN_ONLY",
+        "PROCTOR_REUSE_BUNDLE"
       ]
     },
     {
@@ -603,8 +608,8 @@
       "unactuated": []
     }
   ],
-  "declaredControls": 81,
-  "actuated": 8,
+  "declaredControls": 82,
+  "actuated": 17,
   "silent": [],
   "mismatched": [],
   "unclassified": []

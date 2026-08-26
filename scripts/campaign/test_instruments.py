@@ -3279,7 +3279,25 @@ def test_claim_provenance_reads_the_verdict_not_only_the_number() -> None:
 # until 2026-08-25, so the blind pass reported NOT RUN while its vocabulary sat
 # fully measured beside it — and every "vacuity 0 findings" line in this
 # repository's gate tables was true of two passes out of three.
-BLIND_RATCHET = 85
+# 85 -> 86 on 2026-08-26, for one block read in full rather than for slack.
+#
+# RunHUDControlTests.everyDeclaredControlIsAnswered was bisected to it: removing
+# that @Test returns the count to 85. The block was then strengthened twice on
+# exactly what the pass was pointing at, and both changes were worth making —
+# it had asserted `reply.id`, which proves a request was answered and says
+# nothing about the control, and it left teardown to a `defer` where nothing
+# observed it. It now reads the `refused` key SessionHUD returns inside a
+# successful result, so a server answering ok to everything fails, and it reads
+# that the agent stops answering after stop().
+#
+# The count did not move for either. What remains is a token matcher reading
+# `pause`, `stop`, `clear` and `send` as mutations wherever they appear, which
+# it cannot avoid without knowing Swift. PRO-0079 characterised this population
+# at 57 of 78 read and 0 genuine, and this is the fifty-eighth read and the
+# fifty-eighth not genuine. Contorting the test further to satisfy the matcher
+# would be the tuning this campaign refuses; adding the readers it lacks to
+# `blindVocabulary` was refused by an out-of-family review of PRO-0079.
+BLIND_RATCHET = 86
 
 
 def test_blind_pass_runs_and_holds_its_ratchet() -> None:

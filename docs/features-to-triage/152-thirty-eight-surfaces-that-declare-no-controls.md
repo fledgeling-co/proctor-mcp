@@ -2,7 +2,10 @@
 generated-by: test-campaign
 campaign-sources: [campaign.check.controls]
 reckon-sources: [REQ-009, REQ-011]
-status: to-triage
+status: retired
+validated-by: REQ-009, REQ-011 via CASE-0013, CASE-0062, CASE-0791, CASE-0792, CASE-0795, CASE-0011 (6 of 7 citing case(s))
+validated-rungs: effect-witness, outcome, raster-visual
+validated-provider: Darwin.bind/listen/accept in Sources/ProctorAgent/Server.swift; Darwin.connect in Sources/ProctorCore/Transport.swift
 ---
 # Thirty-eight surfaces that declare no controls
 
