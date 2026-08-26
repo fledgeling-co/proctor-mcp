@@ -4515,7 +4515,7 @@
     {
       "id": "DEF-221",
       "title": "One image carries three captions across two unrelated sweeps, and two wedged timestamps share one frame",
-      "status": "fixed",
+      "status": "partially-fixed",
       "severity": "medium",
       "surfaces": [
         "SURF-027"
@@ -4523,7 +4523,7 @@
       "requirements": [
         "REQ-113"
       ],
-      "note": "CLOSED in PRO-0109: sweepL-wedged-recovered.png given a genuine re-take (1,046-pixel delta against sweepL-wedged-t1.png), witnessing the recovery transition back to Ready after SIGCONT.\n\nsweepK-theme-before.png, sweepL-wedged-t1.png and sweepL-wedged-recovered.png are byte-identical (sha256 670a93988315\u2026), and the picture is a dark Ready status window. So sweep K's dark theme baseline, sweep L's earliest wedged frame and sweep L's recovery frame are one file under three captions, across two sweeps that share no measurement.\n\nTWO CONSEQUENCES, ONE OF THEM WORSE THAN THE OTHER. A Ready window at t+1 is defensible on its own terms, because the window's timeout is 5s and at t+1 it has nothing to report yet. The recovery frame is not: evidence/sweepL-halfopen.json records recoveredAfterSIGCONT true, and a recovery shown by the same bytes as the pre-recovery frame witnesses no transition.\n\nAND THE SAME SHAPE ONE STEP LATER: sweepL-wedged-t7.png and sweepL-wedged-t14.png are byte-identical to each other (5c7d4535e70c\u2026), both showing `Agent down \u2014 the Proctor agent did not answer within 5s`, so the wedge is witnessed once rather than at two times. RECORDED rather than fixed: the sweeps' verdicts rest on their JSON records and their timings, not on the frames, and re-running them is not this item's scope."
+      "note": "STATUS CORRECTED 2026-08-26 from `fixed`: the note below closes its second arm with \"RECORDED rather than fixed\", and the files still agree. sweepK-theme-before.png and sweepL-wedged-t1.png remain one image (670a93988315), and sweepL-wedged-t7.png and -t14.png remain one image (5c7d4535e70c), both re-checked by md5 this date. The registry already carries `partially-fixed` and DEF-339 uses it.\n\nCLOSED in PRO-0109: sweepL-wedged-recovered.png given a genuine re-take (1,046-pixel delta against sweepL-wedged-t1.png), witnessing the recovery transition back to Ready after SIGCONT.\n\nsweepK-theme-before.png, sweepL-wedged-t1.png and sweepL-wedged-recovered.png are byte-identical (sha256 670a93988315\u2026), and the picture is a dark Ready status window. So sweep K's dark theme baseline, sweep L's earliest wedged frame and sweep L's recovery frame are one file under three captions, across two sweeps that share no measurement.\n\nTWO CONSEQUENCES, ONE OF THEM WORSE THAN THE OTHER. A Ready window at t+1 is defensible on its own terms, because the window's timeout is 5s and at t+1 it has nothing to report yet. The recovery frame is not: evidence/sweepL-halfopen.json records recoveredAfterSIGCONT true, and a recovery shown by the same bytes as the pre-recovery frame witnesses no transition.\n\nAND THE SAME SHAPE ONE STEP LATER: sweepL-wedged-t7.png and sweepL-wedged-t14.png are byte-identical to each other (5c7d4535e70c\u2026), both showing `Agent down \u2014 the Proctor agent did not answer within 5s`, so the wedge is witnessed once rather than at two times. RECORDED rather than fixed: the sweeps' verdicts rest on their JSON records and their timings, not on the frames, and re-running them is not this item's scope."
     },
     {
       "id": "DEF-222",
@@ -5091,7 +5091,7 @@
     },
     {
       "id": "DEF-341",
-      "title": "An arm whose command compiles perturbs the next arm's baseline, and a full rebuild does not undo it",
+      "title": "An arm whose command compiles perturbed the next arm's baseline, and the recorded reproduction no longer holds",
       "status": "open",
       "severity": "low",
       "surfaces": [
@@ -5100,7 +5100,20 @@
       "requirements": [
         "REQ-046"
       ],
-      "note": "Measured 2026-08-25. arming_verify runs arms in registry order. CASE-0808's arm splices Sources/ProctorCore/Transport.swift and runs `swift test --filter SocketBoundaryChaos`, which compiles. CASE-0819 runs next and its baseline \u2014 test_instruments.py \u2014 comes back red with 'Supervision TUI PTY verification FAILED (1/5 failed)', a check that spawns a product binary through a pty. CASE-0819 verifies cleanly on its own. Restoring the source and rebuilding both the executables and the test bundle does NOT clear it, so the stale-binary reading is wrong or incomplete and the real cause is not yet known. The tool's behaviour is CORRECT: it refuses the arm as unverifiable rather than reporting a verified arm off a red baseline, and since 2026-08-25 it records the baseline's last words so the reason is legible \u2014 which is how this was found at all. 4 of 5 arms verify in a full run; all 5 verify individually."
+      "note": "Measured 2026-08-25. arming_verify runs arms in registry order. CASE-0808's arm splices Sources/ProctorCore/Transport.swift and runs `swift test --filter SocketBoundaryChaos`, which compiles. CASE-0819 runs next and its baseline \u2014 test_instruments.py \u2014 comes back red with 'Supervision TUI PTY verification FAILED (1/5 failed)', a check that spawns a product binary through a pty. CASE-0819 verifies cleanly on its own. Restoring the source and rebuilding both the executables and the test bundle does NOT clear it, so the stale-binary reading is wrong or incomplete and the real cause is not yet known. The tool's behaviour is CORRECT: it refuses the arm as unverifiable rather than reporting a verified arm off a red baseline, and since 2026-08-25 it records the baseline's last words so the reason is legible \u2014 which is how this was found at all. 4 of 5 arms verified in a full run at the time; all 5 verified individually. RE-MEASURED 2026-08-26 at 75a7a8c on a clean tree, twice: arming_verify.py returns 5 verified / 0 does-not-arm / 0 unverifiable both times, CASE-0819 among them. Two clean runs do not prove the ordering dependency is gone \u2014 they prove the recorded reproduction does not hold at this commit. Kept open with the reproduction owed rather than closed on a pass that was expected to fail and did not."
+    },
+    {
+      "id": "DEF-342",
+      "title": "SO_NOSIGPIPE reaches one of four accepted sockets, so three writers can still be killed by signal",
+      "status": "open",
+      "severity": "high",
+      "surfaces": [
+        "SURF-029"
+      ],
+      "requirements": [
+        "REQ-046"
+      ],
+      "note": "Found 2026-08-26 by a tailings unaimed read, after DEF-338 was recorded fixed. Server.swift:108 states the rule the fix rests on \u2014 an ACCEPTED descriptor does not inherit SO_NOSIGPIPE from its listener \u2014 and Server.swift is the only one of four socket servers that applies proctorSuppressSIGPIPE to both its listener (:43) and its accepted client (:112). ProctorReflector/SocketServer.swift suppresses on the listener (:47) and not the accepted client, and writes to that client through writeAll at :123, :128 and :146. ProctorAgent/Unlock/UnlockBroker.swift suppresses on the listener (:102) and not the accepted client, and calls send(client, ..., 0) at :137 and :148 \u2014 flags 0, not MSG_NOSIGNAL. ProctorShim/RemoteServer.swift suppresses on neither its socket (:69) nor its accepted client (:94), and writes to the client at :288. MEASURED: the absence, by exhaustive grep over the four files. NOT MEASURED: that the signal fires on these three. DEF-338's reproduction needs a second write after the FIN has landed, and it has not been re-run against them. ProctorReflector is the worst case because it is embedded in another application, so the process a SIGPIPE terminates is the host's rather than Proctor's."
     }
   ],
   "journey": [
