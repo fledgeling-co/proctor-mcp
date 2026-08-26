@@ -1,0 +1,14 @@
+9 descriptor(s) produced under Sources/ — 5 by socket(), 4 by accept()
+  ok   Sources/ProctorAgent/Server.swift:40  socket() -> fd   proctorSuppressSIGPIPE
+  ok   Sources/ProctorAgent/Server.swift:107  accept() -> client   proctorSuppressSIGPIPE
+  ok   Sources/ProctorAgent/Unlock/UnlockBroker.swift:99  socket() -> fd   proctorSuppressSIGPIPE
+  BARE  Sources/ProctorAgent/Unlock/UnlockBroker.swift:124  accept() -> client   nothing within 6 code lines
+  ok   Sources/ProctorCore/Transport.swift:128  socket() -> s   proctorSuppressSIGPIPE
+  ok   Sources/ProctorReflector/SocketServer.swift:40  socket() -> fd   setsockopt SO_NOSIGPIPE
+  BARE  Sources/ProctorReflector/SocketServer.swift:102  accept() -> client   nothing within 6 code lines
+  BARE  Sources/ProctorShim/RemoteServer.swift:69  socket() -> fd   nothing within 6 code lines
+  BARE  Sources/ProctorShim/RemoteServer.swift:94  accept() -> client   nothing within 6 code lines
+
+FAIL  4 of 9 descriptor(s) can be killed by SIGPIPE.
+      An accepted descriptor does not inherit SO_NOSIGPIPE from its listener,
+      so a suppression on the listener does not answer for the client.

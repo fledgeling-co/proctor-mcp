@@ -1,0 +1,38 @@
+[1/1] Compiling plugin BuildIdentity
+[2/2] Compiling plugin DesignTokens
+Building for debugging...
+[2/13] Write sources
+[3/13] Write swift-version--58304C5D6DBC2206.txt
+[5/7] Compiling ProctorCoreTests AcceptedSocketSignalTests.swift
+[6/7] Emitting module ProctorCoreTests
+[6/8] Write Objects.LinkFileList
+[7/8] Linking proctor-mcpPackageTests
+Build complete! (6.94s)
+Test Suite 'Selected tests' started at 2026-08-26 19:50:09.429.
+Test Suite 'proctor-mcpPackageTests.xctest' started at 2026-08-26 19:50:09.430.
+Test Suite 'proctor-mcpPackageTests.xctest' passed at 2026-08-26 19:50:09.430.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-08-26 19:50:09.430.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds
+􀟈  Test run started.
+􀄵  Testing Library Version: 1902
+􀄵  Target Platform: arm64e-apple-macos14.0
+􀟈  Suite "An accepted socket carries its own signal disposition" started.
+􀟈  Test "The same holds for AF_INET, which is the family proctor-shim's remote transport listens on" started.
+􀟈  Test "Setting it directly on the accepted descriptor also takes" started.
+􀟈  Test "Suppressing the listener is enough: the same write returns EPIPE and the process lives" started.
+􀟈  Test "Every descriptor Sources/ produces suppresses the signal — the census that would have caught DEF-342" started.
+􀟈  Test "Measured on Darwin: an accepted AF_UNIX descriptor inherits its listener's SO_NOSIGPIPE" started.
+􀟈  Test "DEF-342: a bare AF_INET listener — proctor-shim's shape — dies by SIGPIPE on the reply path" started.
+􀟈  Test case passing 1 argument family → "unix" to "Suppressing the listener is enough: the same write returns EPIPE and the process lives" started.
+􀟈  Test case passing 1 argument family → "inet" to "Suppressing the listener is enough: the same write returns EPIPE and the process lives" started.
+􀟈  Test case passing 1 argument family → "unix" to "DEF-342: a bare AF_INET listener — proctor-shim's shape — dies by SIGPIPE on the reply path" started.
+􀟈  Test case passing 1 argument family → "inet" to "DEF-342: a bare AF_INET listener — proctor-shim's shape — dies by SIGPIPE on the reply path" started.
+􁁛  Test "The same holds for AF_INET, which is the family proctor-shim's remote transport listens on" passed after 0.001 seconds.
+􁁛  Test "Setting it directly on the accepted descriptor also takes" passed after 0.001 seconds.
+􁁛  Test "Measured on Darwin: an accepted AF_UNIX descriptor inherits its listener's SO_NOSIGPIPE" passed after 0.002 seconds.
+􁁛  Test "Suppressing the listener is enough: the same write returns EPIPE and the process lives" with 2 test cases passed after 0.052 seconds.
+􁁛  Test "Every descriptor Sources/ produces suppresses the signal — the census that would have caught DEF-342" passed after 0.084 seconds.
+􁁛  Test "DEF-342: a bare AF_INET listener — proctor-shim's shape — dies by SIGPIPE on the reply path" with 2 test cases passed after 0.118 seconds.
+􁁛  Suite "An accepted socket carries its own signal disposition" passed after 0.119 seconds.
+􁁛  Test run with 6 tests in 1 suite passed after 0.119 seconds.

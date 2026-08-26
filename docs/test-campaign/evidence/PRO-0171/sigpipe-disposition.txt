@@ -1,0 +1,5 @@
+# sigpipe_disposition_probe.py, both families, both dispositions — 2026-08-26
+unix  bare        exit=141    
+unix  --suppress  exit=0     family=unix listener_opt=1 accepted_opt=1 EPIPE on write 1; the process survived 
+inet  bare        exit=141    
+inet  --suppress  exit=0     family=inet listener_opt=1 accepted_opt=1 EPIPE on write 1; the process survived 

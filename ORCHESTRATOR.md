@@ -1,9 +1,9 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** **Wave 29 open on `main`.** 170 rows: 158 Merged, 2 Retired, **10 outstanding**. PRO-0159 and PRO-0163 landed this wave; PRO-0160, 0161, 0162, 0164 and PRO-0165..0170 remain. Waves 9 through 28 are closed.
+**Status:** **Wave 29 open on `main`.** 172 rows: 159 Merged, 2 Retired, **11 outstanding**. PRO-0159, PRO-0163 and PRO-0171 landed this wave; PRO-0160, 0161, 0162, 0164, PRO-0165..0170 and PRO-0172 remain. Waves 9 through 28 are closed.
 **Open, and named rather than smoothed:** PRO-0161 is **not** complete — the routing covers 36 of the 43 sub-effect-rung entries and 7 need a person, so it stays `Ready for AI` and the figure it declared (`warrant.surface-conformance` 84.0 → 100) has not moved. `figure_ledger.py` enforces that.
-**Reconciliation (the exit condition, not the ledger):** reckon holds 1015 rows · broken 2 · unmeasured 2 · **undecided 12** · verified-done 846. The 12 undecided are the 10 outstanding rows' briefs plus two the routing left open — every one is a wave, not a footnote.
-**Updated:** 2026-08-25 — Wave 29 in flight. Gate: 2,173 tests in 275 suites; fifteen standing gates green; strict 440 of 502 (88%).
+**Reconciliation (the exit condition, not the ledger):** reckon holds 1017 rows · broken 5 · unmeasured 2 · **undecided 12** · verified-done 845. Two of the five broken are `partially-fixed` rows owing a reproduction for their remaining half; the other three are DEF-340's recorded lane gap, DEF-341's reproduction that no longer reproduces, and DEF-342 which this wave fixed.
+**Updated:** 2026-08-26 — Wave 29 in flight. Gate: 2,179 tests in 276 suites; fifteen standing gates green; strict 440 of 502 (88%).
 
 ### Repository state (reconciled 2026-08-17)
 - **Git remote:** `origin` → `github.com/fledgeling-co/proctor-mcp`. Local `main` is up to date with `origin/main` at tag `v0.2.0`.
@@ -3420,7 +3420,7 @@ grok-4.6 at xhigh returned **UNSOUND** on `brief_validation.py`'s first join, an
 | `strict-check.py` | **0** | **ratchet 438 held** |
 | `vacuity-check.py` | ratcheted | unclassed 0 · uncensused 0 · **blind 85 of 616 mutating over 2,224 examined** — the blind pass had never run here until `testRoot` was declared; ratcheted in test_instruments at 85, PRO-0079 measured the population at 0 genuine |
 | `capture-lineage.py --gate` | **0** | ratchet 6 held |
-| `ledger_gate.py` | **0** | 170 rows · 170 specs · statuses summing to 170, outstanding 12 |
+| `ledger_gate.py` | **0** | 172 rows · 172 specs · statuses summing to 172, outstanding 11 |
 | `spec_citation_measure.py` | **0** | 19/19 (162 briefs, 0 unclaimed) |
 | `spec_symbol_linter.py --gate` | **0** | ratchet 825 held |
 | `mutation_report.py --gate` | **0** | ratchet 47 survivors held |

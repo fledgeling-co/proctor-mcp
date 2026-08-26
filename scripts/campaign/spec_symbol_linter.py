@@ -93,6 +93,30 @@ BUILTIN = {
     "HMAC", "AES", "SymmetricKey", "true", "false", "nil", "self", "Self",
 }
 
+# Names libc supplies. A spec about sockets cites `accept()` and `SO_NOSIGPIPE`
+# for the same reason one about windows cites `kCGWindowNumber`: the platform
+# declares it, and reporting it unresolved is a linter finding about the C
+# library rather than about the specification. PLATFORM above covers the
+# Apple-framework prefixes and matched none of these, so PRO-0171 arrived with
+# three unresolved citations and the ratchet refused the merge — correctly, and
+# the answer is the missing vocabulary rather than a higher bar.
+#
+# Kept as an explicit list rather than a prefix rule, because a prefix over
+# lower-case syscall names would swallow ordinary identifiers: `send`, `write`
+# and `close` are also plausible method names in this tree, so each has to be
+# named on purpose and each is only excused with its call parentheses.
+POSIX = {
+    "socket()", "accept()", "bind()", "listen()", "connect()", "send()", "recv()",
+    "write()", "read()", "close()", "setsockopt()", "getsockopt()", "getsockname()",
+    "unlink()", "fcntl()", "select()", "poll()", "signal()", "sigaction()",
+    "pthread_sigmask()", "sigpending()", "posix_spawn()", "waitpid()",
+    "SO_NOSIGPIPE", "SO_LINGER", "SO_REUSEADDR", "SO_RCVTIMEO", "SO_SNDTIMEO",
+    "SOL_SOCKET", "MSG_NOSIGNAL", "SOCK_STREAM", "AF_UNIX", "AF_INET",
+    "SIGPIPE", "SIGKILL", "SIGSTOP", "SIGCONT", "SIGTERM", "SIG_IGN", "SIG_DFL",
+    "EPIPE", "ECONNRESET", "EINTR", "EADDRINUSE", "EAGAIN", "ENOENT",
+    "sockaddr_un", "sockaddr_in", "in_addr", "sigset_t", "socklen_t", "timeval",
+}
+
 
 def source_symbols(source: Path) -> dict[str, set[str]]:
     """Every declared name in the production tree, mapped to the files declaring it."""
@@ -194,7 +218,7 @@ def main() -> int:
         res, in_tests, unres = 0, 0, []
         for line, sym in cites:
             h = head(sym)
-            if h in BUILTIN or h in index or PLATFORM.match(h) or h in literals:
+            if h in BUILTIN or h in POSIX or h in index or PLATFORM.match(h) or h in literals:
                 res += 1
             elif h in test_index:
                 in_tests += 1

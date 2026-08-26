@@ -9629,5 +9629,69 @@
       "docs/test-campaign/evidence/PRO-0163/figure-ledger.txt"
     ],
     "note": "PRO-0163. Four specifications were written to bring five warrant classes to full figure sourcing; all four merged and the rollup still reports all five short. Nothing tied a merge to the figure it claimed it would shift. The ledger does, and it caught its own author on the first run: a **Moves:** line attached to this spec as a demonstration was a mis-declaration, and the refusal is recorded in the spec rather than quietly deleted \u2014 a gate catching its author on first use is the most useful thing it will ever do."
+  },
+  {
+    "id": "CASE-0826",
+    "req": "REQ-046",
+    "surface": "SURF-029",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "plane": "live-external",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "The probe IS the arm, and it is run in both directions on every gate run: a bare listener ends the child at exit 141 on AF_UNIX and AF_INET, and a suppressed one ends it at exit 0 with EPIPE or ECONNRESET. A probe that only ever dies proves nothing about the option, so both dispositions are asserted.",
+    "defects": [
+      "DEF-342"
+    ],
+    "witness": {
+      "recorder": "the child process's own termination, read back through wait(2)",
+      "effect": "subprocess",
+      "count": 4
+    },
+    "evidence": [
+      "scripts/campaign/sigpipe_disposition_probe.py",
+      "Tests/ProctorCoreTests/AcceptedSocketSignalTests.swift",
+      "docs/test-campaign/evidence/PRO-0171/sigpipe-disposition.txt"
+    ],
+    "note": "PRO-0171. The claim is that the default disposition of SIGPIPE terminates the process, so the only honest place to measure it is a process whose termination is the result. An in-process version blocked the signal on the writing thread with pthread_sigmask and asserted sigpending; the mask did not hold, swift test came back 'exited with unexpected signal code 13', and the four passing tests beside it were reported as a failed run. The child-process form is the fix and it is also the stronger oracle: an exit code somebody else's kernel set."
+  },
+  {
+    "id": "CASE-0827",
+    "req": "REQ-046",
+    "surface": "SURF-029",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "The pre-fix tree at bf34a985, extracted with git archive rather than seeded: the census exits 1 there and names exactly four bare descriptors including RemoteServer.swift. Arming against a fixture would have proved the regex fires; arming against the commit proves the check would have caught DEF-342.",
+    "defects": [
+      "DEF-342"
+    ],
+    "evidence": [
+      "scripts/campaign/socket_signal_census.py",
+      "docs/test-campaign/evidence/PRO-0171/socket-census.txt",
+      "docs/test-campaign/evidence/PRO-0171/socket-census-prefix-arm.txt"
+    ],
+    "note": "PRO-0171. DEF-338's fix was applied in one of four socket servers and the tree passed every gate in the repository for a wave. The census walks every socket() and accept() under Sources/ and requires a suppression within six CODE lines \u2014 comments skipped, after a thirteen-line comment above one of the calls pushed it out of a prose-counted window and reported a bare descriptor that was not bare."
+  },
+  {
+    "id": "CASE-0828",
+    "req": "REQ-046",
+    "surface": "SURF-029",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Four cells rather than one: AF_UNIX and AF_INET, listener suppressed and bare. The bare cells are the arm \u2014 an accepted descriptor reads 0 there \u2014 so a test that could only ever read 1 is distinguishable from one that measured.",
+    "defects": [
+      "DEF-343"
+    ],
+    "evidence": [
+      "Tests/ProctorCoreTests/AcceptedSocketSignalTests.swift",
+      "docs/test-campaign/evidence/PRO-0171/accepted-socket-signal-tests.txt"
+    ],
+    "note": "PRO-0171. Server.swift asserted in a comment that an accepted descriptor does not inherit SO_NOSIGPIPE from its listener. On Darwin 25.6.0 it does, in all four cells. The cost of the unmeasured comment was not the redundant setsockopt it justified \u2014 it was that an audit reading the tree against it counted three defective servers where there was one, and the commit correcting them was written before anyone measured. DEF-343."
   }
 ]

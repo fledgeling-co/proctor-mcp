@@ -1,0 +1,12 @@
+9 descriptor(s) produced under Sources/ — 5 by socket(), 4 by accept()
+  ok   Sources/ProctorAgent/Server.swift:40  socket() -> fd   proctorSuppressSIGPIPE
+  ok   Sources/ProctorAgent/Server.swift:107  accept() -> client   proctorSuppressSIGPIPE
+  ok   Sources/ProctorAgent/Unlock/UnlockBroker.swift:99  socket() -> fd   proctorSuppressSIGPIPE
+  ok   Sources/ProctorAgent/Unlock/UnlockBroker.swift:124  accept() -> client   proctorSuppressSIGPIPE
+  ok   Sources/ProctorCore/Transport.swift:128  socket() -> s   proctorSuppressSIGPIPE
+  ok   Sources/ProctorReflector/SocketServer.swift:40  socket() -> fd   setsockopt SO_NOSIGPIPE
+  ok   Sources/ProctorReflector/SocketServer.swift:102  accept() -> client   setsockopt SO_NOSIGPIPE
+  ok   Sources/ProctorShim/RemoteServer.swift:69  socket() -> fd   proctorSuppressSIGPIPE
+  ok   Sources/ProctorShim/RemoteServer.swift:100  accept() -> client   proctorSuppressSIGPIPE
+
+PASS: all 9 descriptor(s) suppress SIGPIPE within 6 code lines of the call that produced them.

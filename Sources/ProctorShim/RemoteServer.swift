@@ -67,6 +67,12 @@ final class RemoteServer: @unchecked Sendable {
         }
 
         let fd = socket(AF_INET, SOCK_STREAM, 0)
+        // DEF-342, and the only one of this package's four socket servers where
+        // the fault was reachable: neither this listener nor the descriptors it
+        // accepted carried SO_NOSIGPIPE, so a write to a peer that had gone
+        // raised SIGPIPE and terminated proctor-shim. The other three suppressed
+        // on the listener and their accepted descriptors inherited it.
+        if fd >= 0 { proctorSuppressSIGPIPE(fd) }
         guard fd >= 0 else { fail("socket() failed: \(String(cString: strerror(errno)))") }
         var yes: Int32 = 1
         setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &yes, socklen_t(MemoryLayout<Int32>.size))
@@ -92,6 +98,11 @@ final class RemoteServer: @unchecked Sendable {
 
         while true {
             let client = accept(fd, nil, nil)
+            // The descriptor `respond` writes the HTTP reply down. A model on
+            // another machine that closes the connection mid-reply is ordinary.
+            // It inherits the option set on the listener above; this makes it
+            // explicit, as the other three servers do.
+            if client >= 0 { proctorSuppressSIGPIPE(client) }
             if client < 0 { if errno == EINTR { continue }; break }
             slots.wait()
             workerQueue.async { [weak self] in

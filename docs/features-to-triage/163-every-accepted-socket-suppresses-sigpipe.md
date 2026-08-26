@@ -2,7 +2,7 @@
 generated-by: tailings
 tailings-sources: [unaimed-site-read]
 reckon-sources: [REQ-046]
-status: to-triage
+status: triaged
 ---
 # Every accepted socket suppresses SIGPIPE, and a check says so
 
@@ -12,31 +12,31 @@ status: to-triage
 - proposed-by-ai: false
 
 ## What and why
-DEF-338 established that a write to a peer that had closed raised SIGPIPE and terminated the
-process at exit 141, and it was fixed by setting `SO_NOSIGPIPE`. The fix reached one of the four
-places this package writes to a socket it accepted. `Server.swift:108` carries the rule the fix
-rests on — an accepted descriptor does not inherit the option from its listener — and
-`Server.swift` is the only file that applies it to both. `ProctorReflector/SocketServer.swift`,
-`ProctorAgent/Unlock/UnlockBroker.swift` and `ProctorShim/RemoteServer.swift` each write to an
-accepted client that carries no suppression, and `UnlockBroker` calls `send` with flags `0`
-rather than `MSG_NOSIGNAL`. That is DEF-342.
+DEF-338 established that a write to a peer that had gone raised SIGPIPE and terminated the
+process at exit 141, and it was fixed by setting `SO_NOSIGPIPE`. `Server.swift` justified the
+fix with a comment asserting that an accepted descriptor does not inherit the option from its
+listener. Nobody had measured that, and on Darwin 25.6.0 it is the reverse: an accepted
+descriptor inherits the option on `AF_UNIX` and `AF_INET` alike, and inherits its absence too.
 
-The three sites are the work, and the reason this is a brief rather than only a defect is that
-nothing would have caught the gap and nothing would catch the next one. A fix applied in one of
-four places passed every gate in the repository. A check that walks every `socket()` and every
-`accept()` in `Sources/` and asserts a suppression on each is a few lines, and it converts a
-defect that was found by reading into one that cannot recur silently.
+Two things follow. `ProctorShim/RemoteServer.swift` suppressed on neither its listener nor the
+descriptor it accepted, and writes the HTTP reply down that descriptor, so a model on another
+machine whose connection dies mid-reply terminated proctor-shim by signal. And an audit reading
+the tree against the false comment counted three defective servers where there was one, because
+a correct pattern read as evidence of a fault.
+
+The work is the fix, the measurement that settles the rule, and a census that makes a fix
+applied in one of four places visible — because that gap passed every gate in the repository.
 
 ## Acceptance sketch
-- Each of the three unsuppressed accepted descriptors carries a suppression, and `UnlockBroker`
-  either suppresses or passes `MSG_NOSIGNAL`
-- A test writes twice to a peer that has closed — the second write after the FIN has landed —
-  and the process survives, on each of the four servers
-- That test is watched to fail with the suppression removed, per server
-- A check enumerates every `socket(AF_*)` and every `accept()` under `Sources/` and fails when
-  one reaches a write path without a suppression
-- The check is armed in both directions: it fires on a seeded unsuppressed socket and stays
-  silent on the tree once the three are fixed
+- `ProctorShim/RemoteServer.swift` suppresses on both its listener and the descriptor it accepts
+- The inheritance rule is measured across four cells — two families by suppressed and bare — and
+  the comment that asserted the opposite is corrected to what was measured
+- A probe writes into a hung-up peer in a child process and the child's ending is the result:
+  terminated by signal 13 bare, exit 0 with an errno once the listener is suppressed
+- A census enumerates every `socket()` and every `accept()` under `Sources/` and fails when one
+  has no suppression within a window of code lines
+- The census is armed against the real pre-fix tree rather than a fixture, and names the
+  descriptors that were bare
 
 ## Assumptions made writing this
 - Assuming a per-socket `SO_NOSIGPIPE` rather than a process-wide `SIG_IGN`, because a library

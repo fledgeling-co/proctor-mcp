@@ -104,6 +104,13 @@ final class SocketServer: @unchecked Sendable {
                 if errno == EINTR { continue }
                 break
             }
+            // This is the descriptor `serve` writes down. It inherits
+            // SO_NOSIGPIPE from the listener above on Darwin — measured, DEF-342
+            // — so this is belt and braces rather than a fix, kept for the same
+            // two reasons as `Server.swift`: inheritance is a platform behaviour,
+            // and the source census cannot pair an accept() with its listener.
+            var on: Int32 = 1
+            setsockopt(client, SOL_SOCKET, SO_NOSIGPIPE, &on, socklen_t(MemoryLayout<Int32>.size))
             queue.async { [weak self] in self?.serve(client) }
         }
     }

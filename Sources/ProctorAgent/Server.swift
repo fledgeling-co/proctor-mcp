@@ -105,10 +105,20 @@ final class Server: @unchecked Sendable {
     private func acceptLoop(_ fd: Int32) {
         while !isStopping {
             let client = accept(fd, nil, nil)
-            // An ACCEPTED descriptor does not inherit SO_NOSIGPIPE from its
-            // listener, and the accepted side is the one the agent writes
-            // replies down. A shim that hangs up while a long batch is running
-            // is ordinary, and it must not take the agent with it.
+            // The accepted side is the one the agent writes replies down, and a
+            // shim that hangs up while a long batch is running is ordinary, so it
+            // must not take the agent with it.
+            //
+            // Measured on Darwin 25.6.0 (DEF-342): an accepted descriptor DOES
+            // inherit SO_NOSIGPIPE from its listener, on AF_UNIX and AF_INET
+            // alike, so the call below is redundant on this platform. It stays
+            // because inheritance is a platform behaviour rather than a promise
+            // — Linux has no SO_NOSIGPIPE and wants MSG_NOSIGNAL per send — and
+            // because socket_signal_census.py cannot tie an accept() back to the
+            // socket() that produced its listener across a function boundary, so
+            // requiring the option at both sites is what makes that check
+            // decidable. An earlier version of this comment asserted the opposite
+            // and nothing had measured it.
             if client >= 0 { proctorSuppressSIGPIPE(client) }
             if client < 0 {
                 if Darwin.errno == EINTR { continue }

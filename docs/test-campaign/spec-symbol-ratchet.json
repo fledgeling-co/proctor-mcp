@@ -1,3 +1,4 @@
 {
-  "unresolved": 825
+  "unresolved": 824,
+  "note": "Lowered 825 -> 824 on 2026-08-26. PRO-0171 arrived with three unresolved citations \u2014 `accept()` twice and `reckon` \u2014 and the ratchet refused it. Two were libc names the linter had no vocabulary for, so POSIX was added beside BUILTIN and the third was prose wearing backticks. Grounding those also grounded one citation already in the tree, which is why the bar goes down rather than back to where it was: a ratchet re-set to its old number after a vocabulary change is carrying one row of slack."
 }

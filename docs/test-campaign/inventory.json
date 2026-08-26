@@ -5104,8 +5104,8 @@
     },
     {
       "id": "DEF-342",
-      "title": "SO_NOSIGPIPE reaches one of four accepted sockets, so three writers can still be killed by signal",
-      "status": "open",
+      "title": "proctor-shim's remote transport suppressed SIGPIPE on neither descriptor, and the rule the other three relied on was never measured",
+      "status": "fixed",
       "severity": "high",
       "surfaces": [
         "SURF-029"
@@ -5113,7 +5113,20 @@
       "requirements": [
         "REQ-046"
       ],
-      "note": "Found 2026-08-26 by a tailings unaimed read, after DEF-338 was recorded fixed. Server.swift:108 states the rule the fix rests on \u2014 an ACCEPTED descriptor does not inherit SO_NOSIGPIPE from its listener \u2014 and Server.swift is the only one of four socket servers that applies proctorSuppressSIGPIPE to both its listener (:43) and its accepted client (:112). ProctorReflector/SocketServer.swift suppresses on the listener (:47) and not the accepted client, and writes to that client through writeAll at :123, :128 and :146. ProctorAgent/Unlock/UnlockBroker.swift suppresses on the listener (:102) and not the accepted client, and calls send(client, ..., 0) at :137 and :148 \u2014 flags 0, not MSG_NOSIGNAL. ProctorShim/RemoteServer.swift suppresses on neither its socket (:69) nor its accepted client (:94), and writes to the client at :288. MEASURED: the absence, by exhaustive grep over the four files. NOT MEASURED: that the signal fires on these three. DEF-338's reproduction needs a second write after the FIN has landed, and it has not been re-run against them. ProctorReflector is the worst case because it is embedded in another application, so the process a SIGPIPE terminates is the host's rather than Proctor's."
+      "note": "Found 2026-08-26 by a tailings unaimed read; SCOPE CORRECTED the same day by measuring the premise it rested on, which was false.\n\nTHE CLAIM THAT WAS WRONG. Server.swift carried the comment 'An ACCEPTED descriptor does not inherit SO_NOSIGPIPE from its listener', and the first reading of this defect took it as fact and reported three defective servers. Measured on Darwin 25.6.0, AF_UNIX and AF_INET alike: an accepted descriptor DOES inherit the option, and inherits its absence too. ProctorReflector/SocketServer.swift and ProctorAgent/Unlock/UnlockBroker.swift both suppressed on the listener, so their accepted clients were already covered and neither was ever defective. The comment has been corrected in place.\n\nTHE ONE THAT WAS REAL. ProctorShim/RemoteServer.swift suppressed on neither its AF_INET listener (:69) nor the descriptor it accepted (:94), and writes the HTTP reply down that descriptor at :288. A model on another machine whose connection dies mid-reply terminated proctor-shim by signal. Reproduced at exit 141 in a child process, both families, and the suppressed run returns EPIPE or ECONNRESET at exit 0 \u2014 scripts/campaign/sigpipe_disposition_probe.py, driven by Tests/ProctorCoreTests/AcceptedSocketSignalTests.swift.\n\nFIXED: all four servers now suppress on both descriptors. Three of those calls are redundant on this platform and are kept because inheritance is a platform behaviour rather than a promise (Linux has no SO_NOSIGPIPE and wants MSG_NOSIGNAL per send), and because scripts/campaign/socket_signal_census.py cannot pair an accept() with the socket() that produced its listener across a function boundary, so requiring the option at both sites is what makes the census decidable. The census fires on the pre-fix tree at bf34a985 naming exactly those four descriptors, and passes at 9 of 9 now."
+    },
+    {
+      "id": "DEF-343",
+      "title": "A comment stated a kernel rule nobody had measured, and three safe servers read as defective because of it",
+      "status": "fixed",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-029"
+      ],
+      "requirements": [
+        "REQ-046"
+      ],
+      "note": "Server.swift:108 asserted that an accepted descriptor does not inherit SO_NOSIGPIPE from its listener. Measured 2026-08-26 on Darwin 25.6.0 across AF_UNIX and AF_INET, with the listener suppressed and bare: the accepted descriptor reports the listener's value in all four cells. The comment was the reverse of the behaviour.\n\nThe cost was not the redundant setsockopt it justified. It was that an audit reading the tree against that comment reported three defective socket servers, of which one was real \u2014 the false rule turned a correct pattern into evidence of a fault, and the fix commit written before the measurement said so. A comment asserting kernel behaviour is a claim, and this repository's own rule is that a claim carries its measurement.\n\nFIXED: the comment now states what was measured, names the platform and version, and gives the two reasons the redundant call is kept. AcceptedSocketSignalTests covers the four cells so the claim cannot drift back."
     }
   ],
   "journey": [

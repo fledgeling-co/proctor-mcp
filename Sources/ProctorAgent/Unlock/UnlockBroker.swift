@@ -122,6 +122,11 @@ final class UnlockBroker: @unchecked Sendable {
 
         while true {
             let client = accept(fd, nil, nil)
+            // `handle` replies with send(..., 0) rather than MSG_NOSIGNAL, so
+            // the reply path depends on the descriptor's own option. It inherits
+            // one from the listener above on Darwin (measured, DEF-342); this
+            // makes it explicit so the source census can see it.
+            if client >= 0 { proctorSuppressSIGPIPE(client) }
             if client < 0 { if errno == EINTR { continue }; break }
             handle(client)
         }

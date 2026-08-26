@@ -1,0 +1,78 @@
+{
+  "window": 6,
+  "rows": [
+    {
+      "file": "Sources/ProctorAgent/Server.swift",
+      "line": 40,
+      "call": "socket",
+      "descriptor": "fd",
+      "suppressed": true,
+      "by": "proctorSuppressSIGPIPE"
+    },
+    {
+      "file": "Sources/ProctorAgent/Server.swift",
+      "line": 107,
+      "call": "accept",
+      "descriptor": "client",
+      "suppressed": true,
+      "by": "proctorSuppressSIGPIPE"
+    },
+    {
+      "file": "Sources/ProctorAgent/Unlock/UnlockBroker.swift",
+      "line": 99,
+      "call": "socket",
+      "descriptor": "fd",
+      "suppressed": true,
+      "by": "proctorSuppressSIGPIPE"
+    },
+    {
+      "file": "Sources/ProctorAgent/Unlock/UnlockBroker.swift",
+      "line": 124,
+      "call": "accept",
+      "descriptor": "client",
+      "suppressed": true,
+      "by": "proctorSuppressSIGPIPE"
+    },
+    {
+      "file": "Sources/ProctorCore/Transport.swift",
+      "line": 128,
+      "call": "socket",
+      "descriptor": "s",
+      "suppressed": true,
+      "by": "proctorSuppressSIGPIPE"
+    },
+    {
+      "file": "Sources/ProctorReflector/SocketServer.swift",
+      "line": 40,
+      "call": "socket",
+      "descriptor": "fd",
+      "suppressed": true,
+      "by": "setsockopt SO_NOSIGPIPE"
+    },
+    {
+      "file": "Sources/ProctorReflector/SocketServer.swift",
+      "line": 102,
+      "call": "accept",
+      "descriptor": "client",
+      "suppressed": true,
+      "by": "setsockopt SO_NOSIGPIPE"
+    },
+    {
+      "file": "Sources/ProctorShim/RemoteServer.swift",
+      "line": 69,
+      "call": "socket",
+      "descriptor": "fd",
+      "suppressed": true,
+      "by": "proctorSuppressSIGPIPE"
+    },
+    {
+      "file": "Sources/ProctorShim/RemoteServer.swift",
+      "line": 100,
+      "call": "accept",
+      "descriptor": "client",
+      "suppressed": true,
+      "by": "proctorSuppressSIGPIPE"
+    }
+  ],
+  "bare": 0
+}

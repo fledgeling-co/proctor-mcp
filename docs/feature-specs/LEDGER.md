@@ -180,3 +180,5 @@
 | PRO-0168 | An Intentional No-Op Says So | 2026-08-25 | Ready for AI |
 | PRO-0169 | Waiting Without Polling | 2026-08-25 | Ready for AI |
 | PRO-0170 | Continuous Claim Verification Between Waves | 2026-08-25 | Ready for AI |
+| PRO-0171 | Every Socket Suppresses SIGPIPE, and a Census Says So | 2026-08-26 | Merged |
+| PRO-0172 | A Defect's Status Word Means One Thing | 2026-08-26 | Ready for AI |

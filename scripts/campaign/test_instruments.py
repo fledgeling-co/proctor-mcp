@@ -3328,6 +3328,64 @@ def test_a_spec_that_names_a_figure_is_checked_against_it() -> None:
           out.stdout[:300])
 
 
+def test_every_socket_suppresses_the_signal_that_terminates() -> None:
+    """The census, armed against the real tree it was written for.
+
+    A fixture would prove the regex fires. The pre-fix tree proves the check
+    would have caught DEF-342, which is the claim being made for it.
+    """
+    script = ROOT / "scripts" / "campaign" / "socket_signal_census.py"
+    out = subprocess.run([sys.executable, str(script), "--gate"], capture_output=True, text=True)
+    check(out.returncode == 0, "every descriptor Sources/ produces suppresses SIGPIPE",
+          out.stdout[-500:])
+    check("descriptor(s) produced under Sources/" in out.stdout,
+          "and the census prints the denominator it examined", out.stdout[:200])
+
+    # The arm: the commit before the fix, extracted from git rather than seeded,
+    # so what fires is the defect rather than a shape somebody planted.
+    with tempfile.TemporaryDirectory() as td:
+        archive = subprocess.run(["git", "-C", str(ROOT), "archive", "bf34a985", "Sources"],
+                                 capture_output=True)
+        if archive.returncode != 0:
+            check(False, "the pre-fix tree at bf34a985 is reachable for the arm",
+                  archive.stderr.decode()[-300:])
+            return
+        subprocess.run(["tar", "-x", "-C", td], input=archive.stdout, check=True)
+        red = subprocess.run([sys.executable, str(script), "--root", td, "--gate"],
+                             capture_output=True, text=True)
+        check(red.returncode == 1, "the pre-fix tree takes the census red",
+              f"exit {red.returncode}\n{red.stdout[-500:]}")
+        check(red.stdout.count("  BARE") == 4,
+              "and it names the four descriptors that carried no suppression",
+              red.stdout[-600:])
+        check("RemoteServer.swift" in red.stdout,
+              "including the one where the fault was actually reachable", red.stdout[-600:])
+
+
+def test_the_signal_probe_runs_in_both_directions() -> None:
+    """A probe that only ever dies proves nothing about the option.
+
+    Both families, both dispositions. The bare run is expected to be terminated
+    by SIGPIPE, which is why it runs in a child: an in-process version of this
+    took `swift test` down with `unexpected signal code 13`.
+    """
+    script = ROOT / "scripts" / "campaign" / "sigpipe_disposition_probe.py"
+    for family in ("unix", "inet"):
+        bare = subprocess.run([sys.executable, str(script), "--family", family],
+                              capture_output=True, text=True)
+        check(bare.returncode in (141, -13),
+              f"a bare {family} listener is terminated by SIGPIPE",
+              f"exit {bare.returncode}\n{bare.stdout}{bare.stderr}")
+
+        safe = subprocess.run([sys.executable, str(script), "--family", family, "--suppress"],
+                              capture_output=True, text=True)
+        check(safe.returncode == 0, f"a suppressed {family} listener survives the same write",
+              f"exit {safe.returncode}\n{safe.stdout}{safe.stderr}")
+        check("accepted_opt=1" in safe.stdout,
+              f"and the {family} descriptor it accepted inherited the option",
+              safe.stdout)
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -3395,7 +3453,9 @@ def main() -> int:
                test_blind_pass_runs_and_holds_its_ratchet,
                test_no_brief_is_untriaged_while_its_spec_is_merged,
                test_every_declared_pass_ran_over_a_named_population,
-               test_a_spec_that_names_a_figure_is_checked_against_it):
+               test_a_spec_that_names_a_figure_is_checked_against_it,
+               test_every_socket_suppresses_the_signal_that_terminates,
+               test_the_signal_probe_runs_in_both_directions):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001
