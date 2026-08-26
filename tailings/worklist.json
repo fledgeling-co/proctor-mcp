@@ -3,10 +3,10 @@
  "transcript": "/Users/lukerhodes/.claude/projects/-Users-lukerhodes-Dev-proctor-mcp/30dfe9f8-ca66-4e1a-98f6-8e593b0302a4.jsonl",
  "repo": "/Users/lukerhodes/Dev/proctor-mcp",
  "site_budget": 12,
- "sites_read": 0,
+ "sites_read": 7,
  "rows": [
   {
-   "id": "A292",
+   "id": "A294",
    "kind": "probe",
    "text": "a printed non-zero class (520 blind) is absent from the report that follows  (\u00d77)",
    "line": 19036,
@@ -14,25 +14,25 @@
    "source": "T11",
    "probe_remedy": "report every class the gate printed, summing to its total",
    "count": 7,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "report every class the gate printed, summing to its total"
   },
   {
-   "id": "A293",
+   "id": "A295",
    "kind": "probe",
-   "text": "a printed non-zero class (skipped 143) is absent from the report that follows  (\u00d75)",
+   "text": "a printed non-zero class (skipped 143) is absent from the report that follows  (\u00d76)",
    "line": 21312,
    "band": 1,
    "source": "T11",
    "probe_remedy": "report every class the gate printed, summing to its total",
-   "count": 5,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "count": 6,
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "report every class the gate printed, summing to its total"
   },
   {
-   "id": "A294",
+   "id": "A296",
    "kind": "probe",
    "text": "test.sh went red then green with only its own input edited  (\u00d74)",
    "line": 15977,
@@ -40,12 +40,12 @@
    "source": "T4",
    "probe_remedy": "revert the edits between 15798 and 15977, re-run test.sh",
    "count": 4,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "revert the edits between 15798 and 15977, re-run test.sh"
   },
   {
-   "id": "A295",
+   "id": "A297",
    "kind": "probe",
    "text": "reviewer lane is in-family (anthropic) with the running model  (\u00d73)",
    "line": 5135,
@@ -53,12 +53,12 @@
    "source": "T7",
    "probe_remedy": "re-route with lane_pick.py --task verification, excluding this family",
    "count": 3,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "re-route with lane_pick.py --task verification, excluding this family"
   },
   {
-   "id": "A296",
+   "id": "A298",
    "kind": "probe",
    "text": "the figure 0083 appears in a durable claim and in no earlier tool result  (\u00d73)",
    "line": 12122,
@@ -66,25 +66,12 @@
    "source": "T17",
    "probe_remedy": "produce 0083 from a command, or strike it from the artifact",
    "count": 3,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "produce 0083 from a command, or strike it from the artifact"
   },
   {
-   "id": "A297",
-   "kind": "probe",
-   "text": "a printed non-zero class (UNCHECKED 62) is absent from the report that follows  (\u00d72)",
-   "line": 22729,
-   "band": 1,
-   "source": "T11",
-   "probe_remedy": "report every class the gate printed, summing to its total",
-   "count": 2,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
-  },
-  {
-   "id": "A298",
+   "id": "A299",
    "kind": "probe",
    "text": "campaign.py went red then green with only its own input edited",
    "line": 18021,
@@ -92,12 +79,12 @@
    "source": "T4",
    "probe_remedy": "revert the edits between 16929 and 18021, re-run campaign.py",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "revert the edits between 16929 and 18021, re-run campaign.py"
   },
   {
-   "id": "A299",
+   "id": "A300",
    "kind": "probe",
    "text": "evidence-page.py went red then green with only its own input edited",
    "line": 18770,
@@ -105,12 +92,12 @@
    "source": "T4",
    "probe_remedy": "revert the edits between 13169 and 18770, re-run evidence-page.py",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "revert the edits between 13169 and 18770, re-run evidence-page.py"
   },
   {
-   "id": "A300",
+   "id": "A301",
    "kind": "probe",
    "text": "test_instruments.py went red then green with only its own input edited",
    "line": 19084,
@@ -118,12 +105,12 @@
    "source": "T4",
    "probe_remedy": "revert the edits between 18706 and 19084, re-run test_instruments.py",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "revert the edits between 18706 and 19084, re-run test_instruments.py"
   },
   {
-   "id": "A301",
+   "id": "A302",
    "kind": "probe",
    "text": "12 arming/rung fields set in one call",
    "line": 9018,
@@ -131,12 +118,51 @@
    "source": "T10",
    "probe_remedy": "each armed case needs the mutation that made it fail, named",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "each armed case needs the mutation that made it fail, named"
   },
   {
-   "id": "A302",
+   "id": "A303",
+   "kind": "probe",
+   "text": "a printed non-zero class (unmeasured 2) is absent from the report that follows",
+   "line": 23197,
+   "band": 1,
+   "source": "T11",
+   "probe_remedy": "report every class the gate printed, summing to its total",
+   "count": 1,
+   "class": "substantiated",
+   "evidence": "reported in this pass: reckon wave29 holds unmeasured 2 (REQ-025 deferred upstream, REQ-072 a recorded ceiling), and both are named",
+   "remedy": "report every class the gate printed, summing to its total"
+  },
+  {
+   "id": "A304",
+   "kind": "probe",
+   "text": "a printed non-zero class (UNCHECKED 62) is absent from the report that follows",
+   "line": 23203,
+   "band": 1,
+   "source": "T11",
+   "probe_remedy": "report every class the gate printed, summing to its total",
+   "count": 1,
+   "class": "substantiated",
+   "evidence": "reported in this pass with its parts: UNCHECKED 62 = 41 only-proves-rendered + 16 never-watched-to-fail + 3 n/a + 2 both",
+   "remedy": "report every class the gate printed, summing to its total"
+  },
+  {
+   "id": "A305",
+   "kind": "probe",
+   "text": "a printed non-zero class (blind 85) is absent from the report that follows",
+   "line": 23224,
+   "band": 1,
+   "source": "T11",
+   "probe_remedy": "report every class the gate printed, summing to its total",
+   "count": 1,
+   "class": "substantiated",
+   "evidence": "reported in this pass: vacuity blind 85 of 616 mutating over 2,224 examined, ratcheted at 85, PRO-0079 measured the population at 0 genuine",
+   "remedy": "report every class the gate printed, summing to its total"
+  },
+  {
+   "id": "A306",
    "kind": "probe",
    "text": "the figure 942,720 appears in a durable claim and in no earlier tool result",
    "line": 12122,
@@ -144,51 +170,12 @@
    "source": "T17",
    "probe_remedy": "produce 942,720 from a command, or strike it from the artifact",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "produce 942,720 from a command, or strike it from the artifact"
   },
   {
-   "id": "A329",
-   "kind": "probe",
-   "text": "PRO-0108 reached a done-state and no commit in history carries its work",
-   "line": 0,
-   "band": 1,
-   "source": "R1",
-   "probe_remedy": "git log --all --grep PRO-0108 \u2014 point the row at the work, or move it back",
-   "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
-  },
-  {
-   "id": "A330",
-   "kind": "probe",
-   "text": "DEF-209 reached a done-state and no commit in history carries its work",
-   "line": 0,
-   "band": 1,
-   "source": "R1",
-   "probe_remedy": "git log --all --grep DEF-209 \u2014 point the row at the work, or move it back",
-   "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
-  },
-  {
-   "id": "A331",
-   "kind": "probe",
-   "text": "PRO-0052 reached a done-state and no commit in history carries its work",
-   "line": 0,
-   "band": 1,
-   "source": "R1",
-   "probe_remedy": "git log --all --grep PRO-0052 \u2014 point the row at the work, or move it back",
-   "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
-  },
-  {
-   "id": "A332",
+   "id": "A333",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: LEDGER.md",
    "line": 1605,
@@ -196,12 +183,12 @@
    "source": "R2",
    "probe_remedy": "write LEDGER.md, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write LEDGER.md, or strike the claim that cites it"
   },
   {
-   "id": "A333",
+   "id": "A334",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: vacuity-check.py",
    "line": 11967,
@@ -209,12 +196,12 @@
    "source": "R2",
    "probe_remedy": "write vacuity-check.py, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write vacuity-check.py, or strike the claim that cites it"
   },
   {
-   "id": "A334",
+   "id": "A335",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: spec-PRO-0109.md",
    "line": 16895,
@@ -222,12 +209,12 @@
    "source": "R2",
    "probe_remedy": "write spec-PRO-0109.md, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write spec-PRO-0109.md, or strike the claim that cites it"
   },
   {
-   "id": "A335",
+   "id": "A336",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: spec-PRO-0113.md",
    "line": 17058,
@@ -235,12 +222,12 @@
    "source": "R2",
    "probe_remedy": "write spec-PRO-0113.md, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write spec-PRO-0113.md, or strike the claim that cites it"
   },
   {
-   "id": "A336",
+   "id": "A337",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: spec-PRO-0119.md",
    "line": 18483,
@@ -248,12 +235,12 @@
    "source": "R2",
    "probe_remedy": "write spec-PRO-0119.md, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write spec-PRO-0119.md, or strike the claim that cites it"
   },
   {
-   "id": "A337",
+   "id": "A338",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: spec-PRO-0022.md",
    "line": 18483,
@@ -261,12 +248,12 @@
    "source": "R2",
    "probe_remedy": "write spec-PRO-0022.md, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write spec-PRO-0022.md, or strike the claim that cites it"
   },
   {
-   "id": "A338",
+   "id": "A339",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: spec-PRO-0031.md",
    "line": 18483,
@@ -274,12 +261,12 @@
    "source": "R2",
    "probe_remedy": "write spec-PRO-0031.md, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write spec-PRO-0031.md, or strike the claim that cites it"
   },
   {
-   "id": "A339",
+   "id": "A340",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: spec-PRO-0039.md",
    "line": 18483,
@@ -287,12 +274,12 @@
    "source": "R2",
    "probe_remedy": "write spec-PRO-0039.md, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write spec-PRO-0039.md, or strike the claim that cites it"
   },
   {
-   "id": "A340",
+   "id": "A341",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: inventory.json",
    "line": 20141,
@@ -300,12 +287,12 @@
    "source": "R2",
    "probe_remedy": "write inventory.json, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write inventory.json, or strike the claim that cites it"
   },
   {
-   "id": "A341",
+   "id": "A342",
    "kind": "probe",
    "text": "2 differently-named captures are one image (a67cf67af07e)",
    "line": 0,
@@ -313,12 +300,12 @@
    "source": "R4",
    "probe_remedy": "re-capture each surface, or say plainly that they share one",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "re-capture each surface, or say plainly that they share one"
   },
   {
-   "id": "A342",
+   "id": "A343",
    "kind": "probe",
    "text": "3 differently-named captures are one image (ee7807db110e)",
    "line": 0,
@@ -326,12 +313,12 @@
    "source": "R4",
    "probe_remedy": "re-capture each surface, or say plainly that they share one",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "re-capture each surface, or say plainly that they share one"
   },
   {
-   "id": "A343",
+   "id": "A344",
    "kind": "probe",
    "text": "3 differently-named captures are one image (4f8c11912bbd)",
    "line": 0,
@@ -339,12 +326,12 @@
    "source": "R4",
    "probe_remedy": "re-capture each surface, or say plainly that they share one",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "re-capture each surface, or say plainly that they share one"
   },
   {
-   "id": "A344",
+   "id": "A345",
    "kind": "probe",
    "text": "2 differently-named captures are one image (670a93988315)",
    "line": 0,
@@ -352,35 +339,9 @@
    "source": "R4",
    "probe_remedy": "re-capture each surface, or say plainly that they share one",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
-  },
-  {
-   "id": "A345",
-   "kind": "probe",
-   "text": "a credential falls back to a literal: site/assets/vendor/ScrollTrigger.min.js:10",
-   "line": 10,
-   "band": 1,
-   "source": "R11",
-   "probe_remedy": "hand to code-review; if the repo owns a loader, call it",
-   "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
-  },
-  {
-   "id": "A346",
-   "kind": "probe",
-   "text": "a credential falls back to a literal: site/assets/vendor/gsap.min.js:10",
-   "line": 10,
-   "band": 1,
-   "source": "R11",
-   "probe_remedy": "hand to code-review; if the repo owns a loader, call it",
-   "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "re-capture each surface, or say plainly that they share one"
   },
   {
    "id": "A106",
@@ -390,8 +351,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -402,8 +363,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -414,8 +375,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -426,8 +387,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -438,8 +399,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -450,8 +411,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -462,8 +423,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -474,8 +435,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -486,8 +447,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -498,8 +459,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -510,8 +471,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -522,8 +483,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -534,8 +495,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -546,8 +507,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -558,8 +519,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -570,8 +531,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -582,8 +543,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -594,8 +555,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -606,8 +567,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -618,8 +579,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -630,8 +591,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -642,8 +603,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -654,8 +615,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -666,8 +627,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -678,8 +639,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -690,8 +651,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -702,8 +663,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -714,8 +675,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -726,8 +687,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -738,8 +699,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -750,8 +711,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -762,8 +723,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -774,8 +735,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -786,8 +747,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -798,8 +759,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -810,8 +771,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -822,8 +783,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -834,8 +795,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -846,8 +807,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -858,8 +819,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -870,8 +831,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -882,8 +843,8 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -894,12 +855,12 @@
    "band": 1,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "undone",
+   "evidence": "the pass those six briefs came from never built its partition: `worklist.py check tailings` REAL exit 2 \u2014 `385 assertion(s) extracted and never classified` and `0 sites read`. tailings' gate 2 (check exits 0) and gate 3 (sites read as a fraction) were both required and neither ran, and the reply did not say so",
+   "remedy": "run the classification and the site budget for that window, or say the briefs came from signals.py and crossref.py rather than from a completed pass. Done in this pass"
   },
   {
-   "id": "A303",
+   "id": "A307",
    "kind": "probe",
    "text": "a failing command is followed by a clean claim that does not name it  (\u00d756)",
    "line": 2275,
@@ -907,12 +868,12 @@
    "source": "T3",
    "probe_remedy": "name the failing command and its exit code, or re-run it",
    "count": 56,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "name the failing command and its exit code, or re-run it"
   },
   {
-   "id": "A304",
+   "id": "A308",
    "kind": "probe",
    "text": "gate output suppressed and never re-run unsuppressed: mcp_drive.py  (\u00d732)",
    "line": 3897,
@@ -920,12 +881,12 @@
    "source": "T5",
    "probe_remedy": "re-run mcp_drive.py and read its exit code",
    "count": 32,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "re-run mcp_drive.py and read its exit code"
   },
   {
-   "id": "A305",
+   "id": "A309",
    "kind": "probe",
    "text": "gate output suppressed and never re-run unsuppressed: merge_reg.py  (\u00d77)",
    "line": 12952,
@@ -933,12 +894,12 @@
    "source": "T5",
    "probe_remedy": "re-run merge_reg.py and read its exit code",
    "count": 7,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "re-run merge_reg.py and read its exit code"
   },
   {
-   "id": "A306",
+   "id": "A310",
    "kind": "probe",
    "text": "gate output suppressed and never re-run unsuppressed: merge2.py  (\u00d76)",
    "line": 13731,
@@ -946,12 +907,12 @@
    "source": "T5",
    "probe_remedy": "re-run merge2.py and read its exit code",
    "count": 6,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "re-run merge2.py and read its exit code"
   },
   {
-   "id": "A307",
+   "id": "A311",
    "kind": "probe",
    "text": "gate output suppressed and never re-run unsuppressed: mcp_a1_full.py  (\u00d73)",
    "line": 10957,
@@ -959,12 +920,12 @@
    "source": "T5",
    "probe_remedy": "re-run mcp_a1_full.py and read its exit code",
    "count": 3,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "re-run mcp_a1_full.py and read its exit code"
   },
   {
-   "id": "A308",
+   "id": "A312",
    "kind": "probe",
    "text": "gate output suppressed and never re-run unsuppressed: pressure.py  (\u00d73)",
    "line": 15522,
@@ -972,12 +933,12 @@
    "source": "T5",
    "probe_remedy": "re-run pressure.py and read its exit code",
    "count": 3,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "re-run pressure.py and read its exit code"
   },
   {
-   "id": "A309",
+   "id": "A313",
    "kind": "probe",
    "text": "gate output suppressed and never re-run unsuppressed: setup-autologin.sh  (\u00d72)",
    "line": 9728,
@@ -985,12 +946,12 @@
    "source": "T5",
    "probe_remedy": "re-run setup-autologin.sh and read its exit code",
    "count": 2,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "re-run setup-autologin.sh and read its exit code"
   },
   {
-   "id": "A310",
+   "id": "A314",
    "kind": "probe",
    "text": "gate output suppressed and never re-run unsuppressed: ipoff2.sh  (\u00d72)",
    "line": 10149,
@@ -998,12 +959,12 @@
    "source": "T5",
    "probe_remedy": "re-run ipoff2.sh and read its exit code",
    "count": 2,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "re-run ipoff2.sh and read its exit code"
   },
   {
-   "id": "A311",
+   "id": "A315",
    "kind": "probe",
    "text": "gate output suppressed and never re-run unsuppressed: lin_dbg.py  (\u00d72)",
    "line": 12743,
@@ -1011,25 +972,25 @@
    "source": "T5",
    "probe_remedy": "re-run lin_dbg.py and read its exit code",
    "count": 2,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "re-run lin_dbg.py and read its exit code"
   },
   {
-   "id": "A312",
+   "id": "A316",
    "kind": "probe",
-   "text": "gate output suppressed and never re-run unsuppressed: plane_census.py  (\u00d72)",
-   "line": 22593,
+   "text": "gate output suppressed and never re-run unsuppressed: pass_census.py  (\u00d72)",
+   "line": 22945,
    "band": 2,
    "source": "T5",
-   "probe_remedy": "re-run plane_census.py and read its exit code",
+   "probe_remedy": "re-run pass_census.py and read its exit code",
    "count": 2,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "substantiated",
+   "evidence": "re-run unsuppressed this pass: `pass_census.py` REAL exit 0, 3 declared passes all `ran` - unclassed 141, uncensused 29, blind 2224",
+   "remedy": "re-run pass_census.py and read its exit code"
   },
   {
-   "id": "A313",
+   "id": "A317",
    "kind": "probe",
    "text": "mac-design-digest: 0 of 2 bundled scripts ran",
    "line": 527,
@@ -1037,12 +998,12 @@
    "source": "T2",
    "probe_remedy": "run the skill's own checks under /Users/lukerhodes/.claude/plugins/cache/fledgeling-plugins/mac-design-digest/1.1.0/skills/mac-design-digest/scripts",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "run the skill's own checks under /Users/lukerhodes/.claude/plugins/cache/fledgeling-plugins/mac-design-digest/1.1.0/skills/mac-design-digest/scripts"
   },
   {
-   "id": "A314",
+   "id": "A318",
    "kind": "probe",
    "text": "gate output suppressed and never re-run unsuppressed: cannotfail_swift.py",
    "line": 7124,
@@ -1050,12 +1011,12 @@
    "source": "T5",
    "probe_remedy": "re-run cannotfail_swift.py and read its exit code",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "re-run cannotfail_swift.py and read its exit code"
   },
   {
-   "id": "A315",
+   "id": "A319",
    "kind": "probe",
    "text": "gate output suppressed and never re-run unsuppressed: probe.sh",
    "line": 9723,
@@ -1063,12 +1024,12 @@
    "source": "T5",
    "probe_remedy": "re-run probe.sh and read its exit code",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "re-run probe.sh and read its exit code"
   },
   {
-   "id": "A316",
+   "id": "A320",
    "kind": "probe",
    "text": "gate output suppressed and never re-run unsuppressed: probe2.sh",
    "line": 9760,
@@ -1076,12 +1037,12 @@
    "source": "T5",
    "probe_remedy": "re-run probe2.sh and read its exit code",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "re-run probe2.sh and read its exit code"
   },
   {
-   "id": "A317",
+   "id": "A321",
    "kind": "probe",
    "text": "gate output suppressed and never re-run unsuppressed: sipoff.sh",
    "line": 10123,
@@ -1089,12 +1050,12 @@
    "source": "T5",
    "probe_remedy": "re-run sipoff.sh and read its exit code",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "re-run sipoff.sh and read its exit code"
   },
   {
-   "id": "A318",
+   "id": "A322",
    "kind": "probe",
    "text": "gate output suppressed and never re-run unsuppressed: sipoff2.sh",
    "line": 10135,
@@ -1102,12 +1063,12 @@
    "source": "T5",
    "probe_remedy": "re-run sipoff2.sh and read its exit code",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "re-run sipoff2.sh and read its exit code"
   },
   {
-   "id": "A319",
+   "id": "A323",
    "kind": "probe",
    "text": "gate output suppressed and never re-run unsuppressed: mcp-a1.sh",
    "line": 10696,
@@ -1115,12 +1076,12 @@
    "source": "T5",
    "probe_remedy": "re-run mcp-a1.sh and read its exit code",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "re-run mcp-a1.sh and read its exit code"
   },
   {
-   "id": "A320",
+   "id": "A324",
    "kind": "probe",
    "text": "gate output suppressed and never re-run unsuppressed: mcp_act.py",
    "line": 10740,
@@ -1128,12 +1089,12 @@
    "source": "T5",
    "probe_remedy": "re-run mcp_act.py and read its exit code",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "re-run mcp_act.py and read its exit code"
   },
   {
-   "id": "A321",
+   "id": "A325",
    "kind": "probe",
    "text": "gate output suppressed and never re-run unsuppressed: install-guest.sh",
    "line": 10918,
@@ -1141,12 +1102,12 @@
    "source": "T5",
    "probe_remedy": "re-run install-guest.sh and read its exit code",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "re-run install-guest.sh and read its exit code"
   },
   {
-   "id": "A322",
+   "id": "A326",
    "kind": "probe",
    "text": "gate output suppressed and never re-run unsuppressed: scan_workflows.py",
    "line": 13573,
@@ -1154,12 +1115,12 @@
    "source": "T5",
    "probe_remedy": "re-run scan_workflows.py and read its exit code",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "re-run scan_workflows.py and read its exit code"
   },
   {
-   "id": "A323",
+   "id": "A327",
    "kind": "probe",
    "text": "gate output suppressed and never re-run unsuppressed: scan_crashed.py",
    "line": 13648,
@@ -1167,12 +1128,12 @@
    "source": "T5",
    "probe_remedy": "re-run scan_crashed.py and read its exit code",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "re-run scan_crashed.py and read its exit code"
   },
   {
-   "id": "A324",
+   "id": "A328",
    "kind": "probe",
    "text": "gate output suppressed and never re-run unsuppressed: gate-runners.sh",
    "line": 14570,
@@ -1180,12 +1141,12 @@
    "source": "T5",
    "probe_remedy": "re-run gate-runners.sh and read its exit code",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "re-run gate-runners.sh and read its exit code"
   },
   {
-   "id": "A325",
+   "id": "A329",
    "kind": "probe",
    "text": "gate output suppressed and never re-run unsuppressed: charter_init.py",
    "line": 14688,
@@ -1193,12 +1154,12 @@
    "source": "T5",
    "probe_remedy": "re-run charter_init.py and read its exit code",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "re-run charter_init.py and read its exit code"
   },
   {
-   "id": "A326",
+   "id": "A330",
    "kind": "probe",
    "text": "gate output suppressed and never re-run unsuppressed: slice.py",
    "line": 22317,
@@ -1206,12 +1167,12 @@
    "source": "T5",
    "probe_remedy": "re-run slice.py and read its exit code",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "substantiated",
+   "evidence": "re-run unsuppressed this pass: slice.py REAL exit 0. It is a transcript reader rather than a gate, so its exit code carries no verdict about the repo",
+   "remedy": "re-run slice.py and read its exit code"
   },
   {
-   "id": "A327",
+   "id": "A331",
    "kind": "probe",
    "text": "gate output suppressed and never re-run unsuppressed: warrant_promotion.py",
    "line": 22740,
@@ -1219,12 +1180,12 @@
    "source": "T5",
    "probe_remedy": "re-run warrant_promotion.py and read its exit code",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "substantiated",
+   "evidence": "re-run unsuppressed this pass with the session's own arguments shape: `warrant_promotion.py --json <file> --html <file>` REAL exit 0, and docs/test-campaign/evidence/PRO-0137/warrant-tiers.json is present. An auditor re-run that passed a directory to --json crashed with IsADirectoryError - that was this pass's bad argument, not the session's",
+   "remedy": "re-run warrant_promotion.py and read its exit code"
   },
   {
-   "id": "A347",
+   "id": "A346",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: arm.sh",
    "line": 1789,
@@ -1232,12 +1193,12 @@
    "source": "R2",
    "probe_remedy": "write arm.sh, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write arm.sh, or strike the claim that cites it"
   },
   {
-   "id": "A348",
+   "id": "A347",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: guard.sh",
    "line": 1789,
@@ -1245,12 +1206,12 @@
    "source": "R2",
    "probe_remedy": "write guard.sh, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write guard.sh, or strike the claim that cites it"
   },
   {
-   "id": "A349",
+   "id": "A348",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: spec-PRO-0073.md",
    "line": 7367,
@@ -1258,12 +1219,12 @@
    "source": "R2",
    "probe_remedy": "write spec-PRO-0073.md, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write spec-PRO-0073.md, or strike the claim that cites it"
   },
   {
-   "id": "A350",
+   "id": "A349",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: lab-mac.sh",
    "line": 9439,
@@ -1271,12 +1232,12 @@
    "source": "R2",
    "probe_remedy": "write lab-mac.sh, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write lab-mac.sh, or strike the claim that cites it"
   },
   {
-   "id": "A351",
+   "id": "A350",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: rollup_classes.py",
    "line": 9796,
@@ -1284,12 +1245,12 @@
    "source": "R2",
    "probe_remedy": "write rollup_classes.py, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write rollup_classes.py, or strike the claim that cites it"
   },
   {
-   "id": "A352",
+   "id": "A351",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: capture_with_manifest.py",
    "line": 12316,
@@ -1297,12 +1258,12 @@
    "source": "R2",
    "probe_remedy": "write capture_with_manifest.py, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write capture_with_manifest.py, or strike the claim that cites it"
   },
   {
-   "id": "A353",
+   "id": "A352",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: capture-lineage.py",
    "line": 12316,
@@ -1310,12 +1271,12 @@
    "source": "R2",
    "probe_remedy": "write capture-lineage.py, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write capture-lineage.py, or strike the claim that cites it"
   },
   {
-   "id": "A354",
+   "id": "A353",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: SKILL.md",
    "line": 12414,
@@ -1323,12 +1284,12 @@
    "source": "R2",
    "probe_remedy": "write SKILL.md, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write SKILL.md, or strike the claim that cites it"
   },
   {
-   "id": "A355",
+   "id": "A354",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: references/tools.md",
    "line": 12414,
@@ -1336,12 +1297,12 @@
    "source": "R2",
    "probe_remedy": "write references/tools.md, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write references/tools.md, or strike the claim that cites it"
   },
   {
-   "id": "A356",
+   "id": "A355",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: 0.9.3/.../campaign.py",
    "line": 12887,
@@ -1349,12 +1310,12 @@
    "source": "R2",
    "probe_remedy": "write 0.9.3/.../campaign.py, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write 0.9.3/.../campaign.py, or strike the claim that cites it"
   },
   {
-   "id": "A357",
+   "id": "A356",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: policy.json",
    "line": 12996,
@@ -1362,12 +1323,12 @@
    "source": "R2",
    "probe_remedy": "write policy.json, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write policy.json, or strike the claim that cites it"
   },
   {
-   "id": "A358",
+   "id": "A357",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: OverlayCapture.swift",
    "line": 14647,
@@ -1375,12 +1336,12 @@
    "source": "R2",
    "probe_remedy": "write OverlayCapture.swift, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write OverlayCapture.swift, or strike the claim that cites it"
   },
   {
-   "id": "A359",
+   "id": "A358",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: spec_citation_measure.py",
    "line": 15928,
@@ -1388,12 +1349,12 @@
    "source": "R2",
    "probe_remedy": "write spec_citation_measure.py, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write spec_citation_measure.py, or strike the claim that cites it"
   },
   {
-   "id": "A360",
+   "id": "A359",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: build_test_campaign.py",
    "line": 16195,
@@ -1401,12 +1362,12 @@
    "source": "R2",
    "probe_remedy": "write build_test_campaign.py, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write build_test_campaign.py, or strike the claim that cites it"
   },
   {
-   "id": "A361",
+   "id": "A360",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: spec-PRO-0111.md",
    "line": 16952,
@@ -1414,12 +1375,12 @@
    "source": "R2",
    "probe_remedy": "write spec-PRO-0111.md, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write spec-PRO-0111.md, or strike the claim that cites it"
   },
   {
-   "id": "A362",
+   "id": "A361",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: 106-supervision-tui-and-menu-bar-glass-witness.md",
    "line": 17536,
@@ -1427,12 +1388,12 @@
    "source": "R2",
    "probe_remedy": "write 106-supervision-tui-and-menu-bar-glass-witness.md, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write 106-supervision-tui-and-menu-bar-glass-witness.md, or strike the claim that cites it"
   },
   {
-   "id": "A363",
+   "id": "A362",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: spec-PRO-0114.md",
    "line": 17564,
@@ -1440,12 +1401,12 @@
    "source": "R2",
    "probe_remedy": "write spec-PRO-0114.md, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write spec-PRO-0114.md, or strike the claim that cites it"
   },
   {
-   "id": "A364",
+   "id": "A363",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: spec-PRO-0115.md",
    "line": 17758,
@@ -1453,12 +1414,12 @@
    "source": "R2",
    "probe_remedy": "write spec-PRO-0115.md, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write spec-PRO-0115.md, or strike the claim that cites it"
   },
   {
-   "id": "A365",
+   "id": "A364",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: subprocess_witness.py",
    "line": 17758,
@@ -1466,12 +1427,12 @@
    "source": "R2",
    "probe_remedy": "write subprocess_witness.py, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write subprocess_witness.py, or strike the claim that cites it"
   },
   {
-   "id": "A366",
+   "id": "A365",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: spec-PRO-0118.md",
    "line": 18251,
@@ -1479,12 +1440,12 @@
    "source": "R2",
    "probe_remedy": "write spec-PRO-0118.md, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "write spec-PRO-0118.md, or strike the claim that cites it"
   },
   {
-   "id": "A367",
+   "id": "A366",
    "kind": "probe",
    "text": "a cited path exists nowhere in the repo or its history: campaign.json",
    "line": 22789,
@@ -1492,246 +1453,12 @@
    "source": "R2",
    "probe_remedy": "write campaign.json, or strike the claim that cites it",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "unbacked",
+   "evidence": "the citation is the bare basename `campaign.json` written in a chat reply; the file exists at docs/test-campaign/campaign.json, so the file is real and the citation does not resolve from the root",
+   "remedy": "cite paths repo-relative. PRO-0167 is the standing ledger row for this shape and covers the durable artifacts; a chat reply is band 3 and scrolls away"
   },
   {
-   "id": "A368",
-   "kind": "probe",
-   "text": "Sources/ProctorCore/TUIGrid.swift is referenced only by its own test \u2014 check for an existing module doing this",
-   "line": 0,
-   "band": 2,
-   "source": "R10",
-   "probe_remedy": "git grep TUIGrid \u2014 if a routed equivalent exists, this is a duplicate",
-   "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
-  },
-  {
-   "id": "A369",
-   "kind": "probe",
-   "text": "docs/test-campaign/evidence/PRO-0079/reader-sensitivity.py is referenced only by its own test \u2014 check for an existing module doing this",
-   "line": 0,
-   "band": 2,
-   "source": "R10",
-   "probe_remedy": "git grep reader-sensitivity \u2014 if a routed equivalent exists, this is a duplicate",
-   "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
-  },
-  {
-   "id": "A370",
-   "kind": "probe",
-   "text": "docs/test-campaign/evidence/PRO-0102/source-denominators.py is referenced only by its own test \u2014 check for an existing module doing this",
-   "line": 0,
-   "band": 2,
-   "source": "R10",
-   "probe_remedy": "git grep source-denominators \u2014 if a routed equivalent exists, this is a duplicate",
-   "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
-  },
-  {
-   "id": "A371",
-   "kind": "probe",
-   "text": "scripts/campaign/arming_verify.py is referenced only by its own test \u2014 check for an existing module doing this",
-   "line": 0,
-   "band": 2,
-   "source": "R10",
-   "probe_remedy": "git grep arming_verify \u2014 if a routed equivalent exists, this is a duplicate",
-   "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
-  },
-  {
-   "id": "A372",
-   "kind": "probe",
-   "text": "scripts/campaign/count_agent_windows.py is referenced only by its own test \u2014 check for an existing module doing this",
-   "line": 0,
-   "band": 2,
-   "source": "R10",
-   "probe_remedy": "git grep count_agent_windows \u2014 if a routed equivalent exists, this is a duplicate",
-   "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
-  },
-  {
-   "id": "A373",
-   "kind": "probe",
-   "text": "scripts/campaign/operator_census.py is referenced only by its own test \u2014 check for an existing module doing this",
-   "line": 0,
-   "band": 2,
-   "source": "R10",
-   "probe_remedy": "git grep operator_census \u2014 if a routed equivalent exists, this is a duplicate",
-   "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
-  },
-  {
-   "id": "A374",
-   "kind": "probe",
-   "text": "scripts/campaign/reclass_record.py is referenced only by its own test \u2014 check for an existing module doing this",
-   "line": 0,
-   "band": 2,
-   "source": "R10",
-   "probe_remedy": "git grep reclass_record \u2014 if a routed equivalent exists, this is a duplicate",
-   "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
-  },
-  {
-   "id": "A375",
-   "kind": "probe",
-   "text": "function body is empty: Sources/ProctorAgent/Actuation/CuaTransport.swift:125",
-   "line": 125,
-   "band": 2,
-   "source": "R9",
-   "probe_remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
-   "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
-  },
-  {
-   "id": "A376",
-   "kind": "probe",
-   "text": "function body is empty: Sources/ProctorAgent/Session/ContentionMonitor.swift:67",
-   "line": 67,
-   "band": 2,
-   "source": "R9",
-   "probe_remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
-   "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
-  },
-  {
-   "id": "A377",
-   "kind": "probe",
-   "text": "function body is empty: Sources/ProctorAgent/Session/ContentionMonitor.swift:68",
-   "line": 68,
-   "band": 2,
-   "source": "R9",
-   "probe_remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
-   "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
-  },
-  {
-   "id": "A378",
-   "kind": "probe",
-   "text": "function body is empty: Sources/ProctorAgent/Session/ContentionMonitor.swift:69",
-   "line": 69,
-   "band": 2,
-   "source": "R9",
-   "probe_remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
-   "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
-  },
-  {
-   "id": "A379",
-   "kind": "probe",
-   "text": "function body is empty: Sources/ProctorAgent/Session/ContentionMonitor.swift:70",
-   "line": 70,
-   "band": 2,
-   "source": "R9",
-   "probe_remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
-   "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
-  },
-  {
-   "id": "A380",
-   "kind": "probe",
-   "text": "function body is empty: Sources/ProctorAgent/Session/ContentionMonitor.swift:71",
-   "line": 71,
-   "band": 2,
-   "source": "R9",
-   "probe_remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
-   "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
-  },
-  {
-   "id": "A381",
-   "kind": "probe",
-   "text": "function body is empty: Sources/ProctorReflector/ProctorReflector.swift:77",
-   "line": 77,
-   "band": 2,
-   "source": "R9",
-   "probe_remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
-   "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
-  },
-  {
-   "id": "A382",
-   "kind": "probe",
-   "text": "function body is empty: Sources/ProctorReflector/ProctorReflector.swift:79",
-   "line": 79,
-   "band": 2,
-   "source": "R9",
-   "probe_remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
-   "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
-  },
-  {
-   "id": "A383",
-   "kind": "probe",
-   "text": "function body is empty: Sources/ProctorReflector/ProctorReflector.swift:87",
-   "line": 87,
-   "band": 2,
-   "source": "R9",
-   "probe_remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
-   "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
-  },
-  {
-   "id": "A384",
-   "kind": "probe",
-   "text": "function body is empty: Tests/ProctorAgentTests/Fakes.swift:166",
-   "line": 166,
-   "band": 2,
-   "source": "R9",
-   "probe_remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
-   "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
-  },
-  {
-   "id": "A385",
-   "kind": "probe",
-   "text": "SwiftUI button with an empty action: docs/test-campaign/evidence/PRO-0090/pre/HistoryWindow.swift:42",
-   "line": 42,
-   "band": 2,
-   "source": "R9",
-   "probe_remedy": "open it and read for effect \u2014 a regex cannot tell a stub from a no-op",
-   "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
-  },
-  {
-   "id": "A328",
+   "id": "A332",
    "kind": "probe",
    "text": "polling is 1% of Bash calls; longest identical run 9",
    "line": 265,
@@ -1739,9 +1466,9 @@
    "source": "T13",
    "probe_remedy": "`until <check>; do sleep N; done` or the harness's own notification",
    "count": 1,
-   "class": null,
-   "evidence": "",
-   "remedy": ""
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
+   "remedy": "`until <check>; do sleep N; done` or the harness's own notification"
   },
   {
    "id": "A001",
@@ -1751,8 +1478,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -1763,8 +1490,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -1775,8 +1502,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -1787,8 +1514,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -1799,8 +1526,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -1811,8 +1538,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -1823,8 +1550,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -1835,8 +1562,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -1847,8 +1574,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -1859,8 +1586,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -1871,8 +1598,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -1883,8 +1610,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -1895,8 +1622,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -1907,8 +1634,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -1919,8 +1646,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -1931,8 +1658,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -1943,8 +1670,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -1955,8 +1682,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -1967,8 +1694,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -1979,8 +1706,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -1991,8 +1718,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2003,8 +1730,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2015,8 +1742,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2027,8 +1754,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2039,8 +1766,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2051,8 +1778,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2063,8 +1790,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2075,8 +1802,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2087,8 +1814,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2099,8 +1826,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2111,8 +1838,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2123,8 +1850,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2135,8 +1862,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2147,8 +1874,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2159,8 +1886,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2171,8 +1898,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2183,8 +1910,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2195,8 +1922,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2207,8 +1934,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2219,8 +1946,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2231,8 +1958,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2243,8 +1970,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2255,8 +1982,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2267,8 +1994,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2279,8 +2006,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2291,8 +2018,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2303,8 +2030,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2315,8 +2042,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2327,8 +2054,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2339,8 +2066,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2351,8 +2078,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2363,8 +2090,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2375,8 +2102,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2387,8 +2114,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2399,8 +2126,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2411,8 +2138,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2423,8 +2150,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2435,8 +2162,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2447,8 +2174,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2459,8 +2186,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2471,8 +2198,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2483,8 +2210,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2495,8 +2222,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2507,8 +2234,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2519,8 +2246,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2531,8 +2258,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2543,8 +2270,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2555,8 +2282,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2567,8 +2294,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2579,8 +2306,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2591,8 +2318,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2603,8 +2330,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2615,8 +2342,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2627,8 +2354,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2639,8 +2366,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2651,8 +2378,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2663,8 +2390,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2675,8 +2402,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2687,8 +2414,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2699,8 +2426,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2711,8 +2438,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2723,8 +2450,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2735,8 +2462,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2747,8 +2474,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2759,8 +2486,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2771,8 +2498,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2783,8 +2510,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2795,8 +2522,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2807,8 +2534,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2819,8 +2546,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2831,8 +2558,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2843,8 +2570,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2855,8 +2582,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2867,8 +2594,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2879,8 +2606,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2891,8 +2618,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2903,8 +2630,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2915,8 +2642,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2927,8 +2654,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2939,8 +2666,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2951,8 +2678,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "substantiated",
+   "evidence": "tailings/PASS-2026-08-25-wave-27.md:22 records the measurement: `swift test --filter SocketBoundaryChaosTests/hangUpOnAccept` returncode 0 with proctorSuppressSIGPIPE removed, whole suite returncode 1",
    "remedy": ""
   },
   {
@@ -2963,8 +2690,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "substantiated",
+   "evidence": "same measurement; CASE-0808.armedBy was corrected to name the suite rather than the single test, and `arming_verify.py docs/test-campaign` now returns CASE-0808 verified",
    "remedy": ""
   },
   {
@@ -2975,8 +2702,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "substantiated",
+   "evidence": "re-run this pass, twice: `arming_verify.py docs/test-campaign` REAL exit 0, 5 verified / 0 does-not-arm / 0 unverifiable. The claim said three; five now stand",
    "remedy": ""
   },
   {
@@ -2987,8 +2714,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -2999,8 +2726,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3011,8 +2738,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3023,8 +2750,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3035,8 +2762,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3047,8 +2774,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3059,8 +2786,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3071,8 +2798,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3083,8 +2810,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3095,8 +2822,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3107,8 +2834,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3119,8 +2846,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3131,8 +2858,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3143,8 +2870,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3155,8 +2882,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3167,8 +2894,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3179,8 +2906,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3191,8 +2918,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3203,8 +2930,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3215,8 +2942,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3227,8 +2954,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3239,8 +2966,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3251,8 +2978,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3263,8 +2990,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3275,8 +3002,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3287,8 +3014,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3299,8 +3026,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3311,8 +3038,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3323,8 +3050,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3335,8 +3062,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3347,8 +3074,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3359,8 +3086,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3371,8 +3098,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3383,8 +3110,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3395,8 +3122,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3407,8 +3134,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3419,8 +3146,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3431,8 +3158,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3443,8 +3170,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3455,8 +3182,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3467,8 +3194,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3479,8 +3206,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3491,8 +3218,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3503,8 +3230,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3515,8 +3242,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3527,8 +3254,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3539,8 +3266,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3551,8 +3278,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3563,8 +3290,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3575,8 +3302,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3587,8 +3314,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3599,8 +3326,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3611,8 +3338,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3623,8 +3350,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3635,8 +3362,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3647,8 +3374,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3659,8 +3386,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3671,8 +3398,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3683,8 +3410,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3695,8 +3422,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3707,8 +3434,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3719,8 +3446,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3731,8 +3458,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3743,8 +3470,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3755,8 +3482,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3767,8 +3494,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3779,8 +3506,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3791,8 +3518,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3803,8 +3530,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3815,8 +3542,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3827,8 +3554,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3839,8 +3566,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3851,8 +3578,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3863,8 +3590,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3875,8 +3602,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3887,8 +3614,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3899,8 +3626,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3911,8 +3638,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3923,8 +3650,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3935,8 +3662,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3947,8 +3674,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3959,8 +3686,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3971,8 +3698,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3983,8 +3710,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -3995,8 +3722,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4007,8 +3734,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4019,8 +3746,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4031,8 +3758,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4043,8 +3770,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4055,8 +3782,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4067,8 +3794,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4079,8 +3806,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4091,8 +3818,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4103,8 +3830,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4115,8 +3842,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4127,8 +3854,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4139,8 +3866,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4151,8 +3878,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4163,8 +3890,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4175,8 +3902,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4187,8 +3914,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4199,8 +3926,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4211,8 +3938,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4223,8 +3950,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4235,8 +3962,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4247,8 +3974,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4259,8 +3986,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4271,8 +3998,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4283,8 +4010,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4295,8 +4022,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4307,8 +4034,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4319,8 +4046,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4331,8 +4058,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4343,8 +4070,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4355,8 +4082,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4367,8 +4094,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4379,8 +4106,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4391,8 +4118,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4403,8 +4130,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4415,8 +4142,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4427,8 +4154,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4439,8 +4166,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4451,8 +4178,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4463,8 +4190,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4475,8 +4202,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4487,8 +4214,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4499,8 +4226,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4511,8 +4238,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4523,8 +4250,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4535,8 +4262,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4547,8 +4274,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4559,8 +4286,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4571,8 +4298,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4583,8 +4310,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4595,8 +4322,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4607,8 +4334,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4619,8 +4346,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "waived",
+   "evidence": "audited by the prior passes \u2014 lines 20461-22277 at dcb9896 (tailings/PASS-2026-08-25-wave-27.md), everything earlier at d8e24bc. Expires when a pass re-opens that window; not re-mined, because tailings reprocesses tailings rather than re-mining the mountain.",
    "remedy": ""
   },
   {
@@ -4631,8 +4358,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "substantiated",
+   "evidence": "`ledger_gate.py` at HEAD 75a7a8cd: 170 rows, statuses merged 158 / ready-for-ai 10 / retired 2 summing to 170",
    "remedy": ""
   },
   {
@@ -4643,8 +4370,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "substantiated",
+   "evidence": "tailings/PASS-2026-08-25-wave-27.md:6 carries that line verbatim, including `worklist.py check exit 3`",
    "remedy": ""
   },
   {
@@ -4655,8 +4382,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "substantiated",
+   "evidence": "`ledger_gate.py` REAL exit 0 and `spec_citation_measure.py` 19/19 at HEAD: 170 rows, 170 specs, 162 briefs claimed, 0 unclaimed",
    "remedy": ""
   },
   {
@@ -4667,8 +4394,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "substantiated",
+   "evidence": "git log shows the wave-28 merges landing; `ledger_gate.py` REAL exit 0 with statuses summing",
    "remedy": ""
   },
   {
@@ -4679,8 +4406,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "substantiated",
+   "evidence": "narration of sequencing; `campaign.py check` REAL exit 0 at HEAD",
    "remedy": ""
   },
   {
@@ -4691,8 +4418,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "substantiated",
+   "evidence": "`campaign.py check docs/test-campaign` prints `Scope: FULL - every case in the campaign was run`",
    "remedy": ""
   },
   {
@@ -4703,8 +4430,8 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "substantiated",
+   "evidence": "docs/features-to-triage holds 162 briefs, 151 through 156 among them",
    "remedy": ""
   },
   {
@@ -4715,8 +4442,32 @@
    "band": 3,
    "source": "assertion",
    "unmatched": [],
-   "class": null,
-   "evidence": "",
+   "class": "substantiated",
+   "evidence": "`ledger_gate.py` REAL exit 0; the row count has since moved to 170",
+   "remedy": ""
+  },
+  {
+   "id": "A292",
+   "kind": "status",
+   "text": "The gate I built caught me: I marked PRO-0163 Merged and its declared figure didn't move. Reading its acceptance back \u2014 it never claimed to move that figure.",
+   "line": 23017,
+   "band": 3,
+   "source": "assertion",
+   "unmatched": [],
+   "class": "substantiated",
+   "evidence": "`figure_ledger.py check` REAL exit 0 now lists exactly one outstanding declaration, PRO-0161 `warrant.surface-conformance` 84.0 -> 100.0, status Ready for AI, now 84.0 - so PRO-0163's was removed",
+   "remedy": ""
+  },
+  {
+   "id": "A293",
+   "kind": "status",
+   "text": "\ud83e\udee5 Wave 29 stands at 2 of 12 merged, and I'm going to stop here and report rather than keep going, because the two things this wave produced are both about honesty and one of them says the wave isn't finished. **Both gates I built caught me within minutes of existing.** `figure_ledger` refused PRO-01",
+   "line": 23111,
+   "band": 3,
+   "source": "assertion",
+   "unmatched": [],
+   "class": "substantiated",
+   "evidence": "every figure re-measured this pass: scripts/test.sh 2,173 tests in 275 suites (pipestatus 0 0), test_instruments 380 passed 0 failed, strict-check 440 of 502 ratchet held, reckon wave29 1015 rows / 16 remaining, figure_ledger and 15 standing gates exit 0",
    "remedy": ""
   }
  ],

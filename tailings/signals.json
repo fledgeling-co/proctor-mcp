@@ -3,21 +3,21 @@
  "transcript": "/Users/lukerhodes/.claude/projects/-Users-lukerhodes-Dev-proctor-mcp/30dfe9f8-ca66-4e1a-98f6-8e593b0302a4.jsonl",
  "repo": "/Users/lukerhodes/Dev/proctor-mcp",
  "models": {
-  "claude-opus-5": 6122,
-  "gemini-3.7-flash-high": 868,
+  "claude-opus-5": 6245,
+  "gemini-3.7-flash-high": 883,
   "gemini-3.7-flash": 124,
   "grok-4.6": 36,
   "glm-5.3": 25,
-  "perch-router": 16,
+  "perch-router": 17,
   "us.openai.gpt-5.6-luna": 8,
   "<synthetic>": 5
  },
  "counts": {
-  "records": 22879,
-  "assistant_prose_turns": 1280,
-  "tool_calls": 4211,
-  "bash": 3904,
-  "human_turns": 115,
+  "records": 23272,
+  "assistant_prose_turns": 1305,
+  "tool_calls": 4292,
+  "bash": 3985,
+  "human_turns": 119,
   "skills": 48,
   "sidechain_records": 0,
   "spawns": 105
@@ -2400,6 +2400,22 @@
    "names": [],
    "unmatched": [],
    "durable": false
+  },
+  {
+   "kind": "status",
+   "line": 23017,
+   "text": "The gate I built caught me: I marked PRO-0163 Merged and its declared figure didn't move. Reading its acceptance back \u2014 it never claimed to move that figure.",
+   "names": [],
+   "unmatched": [],
+   "durable": false
+  },
+  {
+   "kind": "status",
+   "line": 23111,
+   "text": "\ud83e\udee5 Wave 29 stands at 2 of 12 merged, and I'm going to stop here and report rather than keep going, because the two things this wave produced are both about honesty and one of them says the wave isn't finished. **Both gates I built caught me within minutes of existing.** `figure_ledger` refused PRO-01",
+   "names": [],
+   "unmatched": [],
+   "durable": false
   }
  ],
  "findings": [
@@ -2455,7 +2471,7 @@
   },
   {
    "probe": "T11",
-   "title": "a printed non-zero class (skipped 143) is absent from the report that follows  (\u00d75)",
+   "title": "a printed non-zero class (skipped 143) is absent from the report that follows  (\u00d76)",
    "line": 21312,
    "quote": "skipped 143 \u2014 already decided, or cites no requirement",
    "band": 1,
@@ -2482,15 +2498,20 @@
     {
      "line": 22775,
      "quote": "skipped 144 \u2014 already decided, or cites no requirement"
+    },
+    {
+     "line": 23238,
+     "quote": "skipped 160 \u2014 already decided, or cites no requirement"
     }
    ],
-   "count": 5,
+   "count": 6,
    "lines": [
     21312,
     22217,
     22296,
     22318,
-    22775
+    22775,
+    23238
    ]
   },
   {
@@ -2592,31 +2613,6 @@
    ]
   },
   {
-   "probe": "T11",
-   "title": "a printed non-zero class (UNCHECKED 62) is absent from the report that follows  (\u00d72)",
-   "line": 22729,
-   "quote": "UNCHECKED 62 \u2014 and unchecked is failed",
-   "band": 1,
-   "confidence": "observed",
-   "remedy": "report every class the gate printed, summing to its total",
-   "figure": "62",
-   "occurrences": [
-    {
-     "line": 22729,
-     "quote": "UNCHECKED 62 \u2014 and unchecked is failed"
-    },
-    {
-     "line": 22796,
-     "quote": "UNCHECKED 62 \u2014 and unchecked is failed"
-    }
-   ],
-   "count": 2,
-   "lines": [
-    22729,
-    22796
-   ]
-  },
-  {
    "probe": "T4",
    "title": "campaign.py went red then green with only its own input edited",
    "line": 18021,
@@ -2701,6 +2697,66 @@
    "count": 1,
    "lines": [
     9018
+   ]
+  },
+  {
+   "probe": "T11",
+   "title": "a printed non-zero class (unmeasured 2) is absent from the report that follows",
+   "line": 23197,
+   "quote": "**Reconciliation (the exit condition, not the ledger):** reckon holds 1015 rows \u00b7 broken 2 \u00b7 unmeasured 2 \u00b7 **undecided 12** \u00b7 verified-done 846. The 12 undecided are the 10 outsta",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "report every class the gate printed, summing to its total",
+   "figure": "2",
+   "occurrences": [
+    {
+     "line": 23197,
+     "quote": "**Reconciliation (the exit condition, not the ledger):** reckon holds 1015 rows \u00b7 broken 2 \u00b7 unmeasured 2 \u00b7 **undecided 12** \u00b7 verified-done 846. The 12 undecided are the 10 outsta"
+    }
+   ],
+   "count": 1,
+   "lines": [
+    23197
+   ]
+  },
+  {
+   "probe": "T11",
+   "title": "a printed non-zero class (UNCHECKED 62) is absent from the report that follows",
+   "line": 23203,
+   "quote": "UNCHECKED 62 \u2014 and unchecked is failed",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "report every class the gate printed, summing to its total",
+   "figure": "62",
+   "occurrences": [
+    {
+     "line": 23203,
+     "quote": "UNCHECKED 62 \u2014 and unchecked is failed"
+    }
+   ],
+   "count": 1,
+   "lines": [
+    23203
+   ]
+  },
+  {
+   "probe": "T11",
+   "title": "a printed non-zero class (blind 85) is absent from the report that follows",
+   "line": 23224,
+   "quote": "| `vacuity-check.py` | ratcheted | unclassed 0 \u00b7 uncensused 0 \u00b7 **blind 85 of 616 mutating over 2,224 examined** \u2014 the blind pass had never run here until `testRoot` was declared;",
+   "band": 1,
+   "confidence": "observed",
+   "remedy": "report every class the gate printed, summing to its total",
+   "figure": "85",
+   "occurrences": [
+    {
+     "line": 23224,
+     "quote": "| `vacuity-check.py` | ratcheted | unclassed 0 \u00b7 uncensused 0 \u00b7 **blind 85 of 616 mutating over 2,224 examined** \u2014 the blind pass had never run here until `testRoot` was declared;"
+    }
+   ],
+   "count": 1,
+   "lines": [
+    23224
    ]
   },
   {
@@ -3402,26 +3458,26 @@
   },
   {
    "probe": "T5",
-   "title": "gate output suppressed and never re-run unsuppressed: plane_census.py  (\u00d72)",
-   "line": 22593,
-   "quote": "cd /Users/lukerhodes/Dev/proctor-mcp python3 scripts/campaign/plane_census.py docs/test-campaign --write --receipts docs/test-campaign/evidence/planes >/dev/null 2>&1 TC=~/.claude/plugins/cache/fledge",
+   "title": "gate output suppressed and never re-run unsuppressed: pass_census.py  (\u00d72)",
+   "line": 22945,
+   "quote": "cd /Users/lukerhodes/Dev/proctor-mcp git status --short | head -5 echo \"=== are the two instruments committed? ===\" for f in scripts/campaign/pass_census.py scripts/campaign/figure_ledger.py; do echo",
    "band": 2,
    "confidence": "observed",
-   "remedy": "re-run plane_census.py and read its exit code",
+   "remedy": "re-run pass_census.py and read its exit code",
    "occurrences": [
     {
-     "line": 22593,
-     "quote": "cd /Users/lukerhodes/Dev/proctor-mcp python3 scripts/campaign/plane_census.py docs/test-campaign --write --receipts docs/test-campaign/evidence/planes >/dev/null 2>&1 TC=~/.claude/plugins/cache/fledge"
+     "line": 22945,
+     "quote": "cd /Users/lukerhodes/Dev/proctor-mcp git status --short | head -5 echo \"=== are the two instruments committed? ===\" for f in scripts/campaign/pass_census.py scripts/campaign/figure_ledger.py; do echo"
     },
     {
-     "line": 22637,
-     "quote": "cd /Users/lukerhodes/Dev/proctor-mcp python3 scripts/campaign/plane_census.py docs/test-campaign --write --receipts docs/test-campaign/evidence/planes >/dev/null 2>&1 TC=~/.claude/plugins/cache/fledge"
+     "line": 23029,
+     "quote": "cd /Users/lukerhodes/Dev/proctor-mcp python3 - << 'PY' import json p=\"docs/test-campaign/cases.json\" raw=json.load(open(p)); seq=raw if isinstance(raw,list) else (raw.get(\"case\") or raw.get(\"cases\"))"
     }
    ],
    "count": 2,
    "lines": [
-    22593,
-    22637
+    22945,
+    23029
    ]
   },
   {
@@ -3759,12 +3815,16 @@
   {
    "line": 14953,
    "text": "This session is being continued from a previous conversation that ran out of context. The summary below covers the earlier portion of the conversation.\n\nSummary:\n## PINNED \u2014 verbatim standing constraints, corrections, and rejected approaches\n\n### User instructions (verbatim, in order given across the whole run)\n\n> \"Perform a throrough review of all of the implemented (and deferred) features that t"
+  },
+  {
+   "line": 23134,
+   "text": "This session is being continued from a previous conversation that ran out of context. The summary below covers the earlier portion of the conversation.\n\nSummary:\n# PINNED \u2014 verbatim standing constraints, corrections, and rejected approaches\n\n## User instructions (verbatim, in order given across the whole run)\n\n> \"Perform a throrough review of all of the implemented (and deferred) features that the"
   }
  ],
  "marker": {
   "applicable": true,
-  "present": 39,
-  "absent": 66,
+  "present": 40,
+  "absent": 68,
   "wrong_glyph": 0,
   "note": "diagnostics only \u2014 never a finding"
  },
