@@ -25,7 +25,7 @@ agrees with, re-anchored against the code as it is at that moment.
 | F-005 | DEF-339 — the Maestro lane's second outbound connection, the one `MAESTRO_CLI_NO_ANALYTICS=1` does not stop. | `finish-line` | pending |
 | F-006 | DEF-340 — 106 of 514 cases carry no lane; `cli` and `mcp-stdio` are declared and carry none. | `finish-line` | pending |
 | F-007 | DEF-341 — the PTY latch check read a list shared across five scenarios and passed on another's work. | `finish-line` | **fixed 2026-08-26** — cause named, check scoped to its own scenario, three fixed sleeps replaced with bounded waits on observables |
-| F-008 | DEF-344 — the PTY probe types before the TUI has taken raw mode. | `finish-line` | **cause measured 2026-08-27, fix owed.** The pty echoes `ps` back on a failing run, which a terminal in raw mode does not, and `requests_served` never rises — the keys went into a terminal with no reader. Same class as F-007, one layer earlier. The fix needs a readiness signal to wait on; the scenario now reports both observables so a failing run says which happened. |
+| F-008 | DEF-344 — the PTY probe types before the TUI has taken raw mode. | `finish-line` | **fixed 2026-08-27.** Waits 20s for the TUI's first request and reports INCONCLUSIVE on a timeout rather than failed, exiting non-zero. Armed both ways: a stub child that never takes raw mode makes it inconclusive and names `ECHOED b'ps'`; the real binary is clean and claims no echo. |
 
 Total: 8. One fixed.
 

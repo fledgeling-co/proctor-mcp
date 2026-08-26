@@ -38,6 +38,12 @@ class PTYVerificationResult(NamedTuple):
     passed: bool
     details: str
     metadata: dict[str, Any] | None = None
+    # DEF-344. A scenario that could not reach its own precondition has measured
+    # nothing, and reporting that as a failure says the product is broken when
+    # what happened is that a child had not started yet. REQ-130's rule: an
+    # instrument proves its own step before grading the outcome, and where the
+    # step cannot be proved the result is inconclusive, named.
+    inconclusive: bool = False
 
 
 def find_proctor_cli_binary() -> list[str]:
@@ -413,7 +419,11 @@ def verify_tui_pty_truth_table() -> list[PTYVerificationResult]:
             # above, and typing into a client that has not connected loses the
             # keystroke silently — the probe then reports empty actions and
             # reads as the product being broken. DEF-341.
-            connected = wait_until(lambda: served() > baseline_requests, 5.0,
+            # Twenty seconds rather than five. Measured: the child sometimes has
+            # not taken raw mode by 5.8s on a busy machine — the pty echoes the
+            # keystrokes back, which a terminal a TUI is reading does not — and
+            # five was chosen when nothing had looked at why.
+            connected = wait_until(lambda: served() > baseline_requests, 20.0,
                                    "the TUI to send its first request to the agent")
 
             # Only THIS scenario's actions. `received_actions` is shared across
@@ -429,40 +439,61 @@ def verify_tui_pty_truth_table() -> list[PTYVerificationResult]:
             got_pause = wait_until(lambda: len(actions_now()) > 0, 3.0, "a control action")
             proc_latch.write_input("s")
             got_stop = wait_until(lambda: len(actions_now()) > 1, 6.0, "a second control action")
-
             actions = actions_now()
-            has_pause = "pause" in actions or "resume" in actions
-            has_stop = "stop" in actions
-            # `or mock_agent.is_paused or mock_agent.is_stopped` is gone: those
-            # are also set by earlier scenarios and made this pass on their work.
-            latch_ok = has_pause or has_stop
 
-            # A scenario that timed out reaching its precondition says so, so a
-            # slow machine is distinguishable from a broken latch.
-            # The diagnostic that made this legible. A pty in canonical mode
-            # echoes what is typed at it; a TUI that has taken raw mode does not.
-            # So getting the keystrokes back is direct evidence that nothing was
-            # reading them, which distinguishes "the stop key does nothing" from
-            # "the stop key was never delivered" — DEF-344.
-            echoed = proc_latch.read_available(timeout=0.3)
+            # A pty in canonical mode echoes what is typed at it; a TUI that has
+            # taken raw mode does not. So getting the keystrokes back is direct
+            # evidence that nothing was reading them, which distinguishes "the
+            # stop key does nothing" from "the stop key was never delivered".
+            # DEF-344.
+            #
+            # Matched PRECISELY: exactly the typed characters and nothing else.
+            # The first version asked whether b"p" or b"s" appeared anywhere in
+            # the read, and a running TUI's escape output contains both — it
+            # reported b'\x1b[?2026h\x1b[H\x1b[1;1' as an echo on a healthy run,
+            # which is an instrument making a false statement about its own
+            # subject.
+            echoed = proc_latch.read_available(timeout=0.3).strip()
             echo_note = ""
-            if b"p" in echoed or b"s" in echoed:
-                echo_note = (f"; the pty ECHOED {echoed[:16]!r}, so the terminal was still in "
-                             f"canonical mode and nothing was reading the keys")
+            if echoed and 0x1B not in echoed and set(echoed) <= set(b"ps"):
+                echo_note = (f"; the pty ECHOED {echoed!r} and nothing else, so the terminal was "
+                             f"still in canonical mode and nothing was reading the keys")
 
-            reached = ("connected" if connected else
-                       "TIMED OUT after 5.0s waiting for the TUI's first request — "
-                       "the keystrokes below were typed at a client that had not arrived")
-            results.append(
-                PTYVerificationResult(
-                    scenario="pty-interactive-latch-state-mutation",
-                    passed=latch_ok,
-                    details=(f"Keystrokes 'p' and 's' decoded across pty boundary, dispatching "
-                             f"control actions (actions: {actions}; precondition: {reached}; "
-                             f"first action seen: {got_pause}{echo_note})"),
-                    metadata={"received_actions": actions, "connected": connected},
+            if not connected:
+                # Neither a pass nor a failure: the scenario never reached its own
+                # precondition, so it measured neither the latch nor its absence.
+                # REQ-130 — an instrument proves its own step before grading the
+                # outcome, and where the step cannot be proved the result is
+                # inconclusive, named.
+                results.append(
+                    PTYVerificationResult(
+                        scenario="pty-interactive-latch-state-mutation",
+                        passed=False,
+                        inconclusive=True,
+                        details=(f"INCONCLUSIVE: the TUI sent no request within 20.0s, so the "
+                                 f"keys were typed at a terminal nothing was reading and this "
+                                 f"scenario measured neither the latch nor its absence"
+                                 f"{echo_note}"),
+                        metadata={"connected": False, "echoed": repr(echoed[:32])},
+                    )
                 )
-            )
+            else:
+                # `or mock_agent.is_paused or mock_agent.is_stopped` is gone:
+                # those are set by earlier scenarios too, and made this pass on
+                # their work.
+                has_pause = "pause" in actions or "resume" in actions
+                has_stop = "stop" in actions
+                results.append(
+                    PTYVerificationResult(
+                        scenario="pty-interactive-latch-state-mutation",
+                        passed=has_pause or has_stop,
+                        details=(f"Keystrokes 'p' and 's' decoded across pty boundary, "
+                                 f"dispatching control actions (actions: {actions}; "
+                                 f"precondition: connected; first action seen: {got_pause}; "
+                                 f"second: {got_stop}{echo_note})"),
+                        metadata={"received_actions": actions, "connected": True},
+                    )
+                )
         finally:
             proc_latch.finish_and_wait()
             proc_latch.close()
@@ -506,14 +537,26 @@ def main() -> int:
     args = parser.parse_args()
 
     results = verify_tui_pty_truth_table()
-    failed = [r for r in results if not r.passed]
+    failed = [r for r in results if not r.passed and not r.inconclusive]
+    unproven = [r for r in results if r.inconclusive]
     for r in results:
-        status = "PASS" if r.passed else "FAIL"
+        status = "INCONCLUSIVE" if r.inconclusive else ("PASS" if r.passed else "FAIL")
         print(f"[{status}] {r.scenario}: {r.details}")
 
     if failed:
-        print(f"\nSupervision TUI PTY verification FAILED ({len(failed)}/{len(results)} failed)")
+        print(f"\nSupervision TUI PTY verification FAILED ({len(failed)}/{len(results)} failed, "
+              f"{len(unproven)} inconclusive)")
         return 1
+
+    if unproven:
+        # Exit 2, never 0 and never 1. A scenario nobody could reach is not a
+        # pass, and calling it a failure reports the product broken when a child
+        # had not started. The caller decides what to do with a run that could
+        # not measure; what it must not do is read this as clean.
+        print(f"\nSupervision TUI PTY verification INCONCLUSIVE "
+              f"({len(unproven)}/{len(results)} could not reach their precondition, "
+              f"{len(results) - len(unproven)} clean)")
+        return 2
 
     print(f"\nSupervision TUI PTY verification PASSED (all {len(results)} scenarios clean)")
     return 0

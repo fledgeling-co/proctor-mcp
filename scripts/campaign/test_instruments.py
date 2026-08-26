@@ -3768,6 +3768,43 @@ def test_the_cache_walk_survives_a_tree_being_mutated() -> None:
               "a cache directory that does not exist yields nothing rather than raising")
 
 
+def test_the_pty_probe_says_when_it_could_not_measure() -> None:
+    """DEF-344. A scenario that never reached its subject is not a failure.
+
+    The latch scenario used to report the product broken when the TUI had not
+    taken raw mode yet — the keys went into a terminal with no reader. It now
+    waits for the TUI's first request, and on a timeout reports INCONCLUSIVE
+    with the echo that proves nothing was reading.
+    """
+    script = ROOT / "scripts" / "campaign" / "supervision_tui_pty_probe.py"
+    out = subprocess.run([sys.executable, str(script)], capture_output=True, text=True)
+    check(out.returncode == 0, "the pty probe is clean on this machine",
+          out.stdout[-600:] + out.stderr[-400:])
+    check("ECHOED" not in out.stdout,
+          "and it claims no echo on a healthy run — the first version matched `p` and `s` "
+          "inside the TUI's own escape output", out.stdout[-500:])
+
+    # The arm: a child that spawns, never takes raw mode and never reaches the
+    # agent. The latch scenario must report INCONCLUSIVE and name the echo,
+    # rather than reporting the stop key as broken.
+    with tempfile.TemporaryDirectory() as td:
+        stub = Path(td) / "never-ready.sh"
+        stub.write_text("#!/bin/sh\nsleep 60\n")
+        stub.chmod(0o755)
+        env = dict(os.environ, PROCTOR_CLI_PATH=str(stub))
+        red = subprocess.run([sys.executable, str(script)], capture_output=True, text=True,
+                             env=env)
+        check("[INCONCLUSIVE] pty-interactive-latch-state-mutation" in red.stdout,
+              "a TUI that never reads the keys makes the latch scenario inconclusive, not failed",
+              red.stdout[-700:])
+        check("ECHOED b'ps'" in red.stdout,
+              "and the echo of exactly the typed keys is named as the evidence",
+              red.stdout[-700:])
+        check(red.returncode != 0,
+              "an inconclusive run is never exit 0 — a scenario nobody could reach is not a pass",
+              f"exit {red.returncode}")
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -3847,7 +3884,8 @@ def main() -> int:
                test_an_intentional_no_op_says_so,
                test_the_inert_build_starts_nothing,
                test_parse_charter_agrees_with_tomllib,
-               test_the_cache_walk_survives_a_tree_being_mutated):
+               test_the_cache_walk_survives_a_tree_being_mutated,
+               test_the_pty_probe_says_when_it_could_not_measure):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001
