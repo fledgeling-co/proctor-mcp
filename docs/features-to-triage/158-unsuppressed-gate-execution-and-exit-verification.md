@@ -2,7 +2,7 @@
 generated-by: tailings
 tailings-sources: [T5]
 reckon-sources: [REQ-046, REQ-130]
-status: to-triage
+status: triaged
 ---
 # Unsuppressed Gate Execution and Exit Verification
 

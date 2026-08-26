@@ -1,7 +1,7 @@
 # Spec PRO-0169 — Waiting Without Polling
 
 **Brief:** `docs/features-to-triage/161-polling-loop-suppression-and-notification-monitor.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-25
 **Surfaces:** SURF-018
 **Defects:** none

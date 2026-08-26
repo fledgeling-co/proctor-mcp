@@ -20,22 +20,22 @@
    "total": 216
   },
   "operator-state": {
-   "coverage": 0.9455,
-   "covered": 52,
+   "coverage": 0.9464,
+   "covered": 53,
    "green": false,
    "lineage_gaps": 3,
    "surfaces_matched": 4,
    "threshold": 1.0,
-   "total": 55
+   "total": 56
   },
   "registry-drift": {
-   "coverage": 0.9737,
-   "covered": 37,
+   "coverage": 0.9744,
+   "covered": 38,
    "green": false,
    "lineage_gaps": 1,
    "surfaces_matched": 3,
    "threshold": 1.0,
-   "total": 38
+   "total": 39
   },
   "release-integrity": {
    "coverage": 1.0,
@@ -65,7 +65,7 @@
    "total": 119
   }
  },
- "generated_at": "2026-08-26T10:33:37.247687+00:00",
+ "generated_at": "2026-08-26T10:44:13.392841+00:00",
  "note": "`figures` is cases on that surface and `sourced` is those on an effect rung \u2014 a check that could catch a wrong answer. Run warrant's rollup_classes.py to key this by defect class using the warrant's own globs.",
  "source": "test-campaign",
  "surfaces": [
@@ -76,9 +76,9 @@
    "unsourced": 0
   },
   {
-   "figures": 6,
+   "figures": 7,
    "file": "cli://proctor",
-   "sourced": 6,
+   "sourced": 7,
    "unsourced": 0
   },
   {
@@ -256,9 +256,9 @@
    "unsourced": 0
   },
   {
-   "figures": 18,
+   "figures": 19,
    "file": "tool://standing-registers/unread-gates",
-   "sourced": 18,
+   "sourced": 19,
    "unsourced": 0
   },
   {

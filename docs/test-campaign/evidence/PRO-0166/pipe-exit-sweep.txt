@@ -1,0 +1,8 @@
+309 line(s) containing a pipe examined across 70 swept file(s)
+  4 pipe a gate into something that discards its status
+  3 are a value extraction inside $( ), where no status is a verdict
+  1 declare the discard with || true
+  0 of those are unguarded — no pipefail, no pipestatus
+  0 of those then read $? and act on the answer
+
+PASS: of 4 gate pipeline(s) in 309 piped line(s), none reads $? where the gate's own status was needed.

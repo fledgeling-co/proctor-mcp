@@ -1,7 +1,7 @@
 # Spec PRO-0166 — Exit Codes That Survive a Pipe
 
 **Brief:** `docs/features-to-triage/158-unsuppressed-gate-execution-and-exit-verification.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-25
 **Surfaces:** SURF-029
 **Defects:** none

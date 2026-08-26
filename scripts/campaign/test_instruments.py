@@ -3457,6 +3457,67 @@ def test_a_path_citation_resolves_from_the_root() -> None:
               "while the fully-qualified citation beside it is not a finding", red.stdout[:400])
 
 
+def test_a_gate_exit_code_is_not_read_from_a_pipeline() -> None:
+    script = ROOT / "scripts" / "campaign" / "pipe_exit_sweep.py"
+    out = subprocess.run([sys.executable, str(script), "--gate"], capture_output=True, text=True)
+    check(out.returncode == 0, "no invocation reads a pipeline's status in place of a gate's",
+          out.stdout[-700:])
+    check("piped line(s) examined" in out.stdout or "containing a pipe examined" in out.stdout,
+          "and the sweep prints how many piped lines it examined", out.stdout[:200])
+
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td) / "repo"
+        (root / "scripts").mkdir(parents=True)
+        # The shape that lies, and the two that do not, in one fixture.
+        (root / "scripts" / "gate.sh").write_text(
+            '#!/bin/sh\n'
+            'python3 scripts/campaign/ledger_gate.py | tail -5\n'
+            'echo "exit=$?"\n'
+            'VALUE="$(codesign -dv /App | grep Authority)"\n'
+            'swift test | tail -2 || true\n')
+        red = subprocess.run([sys.executable, str(script), "--root", str(root), "--gate"],
+                             capture_output=True, text=True)
+        check(red.returncode == 1, "a gate piped to tail with $? read after takes the sweep red",
+              f"exit {red.returncode}\n{red.stdout[-500:]}")
+        check("reads $?" in red.stdout, "and the finding says the status was read", red.stdout[-500:])
+        check(" 1 are a value extraction" in red.stdout or "1 are a value extraction" in red.stdout,
+              "while the $( ) extraction beside it is counted apart, not reported",
+              red.stdout[:500])
+        check("1 declare the discard" in red.stdout,
+              "and so is the one that wrote down || true", red.stdout[:500])
+
+
+def test_a_wait_states_its_bound() -> None:
+    script = ROOT / "scripts" / "campaign" / "wait_site_sweep.py"
+    out = subprocess.run([sys.executable, str(script), "--gate"], capture_output=True, text=True)
+    check(out.returncode == 0, "every waiting loop is bounded and says what the bound means",
+          out.stdout[-700:])
+    check("wait site(s) examined across" in out.stdout,
+          "and the sweep prints how many wait sites it examined", out.stdout[:200])
+
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td) / "repo"
+        (root / "scripts").mkdir(parents=True)
+        (root / "scripts" / "poll.sh").write_text(
+            '#!/bin/sh\nwhile true; do\n  check_it\n  sleep 2\ndone\n')
+        red = subprocess.run([sys.executable, str(script), "--root", str(root), "--gate"],
+                             capture_output=True, text=True)
+        check(red.returncode == 1, "a loop with neither counter nor deadline takes the sweep red",
+              f"exit {red.returncode}\n{red.stdout[-400:]}")
+        check("unbounded  " in red.stdout and "poll.sh" in red.stdout,
+              "and the finding names the file and the line the loop opens on", red.stdout[-400:])
+
+        # The other direction: the same sleep inside a counted loop that says
+        # what the bound means is not a finding.
+        (root / "scripts" / "poll.sh").write_text(
+            '#!/bin/sh\nfor _ in $(seq 1 20); do\n  if check_it; then break; fi\n  sleep 2\ndone\n'
+            'if ! check_it; then echo "it did not come up within 40 seconds"; exit 1; fi\n')
+        green = subprocess.run([sys.executable, str(script), "--root", str(root), "--gate"],
+                               capture_output=True, text=True)
+        check(green.returncode == 0, "and a counted loop that says what the bound means is not",
+              f"exit {green.returncode}\n{green.stdout[-400:]}")
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -3528,7 +3589,9 @@ def main() -> int:
                test_every_socket_suppresses_the_signal_that_terminates,
                test_the_signal_probe_runs_in_both_directions,
                test_a_defect_status_word_matches_its_note,
-               test_a_path_citation_resolves_from_the_root):
+               test_a_path_citation_resolves_from_the_root,
+               test_a_gate_exit_code_is_not_read_from_a_pipeline,
+               test_a_wait_states_its_bound):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001

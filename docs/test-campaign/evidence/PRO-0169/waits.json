@@ -1,0 +1,71 @@
+{
+  "examined": 11,
+  "settle": [
+    {
+      "file": "scripts/campaign/overlay_exclusion.py",
+      "line": 90,
+      "text": "time.sleep(3.5)"
+    },
+    {
+      "file": "scripts/campaign/sigpipe_disposition_probe.py",
+      "line": 96,
+      "text": "time.sleep(0.1)"
+    },
+    {
+      "file": "scripts/campaign/supervision_tui_pty_probe.py",
+      "line": 378,
+      "text": "time.sleep(0.3)"
+    },
+    {
+      "file": "scripts/campaign/supervision_tui_pty_probe.py",
+      "line": 381,
+      "text": "time.sleep(0.3)"
+    },
+    {
+      "file": "scripts/campaign/test_instruments.py",
+      "line": 3502,
+      "text": "'#!/bin/sh\\nwhile true; do\\n  check_it\\n  sleep 2\\ndone\\n')"
+    },
+    {
+      "file": "scripts/campaign/test_instruments.py",
+      "line": 3513,
+      "text": "'#!/bin/sh\\nfor _ in $(seq 1 20); do\\n  if check_it; then break; fi\\n  sleep 2\\ndone\\n'"
+    }
+  ],
+  "service": [
+    {
+      "file": "scripts/campaign/supervision_tui_pty_probe.py",
+      "line": 142,
+      "text": "time.sleep(0.5)",
+      "loop": 118
+    }
+  ],
+  "bounded": [
+    {
+      "file": "scripts/campaign/sigpipe_disposition_probe.py",
+      "line": 116,
+      "text": "time.sleep(0.02)",
+      "loop": 100
+    },
+    {
+      "file": "scripts/campaign/subprocess_witness.py",
+      "line": 217,
+      "text": "sleep 0.1",
+      "loop": 216
+    },
+    {
+      "file": "scripts/campaign/supervision_tui_pty_probe.py",
+      "line": 270,
+      "text": "time.sleep(0.05)",
+      "loop": 266
+    },
+    {
+      "file": "scripts/install.sh",
+      "line": 207,
+      "text": "sleep 0.25",
+      "loop": 205
+    }
+  ],
+  "silent": [],
+  "unbounded": []
+}

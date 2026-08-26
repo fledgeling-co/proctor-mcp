@@ -1,0 +1,8 @@
+11 wait site(s) examined across 68 swept file(s)
+  settle       6  a lone pause, not a loop — not a poll
+  service      1  a loop held open by a flag its owner clears — not a poll
+  bounded      4  a loop with a bound, and it says what the bound means
+  silent       0  bounded, and nothing says what happens at the bound
+  unbounded    0  a loop with neither counter nor deadline
+
+PASS: all 4 waiting loop(s) of 11 wait site(s) are bounded and say what the bound means; 6 are settles and 1 are service loops rather than polls.

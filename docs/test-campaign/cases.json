@@ -9730,5 +9730,39 @@
       "docs/test-campaign/evidence/PRO-0172/defect-status.txt"
     ],
     "note": "PRO-0172. reckon decides the owing set from a defect's status word, so a wrong word removes a piece of work from the only report that counts it. DEF-221 read `fixed` while its own note closed its second arm with \"RECORDED rather than fixed\". The gate caught two more rows on first use and both were false positives \u2014 DEF-202 quotes reckon's reasoning, DEF-219 attributes the remainder to another row \u2014 so each carries a recorded per-row waiver rather than the phrase being deleted. Deleting \"still broken\" would clear both runs and let the next row that genuinely is still broken through unflagged, which is tuning toward zero."
+  },
+  {
+    "id": "CASE-0831",
+    "req": "REQ-046",
+    "surface": "SURF-029",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "A four-line fixture carrying all three shapes at once: a gate piped to tail with $? read after (red), a $( ) value extraction, and a pipeline declaring its discard with || true. The sweep must report the first and count the other two apart, so a run that reported everything would fail the arm as loudly as one that reported nothing.",
+    "defects": [],
+    "evidence": [
+      "scripts/campaign/pipe_exit_sweep.py",
+      "docs/test-campaign/evidence/PRO-0166/pipe-exit-sweep.txt"
+    ],
+    "note": "PRO-0166. `cmd | tail; echo $?` reads tail's status, which is 0 whatever the gate did. The sweep knows both spellings of the fix \u2014 $pipestatus in zsh, PIPESTATUS in bash \u2014 because a script using the wrong one for its shell reads an empty string and compares it to zero. Its first version required the $? to be read and reported 0 findings over three real pipelines that had all discarded a verdict; its second reported all three, and all three were value extractions where no status is a verdict. 296 piped lines examined, 3 gate pipelines, 0 unguarded."
+  },
+  {
+    "id": "CASE-0832",
+    "req": "REQ-046",
+    "surface": "SURF-018",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Both directions on one fixture: `while true; do \u2026 sleep 2; done` takes the sweep red naming the file and the line the loop opens on, and the same sleep inside `for _ in $(seq 1 20)` followed by a message saying what the bound means does not.",
+    "defects": [],
+    "evidence": [
+      "scripts/campaign/wait_site_sweep.py",
+      "docs/test-campaign/evidence/PRO-0169/wait-site-sweep.txt"
+    ],
+    "note": "PRO-0169. Nine wait sites: 4 settles, 1 service loop, 4 bounded, 0 silent, 0 unbounded. The three classes that are not findings exist because the first run reported two of them as polling defects \u2014 install.sh counts to forty with `seq` and then says the agent did not bind within 10 seconds, and a PTY probe's `while self.running:` holds a stream open rather than asking a question repeatedly. A sweep that calls a server's accept loop a polling defect is a sweep nobody runs twice."
   }
 ]

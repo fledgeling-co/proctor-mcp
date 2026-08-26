@@ -2,7 +2,7 @@
 generated-by: tailings
 tailings-sources: [T13]
 reckon-sources: [REQ-045, REQ-130]
-status: to-triage
+status: triaged
 ---
 # Polling Loop Suppression and Notification Monitor
 
