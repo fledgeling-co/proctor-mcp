@@ -215,6 +215,15 @@ def main() -> int:
             return False, "declares an external effect and names no provider"
         return True, "the vacuity census resolves its provider"
 
+    # Which spec claims which brief, from the one place that says so: the
+    # `**Brief:**` header. Built once.
+    claiming_spec: dict[str, str] = {}
+    for spec in sorted((ROOT / "docs" / "specs").glob("spec-PRO-*.md")):
+        head = spec.read_text(errors="replace")[:1200]
+        m = re.search(r"^\*\*Brief:\*\*\s*`([^`]+)`", head, re.M)
+        if m:
+            claiming_spec[Path(m.group(1)).name] = spec.stem.replace("spec-", "")
+
     validated, blocked, skipped = [], [], []
     for f in sorted(a.briefs.rglob("*.md")):
         text = f.read_text()
@@ -294,13 +303,54 @@ def main() -> int:
                 "detail": provider_notes})
             continue
 
-        ids = sorted({c["id"] for c in support})[:6]
+        # WHICH cases the record names, and why it is not simply the first six.
+        #
+        # `sorted(...)[:6]` takes whichever ids sort earliest, and on a
+        # requirement carried by fifteen cases those are the oldest — cases about
+        # something else that happen to cite the same requirement. Brief 163's
+        # first record named CASE-0045, 0072, 0073, 0080, 0110 and 0111 while the
+        # cases written FOR it, 0826 to 0828, appeared nowhere. The join was
+        # sound and the witnesses were wrong, so a reader following the record
+        # landed on unrelated work.
+        #
+        # Rank instead: a case whose note or evidence names this brief or its
+        # spec first, then by rung with the strongest leading, then by id. And
+        # print the total, so six is visibly a sample rather than the whole.
+        stem = f.stem
+
+        # A case names its work by SPEC id — "PRO-0168." opens most notes in this
+        # registry — not by brief filename, so relevance has to go through the
+        # spec whose `**Brief:**` header claims this brief. Without that hop,
+        # brief 160's record led with the SIGPIPE case rather than either of the
+        # two written for it.
+        def names_this_brief(c: dict) -> int:
+            blob = json.dumps(c)
+            if stem in blob or f.name in blob:
+                return 0
+            if claiming_spec.get(f.name) and claiming_spec[f.name] in blob:
+                return 0
+            return 1
+
+        # Strongest rung first, using the campaign's own ladder order.
+        LADDER = ["outcome", "metamorphic", "effect-witness", "raster-visual",
+                  "interactive-glass"]
+
+        def rung_rank(c: dict) -> int:
+            o = c.get("oracle")
+            return -LADDER.index(o) if o in LADDER else 1
+
+        ordered = sorted({c["id"]: c for c in support}.values(),
+                         key=lambda c: (names_this_brief(c), rung_rank(c), c["id"]))
+        ids = [c["id"] for c in ordered[:6]]
+        support_total = len({c["id"] for c in support})
         surfaces = sorted({c["surface"] for c in support})
         req = carrying[0]
         rec = {"brief": f.name, "requirements": carrying, "surfaces": surfaces,
                "cases": ids, "provider": (reqs[req].get("provider") or "none"),
                "rungs": sorted({c["oracle"] for c in support}),
-               "viaDefect": via_defect or None}
+               "viaDefect": via_defect or None,
+               "casesTotal": support_total,
+               "casesShown": len(ids)}
         validated.append(rec)
 
         if a.record:
@@ -311,7 +361,9 @@ def main() -> int:
             # inert to that scan and legible to a person, which is the whole
             # requirement.
             lines = {
-                "validated-by": f"{', '.join(carrying)} via {', '.join(ids)}",
+                "validated-by": (f"{', '.join(carrying)} via {', '.join(ids)}"
+                                 + (f" ({len(ids)} of {support_total} citing case(s))"
+                                    if support_total > len(ids) else "")),
                 "validated-rungs": ", ".join(rec["rungs"]),
                 "validated-provider": rec["provider"],
             }

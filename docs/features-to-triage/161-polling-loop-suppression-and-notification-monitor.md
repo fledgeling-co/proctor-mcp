@@ -2,7 +2,10 @@
 generated-by: tailings
 tailings-sources: [T13]
 reckon-sources: [REQ-045, REQ-130]
-status: triaged
+status: retired
+validated-by: REQ-045, REQ-130 via CASE-0554, CASE-0566, CASE-0822, CASE-0063, CASE-0552, CASE-0824 (6 of 8 citing case(s))
+validated-rungs: metamorphic, outcome
+validated-provider: none
 ---
 # Polling Loop Suppression and Notification Monitor
 

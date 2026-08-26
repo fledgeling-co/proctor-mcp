@@ -2,7 +2,10 @@
 generated-by: tailings
 tailings-sources: [T5]
 reckon-sources: [REQ-046, REQ-130]
-status: triaged
+status: retired
+validated-by: REQ-046, REQ-130 via CASE-0831, CASE-0826, CASE-0152, CASE-0554, CASE-0566, CASE-0796 (6 of 20 citing case(s))
+validated-rungs: effect-witness, metamorphic, outcome
+validated-provider: none
 ---
 # Unsuppressed Gate Execution and Exit Verification
 

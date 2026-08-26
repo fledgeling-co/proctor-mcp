@@ -2,7 +2,11 @@
 generated-by: tailings
 tailings-sources: [unaimed-site-read]
 reckon-sources: [REQ-046]
-status: triaged
+status: retired
+validated-by: REQ-035, REQ-046, REQ-053 via CASE-0826, CASE-0827, CASE-0828, CASE-0080, CASE-0808, CASE-0114 (6 of 26 citing case(s))
+validated-rungs: effect-witness, metamorphic, outcome
+validated-provider: LOCAL_PEERPID getsockopt in Sources/ProctorAgent/SessionIdentity.swift
+validated-through-defect: REQ-035 via DEF-338; REQ-053 via DEF-338
 ---
 # Every accepted socket suppresses SIGPIPE, and a check says so
 

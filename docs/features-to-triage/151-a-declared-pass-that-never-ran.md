@@ -2,8 +2,11 @@
 generated-by: test-campaign
 campaign-sources: [vacuity-check.blind]
 reckon-sources: [REQ-045, REQ-130]
-status: triaged
+status: retired
 triaged-as: PRO-0159
+validated-by: REQ-045, REQ-130 via CASE-0824, CASE-0554, CASE-0566, CASE-0822, CASE-0063, CASE-0552 (6 of 8 citing case(s))
+validated-rungs: metamorphic, outcome
+validated-provider: none
 ---
 # A declared pass that never ran
 

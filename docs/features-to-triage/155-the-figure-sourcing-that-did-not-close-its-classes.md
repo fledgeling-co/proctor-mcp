@@ -2,8 +2,11 @@
 generated-by: reckon
 campaign-sources: [warrant.rollup_classes]
 reckon-sources: [REQ-102, REQ-111]
-status: triaged
+status: retired
 triaged-as: PRO-0163
+validated-by: REQ-102, REQ-111 via CASE-0825, CASE-0456, CASE-0441, CASE-0442, CASE-0443, CASE-0472 (6 of 12 citing case(s))
+validated-rungs: effect-witness, outcome
+validated-provider: none
 ---
 # The figure sourcing that did not close its classes
 

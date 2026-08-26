@@ -2,7 +2,10 @@
 generated-by: tailings
 tailings-sources: [R9]
 reckon-sources: [REQ-046, REQ-130]
-status: triaged
+status: retired
+validated-by: REQ-046, REQ-130 via CASE-0835, CASE-0836, CASE-0826, CASE-0152, CASE-0554, CASE-0566 (6 of 20 citing case(s))
+validated-rungs: effect-witness, metamorphic, outcome
+validated-provider: none
 ---
 # Release Stub and No-Op Verification Attestation
 

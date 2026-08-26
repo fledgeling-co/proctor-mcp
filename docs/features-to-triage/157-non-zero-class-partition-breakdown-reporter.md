@@ -2,7 +2,10 @@
 generated-by: tailings
 tailings-sources: [T11]
 reckon-sources: [REQ-045, REQ-120]
-status: triaged
+status: retired
+validated-by: REQ-045, REQ-120 via CASE-0822, CASE-0063, CASE-0505, CASE-0507, CASE-0508, CASE-0509 (6 of 14 citing case(s))
+validated-rungs: metamorphic, outcome
+validated-provider: none
 ---
 # Non-Zero Class Partition Breakdown Reporter
 

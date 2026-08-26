@@ -2,7 +2,10 @@
 generated-by: test-campaign
 campaign-sources: [capture-lineage.unjudged]
 reckon-sources: [REQ-111, REQ-146]
-status: triaged
+status: retired
+validated-by: REQ-111, REQ-146 via CASE-0472, CASE-0479, CASE-0480, CASE-0597, CASE-0801
+validated-rungs: outcome
+validated-provider: none
 ---
 # Two captures nobody judged
 

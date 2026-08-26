@@ -2,7 +2,10 @@
 generated-by: tailings
 tailings-sources: [continuous-audit]
 reckon-sources: [REQ-045, REQ-046]
-status: triaged
+status: retired
+validated-by: REQ-045, REQ-046 via CASE-0826, CASE-0152, CASE-0796, CASE-0816, CASE-0822, CASE-0063 (6 of 18 citing case(s))
+validated-rungs: effect-witness, metamorphic, outcome
+validated-provider: none
 ---
 # Autonomous Audit Worklist Continuous Verifier
 

@@ -2,7 +2,11 @@
 generated-by: tailings
 tailings-sources: [site-read]
 reckon-sources: [REQ-046, REQ-130]
-status: triaged
+status: retired
+validated-by: REQ-046, REQ-047, REQ-130 via CASE-0830, CASE-0826, CASE-0074, CASE-0152, CASE-0153, CASE-0554 (6 of 39 citing case(s))
+validated-rungs: effect-witness, metamorphic, outcome
+validated-provider: none
+validated-through-defect: REQ-047 via DEF-033
 ---
 # A defect's status word means one thing, and matches its own note
 

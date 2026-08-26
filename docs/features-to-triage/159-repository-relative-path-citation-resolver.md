@@ -2,7 +2,10 @@
 generated-by: tailings
 tailings-sources: [R2]
 reckon-sources: [REQ-134, REQ-151]
-status: triaged
+status: retired
+validated-by: REQ-134, REQ-151 via CASE-0550, CASE-0560, CASE-0563, CASE-0564, CASE-0545, CASE-0601
+validated-rungs: metamorphic, outcome
+validated-provider: none
 ---
 # Repository-Relative Path Citation Resolver
 
