@@ -66,7 +66,14 @@ SERVICE_LOOP = re.compile(r"^\s*while\s+(?:self\.\w+|not\s+self\.\w+|\$\{?\w+\}?
 # means, in words no earlier alternative covered.
 AT_THE_BOUND = re.compile(r"\braise\b|\breturn\s+[1-9]|\bexit\s+[1-9]|\bsys\.exit\s*\(\s*[1-9]|"
                           r"\bgave up\b|\btimed out\b|\btimeout\b|\bfail\b|\bFAIL\b|"
-                          r"nothing was measured|\bdid not\b|within\s+\d+\s+second")
+                          r"nothing was measured|\bdid not\b|within\s+\d+\s+second|"
+                          # `return False` is how a bounded poll helper says it
+                          # ran out — the caller then reports which way it ended.
+                          # Added from supervision_tui_pty_probe's wait_until,
+                          # which this sweep classed `silent` on its first sight
+                          # of it while the function's whole contract is that the
+                          # boolean says whether the bound was reached.
+                          r"return\s+False|\breturns? whether\b|\bran out\b")
 
 
 def files(root: Path) -> list[Path]:

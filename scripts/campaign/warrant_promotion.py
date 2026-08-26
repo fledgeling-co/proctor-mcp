@@ -51,16 +51,34 @@ def parse_charter(path: Path) -> dict:
     Hand-parsed rather than via `tomllib` so the reason for every field read is
     visible here; the file is a flat list of `[[classes]]` tables and nothing in
     it needs a full parser.
+
+    It is also the only reader of this file that runs everywhere. `tomllib`
+    arrived in Python 3.11, and a Stop hook on this machine resolves `python3`
+    to /usr/bin/python3, which is 3.9.6 — so two checks in test_instruments that
+    imported it passed in a developer's shell and failed under the hook with
+    `ModuleNotFoundError`, taking the whole suite red at 407 of 412. They read
+    this instead, and `test_parse_charter_agrees_with_tomllib` compares the two
+    field by field wherever tomllib is available, so the hand parser cannot
+    drift from the format it is standing in for.
     """
     try:
         text = path.read_text()
     except OSError:
         return {}
-    out = {"owner": {}, "classes": [], "signed": None, "renewal": None}
-    for key in ("signed", "renewal"):
+    out = {"owner": {}, "classes": [], "signed": None, "renewal": None,
+           "version": None, "lot": {}}
+    for key in ("signed", "renewal", "version"):
         m = re.search(rf'^{key}\s*=\s*"([^"]+)"', text, re.M)
         if m:
             out[key] = m.group(1)
+    # [lot].census_classes — the only field outside [[classes]] a gate reads.
+    lot = re.search(r"^\[lot\]\s*\n(.*?)(?=^\[|\Z)", text, re.M | re.S)
+    if lot:
+        cc = re.search(r"census_classes\s*=\s*\[(.*?)\]", lot.group(1), re.S)
+        if cc:
+            out["lot"]["census_classes"] = re.findall(r'"([^"]+)"', cc.group(1))
+        for k, v in re.findall(r"^(\w+)\s*=\s*([\d.]+)\s*$", lot.group(1), re.M):
+            out["lot"][k] = float(v)
     owner = re.search(r"\[owner\]\s*\n((?:\s*\w+\s*=\s*\"[^\"]*\"\s*\n)+)", text)
     if owner:
         for k, v in re.findall(r'(\w+)\s*=\s*"([^"]*)"', owner.group(1)):
@@ -71,6 +89,8 @@ def parse_charter(path: Path) -> dict:
         tier = re.search(r"tier\s*=\s*(\d+)", block)
         esc = re.search(r'escalation\s*=\s*"([^"]+)"', block)
         surf = re.search(r"surfaces\s*=\s*\[(.*?)\]", block, re.S)
+        census = re.search(r"census\s*=\s*(true|false)", block)
+        plane = re.search(r'plane\s*=\s*"([^"]+)"', block)
         if not name:
             continue
         out["classes"].append({
@@ -78,6 +98,8 @@ def parse_charter(path: Path) -> dict:
             "tier": int(tier.group(1)) if tier else 0,
             "escalation": esc.group(1) if esc else "owner",
             "surfaces": re.findall(r'"([^"]+)"', surf.group(1)) if surf else [],
+            "census": (census.group(1) == "true") if census else None,
+            "plane": plane.group(1) if plane else None,
         })
     return out
 

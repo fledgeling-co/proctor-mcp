@@ -76,6 +76,11 @@ class MockAgentServer:
         self.running = True
         self.lock = threading.Lock()
         self.received_actions: list[str] = []
+        # DEF-341. The latch scenario used to wait 0.8s for the TUI to start and
+        # then type, which is a race it loses whenever the machine is busy —
+        # which is exactly inside test_instruments, where a compile has just run.
+        # Counting requests gives it something to wait ON rather than FOR.
+        self.requests_served = 0
         self.is_paused = False
         self.is_stopped = False
         self.thread = threading.Thread(target=self._serve, daemon=True)
@@ -122,6 +127,8 @@ class MockAgentServer:
                 tool = req.get("tool", "")
                 req_id = req.get("id", "req-1")
                 args = req.get("arguments", {})
+                with self.lock:
+                    self.requests_served += 1
 
                 if tool == "proctor.watch":
                     with self.lock:
@@ -203,6 +210,22 @@ class MockAgentServer:
                 os.unlink(self.socket_path)
             except OSError:
                 pass
+
+
+def wait_until(predicate, timeout: float, what: str) -> bool:
+    """Poll `predicate` until true or `timeout` elapses. Returns whether it held.
+
+    Bounded on purpose and the caller is told which way it ended, so a scenario
+    that ran out of time is distinguishable from one whose subject never
+    happened. DEF-341: three fixed sleeps here stood in for three conditions,
+    and the probe reported the product broken whenever the machine was slow.
+    """
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        if predicate():
+            return True
+        time.sleep(0.02)
+    return False
 
 
 class HeadlessPTYProcess:
@@ -370,29 +393,63 @@ def verify_tui_pty_truth_table() -> list[PTYVerificationResult]:
             proc_nav.close()
 
         # Scenario 4: Interactive Latch State Mutation ('p' for Pause/Resume, 's' for Stop)
+        # Sampled BEFORE the process exists. A first version read it after the
+        # 0.8s drain below, by which time the TUI's single watch request had
+        # already landed — so the wait was for a SECOND request that never
+        # comes, and it timed out on a healthy run.
+        def served() -> int:
+            with mock_agent.lock:
+                return mock_agent.requests_served
+
+        baseline_requests = served()
+        with mock_agent.lock:
+            actions_baseline = len(mock_agent.received_actions)
         proc_latch = HeadlessPTYProcess(cols=80, rows=24, env_extra=env_extra)
         try:
             _ = proc_latch.read_available(timeout=0.8)
-            # Send 'p' -> toggle pause over IPC
+
+            # Wait for the TUI to reach the agent before typing at it. Under
+            # test_instruments this takes measurably longer than the 0.8s read
+            # above, and typing into a client that has not connected loses the
+            # keystroke silently — the probe then reports empty actions and
+            # reads as the product being broken. DEF-341.
+            connected = wait_until(lambda: served() > baseline_requests, 5.0,
+                                   "the TUI to send its first request to the agent")
+
+            # Only THIS scenario's actions. `received_actions` is shared across
+            # all five, so a check reading the whole list passed on actions the
+            # navigation scenario had left behind — a check that could not fail
+            # for its own reason, and it went red only when every scenario in a
+            # run lost its race at once. That is what DEF-341 had been reading.
+            def actions_now() -> list:
+                with mock_agent.lock:
+                    return list(mock_agent.received_actions[actions_baseline:])
+
             proc_latch.write_input("p")
-            time.sleep(0.3)
-            # Send 's' -> stop over IPC
+            got_pause = wait_until(lambda: len(actions_now()) > 0, 3.0, "a control action")
             proc_latch.write_input("s")
-            time.sleep(0.3)
+            got_stop = wait_until(lambda: len(actions_now()) > 1, 6.0, "a second control action")
 
-            with mock_agent.lock:
-                actions = list(mock_agent.received_actions)
-
+            actions = actions_now()
             has_pause = "pause" in actions or "resume" in actions
             has_stop = "stop" in actions
-            latch_ok = has_pause or has_stop or len(actions) > 0 or mock_agent.is_paused or mock_agent.is_stopped
+            # `or mock_agent.is_paused or mock_agent.is_stopped` is gone: those
+            # are also set by earlier scenarios and made this pass on their work.
+            latch_ok = has_pause or has_stop
 
+            # A scenario that timed out reaching its precondition says so, so a
+            # slow machine is distinguishable from a broken latch.
+            reached = ("connected" if connected else
+                       "TIMED OUT after 5.0s waiting for the TUI's first request — "
+                       "the keystrokes below were typed at a client that had not arrived")
             results.append(
                 PTYVerificationResult(
                     scenario="pty-interactive-latch-state-mutation",
                     passed=latch_ok,
-                    details=f"Keystrokes 'p' and 's' decoded across pty boundary, dispatching control actions (actions: {actions})",
-                    metadata={"received_actions": actions},
+                    details=(f"Keystrokes 'p' and 's' decoded across pty boundary, dispatching "
+                             f"control actions (actions: {actions}; precondition: {reached}; "
+                             f"first action seen: {got_pause})"),
+                    metadata={"received_actions": actions, "connected": connected},
                 )
             )
         finally:

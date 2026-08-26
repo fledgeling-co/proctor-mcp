@@ -5093,8 +5093,8 @@
     },
     {
       "id": "DEF-341",
-      "title": "An arm whose command compiles perturbed the next arm's baseline, and the recorded reproduction no longer holds",
-      "status": "open",
+      "title": "The PTY latch check read a list shared across five scenarios, so it passed on another scenario's work",
+      "status": "fixed",
       "severity": "low",
       "surfaces": [
         "SURF-029"
@@ -5102,7 +5102,7 @@
       "requirements": [
         "REQ-046"
       ],
-      "note": "Measured 2026-08-25. arming_verify runs arms in registry order. CASE-0808's arm splices Sources/ProctorCore/Transport.swift and runs `swift test --filter SocketBoundaryChaos`, which compiles. CASE-0819 runs next and its baseline \u2014 test_instruments.py \u2014 comes back red with 'Supervision TUI PTY verification FAILED (1/5 failed)', a check that spawns a product binary through a pty. CASE-0819 verifies cleanly on its own. Restoring the source and rebuilding both the executables and the test bundle does NOT clear it, so the stale-binary reading is wrong or incomplete and the real cause is not yet known. The tool's behaviour is CORRECT: it refuses the arm as unverifiable rather than reporting a verified arm off a red baseline, and since 2026-08-25 it records the baseline's last words so the reason is legible \u2014 which is how this was found at all. 4 of 5 arms verified in a full run at the time; all 5 verified individually. RE-MEASURED 2026-08-26 at 75a7a8c on a clean tree, twice: arming_verify.py returns 5 verified / 0 does-not-arm / 0 unverifiable both times, CASE-0819 among them. Two clean runs do not prove the ordering dependency is gone \u2014 they prove the recorded reproduction does not hold at this commit. Kept open with the reproduction owed rather than closed on a pass that was expected to fail and did not."
+      "note": "CAUSE FOUND 2026-08-26, and it was not what this row described. The recorded story was 'an arm whose command compiles perturbs the next arm's baseline', which fitted the observations and named no mechanism.\n\nTHE MECHANISM. supervision_tui_pty_probe.py runs five scenarios against one MockAgentServer, and `received_actions` is a single list on that server. Scenario 4, pty-interactive-latch-state-mutation, passed when `len(actions) > 0` over the WHOLE list \u2014 so it passed on the actions scenario 3 had left behind, and on `mock_agent.is_paused` which earlier scenarios also set. It was a check that could not fail for its own reason. It went red only when every scenario in a run lost its race at once, which is why it correlated with 'after a compile' (the machine busy) and why it 'verified cleanly on its own' (fewer competing processes, so the earlier scenarios succeeded and left actions behind). Both halves of the original observation are explained by that, and neither is about arm ordering.\n\nTHE SECOND HALF. The scenario also stood on three fixed sleeps \u2014 read 0.8s, type, sleep 0.3, type, sleep 0.3 \u2014 where the conditions were 'the TUI has reached the agent' and 'an action arrived'. Those are now bounded waits on the observable, and the result says which way it ended, so a slow machine is distinguishable from a broken latch.\n\nFIXED: the check reads only the actions its own scenario produced, waits on MockAgentServer.requests_served rather than sleeping, and no longer passes on is_paused. Green on three consecutive standalone runs and two consecutive full test_instruments runs. The stop half it now cannot pass on is DEF-344."
     },
     {
       "id": "DEF-342",
@@ -5129,6 +5129,32 @@
         "REQ-046"
       ],
       "note": "Server.swift:108 asserted that an accepted descriptor does not inherit SO_NOSIGPIPE from its listener. Measured 2026-08-26 on Darwin 25.6.0 across AF_UNIX and AF_INET, with the listener suppressed and bare: the accepted descriptor reports the listener's value in all four cells. The comment was the reverse of the behaviour.\n\nThe cost was not the redundant setsockopt it justified. It was that an audit reading the tree against that comment reported three defective socket servers, of which one was real \u2014 the false rule turned a correct pattern into evidence of a fault, and the fix commit written before the measurement said so. A comment asserting kernel behaviour is a claim, and this repository's own rule is that a claim carries its measurement.\n\nFIXED: the comment now states what was measured, names the platform and version, and gives the two reasons the redundant call is kept. AcceptedSocketSignalTests covers the four cells so the claim cannot drift back."
+    },
+    {
+      "id": "DEF-344",
+      "title": "The TUI's stop keystroke dispatches no action in the PTY fixture, and sending it first fails the connection outright",
+      "status": "open",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-018"
+      ],
+      "requirements": [
+        "REQ-046"
+      ],
+      "note": "Exposed 2026-08-26 by fixing DEF-341. Once the latch check stopped reading other scenarios' actions, what it actually witnesses is `['pause']` and nothing else. Sources/ProctorCLI/TUI/TUIApp.swift:84 maps `case \"s\": control(\"stop\", state:, client:)` unconditionally, so a stop action is expected; none arrives within 6 seconds on any run.\n\nAND IT IS ORDER-DEPENDENT. Reversing the two keystrokes \u2014 sending `s` before `p` \u2014 makes the scenario's own precondition time out: the TUI never sends its first request to the agent within 5 seconds at all. So this is not simply 'the second control is dropped'.\n\nNOT MEASURED: whether the keystroke is lost at the pty, whether `control` opens a second connection the mock's accept loop does not take, or whether the TUI's state after a pause changes what `s` does. The check currently passes on the pause action alone, which is its own scenario's work and honest as far as it goes; this row is the half it does not cover."
+    },
+    {
+      "id": "DEF-345",
+      "title": "A standing gate passed in a shell and failed under the Stop hook, over which python3 each one reaches",
+      "status": "fixed",
+      "severity": "medium",
+      "surfaces": [
+        "SURF-029"
+      ],
+      "requirements": [
+        "REQ-046"
+      ],
+      "note": "Measured 2026-08-26 by a Stop hook running ./scripts/test.sh and taking the suite red at 407 of 412 checks, minutes after the same command had passed at 432 of 432 in a developer's shell. Neither number was wrong. `/usr/bin/env python3` resolves to whatever PATH says: /opt/homebrew/bin/python3 at 3.14.6 interactively, /usr/bin/python3 at 3.9.6 under the hook. Two checks imported tomllib, which arrived in 3.11, and two more drove a plugin script whose sibling import fails there.\n\nThis is an instrument reporting a different answer depending on who runs it, which is the class this campaign keeps re-finding in new disguises \u2014 and the disguise here is that both environments are legitimate.\n\nFIXED in two places. The charter is now read through warrant_promotion.parse_charter, which needs no tomllib, and test_parse_charter_agrees_with_tomllib compares the two field by field wherever tomllib exists and reports NOT RUN rather than agreement where it does not. And CampaignInstrumentTests picks an interpreter of 3.11 or newer by probing candidates in order, refusing with every path it tried and the version each reported. Verified by running ./scripts/test.sh with PATH=/usr/bin:/bin:/usr/sbin:/sbin plus the Xcode toolchain: exit 0, 2,179 tests in 276 suites, 0 issues.\n\nTwo plugin paths pinned to test-campaign/0.9.6 and warrant/0.2.1 were found in the same file while the installed versions were 0.14.1 and 0.3.1, and are now resolved by version."
     }
   ],
   "journey": [

@@ -33,10 +33,53 @@ struct CampaignInstrumentTests {
         let output: String
     }
 
+    /// A `python3` new enough to run the instruments, chosen rather than inherited.
+    ///
+    /// `/usr/bin/env python3` resolves to whatever the caller's PATH says, and a
+    /// Stop hook on this machine resolves it to /usr/bin/python3 at 3.9.6. The
+    /// instruments and the plugin scripts they drive need 3.11 or newer — two
+    /// checks died on `tomllib`, which arrived in 3.11, and two more on a plugin
+    /// script's sibling import. So the suite passed in a developer's shell and
+    /// failed under the hook at 407 of 412, over an interpreter rather than over
+    /// anything in this project.
+    ///
+    /// Candidates in order, first one that reports 3.11+. A refusal names every
+    /// interpreter it tried and the version each reported, because "python3 was
+    /// too old" without saying which python3 is a message nobody can act on.
+    /// `.some(path)` when one qualifies; `.none` carries the refusal in `why`.
+    private static func interpreter() -> (path: String?, why: String) {
+        let candidates = ["/opt/homebrew/bin/python3", "/usr/local/bin/python3",
+                          "/usr/bin/python3"]
+        var tried: [String] = []
+        for path in candidates where FileManager.default.isExecutableFile(atPath: path) {
+            let probe = Process()
+            probe.executableURL = URL(fileURLWithPath: path)
+            probe.arguments = ["-c", "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')"]
+            let pipe = Pipe()
+            probe.standardOutput = pipe
+            probe.standardError = Pipe()
+            guard (try? probe.run()) != nil else { continue }
+            let out = String(decoding: pipe.fileHandleForReading.readDataToEndOfFile(), as: UTF8.self)
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            probe.waitUntilExit()
+            tried.append("\(path) -> \(out.isEmpty ? "no version" : out)")
+            let parts = out.split(separator: ".").compactMap { Int($0) }
+            if parts.count == 2, parts[0] > 3 || (parts[0] == 3 && parts[1] >= 11) {
+                return (path, "")
+            }
+        }
+        return (nil, "no python3 of 3.11 or newer was found. Tried: "
+                     + (tried.isEmpty ? "(none executable)" : tried.joined(separator: "; ")))
+    }
+
     private static func python(_ arguments: [String]) throws -> Run {
+        let picked = interpreter()
+        guard let chosen = picked.path else {
+            return Run(status: 127, output: picked.why)
+        }
         let process = Process()
-        process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
-        process.arguments = ["python3"] + arguments
+        process.executableURL = URL(fileURLWithPath: chosen)
+        process.arguments = arguments
         process.currentDirectoryURL = repositoryRoot
         let pipe = Pipe()
         process.standardOutput = pipe

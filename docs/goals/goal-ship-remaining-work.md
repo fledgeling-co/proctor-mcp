@@ -24,9 +24,10 @@ agrees with, re-anchored against the code as it is at that moment.
 | F-004 | DEF-221 — two byte-identical capture pairs still stand: `sweepK-theme-before.png` with `sweepL-wedged-t1.png` (670a93988315), and `sweepL-wedged-t7.png` with `-t14.png` (5c7d4535e70c). | `finish-line` | pending |
 | F-005 | DEF-339 — the Maestro lane's second outbound connection, the one `MAESTRO_CLI_NO_ANALYTICS=1` does not stop. | `finish-line` | pending |
 | F-006 | DEF-340 — 106 of 514 cases carry no lane; `cli` and `mcp-stdio` are declared and carry none. | `finish-line` | pending |
-| F-007 | DEF-341 — an arm whose command compiles perturbed the next arm's baseline, and the recorded reproduction no longer reproduces. | `finish-line` | pending |
+| F-007 | DEF-341 — the PTY latch check read a list shared across five scenarios and passed on another's work. | `finish-line` | **fixed 2026-08-26** — cause named, check scoped to its own scenario, three fixed sleeps replaced with bounded waits on observables |
+| F-008 | DEF-344 — the TUI's stop keystroke dispatches no action in the PTY fixture, and sending it first fails the connection precondition outright. Exposed by fixing F-007. | `finish-line` | pending |
 
-Total: 7.
+Total: 8. One fixed.
 
 ## What closing each of the four defects may not mean
 
@@ -147,4 +148,14 @@ That is PRO-0166's finding applied to the thing that would suffer most from it.
 
 ## Open questions
 
-_Appended during the run. Empty at arm time._
+_None outstanding. Two things worth a reader knowing rather than deciding:_
+
+**The stall watcher fires on a long turn, not only on a dead run.** It read the
+ledger as stale after 25 minutes while turn 1 was still working. The ledger only
+moves at a Stop event, so from outside, one long turn and a dead session look
+identical — which is the gap the watcher exists to cover and also the reason it
+cannot tell those two apart. Read a STALL line as "check", not "it died".
+
+**DEF-344 is a new open row that this run created by fixing DEF-341**, and the
+`finish-line` gate names it as undeclared. That is the gate working: a broken row
+cannot be waved through by the run that found it.

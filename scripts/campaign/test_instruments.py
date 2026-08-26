@@ -2215,18 +2215,92 @@ def test_dynamic_grant_probe_characterization() -> None:
     check(len(results) == 9 and all(ok for _, ok, _ in results), "dynamic_grant_probe lifecycle passes all 9 assertions")
 
 
+def _charter() -> dict:
+    """The warrant charter, through warrant_promotion's hand parser.
+
+    NOT through `tomllib`. That arrived in Python 3.11, and the Stop hook on this
+    machine resolves `python3` to /usr/bin/python3 at 3.9.6 — so these two checks
+    passed in a shell and failed under the hook with `ModuleNotFoundError`,
+    taking the suite red at 407 of 412 over an interpreter rather than over
+    anything in the project. One reader, and it runs everywhere.
+    """
+    return load(ROOT / "scripts" / "campaign" / "warrant_promotion.py",
+                "warrant_promotion").parse_charter(ROOT / ".warrant" / "warrant.toml")
+
+
+def _newest_warrant_script(name: str) -> Path | None:
+    """A script from the installed warrant plugin, newest version first.
+
+    Resolved rather than pinned. This was hard-coded to warrant/0.2.1 while the
+    installed version had moved to 0.3.1, so the check ran an older tool than
+    the one in use — the same drift `_newest_campaign_py` exists to avoid.
+    """
+    base = Path.home() / ".claude" / "plugins" / "cache" / "fledgeling-plugins" / "warrant"
+    if not base.is_dir():
+        return None
+    def version(d: Path) -> list:
+        return [int(x) if x.isdigit() else 0 for x in d.name.split(".")]
+    for d in sorted((d for d in base.iterdir() if d.is_dir()), key=version, reverse=True):
+        candidate = d / "scripts" / name
+        if candidate.is_file():
+            return candidate
+    return None
+
+
+def test_parse_charter_agrees_with_tomllib() -> None:
+    """The hand parser, checked against the real one wherever the real one exists.
+
+    A hand parser standing in for a format parser is a place for silent drift, so
+    it is compared field by field on the actual charter. Where tomllib is absent
+    — the 3.9 interpreter a Stop hook reaches — the comparison is reported as not
+    run rather than counted as agreement, because an unrun check is not a passing
+    one.
+    """
+    try:
+        import tomllib
+    except ImportError:
+        try:
+            import tomli as tomllib  # type: ignore
+        except ImportError:
+            check(True, "parse_charter vs tomllib: NOT RUN on this interpreter "
+                        f"(Python {sys.version_info.major}.{sys.version_info.minor}, "
+                        f"tomllib arrived in 3.11) — reported, not counted as agreement")
+            return
+
+    warrant_file = ROOT / ".warrant" / "warrant.toml"
+    with open(warrant_file, "rb") as f:
+        real = tomllib.load(f)
+    mine = _charter()
+
+    check(str(real.get("version")) == str(mine.get("version")),
+          "parse_charter reads the same version as tomllib",
+          f"{mine.get('version')!r} vs {real.get('version')!r}")
+    check(real.get("owner", {}).get("name") == mine.get("owner", {}).get("name")
+          and real.get("owner", {}).get("email") == mine.get("owner", {}).get("email"),
+          "parse_charter reads the same owner as tomllib",
+          f"{mine.get('owner')} vs {real.get('owner')}")
+    check(real.get("lot", {}).get("census_classes") == mine.get("lot", {}).get("census_classes"),
+          "parse_charter reads the same lot.census_classes as tomllib",
+          f"{mine.get('lot', {}).get('census_classes')} vs "
+          f"{real.get('lot', {}).get('census_classes')}")
+
+    rc = {c["name"]: c for c in real.get("classes", [])}
+    mc = {c["name"]: c for c in mine.get("classes", [])}
+    check(set(rc) == set(mc), "parse_charter finds the same class names as tomllib",
+          f"only-hand={sorted(set(mc) - set(rc))} only-tomllib={sorted(set(rc) - set(mc))}")
+    for name in sorted(set(rc) & set(mc)):
+        for field in ("tier", "escalation", "census", "plane", "surfaces"):
+            check(rc[name].get(field) == mc[name].get(field),
+                  f"parse_charter reads {name}.{field} as tomllib does",
+                  f"{mc[name].get(field)!r} vs {rc[name].get(field)!r}")
+
+
 def test_warrant_charter_integrity() -> None:
     """DEF-290: standing check that .warrant/warrant.toml is valid, signed, and unexpired."""
     warrant_file = ROOT / ".warrant" / "warrant.toml"
     check(warrant_file.is_file(), "warrant.toml exists at repository root", str(warrant_file))
 
-    try:
-        import tomllib
-    except ImportError:
-        import tomli as tomllib  # type: ignore
-
-    with open(warrant_file, "rb") as f:
-        doc = tomllib.load(f)
+    doc = _charter()
 
     # Validate owner signature
     owner = doc.get("owner", {})
@@ -2239,8 +2313,7 @@ def test_warrant_charter_integrity() -> None:
     check(version == "1", "warrant specifies schema version 1", f"version={version}")
 
     # Validate charter_validate execution
-    warrant_scripts = Path("/Users/lukerhodes/.claude/plugins/cache/fledgeling-plugins/warrant/0.2.1/scripts")
-    charter_val = warrant_scripts / "charter_validate.py"
+    charter_val = _newest_warrant_script("charter_validate.py")
     if charter_val.is_file():
         p = subprocess.run([sys.executable, str(charter_val), "--root", str(ROOT)],
                            capture_output=True, text=True)
@@ -2278,14 +2351,7 @@ escalation = "owner"
 
 def test_warrant_census_classes_and_surface_coverage() -> None:
     """DEF-290: standing check that all 7 charter classes are defined and cover 100% of campaign surfaces."""
-    try:
-        import tomllib
-    except ImportError:
-        import tomli as tomllib  # type: ignore
-
-    warrant_file = ROOT / ".warrant" / "warrant.toml"
-    with open(warrant_file, "rb") as f:
-        doc = tomllib.load(f)
+    doc = _charter()
 
     classes = doc.get("classes", [])
     expected_classes = {
@@ -2360,10 +2426,16 @@ def test_warrant_census_classes_and_surface_coverage() -> None:
 
 def test_warrant_release_gate_and_export_verification() -> None:
     """DEF-290: standing check that campaign export-warrant and rollup_classes produce valid release evidence."""
-    campaign_script = Path("/Users/lukerhodes/.claude/plugins/cache/fledgeling-plugins/test-campaign/0.9.6/skills/test-campaign/scripts/campaign.py")
-    warrant_scripts = Path("/Users/lukerhodes/.claude/plugins/cache/fledgeling-plugins/warrant/0.2.1/scripts")
-    rollup_script = warrant_scripts / "rollup_classes.py"
+    # Both were pinned — test-campaign/0.9.6 and warrant/0.2.1 — while the
+    # installed versions had moved to 0.14.1 and 0.3.1. A pin does not fail when
+    # it drifts; it keeps answering, out of an older tool.
+    campaign_script = _newest_campaign_py()
+    rollup_script = _newest_warrant_script("rollup_classes.py")
 
+    if campaign_script is None or rollup_script is None:
+        check(False, "the installed test-campaign and warrant plugins are findable",
+              "an absent instrument is a lane failure, not a pass")
+        return
     if campaign_script.is_file() and rollup_script.is_file():
         p_export = subprocess.run([sys.executable, str(campaign_script), "export-warrant", "docs/test-campaign", "--root", str(ROOT)],
                                   cwd=str(ROOT), capture_output=True, text=True)
@@ -2385,7 +2457,7 @@ def test_warrant_release_gate_and_export_verification() -> None:
               f"rolled_classes={list(rolled_classes.keys())}")
 
         # Negative mutation check: unearned tier 1 fails charter_validate
-        charter_val = warrant_scripts / "charter_validate.py"
+        charter_val = _newest_warrant_script("charter_validate.py")
         with tempfile.TemporaryDirectory() as tmp:
             tmp_root = Path(tmp)
             (tmp_root / ".warrant").mkdir()
@@ -3715,7 +3787,8 @@ def main() -> int:
                test_every_non_zero_class_reaches_its_summary,
                test_a_wave_rechecks_the_claims_it_wrote,
                test_an_intentional_no_op_says_so,
-               test_the_inert_build_starts_nothing):
+               test_the_inert_build_starts_nothing,
+               test_parse_charter_agrees_with_tomllib):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001
