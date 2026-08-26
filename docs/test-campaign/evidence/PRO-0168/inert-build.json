@@ -1,0 +1,25 @@
+{
+  "inert": {
+    "built": true,
+    "exit": 0,
+    "output": "isRunning=false isIdle=true serial=0 socketCreated=false",
+    "fields": {
+      "isRunning": "false",
+      "isIdle": "true",
+      "serial": "0",
+      "socketCreated": "false"
+    }
+  },
+  "debug": {
+    "built": true,
+    "exit": 0,
+    "output": "isRunning=true isIdle=true serial=1 socketCreated=false",
+    "fields": {
+      "isRunning": "true",
+      "isIdle": "true",
+      "serial": "1",
+      "socketCreated": "false"
+    }
+  },
+  "problems": []
+}

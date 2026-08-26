@@ -1,0 +1,94 @@
+{
+  "production": [
+    {
+      "file": "Sources/ProctorAgent/Actuation/CuaTransport.swift",
+      "line": 132,
+      "symbol": "adopt",
+      "attested": true,
+      "by": "no-op",
+      "text": "func adopt(laneId: String) {}"
+    },
+    {
+      "file": "Sources/ProctorAgent/Session/ContentionMonitor.swift",
+      "line": 67,
+      "symbol": "arm",
+      "attested": true,
+      "by": "the safe reading is the default",
+      "text": "func arm(observeInput: Bool) {}"
+    },
+    {
+      "file": "Sources/ProctorAgent/Session/ContentionMonitor.swift",
+      "line": 68,
+      "symbol": "disarm",
+      "attested": true,
+      "by": "the safe reading is the default",
+      "text": "func disarm() {}"
+    },
+    {
+      "file": "Sources/ProctorAgent/Session/ContentionMonitor.swift",
+      "line": 69,
+      "symbol": "setExpectedPid",
+      "attested": true,
+      "by": "the safe reading is the default",
+      "text": "func setExpectedPid(_ pid: Int32?) {}"
+    },
+    {
+      "file": "Sources/ProctorAgent/Session/ContentionMonitor.swift",
+      "line": 70,
+      "symbol": "noteSyntheticPost",
+      "attested": true,
+      "by": "the safe reading is the default",
+      "text": "func noteSyntheticPost() {}"
+    },
+    {
+      "file": "Sources/ProctorAgent/Session/ContentionMonitor.swift",
+      "line": 71,
+      "symbol": "noteUserInput",
+      "attested": true,
+      "by": "the safe reading is the default",
+      "text": "func noteUserInput() {}"
+    },
+    {
+      "file": "Sources/ProctorReflector/ProctorReflector.swift",
+      "line": 77,
+      "symbol": "start",
+      "attested": true,
+      "by": "No-op",
+      "text": "public static func start(socketPath: String? = nil) {}"
+    },
+    {
+      "file": "Sources/ProctorReflector/ProctorReflector.swift",
+      "line": 81,
+      "symbol": "stop",
+      "attested": true,
+      "by": "No-op",
+      "text": "public static func stop() {}"
+    },
+    {
+      "file": "Sources/ProctorReflector/ProctorReflector.swift",
+      "line": 93,
+      "symbol": "endActivity",
+      "attested": true,
+      "by": "No-op",
+      "text": "public static func endActivity(_ token: ActivityToken) {}"
+    }
+  ],
+  "tests": 3,
+  "bare": [],
+  "phrases": [
+    "no-op",
+    "No-op",
+    "no op",
+    "nothing to start",
+    "nothing is tracked",
+    "nothing to stop",
+    "deliberately empty",
+    "intentionally empty",
+    "empty by design",
+    "does nothing",
+    "samples as a quiet machine",
+    "the safe reading is the default",
+    "inert build",
+    "compiled without"
+  ]
+}

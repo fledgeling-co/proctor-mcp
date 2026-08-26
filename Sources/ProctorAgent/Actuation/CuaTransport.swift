@@ -118,10 +118,17 @@ protocol CuaTransport: Sendable {
     func adopt(laneId: String)
 }
 
+/// The defaults a transport gets for free, so that adding one to this protocol
+/// does not break every conformance that has no opinion about it.
 extension CuaTransport {
     var identityPinned: Bool { false }
     var processIdentity: CuaProcessIdentity? { nil }
     var kind: String { "unknown" }
+
+    /// A no-op by design: a transport that carries no lane name in its events has
+    /// nothing to record when it is told one. `CuaActuationBackend` calls this on
+    /// every transport it adopts, so the default has to exist and has to be
+    /// harmless; the conformances that DO carry a lane name override it.
     func adopt(laneId: String) {}
 }
 

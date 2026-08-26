@@ -3585,6 +3585,59 @@ def test_a_wave_rechecks_the_claims_it_wrote() -> None:
           f"exit {bad.returncode}\n{bad.stdout[-300:]}")
 
 
+def test_an_intentional_no_op_says_so() -> None:
+    script = ROOT / "scripts" / "campaign" / "noop_attestation.py"
+    out = subprocess.run([sys.executable, str(script), "--gate"], capture_output=True, text=True)
+    check(out.returncode == 0, "every production empty body attests that the emptiness is the design",
+          out.stdout[-700:])
+    check("in Tests" in out.stdout and "counted apart" in out.stdout,
+          "and test doubles are counted apart from production stubs", out.stdout[:400])
+
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td) / "repo"
+        (root / "Sources" / "X").mkdir(parents=True)
+        (root / "Tests" / "X").mkdir(parents=True)
+        (root / "Sources" / "X" / "A.swift").write_text(
+            "final class A {\n"
+            "    /// No-op. Nothing is tracked in this build.\n"
+            "    func attested() {}\n"
+            "    func forgotten() {}\n"
+            "}\n")
+        (root / "Tests" / "X" / "Fake.swift").write_text(
+            "final class Fake {\n    func record() {}\n}\n")
+        red = subprocess.run([sys.executable, str(script), "--root", str(root), "--gate"],
+                             capture_output=True, text=True)
+        check(red.returncode == 1, "an unattested production empty body takes the gate red",
+              f"exit {red.returncode}\n{red.stdout[-400:]}")
+        check("forgotten" in red.stdout and "BARE" in red.stdout,
+              "and the finding names the symbol", red.stdout[-400:])
+        check("attested" in red.stdout and red.stdout.count("BARE") == 1,
+              "while the attested body beside it is not reported", red.stdout[-500:])
+        check("1 in Tests" in red.stdout,
+              "and the test double is counted, not reported", red.stdout[:300])
+
+
+def test_the_inert_build_starts_nothing() -> None:
+    """The branch `swift test` can never reach, run rather than assumed.
+
+    ProctorReflector is live under `#if DEBUG || PROCTOR_REFLECTOR` and empty
+    under `#else`. Every run of this repository's suite is a debug build, so the
+    empty branch is dead code in all of them and its safe defaults had never
+    been asserted by anything.
+    """
+    script = ROOT / "scripts" / "campaign" / "inert_build_probe.py"
+    out = subprocess.run([sys.executable, str(script)], capture_output=True, text=True)
+    check(out.returncode == 0, "the inert Reflector build starts nothing and tracks nothing",
+          out.stdout[-700:] + out.stderr[-400:])
+    check("isRunning=false" in out.stdout and "serial=0" in out.stdout,
+          "with the observables read off a process rather than off the source", out.stdout[:400])
+    # The control is the arm: if -DDEBUG changed nothing, the flag never reached
+    # the compiler and the inert reading is one build measured twice.
+    check("isRunning=true" in out.stdout and "serial=1" in out.stdout,
+          "and the DEBUG build of the same sources differs, so the flag reached the compiler",
+          out.stdout[:400])
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -3660,7 +3713,9 @@ def main() -> int:
                test_a_gate_exit_code_is_not_read_from_a_pipeline,
                test_a_wait_states_its_bound,
                test_every_non_zero_class_reaches_its_summary,
-               test_a_wave_rechecks_the_claims_it_wrote):
+               test_a_wave_rechecks_the_claims_it_wrote,
+               test_an_intentional_no_op_says_so,
+               test_the_inert_build_starts_nothing):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001

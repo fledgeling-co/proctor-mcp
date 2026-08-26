@@ -1,0 +1,17 @@
+9 empty body(ies) in Sources · 3 in Tests
+  attested   9  the comment says the emptiness is the design
+  bare       0  nothing says whether this is finished
+  test double  3  counted apart — an empty method on a fake is the fake doing its job
+
+Production empty bodies:
+  Sources/ProctorAgent/Actuation/CuaTransport.swift:132  adopt  [attested (no-op)]
+  Sources/ProctorAgent/Session/ContentionMonitor.swift:67  arm  [attested (the safe reading is the default)]
+  Sources/ProctorAgent/Session/ContentionMonitor.swift:68  disarm  [attested (the safe reading is the default)]
+  Sources/ProctorAgent/Session/ContentionMonitor.swift:69  setExpectedPid  [attested (the safe reading is the default)]
+  Sources/ProctorAgent/Session/ContentionMonitor.swift:70  noteSyntheticPost  [attested (the safe reading is the default)]
+  Sources/ProctorAgent/Session/ContentionMonitor.swift:71  noteUserInput  [attested (the safe reading is the default)]
+  Sources/ProctorReflector/ProctorReflector.swift:77  start  [attested (No-op)]
+  Sources/ProctorReflector/ProctorReflector.swift:81  stop  [attested (No-op)]
+  Sources/ProctorReflector/ProctorReflector.swift:93  endActivity  [attested (No-op)]
+
+PASS: all 9 production empty body(ies) attest that the emptiness is the design; 3 test doubles counted apart.

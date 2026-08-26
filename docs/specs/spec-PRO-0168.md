@@ -1,7 +1,7 @@
 # Spec PRO-0168 — An Intentional No-Op Says So
 
 **Brief:** `docs/features-to-triage/160-release-stub-and-no-op-verification-attestation.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-25
 **Surfaces:** SURF-002
 **Defects:** none

@@ -76,6 +76,8 @@ public enum ProctorReflector {
     /// so no socket is created and no observers are registered.
     public static func start(socketPath: String? = nil) {}
 
+    /// No-op, for the same reason as `start`: nothing was created, so there is
+    /// nothing to tear down.
     public static func stop() {}
 
     public static var isRunning: Bool { false }
@@ -84,6 +86,10 @@ public enum ProctorReflector {
         ActivityToken(name: name, serial: 0)
     }
 
+    /// No-op. `beginActivity` in this build hands back a token with serial 0 and
+    /// registers nothing, so there is no activity for this to end. A caller
+    /// pairing the two calls is correct either way, which is the point of the
+    /// inert build having the same shape as the live one.
     public static func endActivity(_ token: ActivityToken) {}
 
     /// Always true in an inert build. Nothing is tracked, so nothing is in

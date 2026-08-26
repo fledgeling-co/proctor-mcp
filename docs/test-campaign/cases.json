@@ -9799,5 +9799,44 @@
       "docs/test-campaign/evidence/PRO-0170/wave-claim-check.txt"
     ],
     "note": "PRO-0170. This repository's ORCHESTRATOR header went stale four times in one wave \u2014 152, 158, 164, 170 rows \u2014 and each was corrected after something downstream had read it. Running the claim audit over the wave's own diff is cheap enough to run at every boundary, which is the only cadence at which it prevents anything. The plan-from set is read out of claim_provenance rather than restated: a first version declared its own wider set and reported 44 of 68 artifacts contradicted, because it was promoting wave-15 briefs that describe wave 15 to claims about now."
+  },
+  {
+    "id": "CASE-0835",
+    "req": "REQ-046",
+    "surface": "SURF-002",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "A four-body fixture: an attested production body, an unattested one beside it in the same file, and a test double. The scan must report exactly the middle one \u2014 a run reporting all three fails the arm as loudly as one reporting none.",
+    "defects": [],
+    "evidence": [
+      "scripts/campaign/noop_attestation.py",
+      "docs/test-campaign/evidence/PRO-0168/noop-attestation.txt"
+    ],
+    "note": "PRO-0168. Nine empty bodies in Sources, three in Tests. A scan that reports NullContentionMonitor is a scan somebody turns off, and one that ignores every empty body cannot find the one that was forgotten, so the discriminator is an attestation in a doc comment. Three were bare on first run and all three were intentional \u2014 a protocol-extension default for transports that carry no lane name, and two halves of the Reflector's inert branch whose sibling `start` was the only one commented. Each now says what a caller gets instead."
+  },
+  {
+    "id": "CASE-0836",
+    "req": "REQ-046",
+    "surface": "SURF-002",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "live-external",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "The control IS the arm: the same sources are compiled a second time with -DDEBUG and must DIFFER on isRunning and serial. If the two builds agree the flag never reached the compiler and the inert reading is one build measured twice, which the probe reports as a failure rather than a pass.",
+    "defects": [],
+    "witness": {
+      "recorder": "a scratch executable built from the same sources, run as its own process",
+      "effect": "subprocess",
+      "count": 2
+    },
+    "evidence": [
+      "scripts/campaign/inert_build_probe.py",
+      "docs/test-campaign/evidence/PRO-0168/inert-build-probe.txt"
+    ],
+    "note": "PRO-0168, criterion 2. ProctorReflector is live under `#if DEBUG || PROCTOR_REFLECTOR` and empty under `#else`. Every run of this suite is a debug build, so the whole inert branch is dead code in all of them and its safe defaults had never been asserted by anything \u2014 compiling it in release proves it builds and not what it does. The probe drives six calls through both builds: inert reads isRunning=false isIdle=true serial=0 socketCreated=false, DEBUG reads isRunning=true serial=1."
   }
 ]

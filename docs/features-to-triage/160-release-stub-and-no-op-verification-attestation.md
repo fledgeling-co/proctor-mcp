@@ -2,7 +2,7 @@
 generated-by: tailings
 tailings-sources: [R9]
 reckon-sources: [REQ-046, REQ-130]
-status: to-triage
+status: triaged
 ---
 # Release Stub and No-Op Verification Attestation
 

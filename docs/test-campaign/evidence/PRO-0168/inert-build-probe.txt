@@ -1,0 +1,5 @@
+  inert  isRunning=false isIdle=true serial=0 socketCreated=false
+  DEBUG  isRunning=true isIdle=true serial=1 socketCreated=false
+
+PASS: the inert build starts nothing, tracks nothing and hands back serial 0, and the
+      DEBUG build of the same sources differs on isRunning (false vs true) and serial (0 vs 1), so the flag reached the compiler.

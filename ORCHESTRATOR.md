@@ -1,9 +1,9 @@
 # ORCHESTRATOR — Proctor remaining-work plan & ledger
 
-**Status:** **Wave 29 open on `main`.** 172 rows: 165 Merged, 2 Retired, **5 outstanding**. PRO-0159, 0163, 0165, 0166, 0167, 0169, 0170, 0171 and 0172 landed this wave; PRO-0160, 0161, 0162, 0164 and 0168 remain. Waves 9 through 28 are closed.
+**Status:** **Wave 29 open on `main`.** 172 rows: 166 Merged, 2 Retired, **4 outstanding**. PRO-0159, 0163, 0165, 0166, 0167, 0168, 0169, 0170, 0171 and 0172 landed this wave; PRO-0160, 0161, 0162 and 0164 remain. Waves 9 through 28 are closed.
 **Open, and named rather than smoothed:** PRO-0161 is **not** complete — the routing covers 36 of the 43 sub-effect-rung entries and 7 need a person, so it stays `Ready for AI` and the figure it declared (`warrant.surface-conformance` 84.0 → 100) has not moved. `scripts/campaign/figure_ledger.py` enforces that.
 **Reconciliation (the exit condition, not the ledger):** reckon holds 1017 rows · broken 5 · unmeasured 2 · **undecided 12** · waived 153 · verified-done 845. Two of the five broken are `partially-fixed` rows owing a reproduction for their remaining half; the other three are DEF-340's recorded lane gap, DEF-341's reproduction that no longer reproduces, and DEF-342 which this wave fixed.
-**Updated:** 2026-08-26 — Wave 29 in flight. Gate: 2,179 tests in 276 suites; seventeen standing gates green; strict 449 of 511 checked, and the 62 that are not split three ways rather than counted together — 41 only proves something rendered, 16 were never watched to fail, 3 status is n/a. Those are three different jobs.
+**Updated:** 2026-08-26 — Wave 29 in flight. Gate: 2,179 tests in 276 suites; seventeen standing gates green; strict 451 of 513 checked, and the 62 that are not split three ways rather than counted together — 41 only proves something rendered, 16 were never watched to fail, 3 status is n/a. Those are three different jobs.
 
 ### Repository state (reconciled 2026-08-17)
 - **Git remote:** `origin` → `github.com/fledgeling-co/proctor-mcp`. Local `main` is up to date with `origin/main` at tag `v0.2.0`.
