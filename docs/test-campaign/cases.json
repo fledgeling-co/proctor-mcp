@@ -9940,5 +9940,30 @@
       "docs/test-campaign/evidence/PRO-0160/control-census.txt"
     ],
     "note": "PRO-0160. Twenty-nine passing effect-rung cases already sat on SURF-004 and none pressed a button: they measure the overlay's window level, its exclusion from captures and its raster \u2014 what it looks like rather than what it does. ProctorUI is an executable target with no test target, so the handlers cannot be called directly; what can be driven is the request each one sends. AgentModel.control sends proctor_hud with the action and dropWaiting sends proctor_queue with clear, so those are sent, and the effect read is the agent's answer rather than the model's own state."
+  },
+  {
+    "id": "CASE-0841",
+    "req": "REQ-023",
+    "surface": "SURF-014",
+    "oracle": "effect-witness",
+    "lane": "headless",
+    "plane": "live-external",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Both arms run every time. The bare arm must reach MORE peers than the suppressed one; if it does not, the variable Proctor sets is doing nothing and the probe exits 1 saying the disclosure overstates it. A probe that only ran the suppressed arm could not tell a working variable from a machine with no network.",
+    "witness": {
+      "recorder": "lsof over the child's own pid while it lives, polled at 50ms",
+      "effect": "outbound-socket",
+      "count": 2
+    },
+    "defects": [
+      "DEF-339"
+    ],
+    "evidence": [
+      "scripts/campaign/maestro_egress_witness.py",
+      "docs/test-campaign/evidence/PRO-0339/maestro-egress.txt",
+      "docs/test-campaign/evidence/PRO-0339/maestro-egress.json"
+    ],
+    "note": "DEF-339's owed reproduction, and it reproduces the 2026-08-25 reading exactly across three consecutive runs: `maestro --version` reaches 2 peers bare \u2014 3.41.202.172:443 and 34.36.150.207:443 \u2014 and 1 with MAESTRO_CLI_NO_ANALYTICS=1, the Google Cloud one. Same addresses, measured independently four weeks on.\n\nTHE FIRST VERSION REPORTED 64 PEERS. lsof ORs its selections, so `-p PID -iTCP` means 'this process OR any TCP' and returns the whole machine \u2014 this session's ssh, Mail's IMAP, a MongoDB cluster, the MCP router on loopback. `-a` ANDs them. A count that large reads as a finding rather than as a bug in the instrument, which is why it is recorded here.\n\nEvery count is a FLOOR: the watcher polls at 50ms and a connection opened and closed between two polls is missed."
   }
 ]

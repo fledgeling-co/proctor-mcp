@@ -1,0 +1,31 @@
+# DEF-339 — the reproduction the partially-fixed half owed
+# 2026-08-27, three consecutive runs
+
+maestro at /opt/homebrew/bin/maestro — 2.4.0
+  bare                         exit 0 · 2 outbound peer(s) ['3.41.202.172:443', '34.36.150.207:443']
+  MAESTRO_CLI_NO_ANALYTICS=1   exit 0 · 1 outbound peer(s) ['34.36.150.207:443']
+
+Each count is a FLOOR: the watcher polls at 50ms and a connection opened and closed between two polls is missed.
+
+MEASURED: bare reaches 2, suppressed reaches 1. The variable removes 1.
+          1 peer(s) remain with the variable set, which is DEF-339's unrepaired half and the reason the lane is not network-isolated:
+            34.36.150.207:443
+
+maestro at /opt/homebrew/bin/maestro — 2.4.0
+  bare                         exit 0 · 2 outbound peer(s) ['3.41.202.145:443', '34.36.150.207:443']
+  MAESTRO_CLI_NO_ANALYTICS=1   exit 0 · 1 outbound peer(s) ['34.36.150.207:443']
+
+Each count is a FLOOR: the watcher polls at 50ms and a connection opened and closed between two polls is missed.
+
+MEASURED: bare reaches 2, suppressed reaches 1. The variable removes 1.
+          1 peer(s) remain with the variable set, which is DEF-339's unrepaired half and the reason the lane is not network-isolated:
+            34.36.150.207:443
+maestro at /opt/homebrew/bin/maestro — 2.4.0
+  bare                         exit 0 · 2 outbound peer(s) ['3.41.202.147:443', '34.36.150.207:443']
+  MAESTRO_CLI_NO_ANALYTICS=1   exit 0 · 1 outbound peer(s) ['34.36.150.207:443']
+
+Each count is a FLOOR: the watcher polls at 50ms and a connection opened and closed between two polls is missed.
+
+MEASURED: bare reaches 2, suppressed reaches 1. The variable removes 1.
+          1 peer(s) remain with the variable set, which is DEF-339's unrepaired half and the reason the lane is not network-isolated:
+            34.36.150.207:443

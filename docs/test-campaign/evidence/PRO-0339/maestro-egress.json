@@ -1,0 +1,20 @@
+{
+  "binary": "/opt/homebrew/bin/maestro",
+  "bare": {
+    "suppressed": false,
+    "exit": 0,
+    "peers": [
+      "3.41.202.172:443",
+      "34.36.150.207:443"
+    ],
+    "version": "2.4.0"
+  },
+  "suppressed": {
+    "suppressed": true,
+    "exit": 0,
+    "peers": [
+      "34.36.150.207:443"
+    ],
+    "version": "2.4.0"
+  }
+}

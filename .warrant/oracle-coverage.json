@@ -48,12 +48,12 @@
   },
   "run-lifecycle": {
    "coverage": 1.0,
-   "covered": 52,
+   "covered": 53,
    "green": true,
    "lineage_gaps": 0,
    "surfaces_matched": 9,
    "threshold": 1.0,
-   "total": 52
+   "total": 53
   },
   "surface-conformance": {
    "coverage": 0.843,
@@ -65,7 +65,7 @@
    "total": 121
   }
  },
- "generated_at": "2026-08-26T21:36:23.238195+00:00",
+ "generated_at": "2026-08-26T21:54:11.792552+00:00",
  "note": "`figures` is cases on that surface and `sourced` is those on an effect rung \u2014 a check that could catch a wrong answer. Run warrant's rollup_classes.py to key this by defect class using the warrant's own globs.",
  "source": "test-campaign",
  "surfaces": [
@@ -106,9 +106,9 @@
    "unsourced": 0
   },
   {
-   "figures": 4,
+   "figures": 5,
    "file": "engine://ios-maestro",
-   "sourced": 4,
+   "sourced": 5,
    "unsourced": 0
   },
   {

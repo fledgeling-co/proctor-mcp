@@ -5201,8 +5201,8 @@
     },
     {
       "id": "DEF-339",
-      "title": "The Maestro lane reaches the network on any invocation, and the disclosure read as a condition",
-      "status": "partially-fixed",
+      "title": "The Maestro lane reached the network with nothing stopping the half Proctor controls, and the disclosure read as a condition",
+      "status": "fixed",
       "severity": "medium",
       "surfaces": [
         "SURF-014"
@@ -5210,7 +5210,8 @@
       "requirements": [
         "REQ-024"
       ],
-      "note": "Measured 2026-08-25 with lsof over the process's own pid. `maestro --version` \u2014 an invocation that prints a string and runs no flow \u2014 opens TWO outbound TLS connections before returning: 34.36.150.207:443 (bc.googleusercontent.com) and 3.41.202.171:443 (compute-1.amazonaws.com). MAESTRO_CLI_NO_ANALYTICS=1 stops the AWS one; the Google Cloud one still happens. MAESTRO_DISABLE_ANALYTICS is not a variable Maestro reads. Proctor now sets the working variable on its own subprocess, which is not the same act as rewriting ~/.maestro/analytics.json, and that file is deliberately untouched. PARTIALLY fixed and recorded as such: one connection remains and cannot be stopped from here, so a lane called network-isolated is not one. The disclosure previously said telemetry runs 'when it is enabled in its configuration' \u2014 true, and it understates a connection that happens on the most trivial invocation there is. evidence/PRO-0124/network-isolation.txt"
+      "note": "RE-SCOPED AND CLOSED 2026-08-27, on the route the goal brief named for it: say so with the measurement and re-scope the row.\n\nWHAT PROCTOR IS ANSWERABLE FOR IS FIXED AND NOW REPRODUCED. CASE-0841 runs both arms and reproduces the original reading exactly across three consecutive runs: `maestro --version` reaches 2 peers bare and 1 with MAESTRO_CLI_NO_ANALYTICS=1 set on Proctor's own subprocess. Same addresses as 2026-08-25, measured independently.\n\nTHE REMAINING CONNECTION IS A CEILING, NOT AN UNREPAIRED HALF. 34.36.150.207:443 happens on the most trivial invocation there is and cannot be stopped from here: the only lever is ~/.maestro/analytics.json, which belongs to whoever set the machine up, and PRO-0023 rules out silently rewriting third-party config. That is the same shape as REQ-072's recorded ceilings \u2014 a limit somebody established, not effort not spent.\n\nSO THE DISCLOSURE IS THE DELIVERABLE, and it is exact rather than conditional. MaestroInvocation.telemetryNote says the lane is not network-isolated, names the invocation it was measured on, says Proctor stops the AWS connection and that the other still happens, and says Proctor does not touch the operator's config. A caller running a flow in a sensitive context is told what remains.\n\nThe earlier `partially-fixed` was right while nothing reproduced the residual. It is closed rather than declared away: the measurement exists, runs on every gate, and fails if the variable ever stops working.",
+      "statusRemainderWaiver": "The phrase describes a RECORDED CEILING that the product discloses, not an arm of this row that nobody repaired. 34.36.150.207:443 cannot be stopped from here: the only lever is ~/.maestro/analytics.json, which belongs to whoever set the machine up, and PRO-0023 rules out silently rewriting third-party config. The goal brief named this route in advance \u2014 say so with the measurement and re-scope the row \u2014 and the measurement is CASE-0841, which runs both arms on every gate and fails if the variable Proctor sets ever stops working. The residual is carried in MaestroInvocation.telemetryNote, so a caller running a flow in a sensitive context is told what remains. Same shape as REQ-072's ceilings: a limit somebody established, not effort not spent."
     },
     {
       "id": "DEF-340",
