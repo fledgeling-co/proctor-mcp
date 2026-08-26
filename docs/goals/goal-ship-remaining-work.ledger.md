@@ -9,3 +9,4 @@
 | 5 | 21:11:01 | block | finish-line | iteration 5/60 · repeat ×2 |
 | 6 | 21:22:53 | block | finish-line | iteration 6/60 · repeat ×1 |
 | 7 | 21:43:25 | block | finish-line | iteration 7/60 · repeat ×1 |
+| 8 | 22:01:07 | block | finish-line | iteration 8/60 · repeat ×1 |

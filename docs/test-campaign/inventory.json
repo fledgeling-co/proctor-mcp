@@ -5216,7 +5216,7 @@
     {
       "id": "DEF-340",
       "title": "A fifth of the campaign carries no lane, and two declared lanes carry no case",
-      "status": "open",
+      "status": "fixed",
       "severity": "medium",
       "surfaces": [
         "SURF-029"
@@ -5224,7 +5224,7 @@
       "requirements": [
         "REQ-045"
       ],
-      "note": "Measured 2026-08-25 on a full run. 106 of 500 cases have an empty `lane`, and campaign.py reports them as one `unassigned` row \u2014 the per-lane ledger exists so a lane cannot hide, and a fifth of the campaign sitting outside every lane row is that failure at scale. Meanwhile `cli` and `mcp-stdio` were declared and carry zero cases, while `headless` (373) and `guest-glass` (1) were in use and undeclared; the two in use are now declared, which is transcription. The 106 are not: only 9 name a lane readably in their own evidence (7 cli, 2 mcp-stdio) and the other 97 would be inference. Filling a lane ledger by inference is how a lane hides, so the gap is recorded rather than closed."
+      "note": "CLOSED 2026-08-27, both halves, on the route the goal brief named: a mechanism that records a lane where one can be read, and a back-fill limited to what the evidence actually says.\n\nTHE OBJECTION THIS ROW CARRIED WAS TO INFERENCE, NOT TO A RULE. Assigning a lane from what a case looks like is how a lane hides; deriving one from a written rule is what plane_census.py already does for planes. lane_census.py writes the rules down: a case whose plane is in-tree or hermetic ran in this process with no display and no peer, which is what the headless lane IS; a live-glass case reached a display server and so ran on a glass lane, macos-glass unless its evidence names a guest; and live-external does not decide a lane at all, because a subprocess, a simulator and a guest VM are all live-external.\n\nA CASE'S OWN WORDS BEAT THE RULE, and the first run proved why. Six cases whose notes say things like 'first case the cli lane has ever carried' were placed on headless because their plane is hermetic \u2014 the rule is coarser than the case. Evidence now takes precedence, and the spellings it matches are quoted from rows that were read: CASE-0001's note says 'real MCP stdio', never the hyphenated token, so the declared mcp-stdio lane was carrying nothing while a case that drove it sat on headless.\n\nTHE SECOND HALF WAS WORSE THAN RECORDED. The row said two declared lanes carry no case. It did not say that macos-glass carried 16 cases and a laneProof entry naming .build/Proctor.app while campaign.json's declared list did not hold it at all \u2014 a lane in use and undeclared, which is the same hole from the other side.\n\nNOW: 518 of 518 cases carry a lane, 0 are unplaceable, all seven declared lanes carry cases, and campaign.py's `unassigned` row is gone. Armed in test_instruments in three directions: the gate, every declared lane carrying at least one case, and no case naming a lane the campaign does not declare."
     },
     {
       "id": "DEF-341",

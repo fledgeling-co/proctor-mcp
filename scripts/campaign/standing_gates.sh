@@ -56,6 +56,7 @@ gate verification-recs $P scripts/campaign/verification_record.py check
 gate registry-drift    $P scripts/campaign/defect_gate.py dropped docs/test-campaign
 gate plane-census      $P scripts/campaign/plane_census.py docs/test-campaign --gate
 gate control-census    $P scripts/campaign/control_census.py --gate
+gate lane-census       $P scripts/campaign/lane_census.py --gate
 
 TOTAL=$((PASSED + ${#FAILED[@]}))
 if [ ${#FAILED[@]} -gt 0 ]; then

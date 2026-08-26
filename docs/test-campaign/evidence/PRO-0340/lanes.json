@@ -1,0 +1,644 @@
+{
+  "total": 518,
+  "already": 412,
+  "placed": [
+    {
+      "case": "CASE-0001",
+      "plane": "hermetic",
+      "lane": "mcp-stdio",
+      "why": "its own note or evidence names the mcp-stdio lane"
+    },
+    {
+      "case": "CASE-0002",
+      "plane": "hermetic",
+      "lane": "mcp-stdio",
+      "why": "its own note or evidence names the mcp-stdio lane"
+    },
+    {
+      "case": "CASE-0003",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0004",
+      "plane": "live-glass",
+      "lane": "macos-glass",
+      "why": "plane live-glass and nothing names a guest; every live-glass case that declares a lane declares macos-glass"
+    },
+    {
+      "case": "CASE-0005",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0006",
+      "plane": "live-glass",
+      "lane": "macos-glass",
+      "why": "plane live-glass and nothing names a guest; every live-glass case that declares a lane declares macos-glass"
+    },
+    {
+      "case": "CASE-0007",
+      "plane": "live-glass",
+      "lane": "macos-glass",
+      "why": "plane live-glass and nothing names a guest; every live-glass case that declares a lane declares macos-glass"
+    },
+    {
+      "case": "CASE-0008",
+      "plane": "live-glass",
+      "lane": "macos-glass",
+      "why": "plane live-glass and nothing names a guest; every live-glass case that declares a lane declares macos-glass"
+    },
+    {
+      "case": "CASE-0009",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0010",
+      "plane": "live-glass",
+      "lane": "macos-glass",
+      "why": "plane live-glass and nothing names a guest; every live-glass case that declares a lane declares macos-glass"
+    },
+    {
+      "case": "CASE-0011",
+      "plane": "live-glass",
+      "lane": "cli",
+      "why": "its own note or evidence names the cli lane"
+    },
+    {
+      "case": "CASE-0012",
+      "plane": "live-glass",
+      "lane": "macos-glass",
+      "why": "plane live-glass and nothing names a guest; every live-glass case that declares a lane declares macos-glass"
+    },
+    {
+      "case": "CASE-0013",
+      "plane": "live-glass",
+      "lane": "macos-glass",
+      "why": "plane live-glass and nothing names a guest; every live-glass case that declares a lane declares macos-glass"
+    },
+    {
+      "case": "CASE-0014",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0015",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0016",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0017",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0018",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0019",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0020",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0021",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0022",
+      "plane": "in-tree",
+      "lane": "ios-sim",
+      "why": "its own note or evidence names the ios-sim lane"
+    },
+    {
+      "case": "CASE-0023",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0024",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0025",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0026",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0027",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0028",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0029",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0030",
+      "plane": "live-glass",
+      "lane": "macos-glass",
+      "why": "plane live-glass and nothing names a guest; every live-glass case that declares a lane declares macos-glass"
+    },
+    {
+      "case": "CASE-0031",
+      "plane": "live-glass",
+      "lane": "macos-glass",
+      "why": "plane live-glass and nothing names a guest; every live-glass case that declares a lane declares macos-glass"
+    },
+    {
+      "case": "CASE-0032",
+      "plane": "live-glass",
+      "lane": "macos-glass",
+      "why": "plane live-glass and nothing names a guest; every live-glass case that declares a lane declares macos-glass"
+    },
+    {
+      "case": "CASE-0033",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0034",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0035",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0036",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0037",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0038",
+      "plane": "hermetic",
+      "lane": "cli",
+      "why": "its own note or evidence names the cli lane"
+    },
+    {
+      "case": "CASE-0039",
+      "plane": "live-glass",
+      "lane": "macos-glass",
+      "why": "plane live-glass and nothing names a guest; every live-glass case that declares a lane declares macos-glass"
+    },
+    {
+      "case": "CASE-0040",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0041",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0042",
+      "plane": "live-glass",
+      "lane": "macos-glass",
+      "why": "plane live-glass and nothing names a guest; every live-glass case that declares a lane declares macos-glass"
+    },
+    {
+      "case": "CASE-0044",
+      "plane": "hermetic",
+      "lane": "cli",
+      "why": "its own note or evidence names the cli lane"
+    },
+    {
+      "case": "CASE-0045",
+      "plane": "hermetic",
+      "lane": "cli",
+      "why": "its own note or evidence names the cli lane"
+    },
+    {
+      "case": "CASE-0046",
+      "plane": "hermetic",
+      "lane": "cli",
+      "why": "its own note or evidence names the cli lane"
+    },
+    {
+      "case": "CASE-0047",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0048",
+      "plane": "in-tree",
+      "lane": "macos",
+      "why": "its own note or evidence names the macos lane"
+    },
+    {
+      "case": "CASE-0049",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0050",
+      "plane": "in-tree",
+      "lane": "macos",
+      "why": "its own note or evidence names the macos lane"
+    },
+    {
+      "case": "CASE-0051",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0052",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0053",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0054",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0055",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0057",
+      "plane": "hermetic",
+      "lane": "cli",
+      "why": "its own note or evidence names the cli lane"
+    },
+    {
+      "case": "CASE-0058",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0059",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0060",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0061",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0062",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0063",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0080",
+      "plane": "hermetic",
+      "lane": "cli",
+      "why": "its own note or evidence names the cli lane"
+    },
+    {
+      "case": "CASE-0081",
+      "plane": "in-tree",
+      "lane": "cli",
+      "why": "its own note or evidence names the cli lane"
+    },
+    {
+      "case": "CASE-0082",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0083",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0084",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0085",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0086",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0087",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0089",
+      "plane": "live-glass",
+      "lane": "macos-glass",
+      "why": "its own note or evidence names the macos-glass lane"
+    },
+    {
+      "case": "CASE-0088",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0072",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0073",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0074",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "its own note or evidence names the headless lane"
+    },
+    {
+      "case": "CASE-0075",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0076",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0077",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0078",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0079",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0110",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0111",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0112",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0113",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0114",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0115",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0116",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0120",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0121",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0122",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0123",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0124",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0125",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0126",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0127",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0128",
+      "plane": "live-glass",
+      "lane": "macos-glass",
+      "why": "plane live-glass and nothing names a guest; every live-glass case that declares a lane declares macos-glass"
+    },
+    {
+      "case": "CASE-0129",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0190",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0191",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0192",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0193",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0194",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0195",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0196",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0197",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0198",
+      "plane": "in-tree",
+      "lane": "headless",
+      "why": "plane in-tree: in this process, so no display and no peer"
+    },
+    {
+      "case": "CASE-0199",
+      "plane": "hermetic",
+      "lane": "headless",
+      "why": "plane hermetic: in this process, so no display and no peer"
+    }
+  ],
+  "unplaceable": [],
+  "undeclared": []
+}

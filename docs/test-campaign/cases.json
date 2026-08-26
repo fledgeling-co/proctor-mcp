@@ -14,7 +14,9 @@
     "armedBy": "disabled MCP stdio dispatcher; verified tool calls fail with protocol error; restored",
     "note": "21 tools advertised over real MCP stdio (mcp_drive.py initialize + tools/list). Doctor structuredContent from the reinstalled artifact: agentBuild.commit ab53c5e5a47b, ready true, Accessibility and Screen Recording granted, Automation denied. The grants survived the Developer ID reinstall, which is what REQ-022 promises. swift test: 1526 tests in 176 suites passed.",
     "plane": "hermetic",
-    "journey": "JRN-001"
+    "journey": "JRN-001",
+    "lane": "mcp-stdio",
+    "laneNote": "Derived by lane_census.py \u2014 its own note or evidence names the mcp-stdio lane."
   },
   {
     "id": "CASE-0002",
@@ -31,7 +33,9 @@
     "armedBy": "Swapped the launch profile and watched the advertised catalogue change: tools/list returns 21 names on full and exactly 10 on core.",
     "note": "Profile filtering measured over real MCP stdio. core advertises proctor_act, apps, assert, capture, doctor, find, menu, snapshot, wait, zoom. The earlier arming claim said proctor_guest is refused on core; it is not. tools/call accepts any real tool by name whatever the profile, which MCPServer.swift:123 states as the contract: the profile trims discovery so a host is not handed the whole catalogue as noise, and never blocks a host that widens its own surface. Verified: proctor_guest and proctor_policy both executed on a core-profile shim. The profile is a token-cost trim, not a privilege boundary, and sweep L records it as such.",
     "plane": "hermetic",
-    "journey": "JRN-001"
+    "journey": "JRN-001",
+    "lane": "mcp-stdio",
+    "laneNote": "Derived by lane_census.py \u2014 its own note or evidence names the mcp-stdio lane."
   },
   {
     "id": "CASE-0003",
@@ -47,7 +51,9 @@
     "armedBy": "forced window focus during process-directed step; verified focus assertion failed; restored",
     "note": "Background AXUIElement action execution without focus theft or Space disruption",
     "plane": "in-tree",
-    "journey": "JRN-002"
+    "journey": "JRN-002",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0004",
@@ -64,7 +70,9 @@
     "armedBy": "suppressed foreground activation; verified synthetic batch refused; restored",
     "note": "Synthetic hover batch raised HUD+takeover (CGWindowList: 3 overlay windows sharingState=0). Raster of the overlay is CASE-0008 n/a. Overlay-exclusion of the AUT capture is evidence/overlay-exclusion.json (verdict excluded, capturePathProvenLive true).",
     "plane": "live-glass",
-    "journey": "JRN-004"
+    "journey": "JRN-004",
+    "lane": "macos-glass",
+    "laneNote": "Derived by lane_census.py \u2014 plane live-glass and nothing names a guest; every live-glass case that declares a lane declares macos-glass."
   },
   {
     "id": "CASE-0005",
@@ -80,7 +88,9 @@
     "armedBy": "injected stale SCFrameStatus; verified trustworthy verdict evaluated false; restored",
     "note": "proctor_capture of Status win:1:0: SCFrameStatus complete, trustworthy true, 900x833 from 1280x1184, dirtyRectCount 1.",
     "plane": "hermetic",
-    "journey": "JRN-003"
+    "journey": "JRN-003",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0006",
@@ -100,7 +110,9 @@
     "armedBy": "forced 768px tier clamp on detail request; verified pixel assertion rejected; restored",
     "note": "Window-scoped SCK of TextEdit scratch.txt during overlay-exclusion baseline (1312x844, complete). Distinct bytes from the Status-window shot.",
     "plane": "live-glass",
-    "journey": "JRN-003"
+    "journey": "JRN-003",
+    "lane": "macos-glass",
+    "laneNote": "Derived by lane_census.py \u2014 plane live-glass and nothing names a guest; every live-glass case that declares a lane declares macos-glass."
   },
   {
     "id": "CASE-0007",
@@ -120,7 +132,9 @@
     "armedBy": "clamped zoom crop to 1x scale; verified sub-pixel resolution assertion failed; restored",
     "note": "proctor_zoom region [16,48,300,160] of Status window: 600x320 at scale 2, status complete, trustworthy true.",
     "plane": "live-glass",
-    "journey": "JRN-003"
+    "journey": "JRN-003",
+    "lane": "macos-glass",
+    "laneNote": "Derived by lane_census.py \u2014 plane live-glass and nothing names a guest; every live-glass case that declares a lane declares macos-glass."
   },
   {
     "id": "CASE-0008",
@@ -141,7 +155,9 @@
     "armedBy": "Armed by the default, which refuses: with PROCTOR_OVERLAY_CAPTURE unset every overlay reports sharingState 0 and screencapture -l exits 1 with \"could not create image from window\". The same commands with the switch set produce these pixels.",
     "note": "704x460 at scale 2, 2517 distinct colours. The frame carries the 22pt character sprite, the step title \"Hovering over ...\", the target badge \"Synthetic event \u2014 TextEdit must stay in front\", the step counter, the elapsed clock and the Pause and Stop controls, which is what REQ-006 promises. Measured under PROCTOR_OVERLAY_CAPTURE=1; the shipping default excludes the panel from every channel, and that default is what CASE-0004 and CASE-0032 check. evidence/hud-capture-channels.json records the four channels that refuse when it is unset. Supporting measurements: evidence/overlay-capture-lifted.json (this capture) and evidence/overlay-capture-default.json (the refusal it is armed against). Citation reconciled in PRO-0109 (DEF-224).",
     "plane": "live-glass",
-    "journey": "JRN-004"
+    "journey": "JRN-004",
+    "lane": "macos-glass",
+    "laneNote": "Derived by lane_census.py \u2014 plane live-glass and nothing names a guest; every live-glass case that declares a lane declares macos-glass."
   },
   {
     "id": "CASE-0009",
@@ -157,7 +173,9 @@
     "armedBy": "disconnected hardware event tap; verified contention yield timed out; restored",
     "note": "Hardware contention detection yields control within 50ms",
     "plane": "in-tree",
-    "journey": "JRN-004"
+    "journey": "JRN-004",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0010",
@@ -178,7 +196,9 @@
     "armedBy": "Armed by the default, which refuses: with PROCTOR_OVERLAY_CAPTURE unset every overlay reports sharingState 0 and screencapture -l exits 1 with \"could not create image from window\". The same commands with the switch set produce these pixels.",
     "note": "5120x2880, the full external display, 2739 distinct colours and every pixel carrying alpha. The frame shows the tint and the statement \"Proctor is driving \\\"TextEdit\\\"\" with \"Your clicks and keys still reach it \u2014 Pause and Stop are in Proctor's run panel\", which is what REQ-008 promises. Measured under PROCTOR_OVERLAY_CAPTURE=1. The complementary property, that the panel does not enter a window-scoped capture of the app under test at the default, is CASE-0004 evidence overlay-exclusion.json. Supporting measurements: evidence/overlay-capture-lifted.json and evidence/overlay-exclusion.json. Citation reconciled in PRO-0109 (DEF-224).",
     "plane": "live-glass",
-    "journey": "JRN-004"
+    "journey": "JRN-004",
+    "lane": "macos-glass",
+    "laneNote": "Derived by lane_census.py \u2014 plane live-glass and nothing names a guest; every live-glass case that declares a lane declares macos-glass."
   },
   {
     "id": "CASE-0011",
@@ -200,7 +220,9 @@
     "captureMethod": "proctor_capture \u2192 ScreenCaptureKit, window-scoped",
     "frameStatus": "complete",
     "plane": "live-glass",
-    "journey": "JRN-001"
+    "journey": "JRN-001",
+    "lane": "cli",
+    "laneNote": "Derived by lane_census.py \u2014 its own note or evidence names the cli lane."
   },
   {
     "id": "CASE-0012",
@@ -220,7 +242,9 @@
     "armedBy": "mocked TCC denial in walkthrough; verified advance button remained disabled; restored",
     "note": "SCK of the walkthrough before Skip setup: Accessibility and Screen Recording marked On, Continue enabled, Skip setup present. 900x833 complete trustworthy.",
     "plane": "live-glass",
-    "journey": "JRN-001"
+    "journey": "JRN-001",
+    "lane": "macos-glass",
+    "laneNote": "Derived by lane_census.py \u2014 plane live-glass and nothing names a guest; every live-glass case that declares a lane declares macos-glass."
   },
   {
     "id": "CASE-0013",
@@ -240,7 +264,9 @@
     "armedBy": "cleared status item image; verified menu bar glyph existence check failed; restored",
     "note": "Menu extra captured at 1056x76. glass_probe hasExtrasMenuBar true on pid 38168. Popover anchoring not opened this run.",
     "plane": "live-glass",
-    "journey": "JRN-001"
+    "journey": "JRN-001",
+    "lane": "macos-glass",
+    "laneNote": "Derived by lane_census.py \u2014 plane live-glass and nothing names a guest; every live-glass case that declares a lane declares macos-glass."
   },
   {
     "id": "CASE-0014",
@@ -256,7 +282,9 @@
     "armedBy": "forced dirty frame generator during settle; verified timeout reported; restored",
     "note": "Multi-signal settling evaluates pixel and AX quietness",
     "plane": "in-tree",
-    "journey": "JRN-002"
+    "journey": "JRN-002",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0015",
@@ -272,7 +300,9 @@
     "armedBy": "injected state hash flip on step 3; verified firstDivergence reported step 3; restored",
     "note": "proctor_stability 5-run of campaign-setup-menu: tree-only deterministic true; includeTiles deterministic false, firstDivergence 0, stepInstability [0.25] (pixel animation).",
     "plane": "hermetic",
-    "journey": "JRN-005"
+    "journey": "JRN-005",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0016",
@@ -288,7 +318,9 @@
     "armedBy": "desynchronised AX element frame from layer geometry; verified agree assertion failed; restored",
     "note": "Tri-observer agree check compares AX tree, geometry, and pixels",
     "plane": "in-tree",
-    "journey": "JRN-005"
+    "journey": "JRN-005",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0017",
@@ -304,7 +336,9 @@
     "armedBy": "mutated HMAC signature on record 12; verified AuditLog.verify flagged corruption; restored",
     "note": "proctor_policy status: auditEncrypted true, auditSigned true, auditVerdict.clean true, completeness proven, entries 733, verified 158, preChain 575.",
     "plane": "hermetic",
-    "journey": "JRN-006"
+    "journey": "JRN-006",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0018",
@@ -320,7 +354,9 @@
     "armedBy": "executed disallowed shell action in policy; verified PolicyEngine refused execution; restored",
     "note": "Policy engine action filters and redaction pattern enforcement",
     "plane": "in-tree",
-    "journey": "JRN-006"
+    "journey": "JRN-006",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0019",
@@ -336,7 +372,9 @@
     "armedBy": "provided invalid VM handle; verified proctor_guest returned error code; restored",
     "note": "proctor_guest list: 1 prlctl guest Windows 11 state invalid; lume --json unknown option. Capability surface answered.",
     "plane": "hermetic",
-    "journey": "JRN-007"
+    "journey": "JRN-007",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0020",
@@ -352,7 +390,9 @@
     "armedBy": "executed tree assertion on delegated Cua tier; verified skipped verdict with reason; restored",
     "note": "Witness tier gating: delegated tier skips tree assertions with reason",
     "plane": "in-tree",
-    "journey": "JRN-007"
+    "journey": "JRN-007",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0021",
@@ -368,7 +408,9 @@
     "armedBy": "unset PROCTOR_GUEST during host takeover check; verified takeover executed on host; restored",
     "note": "LaunchAgent env PROCTOR_GUEST=gst-sequoia-01; synthetic hover on TextEdit refused: notImplemented, names gst-sequoia-01, remedy Unset PROCTOR_GUEST. Env restored after the call.",
     "plane": "hermetic",
-    "journey": "JRN-007"
+    "journey": "JRN-007",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0022",
@@ -385,7 +427,9 @@
     "armedBy": "passed malformed URL scheme to simctl; verified launch failed with non-zero exit; restored",
     "note": "iOS simulator deep link launching and Maestro flow repeat execution. The live lane was run on 20 Aug 2026 rather than carried from 15 Aug, against maestro 2.4.0 and a booted iPhone 16 Pro on iOS 18.2, and running it found DEF-015: it passed device nil and relied on exactly one simulator being booted, and its two tests drove one device concurrently so the determinism check scored its own repeats as divergent at command 4. Serialised and given a named device, both pass in 55.6s, green twice. What is still not gated by a default run is the live lane itself, which stays opt-in behind PROCTOR_LIVE_MAESTRO because a machine without Xcode, maestro or a booted simulator would go red for a fact about the machine.",
     "plane": "in-tree",
-    "journey": "JRN-008"
+    "journey": "JRN-008",
+    "lane": "ios-sim",
+    "laneNote": "Derived by lane_census.py \u2014 its own note or evidence names the ios-sim lane."
   },
   {
     "id": "CASE-0023",
@@ -401,7 +445,9 @@
     "armedBy": "injected non-Sendable actor mutation across task boundary; verified Swift compiler error; restored",
     "note": "Swift 6 complete concurrency safety across 1520 tests",
     "plane": "in-tree",
-    "journey": "JRN-002"
+    "journey": "JRN-002",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0024",
@@ -418,7 +464,9 @@
     "armedBy": "Watched to fail on the previous install: spctl rejected and stapler reported no ticket against the same two commands that now pass.",
     "note": "Re-measured after scripts/install.sh notarised and stapled a fresh build: spctl -a -vv /Applications/Proctor.app returns accepted, source=Notarized Developer ID, origin=Developer ID Application: Luke Rhodes (H4HGFL52W7); stapler validate returns \"The validate action worked!\"; codesign reports runtime hardened, timestamp 19 Aug 2026 21:59:14. The earlier fail was the same commands against the previous install (rejected, Unnotarized Developer ID, no ticket).",
     "plane": "hermetic",
-    "journey": "JRN-001"
+    "journey": "JRN-001",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0025",
@@ -434,7 +482,9 @@
     "armedBy": "stopped reflector in-process endpoint; verified reflectorIdle condition timed out; restored",
     "note": "proctor_inspect of Proctor Status returned reflectorUnavailable (expected: not in-process). Unit suite covers the bridge; live inspect of a foreign process is the documented ceiling.",
     "plane": "in-tree",
-    "journey": "JRN-002"
+    "journey": "JRN-002",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0026",
@@ -450,7 +500,9 @@
     "armedBy": "disabled Obscura toolchain flag; verified browser route refused with missing engine; restored",
     "note": "doctor.obscura.available true at /Users/lukerhodes/.local/bin/obscura; browser lane ready.",
     "plane": "hermetic",
-    "journey": "JRN-002"
+    "journey": "JRN-002",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0027",
@@ -467,7 +519,9 @@
     "armedBy": "Closed Status via AXPress close; proctor_apps activate returned windows []; open -a left axWindowCount=0; Window \u25b8 Proctor restored the window. The activate/open path is the one that fails.",
     "note": "Fixed and verified on the installed artifact. With the window ordered out at an accessory launch (cg 0, axWindowCount 0, extras present), open -a /Applications/Proctor.app produced cg 1 window 640x592 and axWindowCount 1 titled Proctor. Before the fix the same sequence left axWindowCount 0 through both activate and open -a. WindowPresentation.shouldPresentMain asks whether a window titled Proctor is on screen instead of trusting AppKit hasVisibleWindows, which is true while only the extras item is up.",
     "plane": "hermetic",
-    "journey": "JRN-001"
+    "journey": "JRN-001",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0028",
@@ -483,7 +537,9 @@
     "armedBy": "The kill is the control: while the agent answered, the same window showed Ready and the permission rows. launchctl bootout + SIGKILL flips it.",
     "note": "Re-measured 2026-08-19 against /Applications/Proctor.app with a monotonic clock: at t+0.71s and t+3.63s after bootout+SIGKILL the window showed the Agent down pill, \"The background agent is not answering\", the socket path and Start the agent / Re-check. The first capture that prompted DEF-002 was taken inside one 2s doctor tick (t is approximately 0.2s), so it caught the pre-tick frame rather than a stale claim. DEF-002 is retracted. Evidence citations reconciled in PRO-0109 (DEF-224).",
     "plane": "hermetic",
-    "journey": "JRN-001"
+    "journey": "JRN-001",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0029",
@@ -502,7 +558,9 @@
       "DEF-002"
     ],
     "plane": "hermetic",
-    "journey": "JRN-001"
+    "journey": "JRN-001",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0030",
@@ -519,7 +577,9 @@
     "armedBy": "The run is the control. The same predicate over CGWindowListCopyWindowInfo returns nothing before the batch starts and nothing four seconds after it ends, and doctor reports hud.onScreen false at both ends.",
     "note": "The rung REQ-006 can actually be measured on this lane. Across 39 samples of the window server while a synthetic batch ran, the Run HUD went absent then present then absent: 352x230 at layer 25, alpha 1, sharingState 0, onscreen true. Its pixels stay unreachable (CASE-0008), so this asserts the panel reaching the display server rather than what it renders.",
     "plane": "live-glass",
-    "journey": "JRN-004"
+    "journey": "JRN-004",
+    "lane": "macos-glass",
+    "laneNote": "Derived by lane_census.py \u2014 plane live-glass and nothing names a guest; every live-glass case that declares a lane declares macos-glass."
   },
   {
     "id": "CASE-0031",
@@ -536,7 +596,9 @@
     "armedBy": "The batch is the control: zero shield windows before it and zero four seconds after, against one per display while it runs.",
     "note": "One takeover panel per display, each matching that display frame exactly (1728x1117 on the one display attached at measurement time; an earlier two-display run carried 1728x1117 and 2560x1440), layer 24, alpha 1, sharingState 0, and all cleared afterwards. The shield pixels stay unreachable (CASE-0010); the complementary property, that the panel does not enter a capture of the app under test, is CASE-0004 evidence overlay-exclusion.json.",
     "plane": "live-glass",
-    "journey": "JRN-004"
+    "journey": "JRN-004",
+    "lane": "macos-glass",
+    "laneNote": "Derived by lane_census.py \u2014 plane live-glass and nothing names a guest; every live-glass case that declares a lane declares macos-glass."
   },
   {
     "id": "CASE-0032",
@@ -558,7 +620,9 @@
       "DEF-005"
     ],
     "plane": "live-glass",
-    "journey": "JRN-004"
+    "journey": "JRN-004",
+    "lane": "macos-glass",
+    "laneNote": "Derived by lane_census.py \u2014 plane live-glass and nothing names a guest; every live-glass case that declares a lane declares macos-glass."
   },
   {
     "id": "CASE-0033",
@@ -575,7 +639,9 @@
     "armedBy": "Watched to fail on the build before the fix: the first render of the queue pane put '2 lanes' on the shelf where the design compiled '3 lanes', and the error pane placed its remedy keybar one row above the design's. Both were caught by the row-and-column comparison rather than by looking.",
     "note": "The running binary was captured through a pty at both sizes by tui-craft's tui_capture.py (kind=captured, term=xterm-256color) and compared against the Swift renderer cell by cell: identical at 100x30 and at 80x24, with any difference reported by its row and column. The 22 compiled design frames are reproduced exactly by the same renderer. NOT a raster claim, deliberately: a terminal has no pixels to photograph, and the artifact is a typed cell grid rather than an image. For this class of defect the grid is the stronger instrument \u2014 a one-column offset from a double-width glyph is invisible in a screenshot and exact against a ruler, which is why both sides measure with the same width function. The oracle is therefore an exact outcome: two independently produced grids are equal or they are not.",
     "plane": "hermetic",
-    "journey": "JRN-009"
+    "journey": "JRN-009",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0034",
@@ -592,7 +658,9 @@
     "armedBy": "Watched to fail on the build before the fix: tui_gates.py --strict reported 'no bold and no dim anywhere in the frame - every glyph carries the same weight, so the screen has no hierarchy that survives a monochrome terminal', because weight was applied only on the NO_COLOR path.",
     "note": "tui_gates.py --strict on both captures: 0 high findings, exit 0. Attribute inventory now reports bold and dim in use, so the role ladder survives losing colour - which matters because the 16-colour palette has no defined RGB mapping, so on many terminals colour is the channel that cannot be relied on.",
     "plane": "hermetic",
-    "journey": "JRN-009"
+    "journey": "JRN-009",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0035",
@@ -608,7 +676,9 @@
     "armedBy": "Watched to fail on the build before the fix: an action string the surface does not have returned ok and did nothing, so a misspelled Stop was indistinguishable from a Stop that worked.",
     "note": "Pause, Resume and Stop from a supervision client reach RunControl.shared - the same object the HUD panel writes and every run loop reads between steps. The control is injected in the test rather than taken from the process, because PRO-0053 recorded a suite writing a shared latch reaching whichever other suite was stepping concurrently; the default argument carries the claim.",
     "plane": "in-tree",
-    "journey": "JRN-009"
+    "journey": "JRN-009",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0036",
@@ -624,7 +694,9 @@
     "armedBy": "Found by capturing the running program against the installed agent, which predates this feature: the surface said 'The background agent is not answering' about an agent that had just answered, and offered to start a process that was already running.",
     "note": "An agent that answers and does not know proctor.watch is now its own state with its own remedy - upgrade rather than start. A frame that stops arriving reports itself stale rather than being drawn as current, because a stale queue drawn as live is the screen somebody decides against.",
     "plane": "hermetic",
-    "journey": "JRN-009"
+    "journey": "JRN-009",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0037",
@@ -640,7 +712,9 @@
     "armedBy": "Watched to fail on the build before the fix: proctor_menu against the running app returned 17 of 20 declared commands, and the three absent ones were exactly those SwiftUI never declared.",
     "note": "20 of 20 specified commands now render, read from the running app's own menu bar through proctor_menu and diffed against CommandSurface.all. The instrument had to be read correctly first: enumerated while the app was not frontmost, the Window and Help menus come back unpopulated, which looks identical to five more missing commands.",
     "plane": "hermetic",
-    "journey": "JRN-005"
+    "journey": "JRN-005",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0038",
@@ -656,7 +730,9 @@
     "armedBy": "Watched to fail by comparing without stripping wall-clock fields: the obscura and tools blocks differ on checkedAt between two calls seconds apart, so the relation is only true of the stable payload and the comparison says which fields it removed.",
     "note": "The same relation from two front ends: proctor --json and the MCP tools/call result for proctor_doctor agree across 23 top-level keys and 51,195 characters. Settles PRO-0073 A2, which was carried as needing a live agent.",
     "plane": "hermetic",
-    "journey": "JRN-009"
+    "journey": "JRN-009",
+    "lane": "cli",
+    "laneNote": "Derived by lane_census.py \u2014 its own note or evidence names the cli lane."
   },
   {
     "id": "CASE-0039",
@@ -673,7 +749,9 @@
     "armedBy": "Watched to fail on the build before the fix: the health report carried three grants and the design drew Input Monitoring as one of them, so the row the design specifies had no data behind it.",
     "note": "Measured through the product: a wave-9 agent on its own socket reports Input Monitoring granted, and the readiness pane draws it. The operator's installed agent was never replaced, so this was measured without an install.",
     "plane": "live-glass",
-    "journey": "JRN-005"
+    "journey": "JRN-005",
+    "lane": "macos-glass",
+    "laneNote": "Derived by lane_census.py \u2014 plane live-glass and nothing names a guest; every live-glass case that declares a lane declares macos-glass."
   },
   {
     "id": "CASE-0040",
@@ -695,7 +773,9 @@
     "actuates": [
       "s"
     ],
-    "actuatesNote": "The TUI's stop key. This case's note already records it \u2014 a real keystroke into a TUI under a pty halted a run an MCP client had started, and the caller received haltedByPerson after five of ten steps. TUIApp.swift:84 maps `s` to control(\"stop\"), so the key that halts is the key declared. Recorded here rather than inferred from the surface."
+    "actuatesNote": "The TUI's stop key. This case's note already records it \u2014 a real keystroke into a TUI under a pty halted a run an MCP client had started, and the caller received haltedByPerson after five of ten steps. TUIApp.swift:84 maps `s` to control(\"stop\"), so the key that halts is the key declared. Recorded here rather than inferred from the surface.",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0041",
@@ -712,7 +792,9 @@
     "armedBy": "Watched to fail on the build before the fix: both panes drew their empty state against a live agent, which reads as a quiet machine rather than as a pane nobody wired.",
     "note": "Captured against a live agent: readiness draws four grants and five lanes with what each still wants, switches draws all eight with their real source and timing. History remains empty by design \u2014 the trail is sealed and no client can read it \u2014 and that is an open question rather than a fixed gap.",
     "plane": "hermetic",
-    "journey": "JRN-009"
+    "journey": "JRN-009",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0042",
@@ -734,7 +816,9 @@
       "frameStatus": "complete"
     },
     "plane": "live-glass",
-    "journey": "JRN-005"
+    "journey": "JRN-005",
+    "lane": "macos-glass",
+    "laneNote": "Derived by lane_census.py \u2014 plane live-glass and nothing names a guest; every live-glass case that declares a lane declares macos-glass."
   },
   {
     "id": "CASE-0043",
@@ -766,7 +850,9 @@
     "armed": true,
     "armedBy": "CLISurfaceTests derives verbs from ToolCatalogue.all rather than a list; adding a tool without a verb reddens the derivation test. Measured live: 21 catalogue tools, 26 verbs, zero tools with no verb.",
     "note": "First case the cli lane has ever carried. The lane was declared in campaign.json from the start and had no requirement, no surface and no case behind it.",
-    "plane": "hermetic"
+    "plane": "hermetic",
+    "lane": "cli",
+    "laneNote": "Derived by lane_census.py \u2014 its own note or evidence names the cli lane."
   },
   {
     "id": "CASE-0045",
@@ -780,7 +866,9 @@
     "armed": true,
     "armedBy": "FrontEndAttributionTests pins the name->front-end map, and a peer whose executable is neither proctor-cli nor proctor-shim records nil rather than defaulting to one of them.",
     "note": "Whole trail read: 1159 records, via=cli on 3, via=mcp on 19, None on the 1137 that predate the field. Derived from proc_pidpath of the peer rather than from the request.",
-    "plane": "hermetic"
+    "plane": "hermetic",
+    "lane": "cli",
+    "laneNote": "Derived by lane_census.py \u2014 its own note or evidence names the cli lane."
   },
   {
     "id": "CASE-0046",
@@ -801,7 +889,9 @@
       "wait",
       "doctor"
     ],
-    "actuatesNote": "Three verbs this case runs and reads the exit code of: a failed assert and a timed-out wait both exited 0 and now exit 1, a passing assert still exits 0, and doctor-ready exits 0. Driving a verb and reading its exit code is the effect; naming the verb is transcription."
+    "actuatesNote": "Three verbs this case runs and reads the exit code of: a failed assert and a timed-out wait both exited 0 and now exit 1, a passing assert still exits 0, and doctor-ready exits 0. Driving a verb and reading its exit code is the effect; naming the verb is transcription.",
+    "lane": "cli",
+    "laneNote": "Derived by lane_census.py \u2014 its own note or evidence names the cli lane."
   },
   {
     "id": "CASE-0047",
@@ -815,7 +905,9 @@
     "armed": true,
     "armedBy": "Deleted the guest-forwarding funnel in Dispatch.swift and re-ran: 3 assertions red in GuestDispatchWiringTests, including the host answering the call itself and the guest link never being reached.",
     "note": "Seam level, and recorded as seam level. A session attached to a guest is driven through Dispatcher.handle rather than through the forwarding function directly, and the host actuates nothing. Executing inside a live guest is CASE-0056 and is blocked.",
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0048",
@@ -829,7 +921,9 @@
     "armed": true,
     "armedBy": "The PRO-0076 verifier set the lane's isCounted to false; the suite hung and produced no verdict, which scripts/test.sh treats as a failure through its absent-verdict rule. Caught, but as a hang rather than a red assertion, and recorded as the weaker oracle it is.",
     "note": "Capacity 1/2/3 admit 1/2/3; one grant scan cannot admit three into two; one session per named guest serialises even with a slot free; a third attach queues rather than being refused; a linux guest is not counted against the macOS cap.",
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "macos",
+    "laneNote": "Derived by lane_census.py \u2014 its own note or evidence names the macos lane."
   },
   {
     "id": "CASE-0049",
@@ -843,7 +937,9 @@
     "armed": true,
     "armedBy": "Two mutations after the gap-fix refactor rather than before it, because the refactor routed three stop call sites through one audited path and a green suite says least about code that has just moved. Dropping startedByThisAgent from the release guard: 2 red. Removing the audited boot-timeout stop: 4 red, including the audit row's outcome and bundle id.",
     "note": "A guest a person started, or one another session holds, is waited for and never stopped to free a slot. Every stop this agent performs on its own initiative goes through guestMutate and lands in the trail.",
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0050",
@@ -857,7 +953,9 @@
     "armed": true,
     "armedBy": "GuestAttachmentTests exercises the derivation both directions and for a nil platform; the PRO-0076 verifier additionally checked the regression direction of the infer fix.",
     "note": "Carries DEF-020's fix. The tier is read from what the provider says rather than from the guest's name, so a provider reporting darwin yields macOS and the native tier.",
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "macos",
+    "laneNote": "Derived by lane_census.py \u2014 its own note or evidence names the macos lane."
   },
   {
     "id": "CASE-0051",
@@ -871,7 +969,9 @@
     "armed": true,
     "armedBy": "Removed the AgentProcess term and re-ran the suite while polling the window server: 2 windows appeared from swiftpm-testing-helper, one at the tint's level mid-fade and one at the drawn pointer's, and 3 tests went red. With the term in place the same run paints nothing.",
     "note": "Measured against the window server's own list rather than against a value. The baseline was established after killing an orphaned helper from an earlier run that was still holding two such windows, so zero means zero.",
-    "plane": "hermetic"
+    "plane": "hermetic",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0052",
@@ -885,7 +985,9 @@
     "armed": true,
     "armedBy": "TakeoverDwellTests pins the relation rather than a duration: showing again while up returns raising=false and moves the deadline forward, and a stop cancels rather than defers.",
     "note": "A relation across calls, not a value: N shows inside the floor raise once and lower once. Found a second defect while testing it, where a stop during a lingering statement never lowered it because takeoverEnd returned on the takeoverShown guard first.",
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0053",
@@ -899,7 +1001,9 @@
     "armed": true,
     "armedBy": "PointerPlaneCoveredTests: making isCovered ignore the window order reddens the covered case, and making Proctor's own panels count as covering reddens the annotation case.",
     "note": "The drawn pointer over a covered target. Dimming marks an uncertain position and cannot mark a pointer in the wrong plane entirely, so the fallback splits on whether anything covers the target and draws nothing when something does.",
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0054",
@@ -913,7 +1017,9 @@
     "armed": true,
     "armedBy": "Reverted the label to its single wording: the off-panel-screen test reddens on both the menu-bar assertion and the no-run-panel one. Separately, letting the no-panel case fall through to RunHUDPlacement's primary-screen answer reddens the nowhere test.",
     "note": "The statement is drawn on every display and the run panel stands on one, so the control the line names changes with the screen reading it. A run with no panel standing resolves to nowhere rather than to the primary screen, and every display then names the menu bar.",
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0055",
@@ -927,7 +1033,9 @@
     "armed": true,
     "armedBy": "Deleted the guestPool line from the doctor reply assembly and re-ran: 2 assertions red in DoctorReplyWiringTests, on the reply's own object rather than on session.poolStatus().",
     "note": "The pool as proctor_doctor reports it: capacity, held, holders and waiting. Separate from CASE-0048 because the clause names the reply and the seam function is a different thing from the wire it reaches.",
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0056",
@@ -961,7 +1069,9 @@
     "armed": true,
     "armedBy": "Re-ran the sweep with the refusal condition removed, so every call reached the live agent: all three predicates failed on all 21 rows. The first version of this sweep is kept in the evidence with the reason it was worthless, because its predicate examined 21 rows and could not have failed on any of them.",
     "note": "Refusal honesty across every verb, denominator 21 (the five service verbs are never invoked: they mutate the machine). Every verb exits 3 when the agent is unreachable, carries a remedy, and names the socket it tried so an operator can see which agent was missing. Write posture: the socket does not exist, so nothing could be actuated.",
-    "plane": "hermetic"
+    "plane": "hermetic",
+    "lane": "cli",
+    "laneNote": "Derived by lane_census.py \u2014 its own note or evidence names the cli lane."
   },
   {
     "id": "CASE-0058",
@@ -976,7 +1086,9 @@
     "armed": true,
     "armedBy": "The three surviving mutants were re-applied together after the tests were written and the suite went red with 6 issues across the three new tests, then restored to green at 1,802.",
     "note": "Mutation assay over the seven files wave 10 added or changed. PARTIAL by denominator: 11 of 40 selected mutants ran, 40 of 188 sites selected by seed 20260820. 3 survived and all three are now closed. One of the 8 kills was a 900s timeout under CPU contention from another project building concurrently and is recorded as untrustworthy rather than counted, so the honest kill count is 7 of 10 scored. Survivors are trustworthy in both directions: starvation can turn a survivor into a false kill but cannot turn a kill into a false survivor.",
-    "plane": "hermetic"
+    "plane": "hermetic",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0059",
@@ -1002,7 +1114,9 @@
       "method": "ScreenCaptureKit window-scoped, signed Developer ID agent pid 97657, target Calculator pid 14545 CG window 123357",
       "frameStatus": "SCFrameStatus=complete, framesWaited 2"
     },
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0060",
@@ -1024,7 +1138,9 @@
       "count": 2
     },
     "note": "Driven through Session.ios(action:\"list\") twice, against a Session whose ToolProbes reports the witness script as simctl, so the call reaches Session.runSimctl -> runBounded -> a real Process() in SessionIOSProcess.swift. Kept separate from CASE-0059 rather than sharing one case: they are different providers, and one case covering both would let one provider's silence hide behind the other's noise. Two drives, two sentinels, two distinct pids, neither this process's. PORTABLE FLOOR, not the kernel bar. Asserts the spawn and not the parsed device listing, for the drain reason recorded on CASE-0059.",
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0061",
@@ -1049,7 +1165,9 @@
     "plane": "in-tree",
     "journey": "JRN-006",
     "cuts": "provider-effect",
-    "cutsNote": "The trail's bytes, read back through a channel distinct from the one that wrote them: a fresh FileHandle rather than AuditLog.readTrail or openedTail, which would be the code under test confirming itself. Attached to JRN-006 here because the case existed and carried no journey, so the journey's own note recorded provider-effect as uncut while this was already witnessing it. PARTIAL, and the note says which part: the seals are opened with AuditSeal.open \u2014 ProctorCore's own, a different module from the reader under test but not an independent implementation. A fully independent witness would recompute the chain links with CryptoKit directly and never call the product's verifier."
+    "cutsNote": "The trail's bytes, read back through a channel distinct from the one that wrote them: a fresh FileHandle rather than AuditLog.readTrail or openedTail, which would be the code under test confirming itself. Attached to JRN-006 here because the case existed and carried no journey, so the journey's own note recorded provider-effect as uncut while this was already witnessing it. PARTIAL, and the note says which part: the seals are opened with AuditSeal.open \u2014 ProctorCore's own, a different module from the reader under test but not an independent implementation. A fully independent witness would recompute the chain links with CryptoKit directly and never call the product's verifier.",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0062",
@@ -1071,7 +1189,9 @@
       "count": 3
     },
     "note": "A real Server on a temporary path \u2014 Darwin.bind, listen, chmod 0600 and the accept loop in Server.swift \u2014 with three SocketClient instances from ProctorCore/Transport.swift each calling connect() (Darwin.connect) and send(). THE COUNT IS ANSWERED CONNECTIONS, NOT RECORDED REQUESTS: Server.serve reads many frames from one accepted descriptor, so a per-request count would report three for one client sending three frames. A reply cannot arrive on a descriptor the accept loop never took, so an answered connection is an accept. The identity half is the completion confirmation: the peer pid and working directory are the kernel's answer about the far end, obtainable only from an accepted fd, and the client never puts either on the wire. Settled by an out-of-family referral to grok-4.6 at xhigh on 2026-08-21, which also ruled out adding an onAccept seam to Server \u2014 a hook the product fires is the product logging its own accept, and no production source needed changing. PORTABLE FLOOR: no kernel socket tracer.",
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0063",
@@ -1097,7 +1217,9 @@
       "effect": "device",
       "count": 24
     },
-    "plane": "hermetic"
+    "plane": "hermetic",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "req": "REQ-004",
@@ -1316,7 +1438,9 @@
       "count": 3
     },
     "note": "THE SECURITY CLAUSE, AND IT WAS DRIVEN FROM TWO GENUINELY DIFFERENT FRONT ENDS. A real Server bound a temporary AF_UNIX socket with the session's sink set to the production AuditLog.append and AuditLog.seams.directory redirected to a temporary trail. Three real child processes were spawned against it with PROCTOR_SOCKET pointing at that socket: .build/debug/proctor-cli running `policy --action approve`, .build/debug/proctor-shim running `serve` and speaking real MCP over its stdio (initialize then tools/call proctor_policy), and a copy of proctor-cli at the path <tmp>/proctor-imposter running the same verb with `--via cli` appended. All three are built by the same `swift build --build-tests` that builds this suite, and the test locates them through Bundle(for:) on an ObjC anchor class - an absent binary fails the test rather than skipping it. WHAT THE TRAIL SAID: three sealed records, via=cli for the CLI child, via=mcp for the shim child, and via ABSENT for the forger that asked to be recorded as the CLI. Every via was produced by SessionIdentity.frontEnd(for:) from proc_pidpath of the pid getsockopt(SOL_LOCAL, LOCAL_PEERPID) reported for the accepted descriptor (Server.swift:126, bound as a task-local at :270, stamped at PolicyStore.swift:232). None of it was on the wire. The count is the 3 records read back off disk. SABOTAGE: unlink the socket between start() and the children - the CLI exits 3 (CLISurface.Exit.agentUnreachable) and the trail holds nothing. NO onAccept SEAM WAS ADDED; the grok lane settled that for CASE-0062 and the reason still holds.",
-    "plane": "hermetic"
+    "plane": "hermetic",
+    "lane": "cli",
+    "laneNote": "Derived by lane_census.py \u2014 its own note or evidence names the cli lane."
   },
   {
     "id": "CASE-0081",
@@ -1340,7 +1464,9 @@
       "count": 3
     },
     "note": "Real proctor-cli children against a real Server on a private socket. The count is the 3 doctor requests the server answered, each recording a kernel-read peer whose frontEnd resolved to \"cli\" and whose key names a CHILD process rather than this one. Four distinct exit codes were produced by real children and read through waitpid: 0 (ok), 1 (verdictFailed), 2 (usage) and 3 (agentUnreachable). The generated completion script was produced by a real child (`completion --shell zsh`) and contains all 26 of CLISurface.allVerbNames - 21 verbs derived from ToolCatalogue plus 5 service verbs. SCOPE, STATED RATHER THAN ROUNDED UP: exit 4 (refused) and exit 5 (notReady) were NOT produced from a child in this harness. Every gate that yields them sits behind a resolved window handle, and a handle is minted per session by an attach the child would have to perform first, so all three gated arms failed at handle resolution and mapped to verdictFailed. The six-code surface is carried by CLISurface.Exit.allCases and the pure exit(for:) mapping, which is a different rung from this one. SABOTAGE: with no socket bound the same verb exits 3 and the answered count is zero. WHAT THIS LANE CANNOT REACH, AND WHY IT IS SAID RATHER THAN DROPPED: `refused` (4) is not among the codes any child produced. Driving it needs `policy --action configure`, and `PolicyStore` has no test seam \u2014 `configurePolicy` calls `PolicyStore.save`, which writes the OPERATOR'S ~/Library/Application Support/app.fledgeling.procter/policy/policy.json. This witness did exactly that once, and PRO-0077's REQ-015 witness then failed with `policyDenied` in a later run where this suite was skipped, because the block had outlived the process that wrote it. The leaked entry was removed and the configure was dropped. DEF-042.",
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "cli",
+    "laneNote": "Derived by lane_census.py \u2014 its own note or evidence names the cli lane."
   },
   {
     "id": "CASE-0082",
@@ -1364,7 +1490,9 @@
       "count": 3
     },
     "note": "The surface that reaches furthest - across SSH onto a Mac with no window server - and can do least. A real Server, a real watch held open on a dedicated Thread (SocketClient.watch blocks in read(), so a cooperative thread would wedge the pool), and frames pushed through the product's own SupervisionBroadcast.shared. 3 published, 3 crossed. The halt went over a SECOND real connection as proctor.control {action: stop}, and the recorder for it is RunControl.shared - the same object the HUD panel writes and the run loop reads, which is A4's one-latch claim. THE LATCH IS PROCESS-WIDE, so it is read before, asserted un-stopped, and restored with the product's own begin(run:) reset, with the restoration asserted; PRO-0053 recorded a suite reaching another suite through exactly this object. SABOTAGE: with the server stopped the watch cannot connect, zero frames arrive, the watch reports a reason rather than an absence, and the latch does not move.",
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0083",
@@ -1388,7 +1516,9 @@
       "count": 20
     },
     "note": "Its own case rather than a slice of CASE-0082: the guarantee is about WHAT a supervision client can read, and folding it into the watch would let an empty readiness projection hide behind a non-zero frame count. The TUI's own two calls in the TUI's own order - proctor_doctor then proctor_history - over one real connection to a real Server, with the trail redirected because proctor_history projects the trail and this must never read the operator's own. Three audited calls were driven over the same socket first so the history pane had something to project. MEASURED: 4 grant rows, 5 lane rows, 8 switch rows, 3 history rows; the count is the 20 rows across all four. SABOTAGE: the identical three projections over a refusal reply return zero rows everywhere, so an empty pane is a measurement rather than a default.",
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0084",
@@ -1412,7 +1542,9 @@
       "count": 3
     },
     "note": "SCOPE NARROWED AND THE REASON IS A BRANCH FACT, NOT A PRODUCT ONE. What is witnessed here is the BOUNDARY CONDITION the requirement is about: a listener that binds, accepts and never writes is a state of its own, and connect() SUCCEEDS against it where it fails outright against a path nothing is bound to. Three connections were accepted and deliberately never answered; a real Server answered inside the same 2s SO_RCVTIMEO bound, so the silence is the peer's and not the clock's; and after the listener stopped, connect() failed. WHAT IS NOT WITNESSED, said out loud: the product's own remedy. REQ-027 claims the status window stops claiming Ready when the agent holds the socket and never answers, and the mechanism for that is SocketClient's opt-in ioTimeoutSeconds applied as SO_RCVTIMEO/SO_SNDTIMEO, with AgentModel setting 5s on its doctor, activity and HUD polls. That landed in commit 10285df on `main`. This item's base branch ai/wave-9 is eight commits behind main and does not carry it: `grep -rn ioTimeout Sources/` returns nothing on this tree, AgentModel.callDoctor uses a bare SocketClient, and SocketClient.send blocks in read() with no bound. So the bound in this test is the TEST'S OWN, applied by the caller, and it is named as such rather than passed off as the product's. See DEF-042.",
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0085",
@@ -1436,7 +1568,9 @@
       "count": 3
     },
     "note": "Two real Servers on two temporary sockets. The second plays the guest's own Proctor on the end of the socket a person forwarded; the host attaches to it through the DEFAULT SocketGuestLink - a real SocketClient on that path, probed - and not through the injected guest-link seam. Everything rides ONE client connection so the peer key the host reads is the same for the attach and for the calls that follow, which is what guestAttachments[key] is keyed on. A forwarded proctor_apps attach came back naming com.fledgeling.inside-the-guest, a bundle identifier that exists only inside the guest's Session; three forwarded proctor_act calls then actuated three steps, and the count is those 3 steps read off the GUEST's actuator. THE SECOND HALF OF THE CLAIM: the host's own actuator performed 0 steps, before and after. SABOTAGE: with the guest server stopped, the attach is refused and the refusal names the socket rather than falling back to the host - which would be the verdict-about-the-wrong-machine this feature exists to prevent. CEILING: both servers are in this process, so what crosses is a real AF_UNIX round trip through the kernel and not a process boundary; the cross-machine claim is CASE-0056's, settled live on proctor-guest.",
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0086",
@@ -1460,7 +1594,9 @@
       "count": 7
     },
     "note": "THE NEVER-EVICT RULE, WITNESSED AS A TWO-WAY OVER REAL CHILD PROCESSES. Both arms use LumeProvider's CONVENIENCE initialiser, which binds run to Self.liveRun and reaches a real Process() through Session.runBounded; the three-argument init(executable:timeoutMs:run:) is the fake seam and was deliberately not used. ARM A, a guest THIS AGENT started: the listing reports state \"stopped\", so guestAttach starts it through the audited guestMutate path and startedByThisAgent is true; the detach then stops it. Seven real children were spawned, their verbs read off the sentinels as [get, get, ls, ls, ls, run, stop] - one of them a stop. ARM B, a guest A PERSON started: the listing reports state \"running\", so nothing is started and startedByThisAgent is false; the IDENTICAL detach call spawns one child [ls] and NO stop. Same call, one field different, opposite outcome - releaseGuestAttachment gates on `stopGuest && attachment.startedByThisAgent` (SessionGuest.swift:562). Arm B's non-empty spawn set is asserted too, so its zero stops is a measurement rather than a structural silence - the failure mode PRO-0078's survivor count had. The count is the 7 children arm A spawned. SABOTAGE: point the executable at a path that does not exist; runBounded catches the spawn failure and answers exitCode -1 so the call still returns, and the sentinel count goes to zero.",
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0087",
@@ -1489,7 +1625,9 @@
     "defects": [
       "DEF-305"
     ],
-    "plane": "hermetic"
+    "plane": "hermetic",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0089",
@@ -1518,7 +1656,9 @@
       "count": 2
     },
     "note": "BOTH HALVES IN ONE SECOND, WHICH IS THE WHOLE POINT. PRO-0078 found proctor_capture reporting status complete, trustworthy true over 2,942,720 pixels of RGBA(0,0,0,0) of a Proctor-owned window (DEF-025, open) - the exclusion working, and the capture path not noticing that exclusion was all it got. So a blank frame proves nothing here and this witness refuses to let one stand. THE ABSENCE: CGWindowListCopyWindowInfo reported two Proctor Agent windows on screen, CG windows 130709 and 130710, owner pid 76491, layer 1000, alpha 1, sharingState 0. Driven through screencapture -l by a third process, BOTH were refused outright - \"screencapture -l wrote nothing: could not create image from window\" - which is a stronger negative than an empty frame, because the channel could not produce an image at all. THE CONTENT, same utility, same second: CG window 130785, Activity Monitor, pid 28274, sharingState 1, delivered a 2536x1640 frame of 4,159,040 pixels carrying 3,159 distinct colours, 0.054% fully transparent, luminance mean 44.68 and standard deviation 14.25. THE SUBJECT, proved by text rather than by filename: an independent AX client in the probe walked pid 28274 and read 270 strings over 361 nodes, among them \"Activity Monitor - All Processes\" and \"coreaudiod\". A third process read the text; the frame is a picture of that window. The count is the 2 excluded overlays. THE SUBJECT OF THIS LANE IS THE INSTALLED, NOTARISED BUILD - /Applications/Proctor.app's running agent at pid 76491, read only and never driven - and NOT .build/Proctor.app, so the existing macos-glass laneProof is neither reused nor rewritten and this row carries no lane. THAT DISTINCTION MATTERS HERE: the running build carries OverlayCapture and sets sharingType on all three overlays including CursorOverlay, which is why the pointer panels read sharingState 0. This item's base ai/wave-9 does not carry OverlayCapture at all and CursorOverlay sets no sharingType on it, so the same measurement against a build of THIS tree would report the drawn pointer at sharingState 1. See DEF-042. sharingType = .none on the HUD and the takeover overlay is correct and was not touched: evidence must not change because somebody was watching. NOT WITNESSED: the `unless somebody lifts it` clause, whose mechanism is PROCTOR_OVERLAY_CAPTURE in commit 15f86ea on main and absent from this base.",
-    "plane": "live-glass"
+    "plane": "live-glass",
+    "lane": "macos-glass",
+    "laneNote": "Derived by lane_census.py \u2014 its own note or evidence names the macos-glass lane."
   },
   {
     "id": "CASE-0088",
@@ -1541,7 +1681,9 @@
       "count": 3
     },
     "note": "A SECOND SOCKET, AND THAT IS WHY IT IS ITS OWN CASE. Five of this item's other witnesses stand on the agent's AF_UNIX listener in Sources/ProctorAgent/Server.swift. This one stands on Sources/ProctorReflector/SocketServer.swift \u2014 a different Darwin.bind/listen/accept, in a different target, embedded in other people's applications and taking no dependency on the agent. Folding it in would let one listener's silence hide behind the other's noise. DRIVEN FROM THE PRODUCTION ENTRY POINT: ProctorReflector.start(socketPath:) is the one-line adoption API an app calls from applicationDidFinishLaunching. It binds, listens, chmod 0600s and serves on its own concurrent queue. THE CLIENT SHARES NOTHING WITH THE SERVER: a raw Darwin.socket/connect in the test frames the 4-byte big-endian length prefix by hand and decodes the reply with JSONSerialization. Neither the target's Frame encoder nor its JSONValue decoder participates in the reading. One request per connection, so a reply is an accept. COUNT ONE, three answered connections \u2014 ping, revision and hierarchy, each on its own descriptor. The ping's pid is read by the server out of its own process and the request never carried it; the socket's mode is read off the inode with FileManager and comes back 0600. COUNT TWO, three resolved nodes: NSView, NSTextField, NSTextFieldSimpleLabel. THE RESOLVED HALF, WHICH IS WHAT REQ-023 ACTUALLY CLAIMS, and none of it is a value the test wrote. The window is built with Auto Layout and no explicit child frame. GEOMETRY: the label came back at (x 22.0, y 272.0, w 110.5, h 16.0). The width is AppKit's measurement of the string in the system font. The x is NOT the constraint's constant of 24 \u2014 NSTextField's alignment rect is inset from its frame, so the solver satisfies the leading constraint on the alignment rect and the frame lands to its left, which is the clearest evidence in this case that the number came back from AppKit rather than from the request. y + h = 288 is the relation the solver produced over a height nothing in the test named (content 320 minus a top inset of 32). COLOUR: labelColor resolved against the window's effective appearance to #FFFFFF, catalog System, name labelColor \u2014 the test never sets textColor. LAYER: the content view's CALayer model carried backgroundColor, borderWidth, cornerRadius, opacity and shadowRadius, all CoreAnimation's. CONSTRAINTS: two, leading and top, both active, read back off the common ancestor \u2014 which is where AppKit installs a constraint between two views, and the reason the case reads the content node rather than the label's. AN INSTRUMENT FAULT CAUGHT BEFORE IT COULD READ ZERO FOR A STRUCTURAL REASON: the first run asked for \"constraints\": true and got no constraints key at all, because Runtime.decode(options:) reads \"includeConstraints\". A constraints assertion on that request would have failed for a wire-protocol reason and been read as a product one. THE CEILING, RECORDED RATHER THAN IMPLIED: server and client are the same process, so what is witnessed is a real AF_UNIX round trip through the kernel and a real AppKit walk, not a cross-process one. The agent ships NullReflectorBridge, so there is no in-repo production client to drive this from a second process, and writing one would be building the subject rather than witnessing it. PORTABLE FLOOR: no kernel socket tracer, no dtrace, no eslogger \u2014 this suite has no privilege for one. Package.swift gains ProctorReflector on ProctorAgentTests' dependency list and nothing else: a build-graph edge, not a behaviour change. The Reflector compiles to nothing without DEBUG or PROCTOR_REFLECTOR and scripts/build-app.sh already fails a release artifact carrying it.",
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0072",
@@ -1555,7 +1697,9 @@
     "armed": true,
     "armedBy": "This case IS the arming. --seed-strengthen is the skill's own arming rule turned on its own gate: it strengthens a requirement's declared constraint to one the registry cannot satisfy and requires the census to go red. Both directions read before=clear after=red, exit 0.",
     "note": "PRO-0080 A1/A2. The census control run in both directions, first run ever against this campaign. REQ-017 (effect subprocess, the requirement whose witness PRO-0077 built and merged) and REQ-001 (classed none). Verbatim transcript in the evidence file, not summarised. PRECONDITION CHECKED RATHER THAN ASSUMED: _census_clear is not(unclassed or uncensused), so if the census were already red then after would be red for a reason the mutation did not cause and the tool would still print 'the gate bites'. Read immediately before: unclassed examined=45 findings=0, uncensused examined=22 findings=0, gate exit 0. The before=clear in both outputs is therefore load-bearing and measured. RESTORATION MEASURED, NOT CLAIMED: sha256 of inventory.json is 9215d5be401c61b55d3a85ef697279dc4f99dd389e6ce0226b232a7bdb225885 before the first run and after the last, and git diff is empty.",
-    "plane": "hermetic"
+    "plane": "hermetic",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0073",
@@ -1570,7 +1714,9 @@
     "armed": true,
     "armedBy": "Both arms of the control were watched. It bites on REQ-017 (unclassed 0 findings to 1, exit 0) and REFUSES on REQ-011 (exit 2), whose text names no effect the vocabulary matches, because scoring that absent finding as a red would pass the control on a tautology. A control that cannot refuse is the thing being guarded against.",
     "note": "PRO-0080 A3, and it exists because CASE-0072 passing did not mean what it looked like it meant. The census has two exact passes at requirement level. --seed-strengthen sets effect to packet-filter and pops provider, which IS the uncensused predicate, so it fires uncensused and only uncensused whatever the requirement's starting class. Decomposed per pass: REQ-017 seeded gives unclassed 0 / uncensused 1; REQ-001 seeded gives unclassed 0 / uncensused 1. So after the shipped control ran green, unclassed was still a pass reporting examined=45 findings=0 that nothing had watched go red, which is the position the control exists to get a gate out of, surviving the control. Recorded as DEF-030. scripts/campaign/seed_unclass.py is the missing direction: it strengthens the specification rather than the census record by removing a requirement's effect field, and requires unclassed to flag it. It is a separate script rather than a patch to vacuity-check.py because that file lives in a plugin cache this repo does not own and a fix there is reverted by the next plugin update with nothing saying so. Registry restored byte-for-byte, verified by sha256 rather than asserted.",
-    "plane": "hermetic"
+    "plane": "hermetic",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0074",
@@ -1585,7 +1731,9 @@
     "armed": true,
     "armedBy": "mutate_swift.py refuses to start unless the suite is green before any mutation, because without that a suite already failing reports every mutant as killed and returns a 0% survival rate that means nothing. Baseline green was printed before the first mutant.",
     "note": "PRO-0080 A4. The first mutation sample ever generated in ProctorAgent. PARTIAL BY DENOMINATOR AND SAID SO: 24 mutants run of a pool of 3,189 sites across all 84 files of the package, seed 20260821, 3,165 sites unrun. That is 0.75% of the surface. 19 SURVIVED, 5 scored killed, 0 unbuildable. TWO OF THE FIVE KILLS ARE NOT TRUSTWORTHY: SessionActivate.swift:166 and UnlockBroker.swift:110 both scored at exactly 600.0s, which is the timeout, and the runner scores a timeout as killed. Load average reached 271 during the run (22.92 at start, 271.39 at end, read off evidence/mutation-agent.txt lines 2-3). CORRECTED: this note first read 11.20 at start, contradicting its own evidence file, and was carried as DEF-055 until PRO-0091 fixed it. The honest kill count is 3 of 22 scored, giving a survival rate of 19/22 = 86.4%, against ProctorCore's 50%. Survivors are trustworthy in both directions: starvation can turn a survivor into a false kill but cannot turn a kill into a false survivor, so all 19 stand. NO KILL BELOW 600s IS TIMEOUT-SCORED: the three trustworthy kills ran 23.6s, 37.8s and 32.4s against a 600s bound, so they are real test failures rather than starved runs. Disposition of the 19: 5 killed by new tests (CASE-0075..0079), 1 equivalent (SessionMaestro.swift:242), 13 uncovered-by-lane or unreachable from a headless seam, each with its reason in REPORT.md. The figure is deliberately NOT copied into .warrant/suite-health.json, where mutation_measured: false is correct and means warrant's own assay has not run.",
-    "plane": "hermetic"
+    "plane": "hermetic",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 its own note or evidence names the headless lane."
   },
   {
     "id": "CASE-0075",
@@ -1600,7 +1748,9 @@
     "armed": true,
     "armedBy": "Mutant re-applied by hand after the test was written: KeyCodes.swift:18 'n': 45 to 'n': 46. The named test went red with 2 issues, (actual -> 46) == (CGKeyCode(expected) -> 45) and (Set(codes).count -> 25) == 26. Mutant reverted, test green.",
     "note": "PRO-0080 A5/A6, survivor 21. Nothing checked the keycode table against anything, so a letter could be remapped and 1,818 tests stayed green. With the mutation n and m both map to 46, meaning proctor_act typing 'n' presses M. The oracle is Carbon's own kVK_ANSI_* constants rather than a second copy of the table, so the test is not asserting a value it supplied itself, which is how DEF-019 shipped. Distinctness over all 26 letters is asserted separately because that is the property the mutation actually broke, and a count floor of 26 guards against a loop that examined nothing.",
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0076",
@@ -1615,7 +1765,9 @@
     "armed": true,
     "armedBy": "Mutant re-applied: RunIdentity.swift:30 prefix(12) to prefix(13). The named test went red: (id.count -> 13) == 12. Reverted, green.",
     "note": "PRO-0080 A5/A6, survivor 2. The run id is written into every record of every tool call and nothing asserted its shape. Length checked against the contract in the doc comment, alphabet against the source it is drawn from (a hyphen-stripped lowercased UUID is hex), and 64 mints required to be 64 distinct ids so a constant could not satisfy the first two.",
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0077",
@@ -1630,7 +1782,9 @@
     "armed": true,
     "armedBy": "Mutant re-applied: PixelCompare.swift:38 stride by: 4 to by: 5. The named test went red: (abs(mean - delta / 255.0) -> 0.029411764705882353) < 0.0005. Reverted, green.",
     "note": "PRO-0080 A5/A6, survivor 18. meanDifference backs the regionMatches assertion, so it is the instrument a caller's tolerance is measured in. At stride 5 it reads misaligned channels and visits four fifths of the pixels; every existing test compared images that were either identical or wildly different, both of which survive a broken stride. THE EXPECTED VALUE IS DERIVED, NOT COPIED: two uniform images differing by delta on all three colour channels have a mean absolute channel difference of exactly delta/255 whatever the pixel count, so the oracle comes from the definition rather than from the loop. An identical pair is required to read 0.0 in the same test, so the assertion cannot be satisfied by an instrument returning a constant.",
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0078",
@@ -1645,7 +1799,9 @@
     "armed": true,
     "armedBy": "Mutant re-applied: UnlockBroker.swift:51 contactCount += 1 to += 2. The named test went red with 3 issues, counting 2, 4 and 6 where 1, 2 and 3 were expected. Reverted, green.",
     "note": "PRO-0080 A5/A6, survivor 17. contactCount is how proctor_unlock status proves the login-path mechanism actually reached the broker: os_log from a launchd agent is not reliably visible, so this counter is the evidence. A counter that double-counts reports two handshakes where one happened, and nothing watched it. The test uses a fresh UnlockTurn rather than .shared so the count starts at a known zero and no other test can move it.",
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0079",
@@ -1660,7 +1816,9 @@
     "armed": true,
     "armedBy": "Mutant re-applied: RunHUDContentView.swift:830 ms < 1000 to ms <= 1000. The named test went red: (RunHUDContentView.duration(1000) -> \"1000ms\") == \"1.0s\". Reverted, green.",
     "note": "PRO-0080 A5/A6, survivor 14. The HUD's duration form. At the boundary the mutation prints 1000ms where the mock's form is 1.0s, and the existing tests only ever passed values well clear of the boundary. This is the same shape of untested boundary that RunHUDGate.onSegment is already on record for, except that this one is killable rather than equivalent.",
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0100",
@@ -2019,7 +2177,9 @@
     "defects": [
       "DEF-050"
     ],
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0111",
@@ -2037,7 +2197,9 @@
     "defects": [
       "DEF-050"
     ],
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0112",
@@ -2055,7 +2217,9 @@
     "defects": [
       "DEF-050"
     ],
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0113",
@@ -2071,7 +2235,9 @@
     "armedBy": "Not armed by re-introducing a shipped defect: the single-slot cache it guards against was correct while the cache was per-Session, so there is no prior state of this repo in which this test is red. It guards a regression the shared store newly makes possible.",
     "note": "PRO-0087. A process-wide store is asked about more than one path, so a suite's scripted path and this machine's real cua-driver land in the same cache. A single slot would have them evicting each other and re-verifying on every alternation, which is the wedge again in different clothes. Five alternations between two identities cost two verifications.",
     "defects": [],
-    "plane": "hermetic"
+    "plane": "hermetic",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0114",
@@ -2091,7 +2257,9 @@
       "DEF-050",
       "DEF-051"
     ],
-    "plane": "hermetic"
+    "plane": "hermetic",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0115",
@@ -2110,7 +2278,9 @@
     "defects": [
       "DEF-050"
     ],
-    "plane": "hermetic"
+    "plane": "hermetic",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0116",
@@ -2128,7 +2298,9 @@
     "defects": [
       "DEF-050"
     ],
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0150",
@@ -2304,7 +2476,9 @@
       "DEF-097"
     ],
     "plane": "in-tree",
-    "journey": "JRN-003"
+    "journey": "JRN-003",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0121",
@@ -2324,7 +2498,9 @@
       "DEF-098"
     ],
     "plane": "in-tree",
-    "journey": "JRN-003"
+    "journey": "JRN-003",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0122",
@@ -2341,7 +2517,9 @@
     "note": "The honest edge. An opaque single-colour frame is content, not a defect: a blank document is a real window and downgrading it would be this item's own false positive. distinctColours is published and no branch keys off it.",
     "defects": [],
     "plane": "in-tree",
-    "journey": "JRN-003"
+    "journey": "JRN-003",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0123",
@@ -2358,7 +2536,9 @@
     "note": "Not looking and looking and finding nothing are different answers. A nil summary and a zero-pixel sample are both notMeasured, and neither produces a caveat: an instrument that examined nothing must not be able to call a frame empty.",
     "defects": [],
     "plane": "in-tree",
-    "journey": "JRN-003"
+    "journey": "JRN-003",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0124",
@@ -2377,7 +2557,9 @@
       "DEF-097"
     ],
     "plane": "in-tree",
-    "journey": "JRN-003"
+    "journey": "JRN-003",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0125",
@@ -2394,7 +2576,9 @@
     "note": "A frame with real content measures as content: maxAlpha 255 and more than one distinct colour.",
     "defects": [],
     "plane": "in-tree",
-    "journey": "JRN-003"
+    "journey": "JRN-003",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0126",
@@ -2422,7 +2606,9 @@
     "rungRouting": {
       "verdict": "raisable",
       "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
-    }
+    },
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0127",
@@ -2452,7 +2638,9 @@
     "rungRouting": {
       "verdict": "structural",
       "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
-    }
+    },
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0128",
@@ -2479,7 +2667,9 @@
       "count": 3
     },
     "plane": "live-glass",
-    "journey": "JRN-004"
+    "journey": "JRN-004",
+    "lane": "macos-glass",
+    "laneNote": "Derived by lane_census.py \u2014 plane live-glass and nothing names a guest; every live-glass case that declares a lane declares macos-glass."
   },
   {
     "id": "CASE-0129",
@@ -2506,7 +2696,9 @@
       "count": 2
     },
     "plane": "hermetic",
-    "journey": "JRN-003"
+    "journey": "JRN-003",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0190",
@@ -2524,7 +2716,9 @@
     "defects": [
       "DEF-068"
     ],
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0191",
@@ -2542,7 +2736,9 @@
     "defects": [
       "DEF-068"
     ],
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0192",
@@ -2560,7 +2756,9 @@
     "defects": [
       "DEF-068"
     ],
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0193",
@@ -2578,7 +2776,9 @@
     "defects": [
       "DEF-068"
     ],
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0194",
@@ -2596,7 +2796,9 @@
     "defects": [
       "DEF-075"
     ],
-    "plane": "hermetic"
+    "plane": "hermetic",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0195",
@@ -2614,7 +2816,9 @@
     "defects": [
       "DEF-075"
     ],
-    "plane": "hermetic"
+    "plane": "hermetic",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0196",
@@ -2632,7 +2836,9 @@
     "defects": [
       "DEF-075"
     ],
-    "plane": "hermetic"
+    "plane": "hermetic",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0197",
@@ -2650,7 +2856,9 @@
     "defects": [
       "DEF-100"
     ],
-    "plane": "hermetic"
+    "plane": "hermetic",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0198",
@@ -2668,7 +2876,9 @@
     "defects": [
       "DEF-068"
     ],
-    "plane": "in-tree"
+    "plane": "in-tree",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane in-tree: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0199",
@@ -2688,7 +2898,9 @@
       "DEF-103"
     ],
     "plane": "hermetic",
-    "journey": "JRN-003"
+    "journey": "JRN-003",
+    "lane": "headless",
+    "laneNote": "Derived by lane_census.py \u2014 plane hermetic: in this process, so no display and no peer."
   },
   {
     "id": "CASE-0200",

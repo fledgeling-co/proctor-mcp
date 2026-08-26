@@ -3805,6 +3805,38 @@ def test_the_pty_probe_says_when_it_could_not_measure() -> None:
               f"exit {red.returncode}")
 
 
+def test_every_case_carries_a_lane() -> None:
+    """DEF-340. A fifth of the campaign sat outside every lane row.
+
+    The rules are written in lane_census.py rather than applied case by case,
+    which is the distinction the defect turned on: it objected to INFERENCE, and
+    plane_census already settles the same kind of question with rules.
+    """
+    script = ROOT / "scripts" / "campaign" / "lane_census.py"
+    out = subprocess.run([sys.executable, str(script), "--gate"], capture_output=True, text=True)
+    check(out.returncode == 0, "every case carries a lane, or is listed as unplaceable",
+          out.stdout[-600:])
+    check("silently unassigned" in out.stdout,
+          "and the run says so in those words rather than printing a bare count",
+          out.stdout[-300:])
+
+    # Every declared lane carries at least one case. The other half of DEF-340:
+    # a lane declared and unused is the same hole as a case with no lane.
+    campaign = json.loads((CAMPAIGN_DIR / "campaign.json").read_text())
+    raw = json.loads((CAMPAIGN_DIR / "cases.json").read_text())
+    cases = raw if isinstance(raw, list) else raw.get("cases", [])
+    for lane in campaign.get("lanes", []):
+        n = sum(1 for c in cases if c.get("lane") == lane)
+        check(n > 0, f"the declared lane {lane} carries at least one case", f"{lane}: {n}")
+
+    # And no case names a lane campaign.json does not declare — which is how
+    # macos-glass came to carry 16 cases and a proved artifact while the
+    # declared list did not hold it.
+    declared = set(campaign.get("lanes", []))
+    stray = sorted({c.get("lane") for c in cases if c.get("lane") and c.get("lane") not in declared})
+    check(not stray, "no case names an undeclared lane", f"stray: {stray}")
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -3885,7 +3917,8 @@ def main() -> int:
                test_the_inert_build_starts_nothing,
                test_parse_charter_agrees_with_tomllib,
                test_the_cache_walk_survives_a_tree_being_mutated,
-               test_the_pty_probe_says_when_it_could_not_measure):
+               test_the_pty_probe_says_when_it_could_not_measure,
+               test_every_case_carries_a_lane):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001

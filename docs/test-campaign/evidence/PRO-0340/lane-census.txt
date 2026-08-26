@@ -1,0 +1,22 @@
+518 case(s) · 412 already carry a lane · 106 placed by rule · 0 the rules cannot place
+  cli            8
+  guest-glass    1
+  headless       470
+  ios-sim        2
+  macos          5
+  macos-glass    30
+  mcp-stdio      2
+
+wrote 106 lane(s), each with the rule that placed it
+
+PASS: 412 of 518 case(s) carry a lane; 0 are listed as ones the rules cannot place, and none is silently unassigned.
+518 case(s) · 518 already carry a lane · 0 placed by rule · 0 the rules cannot place
+  cli            8
+  guest-glass    1
+  headless       470
+  ios-sim        2
+  macos          5
+  macos-glass    30
+  mcp-stdio      2
+
+PASS: 518 of 518 case(s) carry a lane; 0 are listed as ones the rules cannot place, and none is silently unassigned.

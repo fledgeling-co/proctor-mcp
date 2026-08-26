@@ -7,6 +7,7 @@
     "cli",
     "ios-sim",
     "headless",
+    "macos-glass",
     "guest-glass"
   ],
   "axes": [
@@ -155,5 +156,5 @@
   ],
   "captureRootsConventionalPath": "docs/evidence",
   "testRoot": "Tests",
-  "laneNote": "`cli` and `mcp-stdio` are declared and carry no case: their work is done inside cases whose lane field is empty. 106 cases carry no lane at all, and only 9 of them name one readably in their own evidence \u2014 the rest would be inference. Recorded as DEF-340 rather than guessed at, because the per-lane ledger exists so a lane cannot hide, and filling it by inference is how one does."
+  "laneNote": "`cli` and `mcp-stdio` are declared and carry no case: their work is done inside cases whose lane field is empty. 106 cases carry no lane at all, and only 9 of them name one readably in their own evidence \u2014 the rest would be inference. Recorded as DEF-340 rather than guessed at, because the per-lane ledger exists so a lane cannot hide, and filling it by inference is how one does. macos-glass added to the declared list 2026-08-27: it carried 16 cases and a laneProof entry naming .build/Proctor.app and the CG windows that witnessed it attaching, while the declared list did not hold it. A lane in use and undeclared is the same hole as a lane declared and unused, and DEF-340 named the second while this was the first."
 }
