@@ -435,8 +435,22 @@ def verify_tui_pty_truth_table() -> list[PTYVerificationResult]:
                 with mock_agent.lock:
                     return list(mock_agent.received_actions[actions_baseline:])
 
-            proc_latch.write_input("p")
-            got_pause = wait_until(lambda: len(actions_now()) > 0, 3.0, "a control action")
+            # Connected is not the same as reading. The TUI sends its watch
+            # request before it finishes installing its key reader, so a single
+            # `p` typed the instant the request lands can be dropped — measured
+            # after the readiness wait was added: precondition connected, actions
+            # empty, and no echo, which is neither of the two states the first
+            # fix distinguished.
+            #
+            # So the key is re-sent rather than assumed delivered. `p` toggles
+            # pause and resume, and the assertion below accepts either, so a
+            # second press that DOES land is as good as the first.
+            got_pause = False
+            for _ in range(6):
+                proc_latch.write_input("p")
+                if wait_until(lambda: len(actions_now()) > 0, 1.5, "a control action"):
+                    got_pause = True
+                    break
             proc_latch.write_input("s")
             got_stop = wait_until(lambda: len(actions_now()) > 1, 6.0, "a second control action")
             actions = actions_now()
@@ -459,7 +473,22 @@ def verify_tui_pty_truth_table() -> list[PTYVerificationResult]:
                 echo_note = (f"; the pty ECHOED {echoed!r} and nothing else, so the terminal was "
                              f"still in canonical mode and nothing was reading the keys")
 
-            if not connected:
+            if connected and not got_pause:
+                # Reached the agent and never acted on a key. Not a failure of
+                # the latch: nothing has shown the keys were being read.
+                results.append(
+                    PTYVerificationResult(
+                        scenario="pty-interactive-latch-state-mutation",
+                        passed=False,
+                        inconclusive=True,
+                        details=("INCONCLUSIVE: the TUI reached the agent but no key produced a "
+                                 "control action across 6 presses over 9 seconds, so it was "
+                                 "connected and not yet reading. The latch was neither shown nor "
+                                 "disproved."),
+                        metadata={"connected": True, "presses": 6},
+                    )
+                )
+            elif not connected:
                 # Neither a pass nor a failure: the scenario never reached its own
                 # precondition, so it measured neither the latch nor its absence.
                 # REQ-130 — an instrument proves its own step before grading the

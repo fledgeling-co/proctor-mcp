@@ -3797,8 +3797,14 @@ def test_the_pty_probe_says_when_it_could_not_measure() -> None:
         check("[INCONCLUSIVE] pty-interactive-latch-state-mutation" in red.stdout,
               "a TUI that never reads the keys makes the latch scenario inconclusive, not failed",
               red.stdout[-700:])
-        check("ECHOED b'ps'" in red.stdout,
-              "and the echo of exactly the typed keys is named as the evidence",
+        # Matched by SHAPE, not by the exact bytes. The probe re-sends `p` up to
+        # six times before giving up, so the echo is whatever it typed — b'ps'
+        # when one press was enough, b'pppppps' when none was. Pinning the
+        # literal made this fail the moment the retry landed, which is an
+        # assertion about the probe's tuning rather than about the echo.
+        echo = re.search(r"ECHOED b'([ps]+)'", red.stdout)
+        check(echo is not None,
+              "and the echo of exactly the typed keys — and nothing else — is named as evidence",
               red.stdout[-700:])
         check(red.returncode != 0,
               "an inconclusive run is never exit 0 — a scenario nobody could reach is not a pass",
@@ -3835,6 +3841,48 @@ def test_every_case_carries_a_lane() -> None:
     declared = set(campaign.get("lanes", []))
     stray = sorted({c.get("lane") for c in cases if c.get("lane") and c.get("lane") not in declared})
     check(not stray, "no case names an undeclared lane", f"stray: {stray}")
+
+
+def test_a_shared_frame_is_declared_or_a_finding() -> None:
+    """DEF-221. Naming a byte-identical share was not enough.
+
+    `capture_manifest` printed "identity, not disposition" and left the
+    disposition to a reader who never arrived, so two shares stood for waves with
+    nothing recording whether anybody had decided they were legitimate.
+    """
+    script = ROOT / "scripts" / "campaign" / "capture_manifest.py"
+    out = subprocess.run([sys.executable, str(script), "--gate"], capture_output=True, text=True)
+    check(out.returncode == 0, "every byte-identical capture share is declared",
+          out.stdout[-700:])
+    check("all declared" in out.stdout,
+          "and the verdict line says how many shares there are, not only how many images",
+          out.stdout[-300:])
+
+    # Every declared share names paths that still hold that digest. A
+    # declaration for a group nobody has any more is a decision about nothing.
+    shares = json.loads((CAMPAIGN_DIR / "shared-frames.json").read_text())["shares"]
+    index = json.loads((CAMPAIGN_DIR / "capture-index.json").read_text())
+    live = {g["sha256"] for g in index.get("duplicateGroups", [])}
+    stale = [s["sha256"][:12] for s in shares if s["sha256"] not in live]
+    check(not stale, "no declaration stands for a share that no longer exists", f"stale: {stale}")
+    for s_ in shares:
+        check(bool(s_.get("why", "").strip()) and bool(s_.get("decidedBy", "").strip()),
+              f"share {s_['sha256'][:12]} carries a reason and who decided it",
+              json.dumps(s_)[:200])
+
+    # The arm: a share the declaration does not cover takes the gate red.
+    with tempfile.TemporaryDirectory() as td:
+        d = Path(td) / "campaign"
+        shutil.copytree(CAMPAIGN_DIR, d)
+        doc = json.loads((d / "shared-frames.json").read_text())
+        doc["shares"] = doc["shares"][:-1]
+        (d / "shared-frames.json").write_text(json.dumps(doc, indent=2) + "\n")
+        red = subprocess.run([sys.executable, str(script), "--campaign", str(d), "--gate"],
+                             capture_output=True, text=True)
+        check(red.returncode == 1, "an undeclared share takes the gate red",
+              f"exit {red.returncode}\n{red.stdout[-400:]}")
+        check("UNDECLARED" in red.stdout, "and the finding names which share",
+              red.stdout[-500:])
 
 
 def main() -> int:
@@ -3918,7 +3966,8 @@ def main() -> int:
                test_parse_charter_agrees_with_tomllib,
                test_the_cache_walk_survives_a_tree_being_mutated,
                test_the_pty_probe_says_when_it_could_not_measure,
-               test_every_case_carries_a_lane):
+               test_every_case_carries_a_lane,
+               test_a_shared_frame_is_declared_or_a_finding):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001

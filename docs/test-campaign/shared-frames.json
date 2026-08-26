@@ -1,0 +1,52 @@
+{
+  "note": "Byte-identical capture groups, each with why the frames are the same. DEF-221: naming the shares was not enough \u2014 two stood for waves with nothing recording whether anybody had decided they were legitimate, and 'identity, not disposition' left the disposition to a reader who never arrived. capture_manifest.py refuses an undeclared share, so a new one is a finding and a decided one is closed. A declaration is not a licence to publish: none of these is a subject shot in inventory.json, and capture-lineage.py judges what is.",
+  "shares": [
+    {
+      "sha256": "ee7807db110ea041dafc1e235bc376fa87c74fafa2702b17d6a12bf03d96ef78",
+      "paths": [
+        "overlay-exclusion-armed.png",
+        "overlay-exclusion-baseA.png",
+        "overlay-exclusion-baseB.png"
+      ],
+      "why": "The identity IS the measurement. evidence/overlay-exclusion.json records two baselines and an armed frame at one md5 with a positive control \u2014 a cmd-A select-all DID change the frame \u2014 and three overlay windows witnessed onscreen at alpha 1 while armed. Verdict `excluded`. Three frames that differ would be the failure here.",
+      "decidedBy": "PRO-0107"
+    },
+    {
+      "sha256": "a67cf67af07e4971c54f2e23a94f1602663f4955b8ba38ac7fbc508a03df7743",
+      "paths": [
+        "app-icon-proctor.png",
+        "icon-proctor-1024.png"
+      ],
+      "why": "One 1024px app-icon render under two names. Neither is a capture of a running surface and both are declared unpublished by capture-lineage; they are kept as the evidence for DEF-218, which is that build_test_campaign.py copied icon renders into the shots directory under surface-shaped names.",
+      "decidedBy": "PRO-0107"
+    },
+    {
+      "sha256": "4f8c11912bbda884a196207acb0ee8a80ed6d191b10b52d751e74362b2913b3d",
+      "paths": [
+        "sweepL-status-agent-down.png",
+        "sweepL-status-t0.6.png",
+        "sweepL-status-t3.5.png"
+      ],
+      "why": "Three names for one state, and the state is what each name claims. sweeps-kl.json records `Agent down at t+0.71s and t+3.63s`, so the two sampled times found the same window saying the same thing, and DEF-222's fix replaced the mis-named third frame with one matching them. A window that reads identically at two moments photographs identically; requiring three different images would require the window to have changed when the sweep recorded that it did not.",
+      "decidedBy": "PRO-0109, DEF-222"
+    },
+    {
+      "sha256": "5c7d4535e70c1b9d4cb81d25798d4077b76cab9adf9a35196397151f78528018",
+      "paths": [
+        "sweepL-wedged-t7.png",
+        "sweepL-wedged-t14.png"
+      ],
+      "why": "Both show `Agent down \u2014 the Proctor agent did not answer within 5s`, at t+7 and t+14 of a wedge that lasted longer than both. The sweep's verdict rests on sweepL-halfopen.json's own fields \u2014 clientBlockedSeconds, clientTimedOutAt25s, recoveredAfterSIGCONT \u2014 not on the frames, and neither file is a subject shot. The wedge is witnessed once in pixels and twice in timings, which is what the record says.",
+      "decidedBy": "DEF-221"
+    },
+    {
+      "sha256": "670a9398831540fde79fe19f44c34cb83bd499de8579424b22feb113684a261a",
+      "paths": [
+        "sweepK-theme-before.png",
+        "sweepL-wedged-t1.png"
+      ],
+      "why": "A dark Ready status window, photographed by two sweeps that both began from one. Sweep K's dark-theme baseline and sweep L's t+1 frame are the same window in the same state: the agent's timeout is 5s, so at t+1 a wedge has nothing to report yet and the window still reads Ready. Defensible on its own terms, and the arm PRO-0109 did fix is the one that was not \u2014 sweepL-wedged-recovered.png was re-taken and now differs by 1,046 pixels, so a recovery is no longer shown by the same bytes as the frame before it.",
+      "decidedBy": "PRO-0109, DEF-221"
+    }
+  ]
+}

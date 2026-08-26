@@ -137,11 +137,33 @@ def main() -> int:
         print(f"\nNone of the {len(CONVENTIONAL)} conventional root names exists here "
               f"({', '.join(CONVENTIONAL)}), which is why an audit looking for them found "
               f"no capture directory. `captureRoots` above is the answer to that.")
+    # DEF-221. Naming the shares was not enough: two of them stood for waves
+    # with nothing recording whether anybody had decided they were legitimate,
+    # and "identity, not disposition" left the disposition to a reader who never
+    # arrived. Every group now has to be DECLARED, with a reason, in
+    # shared-frames.json — an undeclared share is a finding and a declared one is
+    # closed, which is the same shape as an explicit empty control list.
+    shared_path = Path(a.campaign) / "shared-frames.json"
+    declared_shares = {}
+    if shared_path.is_file():
+        declared_shares = {d["sha256"]: d for d in
+                           json.loads(shared_path.read_text()).get("shares", [])}
+    undeclared = []
     if dupes:
         print(f"\n{len(dupes)} digest(s) held by more than one path — identity, not disposition; "
               f"whether a share is legitimate is capture-lineage.py's call:")
-        for h, p in sorted(dupes.items())[:6]:
-            print(f"  {h[:12]}  {len(p)} paths: {', '.join(x.split('/')[-1] for x in p[:4])}")
+        for h, p in sorted(dupes.items()):
+            note = declared_shares.get(h)
+            mark = "declared" if note else "UNDECLARED"
+            print(f"  {h[:12]}  [{mark}]  {len(p)} paths: "
+                  f"{', '.join(x.split('/')[-1] for x in p[:4])}")
+            if note:
+                print(f"                  {note.get('why', '')[:150]}")
+            else:
+                undeclared.append(h)
+        if undeclared:
+            print(f"\n{len(undeclared)} share(s) nobody has decided about. Add each to "
+                  f"{shared_path.name} with why the frames are the same, or re-take one.")
 
     if a.write:
         index_path.write_text(json.dumps(index, indent=2) + "\n")
@@ -195,8 +217,11 @@ def main() -> int:
                   f"--write once somebody has decided the new content is the standard — "
                   f"adopting it here would make the index agree with whatever is on disk.")
             return 1
+        if undeclared:
+            print(f"\nFAIL  {len(undeclared)} byte-identical share(s) are undeclared.")
+            return 1
         print(f"\ngate: {len(entries)} image(s) across {len(roots)} declared root(s), "
-              f"all present and unchanged.")
+              f"all present and unchanged; {len(dupes)} share(s), all declared.")
     return 0
 
 
