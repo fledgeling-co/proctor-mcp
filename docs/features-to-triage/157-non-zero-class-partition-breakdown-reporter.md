@@ -2,7 +2,7 @@
 generated-by: tailings
 tailings-sources: [T11]
 reckon-sources: [REQ-045, REQ-120]
-status: to-triage
+status: triaged
 ---
 # Non-Zero Class Partition Breakdown Reporter
 

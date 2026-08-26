@@ -36,8 +36,14 @@ anyway, which is the finding worth keeping.
 
 So criterion 1 holds for the artifacts where nothing else reads the citation form, and
 `docs/specs/` and `docs/feature-specs/` are excluded by name in `FIXED_FORM`. That leaves 347
-citations that are resolvable and deliberately unexpanded, counted apart from the 78 ambiguous
-and 48 absent so the residue is not one undifferentiated number.
+citations that are resolvable and deliberately unexpanded, counted apart from the rest so the
+residue is not one undifferentiated number.
+
+The residue's own partition, which `scripts/campaign/partition_report.py` requires this section
+to carry: **bare, several matches** 78 — a bare entry-point filename that resolves to three real
+files, one per executable target, where picking one is a guess. **no file of that name** 48 — including template
+placeholders that correctly name nothing. Neither can be closed mechanically and each needs a
+person, which is why the gate ratchets rather than demanding zero.
 
 **Moves:** none.
 

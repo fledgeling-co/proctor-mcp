@@ -3518,6 +3518,73 @@ def test_a_wait_states_its_bound() -> None:
               f"exit {green.returncode}\n{green.stdout[-400:]}")
 
 
+def test_every_non_zero_class_reaches_its_summary() -> None:
+    script = ROOT / "scripts" / "campaign" / "partition_report.py"
+    out = subprocess.run([sys.executable, str(script), "--gate"], capture_output=True, text=True)
+    check(out.returncode == 0, "every non-zero class a declared gate prints reaches its summary",
+          out.stdout[-900:])
+    check("declared partition(s)" in out.stdout,
+          "and the run says how many partitions it read", out.stdout[:200])
+
+    # Two arms on a copied declaration: a summary that carries the total and not
+    # the classes, and a gate that produces nothing.
+    with tempfile.TemporaryDirectory() as td:
+        decl = json.loads((CAMPAIGN_DIR / "partitions.json").read_text())
+        one = dict(decl["partitions"][3])            # wait_site_sweep, which is cheap
+        empty = Path(td) / "summary.md"
+        empty.write_text("11 wait sites, all fine.\n")
+        one["summary"] = str(empty.relative_to(Path("/"))) if False else "docs/test-campaign/EMPTY.md"
+        (ROOT / "docs" / "test-campaign" / "EMPTY.md").write_text("11 wait sites, all fine.\n")
+        try:
+            path = Path(td) / "partitions.json"
+            path.write_text(json.dumps({"partitions": [one]}, indent=2) + "\n")
+            red = subprocess.run([sys.executable, str(script), "--declaration", str(path),
+                                  "--gate"], capture_output=True, text=True)
+            check(red.returncode == 1,
+                  "a summary carrying the total and none of the classes takes the gate red",
+                  f"exit {red.returncode}\n{red.stdout[-400:]}")
+            check("absent from" in red.stdout,
+                  "and the refusal names which classes are missing and from where",
+                  red.stdout[-400:])
+        finally:
+            (ROOT / "docs" / "test-campaign" / "EMPTY.md").unlink(missing_ok=True)
+
+        silent = dict(one)
+        silent["command"] = ["python3", "-c", "pass"]
+        path = Path(td) / "silent.json"
+        path.write_text(json.dumps({"partitions": [silent]}, indent=2) + "\n")
+        red = subprocess.run([sys.executable, str(script), "--declaration", str(path), "--gate"],
+                             capture_output=True, text=True)
+        check(red.returncode == 2, "a gate that printed nothing is exit 2, not a pass",
+              f"exit {red.returncode}\n{red.stdout[-300:]}")
+
+
+def test_a_wave_rechecks_the_claims_it_wrote() -> None:
+    script = ROOT / "scripts" / "campaign" / "wave_claim_check.py"
+    out = subprocess.run([sys.executable, str(script), "--since", "HEAD~1", "--gate"],
+                         capture_output=True, text=True)
+    check(out.returncode == 0, "the claims this wave wrote hold against the registries",
+          out.stdout[-800:])
+    check("artifact(s) another session plans from" in out.stdout,
+          "and the run names the plan-from set it took from claim_provenance",
+          out.stdout[:400])
+
+    # The fourth outcome, which is the one this exists for: a range that touched
+    # nothing durable says so rather than reporting a clean check.
+    nothing = subprocess.run([sys.executable, str(script), "--since", "HEAD", "--gate"],
+                             capture_output=True, text=True)
+    check(nothing.returncode == 0, "an empty range is not a failure", nothing.stdout[-300:])
+    check("touched no durable artifact" in nothing.stdout,
+          "and it says so in those words rather than reporting a check it did not make",
+          nothing.stdout[-300:])
+
+    # And a range that cannot be resolved is exit 2, never a pass.
+    bad = subprocess.run([sys.executable, str(script), "--since", "no-such-ref-here", "--gate"],
+                         capture_output=True, text=True)
+    check(bad.returncode == 2, "an unresolvable range is exit 2, not a clean check",
+          f"exit {bad.returncode}\n{bad.stdout[-300:]}")
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -3591,7 +3658,9 @@ def main() -> int:
                test_a_defect_status_word_matches_its_note,
                test_a_path_citation_resolves_from_the_root,
                test_a_gate_exit_code_is_not_read_from_a_pipeline,
-               test_a_wait_states_its_bound):
+               test_a_wait_states_its_bound,
+               test_every_non_zero_class_reaches_its_summary,
+               test_a_wave_rechecks_the_claims_it_wrote):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001

@@ -1,0 +1,16 @@
+621 file(s) changed in 626539e3..HEAD · 2 of the 2 artifact(s) another session plans from
+  the plan-from set, from claim_provenance itself: ORCHESTRATOR.md, docs/feature-specs/LEDGER.md
+  ok    ORCHESTRATOR.md
+  ok    docs/feature-specs/LEDGER.md
+
+PASS: all 2 durable artifact(s) this wave touched hold against the registries.
+# The fourth outcome: a range that touched no durable artifact says so.
+0 file(s) changed in HEAD..HEAD · 0 of the 2 artifact(s) another session plans from
+  the plan-from set, from claim_provenance itself: ORCHESTRATOR.md, docs/feature-specs/LEDGER.md
+
+This wave touched no durable artifact, so there is no claim in it to re-check.
+That is a different fact from a clean check, and it is reported as itself.
+
+# And a range that cannot be resolved is exit 2, never a pass.
+the range no-such-ref-here..HEAD could not be resolved, so nothing was examined. This is not a clean check.
+exit=2

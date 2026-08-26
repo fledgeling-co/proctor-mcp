@@ -9763,6 +9763,41 @@
       "scripts/campaign/wait_site_sweep.py",
       "docs/test-campaign/evidence/PRO-0169/wait-site-sweep.txt"
     ],
-    "note": "PRO-0169. Nine wait sites: 4 settles, 1 service loop, 4 bounded, 0 silent, 0 unbounded. The three classes that are not findings exist because the first run reported two of them as polling defects \u2014 install.sh counts to forty with `seq` and then says the agent did not bind within 10 seconds, and a PTY probe's `while self.running:` holds a stream open rather than asking a question repeatedly. A sweep that calls a server's accept loop a polling defect is a sweep nobody runs twice."
+    "note": "PRO-0169. 11 wait sites: settle 6, service 1, bounded 4, silent 0, unbounded 0. The three classes that are not findings exist because the first run reported two of them as polling defects \u2014 install.sh counts to forty with `seq` and then says the agent did not bind within 10 seconds, and a PTY probe's `while self.running:` holds a stream open rather than asking a question repeatedly. A sweep that calls a server's accept loop a polling defect is a sweep nobody runs twice."
+  },
+  {
+    "id": "CASE-0833",
+    "req": "REQ-046",
+    "surface": "SURF-029",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Two arms on a copied declaration: a summary carrying the total and none of the classes takes the gate red and the refusal names which classes are missing and from where; and a declared gate that prints nothing is exit 2 rather than a pass, because a partition that was not read is not a partition that held.",
+    "defects": [],
+    "evidence": [
+      "scripts/campaign/partition_report.py",
+      "docs/test-campaign/partitions.json",
+      "docs/test-campaign/evidence/PRO-0165/partition-report.txt"
+    ],
+    "note": "PRO-0165. A gate that prints a partition and a summary that reports only its total are the same green, and the total is true \u2014 which is why it is quiet. On first run the gate found three of its four declared partitions summarised without their classes: ORCHESTRATOR carried `strict 440 of 502` and neither the 41 that only prove something rendered nor the 16 never watched to fail, and carried reckon's classes without `waived`. Those are different jobs with different owners. The classes are read out of each gate's own output rather than recomputed, so a class this repository declares and the gate stops printing is a reported disagreement rather than a silent drop."
+  },
+  {
+    "id": "CASE-0834",
+    "req": "REQ-130",
+    "surface": "SURF-029",
+    "oracle": "outcome",
+    "lane": "headless",
+    "plane": "hermetic",
+    "status": "pass",
+    "armed": true,
+    "armedBy": "Three arms, one per outcome that is not a pass: a range touching nothing durable says so in those words, an unresolvable range is exit 2, and a contradicted claim in a touched artifact is exit 1. The middle one is the arm that matters \u2014 a wave that wrote nothing and a wave whose claims all held are the same green.",
+    "defects": [],
+    "evidence": [
+      "scripts/campaign/wave_claim_check.py",
+      "docs/test-campaign/evidence/PRO-0170/wave-claim-check.txt"
+    ],
+    "note": "PRO-0170. This repository's ORCHESTRATOR header went stale four times in one wave \u2014 152, 158, 164, 170 rows \u2014 and each was corrected after something downstream had read it. Running the claim audit over the wave's own diff is cheap enough to run at every boundary, which is the only cadence at which it prevents anything. The plan-from set is read out of claim_provenance rather than restated: a first version declared its own wider set and reported 44 of 68 artifacts contradicted, because it was promoting wave-15 briefs that describe wave 15 to claims about now."
   }
 ]

@@ -1,0 +1,34 @@
+{
+  "note": "Gates that print a partition, and the artifact that summarises each. A summary quoting a total with no classes beside it is the failure PRO-0165 exists for: the total is true and the classes are two different jobs with two different owners. Add a row here when a gate starts printing a partition; partition_report.py reads the classes out of the gate's own output rather than recomputing them, so a class this file names and the gate stops printing is reported as a disagreement rather than silently dropped.",
+  "partitions": [
+    {
+      "label": "strict-check — what the campaign's oracle rungs actually prove",
+      "command": ["python3",
+                  "/Users/lukerhodes/.claude/plugins/cache/fledgeling-plugins/test-campaign/0.14.1/skills/test-campaign/scripts/strict-check.py",
+                  "docs/test-campaign"],
+      "classes": ["only proves something rendered", "never watched to fail", "status is n/a"],
+      "summary": "ORCHESTRATOR.md"
+    },
+    {
+      "label": "reckon — the closed-world partition over briefs, requirements, cases and defects",
+      "command": ["python3",
+                  "/Users/lukerhodes/.claude/plugins/cache/fledgeling-plugins/reckon/1.7.0/skills/reckon/scripts/reckon.py",
+                  "check", "docs/reckoning/2026-08-26-wave29b/ledger.json"],
+      "classes": ["broken", "unmeasured", "undecided", "waived", "verified-done"],
+      "total": "rows",
+      "summary": "ORCHESTRATOR.md"
+    },
+    {
+      "label": "path_citation_check — citations an outside reader cannot resolve",
+      "command": ["python3", "scripts/campaign/path_citation_check.py"],
+      "classes": ["bare, several matches", "no file of that name"],
+      "summary": "docs/specs/spec-PRO-0167.md"
+    },
+    {
+      "label": "wait_site_sweep — how this repository waits",
+      "command": ["python3", "scripts/campaign/wait_site_sweep.py"],
+      "classes": ["settle", "service", "bounded", "silent", "unbounded"],
+      "summary": "docs/test-campaign/cases.json"
+    }
+  ]
+}

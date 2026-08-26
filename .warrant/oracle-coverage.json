@@ -29,13 +29,13 @@
    "total": 56
   },
   "registry-drift": {
-   "coverage": 0.9744,
-   "covered": 38,
+   "coverage": 0.9756,
+   "covered": 40,
    "green": false,
    "lineage_gaps": 1,
    "surfaces_matched": 3,
    "threshold": 1.0,
-   "total": 39
+   "total": 41
   },
   "release-integrity": {
    "coverage": 1.0,
@@ -65,7 +65,7 @@
    "total": 119
   }
  },
- "generated_at": "2026-08-26T10:44:13.392841+00:00",
+ "generated_at": "2026-08-26T10:58:30.438401+00:00",
  "note": "`figures` is cases on that surface and `sourced` is those on an effect rung \u2014 a check that could catch a wrong answer. Run warrant's rollup_classes.py to key this by defect class using the warrant's own globs.",
  "source": "test-campaign",
  "surfaces": [
@@ -256,9 +256,9 @@
    "unsourced": 0
   },
   {
-   "figures": 19,
+   "figures": 21,
    "file": "tool://standing-registers/unread-gates",
-   "sourced": 19,
+   "sourced": 21,
    "unsourced": 0
   },
   {

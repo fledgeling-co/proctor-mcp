@@ -2,7 +2,7 @@
 generated-by: tailings
 tailings-sources: [continuous-audit]
 reckon-sources: [REQ-045, REQ-046]
-status: to-triage
+status: triaged
 ---
 # Autonomous Audit Worklist Continuous Verifier
 

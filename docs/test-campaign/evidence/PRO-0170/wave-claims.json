@@ -1,0 +1,22 @@
+{
+  "since": "626539e3",
+  "changed": 621,
+  "durable": [
+    "ORCHESTRATOR.md",
+    "docs/feature-specs/LEDGER.md"
+  ],
+  "rows": [
+    {
+      "artifact": "ORCHESTRATOR.md",
+      "exit": 0,
+      "contradicted": false,
+      "output": ""
+    },
+    {
+      "artifact": "docs/feature-specs/LEDGER.md",
+      "exit": 0,
+      "contradicted": false,
+      "output": ""
+    }
+  ]
+}

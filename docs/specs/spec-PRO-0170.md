@@ -1,7 +1,7 @@
 # Spec PRO-0170 — Continuous Claim Verification Between Waves
 
 **Brief:** `docs/features-to-triage/162-autonomous-audit-worklist-continuous-verifier.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-25
 **Surfaces:** SURF-029
 **Defects:** none

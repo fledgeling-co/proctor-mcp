@@ -1,0 +1,85 @@
+{
+  "rows": [
+    {
+      "label": "strict-check \u2014 what the campaign's oracle rungs actually prove",
+      "readable": true,
+      "classes": {
+        "only proves something rendered": 41,
+        "never watched to fail": 16,
+        "status is n/a": 3
+      },
+      "nonZero": {
+        "only proves something rendered": 41,
+        "never watched to fail": 16,
+        "status is n/a": 3
+      },
+      "absentFromSummary": [],
+      "missingFromGate": [],
+      "sums": null,
+      "summed": 60,
+      "summary": "ORCHESTRATOR.md"
+    },
+    {
+      "label": "reckon \u2014 the closed-world partition over briefs, requirements, cases and defects",
+      "readable": true,
+      "classes": {
+        "broken": 5,
+        "unmeasured": 2,
+        "undecided": 12,
+        "waived": 153,
+        "verified-done": 845
+      },
+      "nonZero": {
+        "broken": 5,
+        "unmeasured": 2,
+        "undecided": 12,
+        "waived": 153,
+        "verified-done": 845
+      },
+      "absentFromSummary": [],
+      "missingFromGate": [],
+      "sums": true,
+      "summed": 1017,
+      "summary": "ORCHESTRATOR.md"
+    },
+    {
+      "label": "path_citation_check \u2014 citations an outside reader cannot resolve",
+      "readable": true,
+      "classes": {
+        "bare, several matches": 78,
+        "no file of that name": 48
+      },
+      "nonZero": {
+        "bare, several matches": 78,
+        "no file of that name": 48
+      },
+      "absentFromSummary": [],
+      "missingFromGate": [],
+      "sums": null,
+      "summed": 126,
+      "summary": "docs/specs/spec-PRO-0167.md"
+    },
+    {
+      "label": "wait_site_sweep \u2014 how this repository waits",
+      "readable": true,
+      "classes": {
+        "settle": 6,
+        "service": 1,
+        "bounded": 4,
+        "silent": 0,
+        "unbounded": 0
+      },
+      "nonZero": {
+        "settle": 6,
+        "service": 1,
+        "bounded": 4
+      },
+      "absentFromSummary": [],
+      "missingFromGate": [],
+      "sums": null,
+      "summed": 11,
+      "summary": "docs/test-campaign/cases.json"
+    }
+  ],
+  "problems": []
+}

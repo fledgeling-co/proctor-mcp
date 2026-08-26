@@ -1,0 +1,15 @@
+4 declared partition(s), 4 read
+  ok    strict-check — what the campaign's oracle rungs actually prove
+        gate prints: only proves something rendered 41 · never watched to fail 16 · status is n/a 3
+        summarised in: ORCHESTRATOR.md
+  ok    reckon — the closed-world partition over briefs, requirements, cases and defects
+        gate prints: broken 5 · unmeasured 2 · undecided 12 · waived 153 · verified-done 845
+        summarised in: ORCHESTRATOR.md
+  ok    path_citation_check — citations an outside reader cannot resolve
+        gate prints: bare, several matches 78 · no file of that name 48
+        summarised in: docs/specs/spec-PRO-0167.md
+  ok    wait_site_sweep — how this repository waits
+        gate prints: settle 6 · service 1 · bounded 4 · silent 0 · unbounded 0
+        summarised in: docs/test-campaign/cases.json
+
+PASS: every non-zero class of 4 partition(s) appears in the summary derived from it.

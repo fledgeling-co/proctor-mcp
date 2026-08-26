@@ -1,7 +1,7 @@
 # Spec PRO-0165 — Non-Zero Class Partition Reporting
 
 **Brief:** `docs/features-to-triage/157-non-zero-class-partition-breakdown-reporter.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-25
 **Surfaces:** SURF-029
 **Defects:** none
