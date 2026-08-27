@@ -90,7 +90,7 @@ surfaces = ["engine://audit-policy", "cli://proctor", "cli://tui", "process://ag
 # should not have been on it.
 [[classes]]
 name = "run-lifecycle"
-tier = 0
+tier = 1          # promoted 2026-08-27 (53/53 sourced)
 escalation = "owner"
 census = false
 plane = "panel"
@@ -112,7 +112,7 @@ surfaces = ["tool://standing-registers/*", "tool://reckoning/*", "docs/test-camp
 # the TCC grants away on the next rebuild.
 [[classes]]
 name = "release-integrity"
-tier = 0
+tier = 1          # promoted 2026-08-27 (2/2 sourced)
 escalation = "owner"
 census = false
 plane = "oracle"

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-08-27
+
 ### Added
 
 - **Proctor can drive a Mac that isn't yours.** Attach a session to a macOS guest and every tool call from it runs inside that guest. The Proctor in there holds that machine's Accessibility and Screen Recording grants and talks to its own window server, so what you get back is a verdict about the guest, not about your desk.
