@@ -2396,7 +2396,7 @@ def test_warrant_census_classes_and_surface_coverage() -> None:
     cov_file = ROOT / ".warrant" / "oracle-coverage.json"
     if cov_file.is_file():
         cov = json.loads(cov_file.read_text(encoding="utf-8"))
-        surface_names = [s["file"] for s in cov.get("surfaces", [])]
+        surface_names = [(s.get("route") or s.get("file") or s.get("surface")) for s in cov.get("surfaces", [])]
         import fnmatch
         from pathlib import PurePath
 
@@ -3933,6 +3933,36 @@ def test_a_journey_cut_has_a_case_behind_it() -> None:
         check("somewhere-else" in red.stdout, "and the refusal names it", red.stdout[-400:])
 
 
+def test_every_sub_effect_rung_case_is_routed() -> None:
+    """PRO-0161. Every case below the effect rung is routed: raisable or structural."""
+    script = ROOT / "scripts" / "campaign" / "rung_routing.py"
+    out = subprocess.run([sys.executable, str(script), str(CAMPAIGN_DIR), "--gate"],
+                         capture_output=True, text=True)
+    check(out.returncode == 0, "every case below the effect rung is routed (0 undecided)",
+          out.stdout[-600:] + out.stderr[-400:])
+    check("undecided       0" in out.stdout,
+          "and the run confirms 0 undecided cases remain", out.stdout[:400])
+
+    # The arm: an unrouted case takes the gate red.
+    with tempfile.TemporaryDirectory() as td:
+        d = Path(td) / "campaign"
+        shutil.copytree(CAMPAIGN_DIR, d)
+        raw = json.loads((d / "cases.json").read_text())
+        cases = raw if isinstance(raw, list) else raw["cases"]
+        cases.append({
+            "id": "CASE-9999", "surface": "SURF-001", "req": "REQ-001",
+            "oracle": "source-analysis", "status": "pass", "armed": True,
+            "note": "A totally unknown arbitrary unclassifiable text xyz123."
+        })
+        (d / "cases.json").write_text(json.dumps(raw, indent=2) + "\n")
+        red = subprocess.run([sys.executable, str(script), str(d), "--gate"],
+                             capture_output=True, text=True)
+        check(red.returncode == 1, "an unroutable case takes the gate red",
+              f"exit {red.returncode}\n{red.stdout[-400:]}")
+        check("undecided (1)" in red.stdout and "CASE-9999" in red.stdout,
+              "and the refusal names the undecided case", red.stdout[-400:])
+
+
 def main() -> int:
     for fn in (test_mutate_swift_closure_shorthand, test_merge_registry,
                test_merge_registry_on_this_registry,
@@ -4016,7 +4046,8 @@ def main() -> int:
                test_the_pty_probe_says_when_it_could_not_measure,
                test_every_case_carries_a_lane,
                test_a_shared_frame_is_declared_or_a_finding,
-               test_a_journey_cut_has_a_case_behind_it):
+               test_a_journey_cut_has_a_case_behind_it,
+               test_every_sub_effect_rung_case_is_routed):
         try:
             fn()
         except Exception as exc:                                    # noqa: BLE001

@@ -12,3 +12,5 @@
 | 8 | 22:01:07 | block | finish-line | iteration 8/60 · repeat ×1 |
 | 9 | 22:17:44 | block | finish-line | iteration 9/60 · repeat ×1 |
 | 10 | 23:01:17 | block | finish-line | iteration 10/60 · repeat ×1 |
+| 11 | 23:22:32 | block | finish-line | iteration 11/60 · repeat ×2 |
+| 12 | 23:28:14 | block | finish-line, tests | iteration 12/60 · repeat ×1 |

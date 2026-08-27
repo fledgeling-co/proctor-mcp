@@ -2,312 +2,313 @@
  "campaign_dir": "/Users/lukerhodes/Dev/proctor-mcp/docs/test-campaign",
  "classes": {
   "capture-trust": {
-   "coverage": 0.9574,
-   "covered": 45,
+   "coverage": 0.0,
+   "covered": 0,
    "green": false,
-   "lineage_gaps": 2,
-   "surfaces_matched": 3,
+   "lineage_gaps": 0,
+   "surfaces_matched": 0,
    "threshold": 1.0,
-   "total": 47
+   "total": 0
   },
   "evidence-integrity": {
-   "coverage": 0.9128,
-   "covered": 199,
+   "coverage": 0.0,
+   "covered": 0,
    "green": false,
-   "lineage_gaps": 19,
-   "surfaces_matched": 16,
+   "lineage_gaps": 0,
+   "surfaces_matched": 0,
    "threshold": 1.0,
-   "total": 218
+   "total": 0
   },
   "operator-state": {
-   "coverage": 0.9464,
-   "covered": 53,
+   "coverage": 0.0,
+   "covered": 0,
    "green": false,
-   "lineage_gaps": 3,
-   "surfaces_matched": 4,
+   "lineage_gaps": 0,
+   "surfaces_matched": 0,
    "threshold": 1.0,
-   "total": 56
+   "total": 0
   },
   "registry-drift": {
-   "coverage": 0.9756,
-   "covered": 40,
+   "coverage": 0.0,
+   "covered": 0,
    "green": false,
-   "lineage_gaps": 1,
-   "surfaces_matched": 3,
+   "lineage_gaps": 0,
+   "surfaces_matched": 0,
    "threshold": 1.0,
-   "total": 41
+   "total": 0
   },
   "release-integrity": {
-   "coverage": 1.0,
-   "covered": 2,
-   "green": true,
+   "coverage": 0.0,
+   "covered": 0,
+   "green": false,
    "lineage_gaps": 0,
-   "surfaces_matched": 1,
+   "surfaces_matched": 0,
    "threshold": 1.0,
-   "total": 2
+   "total": 0
   },
   "run-lifecycle": {
-   "coverage": 1.0,
-   "covered": 53,
-   "green": true,
+   "coverage": 0.0,
+   "covered": 0,
+   "green": false,
    "lineage_gaps": 0,
-   "surfaces_matched": 9,
+   "surfaces_matched": 0,
    "threshold": 1.0,
-   "total": 53
+   "total": 0
   },
   "surface-conformance": {
-   "coverage": 0.843,
-   "covered": 102,
+   "coverage": 0.0,
+   "covered": 0,
    "green": false,
-   "lineage_gaps": 19,
-   "surfaces_matched": 6,
+   "lineage_gaps": 0,
+   "surfaces_matched": 0,
    "threshold": 1.0,
-   "total": 121
+   "total": 0
   }
  },
- "generated_at": "2026-08-26T23:11:59.248298+00:00",
- "note": "`figures` is cases on that surface and `sourced` is those on an effect rung \u2014 a check that could catch a wrong answer. Run warrant's rollup_classes.py to key this by defect class using the warrant's own globs.",
+ "generated_at": "2026-08-27T00:04:49.320338+00:00",
+ "note": "`figures` is cases on that surface and `sourced` is those on an effect rung \u2014 a check that could catch a wrong answer. `file` is a filesystem path and is ABSENT where the surface has no declaring file; the warrant's class globs match `file`, so a surface without one is genuinely unmatched rather than quietly miscounted. `route` always travels. Run warrant's rollup_classes.py to key this by defect class using the warrant's own globs.",
  "source": "test-campaign",
  "surfaces": [
   {
    "figures": 2,
-   "file": "cli://install-notarize",
+   "route": "cli://install-notarize",
    "sourced": 2,
    "unsourced": 0
   },
   {
    "figures": 7,
-   "file": "cli://proctor",
+   "route": "cli://proctor",
    "sourced": 7,
    "unsourced": 0
   },
   {
    "figures": 11,
-   "file": "cli://tui",
+   "route": "cli://tui",
    "sourced": 11,
    "unsourced": 0
   },
   {
    "figures": 26,
-   "file": "core://tools",
+   "route": "core://tools",
    "sourced": 16,
    "unsourced": 10
   },
   {
    "figures": 37,
-   "file": "engine://audit-policy",
+   "route": "engine://audit-policy",
    "sourced": 34,
    "unsourced": 3
   },
   {
    "figures": 4,
-   "file": "engine://guest-provider",
+   "route": "engine://guest-provider",
    "sourced": 4,
    "unsourced": 0
   },
   {
    "figures": 5,
-   "file": "engine://ios-maestro",
+   "route": "engine://ios-maestro",
    "sourced": 5,
    "unsourced": 0
   },
   {
    "figures": 17,
-   "file": "engine://process-directed",
+   "route": "engine://process-directed",
    "sourced": 17,
    "unsourced": 0
   },
   {
    "figures": 3,
-   "file": "engine://reflector",
+   "route": "engine://reflector",
    "sourced": 3,
    "unsourced": 0
   },
   {
    "figures": 18,
-   "file": "engine://screen-capture",
+   "route": "engine://screen-capture",
    "sourced": 16,
    "unsourced": 2
   },
   {
    "figures": 3,
-   "file": "engine://stability",
+   "route": "engine://stability",
    "sourced": 3,
    "unsourced": 0
   },
   {
    "figures": 1,
-   "file": "engine://zoom",
+   "route": "engine://zoom",
    "sourced": 1,
    "unsourced": 0
   },
   {
    "figures": 6,
-   "file": "mcp://proctor_doctor#guestPool",
+   "route": "mcp://proctor_doctor#guestPool",
    "sourced": 6,
    "unsourced": 0
   },
   {
    "figures": 6,
-   "file": "mcp://proctor_guest?action=attach",
+   "route": "mcp://proctor_guest?action=attach",
    "sourced": 6,
    "unsourced": 0
   },
   {
    "figures": 1,
-   "file": "process://agent-claim",
+   "route": "process://agent-claim",
    "sourced": 1,
    "unsourced": 0
   },
   {
    "figures": 1,
-   "file": "proctor://panel/about",
+   "route": "proctor://panel/about",
    "sourced": 1,
    "unsourced": 0
   },
   {
    "figures": 4,
-   "file": "stdio://proctor-shim",
+   "route": "stdio://proctor-shim",
    "sourced": 4,
    "unsourced": 0
   },
   {
    "figures": 3,
-   "file": "tool://actuation/cua-subprocess",
+   "route": "tool://actuation/cua-subprocess",
    "sourced": 3,
    "unsourced": 0
   },
   {
    "figures": 1,
-   "file": "tool://automation-yield/cross-stack",
+   "route": "tool://automation-yield/cross-stack",
    "sourced": 1,
    "unsourced": 0
   },
   {
    "figures": 1,
-   "file": "tool://bookkeeping/brief-108-retirement",
+   "route": "tool://bookkeeping/brief-108-retirement",
    "sourced": 1,
    "unsourced": 0
   },
   {
    "figures": 16,
-   "file": "tool://boundary-audit/limits",
+   "route": "tool://boundary-audit/limits",
    "sourced": 16,
    "unsourced": 0
   },
   {
    "figures": 28,
-   "file": "tool://capture-lineage/unaccounted",
+   "route": "tool://capture-lineage/unaccounted",
    "sourced": 28,
    "unsourced": 0
   },
   {
    "figures": 3,
-   "file": "tool://cursor-plane/occlusion",
+   "route": "tool://cursor-plane/occlusion",
    "sourced": 3,
    "unsourced": 0
   },
   {
    "figures": 5,
-   "file": "tool://guest/multi-session-queue",
+   "route": "tool://guest/multi-session-queue",
    "sourced": 5,
    "unsourced": 0
   },
   {
    "figures": 7,
-   "file": "tool://inspection/native-ocr-zoom",
+   "route": "tool://inspection/native-ocr-zoom",
    "sourced": 7,
    "unsourced": 0
   },
   {
    "figures": 18,
-   "file": "tool://mutate-swift/agent",
+   "route": "tool://mutate-swift/agent",
    "sourced": 18,
    "unsourced": 0
   },
   {
    "figures": 4,
-   "file": "tool://reckon/brief-join",
+   "route": "tool://reckon/brief-join",
    "sourced": 4,
    "unsourced": 0
   },
   {
    "figures": 38,
-   "file": "tool://reckon/build",
+   "route": "tool://reckon/build",
    "sourced": 35,
    "unsourced": 3
   },
   {
    "figures": 16,
-   "file": "tool://reckoning/compare",
+   "route": "tool://reckoning/compare",
    "sourced": 15,
    "unsourced": 1
   },
   {
    "figures": 4,
-   "file": "tool://reckoning/tool-identity",
+   "route": "tool://reckoning/tool-identity",
    "sourced": 4,
    "unsourced": 0
   },
   {
    "figures": 27,
-   "file": "tool://spec-citation/measure",
+   "route": "tool://spec-citation/measure",
    "sourced": 27,
    "unsourced": 0
   },
   {
    "figures": 21,
-   "file": "tool://standing-registers/unread-gates",
+   "route": "tool://standing-registers/unread-gates",
    "sourced": 21,
    "unsourced": 0
   },
   {
    "figures": 6,
-   "file": "tool://tui-pty/rendering",
+   "route": "tool://tui-pty/rendering",
    "sourced": 6,
    "unsourced": 0
   },
   {
    "figures": 41,
-   "file": "tool://vacuity-check/blind",
+   "route": "tool://vacuity-check/blind",
    "sourced": 36,
    "unsourced": 5
   },
   {
    "figures": 7,
-   "file": "tool://warrant/charter-integrity",
+   "route": "tool://warrant/charter-integrity",
    "sourced": 7,
    "unsourced": 0
   },
   {
    "figures": 9,
-   "file": "ui://menubar",
+   "route": "ui://menubar",
    "sourced": 8,
    "unsourced": 1
   },
   {
    "figures": 33,
-   "file": "ui://run-hud",
+   "route": "ui://run-hud",
    "sourced": 32,
    "unsourced": 1
   },
   {
    "figures": 36,
-   "file": "ui://status-window",
+   "route": "ui://status-window",
    "sourced": 28,
    "unsourced": 8
   },
   {
    "figures": 17,
-   "file": "ui://takeover-shield",
+   "route": "ui://takeover-shield",
    "sourced": 17,
    "unsourced": 0
   },
   {
    "figures": 25,
-   "file": "ui://walkthrough",
+   "route": "ui://walkthrough",
    "sourced": 16,
    "unsourced": 9
   }
- ]
+ ],
+ "unmapped_surfaces": 40
 }

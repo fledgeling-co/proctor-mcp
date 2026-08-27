@@ -141,7 +141,7 @@ def main() -> int:
             continue
         below[route_of.get(c.get("surface"), c.get("surface") or "?")].append(c)
 
-    by_route = {s["file"]: s for s in coverage.get("surfaces", [])}
+    by_route = {(s.get("route") or s.get("file") or s.get("surface")): s for s in coverage.get("surfaces", [])}
     gate_clear = bool(health.get("campaign_gate_clear"))
     proposals, blocked = [], []
 

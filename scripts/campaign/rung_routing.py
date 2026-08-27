@@ -53,7 +53,14 @@ ABSENCE = re.compile(
     r"\bis NOT\b|\bare NOT\b|\bdoes not (?:construct|call|write|reach|raise)\b|"
     # A census over source lines is a measurement OF the source. It reports how
     # many lines were read, and running the product changes none of them.
-    r"\bread off the tree\b|\blines? of \w+\.swift\b|\bexamined between them\b", re.I)
+    r"\bread off the tree\b|\blines? of \w+\.swift\b|\bexamined between them\b|"
+    # Structural source/document inspections: AST matching, drift guards over source files,
+    # counting modifiers or regex matches in source files or design HTML documents,
+    # and census counts over source tokens (force unwraps, tool catalogue schema sync).
+    r"\bdrift guard\b|\bcomment-stripped\b|\bpresence half\b|"
+    r"\bdesign of record yields\b|\bproctor-surfaces\.html\b|"
+    r"\bcounting \.[a-zA-Z_]+\b|\bunwrap-census\b|\bThree greps\b|"
+    r"\bskill_doc_measure\.py\b|\bNSRegularExpression over\b", re.I)
 
 # A claim about what a RUNNING thing shows or does. These have an observable and
 # the analyzer is standing in for a reading nobody took.

@@ -20,6 +20,13 @@
       "figure": "warrant.evidence-integrity",
       "value": 91.1,
       "status": "Merged"
+    },
+    {
+      "at": "2026-08-26T23:59:45Z",
+      "spec": "PRO-0161",
+      "figure": "warrant.surface-conformance",
+      "value": 84.3,
+      "status": "Merged"
     }
   ]
 }

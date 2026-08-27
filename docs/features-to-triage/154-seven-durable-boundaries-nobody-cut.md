@@ -2,7 +2,10 @@
 generated-by: test-campaign
 campaign-sources: [campaign.check.journeys]
 reckon-sources: [REQ-035, REQ-039]
-status: to-triage
+status: retired
+validated-by: REQ-035, REQ-039 via CASE-0080, CASE-0086, CASE-0808, CASE-0114, CASE-0045, CASE-0049 (6 of 9 citing case(s))
+validated-rungs: effect-witness, metamorphic, outcome
+validated-provider: LOCAL_PEERPID getsockopt in Sources/ProctorAgent/SessionIdentity.swift
 ---
 # Seven durable boundaries nobody cut
 

@@ -170,8 +170,8 @@
 | PRO-0158 | Reclassification Record for an Audit Pass | 2026-08-25 | Merged |
 | PRO-0159 | Every Declared Pass Proves It Ran | 2026-08-25 | Merged |
 | PRO-0160 | Control Census Across Every Surface | 2026-08-27 | Merged |
-| PRO-0161 | Raise or Record Every Case Below the Effect Rung | 2026-08-25 | Ready for AI |
-| PRO-0162 | Cut or Record Every Durable Boundary | 2026-08-25 | Ready for AI |
+| PRO-0161 | Raise or Record Every Case Below the Effect Rung | 2026-08-27 | Merged |
+| PRO-0162 | Cut or Record Every Durable Boundary | 2026-08-27 | Merged |
 | PRO-0163 | A Specification Names the Figure It Will Move | 2026-08-25 | Merged |
 | PRO-0164 | Judge Every Judgeable Capture | 2026-08-26 | Merged |
 | PRO-0165 | Non-Zero Class Partition Reporting | 2026-08-26 | Merged |

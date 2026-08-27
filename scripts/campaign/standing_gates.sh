@@ -58,6 +58,7 @@ gate plane-census      $P scripts/campaign/plane_census.py docs/test-campaign --
 gate control-census    $P scripts/campaign/control_census.py --gate
 gate lane-census       $P scripts/campaign/lane_census.py --gate
 gate journey-census    $P scripts/campaign/journey_census.py --gate
+gate rung-routing       $P scripts/campaign/rung_routing.py docs/test-campaign --gate
 
 TOTAL=$((PASSED + ${#FAILED[@]}))
 if [ ${#FAILED[@]} -gt 0 ]; then

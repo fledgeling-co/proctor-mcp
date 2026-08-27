@@ -3604,8 +3604,8 @@
     },
     "plane": "in-tree",
     "rungRouting": {
-      "verdict": "raisable",
-      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
     }
   },
   {
@@ -3680,8 +3680,8 @@
     },
     "plane": "in-tree",
     "rungRouting": {
-      "verdict": "raisable",
-      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
     }
   },
   {
@@ -3722,8 +3722,8 @@
     },
     "plane": "in-tree",
     "rungRouting": {
-      "verdict": "raisable",
-      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
     }
   },
   {
@@ -4483,8 +4483,8 @@
     "plane": "in-tree",
     "journey": "JRN-010",
     "rungRouting": {
-      "verdict": "undecided",
-      "why": "neither an absence nor a named observable could be read off this row; a person has to look, and this tool will not guess which it is"
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
     }
   },
   {
@@ -4528,8 +4528,8 @@
     "plane": "in-tree",
     "journey": "JRN-010",
     "rungRouting": {
-      "verdict": "raisable",
-      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
     }
   },
   {
@@ -4882,8 +4882,8 @@
     },
     "plane": "in-tree",
     "rungRouting": {
-      "verdict": "undecided",
-      "why": "neither an absence nor a named observable could be read off this row; a person has to look, and this tool will not guess which it is"
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
     }
   },
   {
@@ -5301,8 +5301,8 @@
     },
     "plane": "in-tree",
     "rungRouting": {
-      "verdict": "undecided",
-      "why": "neither an absence nor a named observable could be read off this row; a person has to look, and this tool will not guess which it is"
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
     }
   },
   {
@@ -5331,8 +5331,8 @@
     },
     "plane": "in-tree",
     "rungRouting": {
-      "verdict": "undecided",
-      "why": "neither an absence nor a named observable could be read off this row; a person has to look, and this tool will not guess which it is"
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
     }
   },
   {
@@ -5448,8 +5448,8 @@
     },
     "plane": "in-tree",
     "rungRouting": {
-      "verdict": "undecided",
-      "why": "neither an absence nor a named observable could be read off this row; a person has to look, and this tool will not guess which it is"
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
     }
   },
   {
@@ -5477,8 +5477,8 @@
     },
     "plane": "in-tree",
     "rungRouting": {
-      "verdict": "raisable",
-      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
     }
   },
   {
@@ -5505,8 +5505,8 @@
     },
     "plane": "in-tree",
     "rungRouting": {
-      "verdict": "raisable",
-      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
     }
   },
   {
@@ -5533,8 +5533,8 @@
     },
     "plane": "in-tree",
     "rungRouting": {
-      "verdict": "raisable",
-      "why": "the claim names something a running build shows or returns, so an observable exists and the analyzer is standing in for a reading nobody has taken"
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
     }
   },
   {
@@ -5557,8 +5557,8 @@
     },
     "plane": "in-tree",
     "rungRouting": {
-      "verdict": "undecided",
-      "why": "neither an absence nor a named observable could be read off this row; a person has to look, and this tool will not guess which it is"
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
     }
   },
   {
@@ -6512,8 +6512,8 @@
     },
     "plane": "in-tree",
     "rungRouting": {
-      "verdict": "undecided",
-      "why": "neither an absence nor a named observable could be read off this row; a person has to look, and this tool will not guess which it is"
+      "verdict": "structural",
+      "why": "the claim is about the ABSENCE of something in the source, and no run can witness an absence \u2014 the analyzer is the only instrument that settles it"
     }
   },
   {

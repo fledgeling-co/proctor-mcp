@@ -12,8 +12,8 @@
       "tier": 0,
       "escalation": "owner",
       "surfaces": 9,
-      "figures": 52,
-      "sourced": 52,
+      "figures": 53,
+      "sourced": 53,
       "pct": 1.0,
       "gateClear": true,
       "shortfall": [],
@@ -24,8 +24,8 @@
       "tier": 0,
       "escalation": "owner",
       "surfaces": 1,
-      "figures": 1,
-      "sourced": 1,
+      "figures": 2,
+      "sourced": 2,
       "pct": 1.0,
       "gateClear": true,
       "shortfall": [],
@@ -38,15 +38,15 @@
       "tier": 0,
       "escalation": "owner",
       "surfaces": 16,
-      "figures": 214,
-      "sourced": 195,
-      "pct": 0.9112,
+      "figures": 218,
+      "sourced": 199,
+      "pct": 0.9128,
       "gateClear": true,
       "shortfall": [
         {
           "surface": "core://tools",
-          "sourced": 14,
-          "figures": 24,
+          "sourced": 16,
+          "figures": 26,
           "unsourced": 10,
           "cases": [
             {
@@ -153,7 +153,7 @@
         }
       ],
       "blockedBy": [
-        "19 of 214 case(s) stand below the effect rung, across 4 surface(s)"
+        "19 of 218 case(s) stand below the effect rung, across 4 surface(s)"
       ]
     },
     {
@@ -161,15 +161,15 @@
       "tier": 0,
       "escalation": "owner",
       "surfaces": 6,
-      "figures": 119,
-      "sourced": 100,
-      "pct": 0.8403,
+      "figures": 121,
+      "sourced": 102,
+      "pct": 0.843,
       "gateClear": true,
       "shortfall": [
         {
           "surface": "ui://walkthrough",
-          "sourced": 15,
-          "figures": 24,
+          "sourced": 16,
+          "figures": 25,
           "unsourced": 9,
           "cases": [
             {
@@ -264,8 +264,8 @@
         },
         {
           "surface": "ui://run-hud",
-          "sourced": 31,
-          "figures": 32,
+          "sourced": 32,
+          "figures": 33,
           "unsourced": 1,
           "cases": [
             {
@@ -276,7 +276,7 @@
         }
       ],
       "blockedBy": [
-        "19 of 119 case(s) stand below the effect rung, across 4 surface(s)"
+        "19 of 121 case(s) stand below the effect rung, across 4 surface(s)"
       ]
     },
     {
@@ -284,9 +284,9 @@
       "tier": 0,
       "escalation": "owner",
       "surfaces": 3,
-      "figures": 46,
-      "sourced": 44,
-      "pct": 0.9565,
+      "figures": 47,
+      "sourced": 45,
+      "pct": 0.9574,
       "gateClear": true,
       "shortfall": [
         {
@@ -307,7 +307,7 @@
         }
       ],
       "blockedBy": [
-        "2 of 46 case(s) stand below the effect rung, across 1 surface(s)"
+        "2 of 47 case(s) stand below the effect rung, across 1 surface(s)"
       ]
     },
     {
@@ -315,9 +315,9 @@
       "tier": 0,
       "escalation": "owner",
       "surfaces": 4,
-      "figures": 55,
-      "sourced": 52,
-      "pct": 0.9455,
+      "figures": 56,
+      "sourced": 53,
+      "pct": 0.9464,
       "gateClear": true,
       "shortfall": [
         {
@@ -342,7 +342,7 @@
         }
       ],
       "blockedBy": [
-        "3 of 55 case(s) stand below the effect rung, across 1 surface(s)"
+        "3 of 56 case(s) stand below the effect rung, across 1 surface(s)"
       ]
     },
     {
@@ -350,9 +350,9 @@
       "tier": 0,
       "escalation": "owner",
       "surfaces": 3,
-      "figures": 33,
-      "sourced": 32,
-      "pct": 0.9697,
+      "figures": 41,
+      "sourced": 40,
+      "pct": 0.9756,
       "gateClear": true,
       "shortfall": [
         {
@@ -369,7 +369,7 @@
         }
       ],
       "blockedBy": [
-        "1 of 33 case(s) stand below the effect rung, across 1 surface(s)"
+        "1 of 41 case(s) stand below the effect rung, across 1 surface(s)"
       ]
     }
   ]

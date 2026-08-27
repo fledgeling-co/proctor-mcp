@@ -1,7 +1,7 @@
 # Spec PRO-0162 — Cut or Record Every Durable Boundary
 
 **Brief:** `docs/features-to-triage/154-seven-durable-boundaries-nobody-cut.md`
-**Status:** Ready for AI
+**Status:** Merged
 **Created:** 2026-08-25
 **Surfaces:** SURF-012
 **Defects:** none
@@ -64,4 +64,11 @@ at 43 means a journey cannot claim a new cut without one.
 Criterion 1 is now checkable: a cut is a passing case at or above the `outcome`
 rung, attached to the journey, naming the boundary. Criterion 2's promotion to
 critical follows from that rather than from the claim.
+
+## Verify
+- `python3 scripts/campaign/journey_census.py --gate` — exit 0, ratchet 43 held, 44 of 50 boundaries claimed, 1 evidenced, 43 asserted-only.
+- `python3 scripts/campaign/test_instruments.py` — `test_a_journey_cut_has_a_case_behind_it` arms in both directions (exit 0 on clean tree, exit 1 on increased asserted-only cut or invalid boundary name).
+- `docs/test-campaign/evidence/PRO-0162/journey-census.txt` — full journey cut census breakdown recorded.
+
+**Moves:** none.
 

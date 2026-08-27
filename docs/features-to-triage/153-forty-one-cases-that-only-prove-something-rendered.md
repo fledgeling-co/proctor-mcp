@@ -2,7 +2,10 @@
 generated-by: test-campaign
 campaign-sources: [strict-check]
 reckon-sources: [REQ-046, REQ-130]
-status: to-triage
+status: retired
+validated-by: REQ-046, REQ-130 via CASE-0826, CASE-0152, CASE-0554, CASE-0566, CASE-0796, CASE-0816 (6 of 20 citing case(s))
+validated-rungs: effect-witness, metamorphic, outcome
+validated-provider: none
 ---
 # Forty-one cases that only prove something rendered
 
